@@ -1,0 +1,781 @@
+<!-- Sortant Table Component -->
+<div class=" ">
+    <!-- Search and Filters Section -->
+    <div class="table-controls mb-4 p-3 bg-light border rounded">
+        <h5 class="mb-3 text-primary">
+            <i class="fas fa-filter me-2"></i>Filtres et Recherche
+        </h5>
+        <div class="row g-3">
+            <div class="col-md-3">
+                <div class="search-box">
+                    <div class="input-group">
+                        <span class="input-group-text bg-primary text-white">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <input type="text" class="form-control" id="searchInput" 
+                               placeholder="Rechercher par nom..." value="{{ search_query }}">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="row g-2">
+                    <!-- First Row of Filters -->
+                    <div class="col-md-4">
+                        <!-- Center Filter -->
+                        <select class="form-select form-select-sm" id="centerFilter">
+                            <option value="">Tous les centres</option>
+                            {% for center in centers %}
+                                <option value="{{ center }}" {% if center == centre_filter %}selected{% endif %}>
+                                    {{ center }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <!-- Placement Type Filter -->
+                        <select class="form-select form-select-sm" id="placementFilter">
+                            <option value="">Tous les placements</option>
+                            {% for placement in placements %}
+                                <option value="{{ placement }}" {% if placement == placement_filter %}selected{% endif %}>
+                                    {{ placement }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <!-- Gender Filter -->
+                        <select class="form-select form-select-sm" id="genderFilter">
+                            <option value="">Tous les genres</option>
+                            <option value="M" {% if genre_filter == 'M' %}selected{% endif %}>Masculin</option>
+                            <option value="F" {% if genre_filter == 'F' %}selected{% endif %}>Féminin</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Second Row of Filters -->
+                    <div class="col-md-4">
+                        <!-- Status Filter -->
+                        <select class="form-select form-select-sm" id="statusFilter">
+                            <option value="">Tous les statuts</option>
+                            {% for status in statuses %}
+                                <option value="{{ status }}" {% if status == status_filter %}selected{% endif %}>
+                                    {{ status }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <!-- Statut Matrimonial Filter -->
+                        <label for="statutMatrimonialFilter" class="form-label small text-muted mb-1">
+                            <i class="fas fa-heart me-1"></i>Statut Matrimonial
+                        </label>
+                        <select class="form-select form-select-sm" id="statutMatrimonialFilter">
+                            <option value="">Statut matrimonial</option>
+                            <option value="Célibataire" {% if statut_matrimonial_filter == 'Célibataire' %}selected{% endif %}>Célibataire</option>
+                            <option value="Marié" {% if statut_matrimonial_filter == 'Marié' %}selected{% endif %}>Marié</option>
+                            <option value="Divorcé" {% if statut_matrimonial_filter == 'Divorcé' %}selected{% endif %}>Divorcé</option>
+                            <option value="Veuf" {% if statut_matrimonial_filter == 'Veuf' %}selected{% endif %}>Veuf</option>
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <!-- Age Filter -->
+                        <select class="form-select form-select-sm" id="ageFilter">
+                            <option value="">Tous les âges</option>
+                            <option value="18-21" {% if age_filter == '18-21' %}selected{% endif %}>18-21 ans</option>
+                            <option value="22-25" {% if age_filter == '22-25' %}selected{% endif %}>22-25 ans</option>
+                            <option value="26-30" {% if age_filter == '26-30' %}selected{% endif %}>26-30 ans</option>
+                            <option value="31+" {% if age_filter == '31+' %}selected{% endif %}>31+ ans</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Third Row - Ville Filter -->
+                    <div class="col-md-6">
+                        <!-- Ville Filter -->
+                        <select class="form-select form-select-sm" id="villeFilter">
+                            <option value="">Toutes les villes</option>
+                            {% for ville in villes %}
+                                <option value="{{ ville }}" {% if ville == ville_filter %}selected{% endif %}>
+                                    {{ ville }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="col-12 text-center mt-2">
+                        <!-- Clear Filters Button -->
+                        <button class="btn btn-outline-secondary btn-sm" id="clearFilters">
+                            <i class="fas fa-times"></i> Effacer tous les filtres
+                        </button>
+                    </div>
+                    
+                    <!-- Active Filters Display -->
+                    <div class="col-12 mt-2">
+                        <div class="active-filters-display">
+                            <small class="text-muted">
+                                <strong>Filtres actifs:</strong>
+                                {% if search_query %}<span class="badge bg-primary me-1">Recherche: {{ search_query }}</span>{% endif %}
+                                {% if centre_filter %}<span class="badge bg-info me-1">Centre: {{ centre_filter }}</span>{% endif %}
+                                {% if placement_filter %}<span class="badge bg-success me-1">Placement: {{ placement_filter }}</span>{% endif %}
+                                {% if genre_filter %}<span class="badge bg-warning me-1">Genre: {{ genre_filter }}</span>{% endif %}
+                                {% if status_filter %}<span class="badge bg-secondary me-1">Statut: {{ status_filter }}</span>{% endif %}
+                                {% if statut_matrimonial_filter %}<span class="badge bg-danger me-1">Matrimonial: {{ statut_matrimonial_filter }}</span>{% endif %}
+                                {% if age_filter %}<span class="badge bg-dark me-1">Âge: {{ age_filter }}</span>{% endif %}
+                                {% if ville_filter %}<span class="badge bg-primary me-1">Ville: {{ ville_filter }}</span>{% endif %}
+                                {% if not search_query and not centre_filter and not placement_filter and not genre_filter and not status_filter and not statut_matrimonial_filter and not age_filter and not ville_filter %}
+                                    <span class="text-muted">Aucun filtre actif</span>
+                                {% endif %}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="stats-card bg-primary text-white">
+                <div class="stats-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="stats-content">
+                    <h3>{{ total_sortants }}</h3>
+                    <p>Total Sortants</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card bg-success text-white">
+                <div class="stats-icon">
+                    <i class="fas fa-male"></i>
+                </div>
+                <div class="stats-content">
+                    <h3>{{ male_count }}</h3>
+                    <p>Hommes ({{ male_percentage }}%)</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card bg-info text-white">
+                <div class="stats-icon">
+                    <i class="fas fa-female"></i>
+                </div>
+                <div class="stats-content">
+                    <h3>{{ female_count }}</h3>
+                    <p>Femmes ({{ female_percentage }}%)</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card bg-warning text-white">
+                <div class="stats-icon">
+                    <i class="fas fa-filter"></i>
+                </div>
+                <div class="stats-content">
+                    <h3>{{ filtered_count }}</h3>
+                    <p>Résultats filtrés</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Table -->
+    <div class="table-wrapper">
+        <div class="table-responsive">
+            <table class="table table-hover sortants-table" id="sortantsTable">
+                <thead class="table-dark">
+                    <tr>
+                        <th width="60">Photo</th>
+                        <th>Nom</th>
+                        <th>Âge</th>
+                        <th>Genre</th>
+                        <th>Contact</th>
+                        <th>Statut Matrimonial</th>
+                        <th>Type de Placement</th>
+                        <th>Statut</th>
+                        <th>Adresse</th>
+                        <th>Emploi</th>
+                        <th width="120">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="sortantsTableBody">
+                    {% for sortant in sortants %}
+                    <tr class="sortant-row" data-sortant-id="{{ sortant.id }}" data-student-id="{{ sortant.sortant.identifiant }}">
+                        <td>
+                            <div class="sortant-avatar">
+                                {% if sortant.imageprofile %}
+                                    <img src="{{ sortant.imageprofile.url }}" alt="{{ sortant.nom }}" 
+                                         class="avatar-img" loading="lazy">
+                                {% else %}
+                                    <div class="avatar-placeholder">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="sortant-name">
+                                <strong>{{ sortant.nom }}</strong>
+                                {% if sortant.email %}
+                                    <small class="text-muted d-block">{{ sortant.email }}</small>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="age-badge">{{ sortant.age }} ans</span>
+                        </td>
+                        <td>
+                            <span class="badge {% if sortant.genre == 'M' %}bg-primary{% else %}bg-pink{% endif %}">
+                                {% if sortant.genre == 'M' %}
+                                    <i class="fas fa-mars"></i> Masculin
+                                {% else %}
+                                    <i class="fas fa-venus"></i> Féminin
+                                {% endif %}
+                            </span>
+                        </td>
+                        <td>
+                            {% if sortant.telephone %}
+                                <small class="text-muted">
+                                    <i class="fas fa-phone"></i> {{ sortant.telephone }}
+                                </small>
+                            {% else %}
+                                <small class="text-muted">N/A</small>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="matrimonial-badge">{{ sortant.statut_matrimonial }}</span>
+                        </td>
+                        <td>
+                            <span class="placement-badge">{{ sortant.placement_type }}</span>
+                        </td>
+                        <td>
+                            <span class="badge {% if sortant.status == 'Embauche' %}bg-success{% else %}bg-warning{% endif %}">
+                                {{ sortant.status }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="address-info">
+                                {% if sortant.ville_actuelle %}
+                                    <small class="text-primary font-weight-bold">{{ sortant.ville_actuelle }}</small>
+                                {% endif %}
+                                {% if sortant.adresse_actuelle %}
+                                    <small class="text-muted d-block">{{ sortant.adresse_actuelle }}</small>
+                                {% endif %}
+                                {% if not sortant.ville_actuelle and not sortant.adresse_actuelle %}
+                                    <small class="text-muted">N/A</small>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="job-info">
+                                {% if sortant.poste_actuel and sortant.entreprise %}
+                                    <small class="text-success">
+                                        <i class="fas fa-briefcase"></i> {{ sortant.poste_actuel }}
+                                    </small>
+                                    <small class="text-muted d-block">{{ sortant.entreprise }}</small>
+                                {% elif sortant.poste_actuel %}
+                                    <small class="text-success">
+                                        <i class="fas fa-briefcase"></i> {{ sortant.poste_actuel }}
+                                    </small>
+                                {% else %}
+                                    <small class="text-muted">Aucun emploi</small>
+                                {% endif %}
+                                {% if sortant.date_embauche %}
+                                    <small class="text-info d-block">
+                                        <i class="fas fa-calendar"></i> {{ sortant.date_embauche|date:"d/m/Y" }}
+                                    </small>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-lg btn-primary view-sortant-btn" 
+                                        onclick="viewSortant('{{ sortant.id }}')" 
+                                        title="Voir Sortant">
+                                    <i class="fas fa-eye me-2"></i>
+                                    Voir Sortant
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="11" class="text-center py-5">
+                            <div class="no-data">
+                                <i class="fas fa-graduation-cap fa-3x text-muted mb-3"></i>
+                                <h5 class="text-muted">Aucun sortant trouvé</h5>
+                                <p class="text-muted">Essayez de modifier vos critères de recherche</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    {% if sortants.has_other_pages %}
+    <nav aria-label="Navigation des pages">
+        <ul class="pagination justify-content-center">
+            {% if sortants.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if placement_filter %}&placement={{ placement_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if statut_matrimonial_filter %}&statut_matrimonial={{ statut_matrimonial_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if ville_filter %}&ville={{ ville_filter }}{% endif %}">
+                        <i class="fas fa-angle-double-left"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ sortants.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if placement_filter %}&placement={{ placement_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if statut_matrimonial_filter %}&statut_matrimonial={{ statut_matrimonial_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if ville_filter %}&ville={{ ville_filter }}{% endif %}">
+                        <i class="fas fa-angle-left"></i>
+                    </a>
+                </li>
+            {% endif %}
+
+            {% for num in sortants.paginator.page_range %}
+                {% if sortants.number == num %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                {% elif num > sortants.number|add:'-3' and num < sortants.number|add:'3' %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if placement_filter %}&placement={{ placement_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if statut_matrimonial_filter %}&statut_matrimonial={{ statut_matrimonial_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if ville_filter %}&ville={{ ville_filter }}{% endif %}">{{ num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if sortants.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ sortants.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if placement_filter %}&placement={{ placement_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if statut_matrimonial_filter %}&statut_matrimonial={{ statut_matrimonial_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if ville_filter %}&ville={{ ville_filter }}{% endif %}">
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ sortants.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if placement_filter %}&placement={{ placement_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if statut_matrimonial_filter %}&statut_matrimonial={{ statut_matrimonial_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if ville_filter %}&ville={{ ville_filter }}{% endif %}">
+                        <i class="fas fa-angle-double-right"></i>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+
+<!-- Styles -->
+<style>
+.sortants-table-container {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    padding: 2rem;
+    margin: 1rem 0;
+}
+
+.table-controls {
+    background: #f8f9fa;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    border: 2px solid #dee2e6;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.table-controls .form-select {
+    border: 2px solid #ced4da;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    padding: 0.5rem;
+    background-color: white;
+    transition: all 0.3s ease;
+    margin-bottom: 0.5rem;
+    min-height: 38px;
+}
+
+.table-controls .form-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+    outline: none;
+}
+
+.table-controls .form-select:hover {
+    border-color: #6c757d;
+}
+
+/* Ensure all filters are visible */
+.table-controls .row {
+    margin: 0;
+}
+
+.table-controls .col-md-4,
+.table-controls .col-md-6 {
+    padding: 0.25rem;
+}
+
+/* Make sure the Statut Matrimonial filter is visible */
+#statutMatrimonialFilter {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.search-box .input-group-text {
+    border: none;
+    background: linear-gradient(45deg, #007bff, #0056b3);
+}
+
+.search-box .form-control {
+    border-left: none;
+    padding-left: 0;
+}
+
+.search-box .form-control:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+    border-color: #007bff;
+}
+
+.filter-controls .form-select {
+    min-width: 150px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+}
+
+.filter-controls .form-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+
+.stats-card {
+    border-radius: 15px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+}
+
+.stats-icon {
+    font-size: 2.5rem;
+    margin-right: 1rem;
+    opacity: 0.8;
+}
+
+.stats-content h3 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.stats-content p {
+    margin: 0;
+    opacity: 0.9;
+}
+
+.bg-pink {
+    background-color: #e91e63 !important;
+}
+
+.table-wrapper {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.sortants-table {
+    margin: 0;
+}
+
+.sortants-table thead th {
+    background: linear-gradient(45deg, #343a40, #495057);
+    border: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.sortant-row {
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+}
+
+.sortant-row:hover {
+    background-color: #f8f9fa;
+    border-left-color: #007bff;
+    transform: translateX(5px);
+}
+
+.sortant-avatar {
+    position: relative;
+}
+
+.avatar-img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.avatar-placeholder {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.sortant-name strong {
+    color: #2c3e50;
+    font-size: 1rem;
+}
+
+.age-badge {
+    background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.placement-badge {
+    background: linear-gradient(45deg, #4ecdc4, #44a08d);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.matrimonial-badge {
+    background: linear-gradient(45deg, #ff9a9e, #fecfef);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.ville-badge {
+    background: linear-gradient(45deg, #f093fb, #f5576c);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.address-info {
+    font-size: 0.85rem;
+}
+
+.address-info .text-primary {
+    color: #007bff !important;
+    font-weight: 600;
+}
+
+.job-info {
+    font-size: 0.85rem;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.view-sortant-btn {
+    border-radius: 12px;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    border: none;
+    min-width: 140px;
+}
+
+.view-sortant-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4);
+    background: linear-gradient(135deg, #0056b3, #007bff);
+}
+
+.view-sortant-btn:active {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+}
+
+.no-data {
+    padding: 3rem;
+}
+
+.pagination {
+    margin: 2rem 0 0 0;
+}
+
+.page-link {
+    border-radius: 8px;
+    margin: 0 2px;
+    border: 1px solid #dee2e6;
+    color: #007bff;
+    transition: all 0.3s ease;
+}
+
+.page-link:hover {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.page-item.active .page-link {
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    border-color: #007bff;
+    box-shadow: 0 4px 8px rgba(0,123,255,0.3);
+}
+
+@media (max-width: 768px) {
+    .sortants-table-container {
+        padding: 1rem;
+    }
+    
+    .table-controls {
+        padding: 1rem;
+    }
+    
+    .filter-controls {
+        flex-direction: column;
+    }
+    
+    .filter-controls .form-select {
+        margin-bottom: 0.5rem;
+        min-width: 100%;
+    }
+    
+    .stats-card {
+        text-align: center;
+        flex-direction: column;
+    }
+    
+    .stats-icon {
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+    }
+    
+    .view-sortant-btn {
+        font-size: 0.8rem;
+        padding: 0.5rem 1rem;
+        min-width: 120px;
+    }
+}
+</style>
+
+<!-- JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Search functionality
+    const searchInput = document.getElementById('searchInput');
+    const centerFilter = document.getElementById('centerFilter');
+    const placementFilter = document.getElementById('placementFilter');
+    const genderFilter = document.getElementById('genderFilter');
+    const statusFilter = document.getElementById('statusFilter');
+    const statutMatrimonialFilter = document.getElementById('statutMatrimonialFilter');
+    const ageFilter = document.getElementById('ageFilter');
+    const villeFilter = document.getElementById('villeFilter');
+    const clearFiltersBtn = document.getElementById('clearFilters');
+
+    // Debounce function for search
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    // Apply filters function
+    function applyFilters() {
+        const params = new URLSearchParams();
+        
+        if (searchInput.value) params.set('search', searchInput.value);
+        if (centerFilter.value) params.set('centre', centerFilter.value);
+        if (placementFilter.value) params.set('placement', placementFilter.value);
+        if (genderFilter.value) params.set('genre', genderFilter.value);
+        if (statusFilter.value) params.set('status', statusFilter.value);
+        if (statutMatrimonialFilter.value) params.set('statut_matrimonial', statutMatrimonialFilter.value);
+        if (ageFilter.value) params.set('age', ageFilter.value);
+        if (villeFilter.value) params.set('ville', villeFilter.value);
+        
+        window.location.href = '?' + params.toString();
+    }
+
+    // Event listeners
+    searchInput.addEventListener('input', debounce(applyFilters, 500));
+    centerFilter.addEventListener('change', applyFilters);
+    placementFilter.addEventListener('change', applyFilters);
+    genderFilter.addEventListener('change', applyFilters);
+    statusFilter.addEventListener('change', applyFilters);
+    statutMatrimonialFilter.addEventListener('change', applyFilters);
+    ageFilter.addEventListener('change', applyFilters);
+    villeFilter.addEventListener('change', applyFilters);
+
+    // Clear filters
+    clearFiltersBtn.addEventListener('click', function() {
+        window.location.href = window.location.pathname;
+    });
+
+    // Debug: Log filter elements to console
+    console.log('Filter elements found:', {
+        searchInput: searchInput,
+        centerFilter: centerFilter,
+        placementFilter: placementFilter,
+        genderFilter: genderFilter,
+        statusFilter: statusFilter,
+        statutMatrimonialFilter: statutMatrimonialFilter,
+        ageFilter: ageFilter,
+        villeFilter: villeFilter,
+        clearFiltersBtn: clearFiltersBtn
+    });
+
+    // Test filter visibility
+    if (statutMatrimonialFilter) {
+        console.log('Statut Matrimonial filter is visible:', statutMatrimonialFilter.offsetWidth > 0);
+    }
+});
+
+// Action functions
+function viewSortant(sortantId) {
+    // Get the student identifiant from the sortant data
+    const sortantRow = document.querySelector(`tr[data-sortant-id="${sortantId}"]`);
+    if (sortantRow) {
+        const studentId = sortantRow.dataset.studentId;
+        if (studentId) {
+            // Redirect to the student detail page using the student identifiant
+            window.location.href = `/student/view/${studentId}`;
+        } else {
+            console.error('Student ID not found for sortant:', sortantId);
+        }
+    } else {
+        console.error('Sortant row not found for ID:', sortantId);
+    }
+}
+</script>

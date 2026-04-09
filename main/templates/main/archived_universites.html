@@ -1,0 +1,566 @@
+{% extends "main/base.html" %}
+{% block title%} Universités Archivées {% endblock%}
+{% block content %}
+
+<!-- Header -->
+<div class="dashboard-header mb-8">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">
+                <i class="fas fa-university text-primary mr-3"></i>
+                Universités Archivées
+            </h1>
+            <p class="text-gray-200">Liste des étudiants universitaires archivés</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'universite' %}" class="btn btn-outline-light btn-sm"><i class="fas fa-university me-2"></i>Universités Actives</a>
+            <a href="{% url 'universite_dashboard' %}" class="btn btn-outline-light btn-sm"><i class="fas fa-chart-bar me-2"></i>Dashboard</a>
+            <a href="{% url 'archived_students' %}" class="btn btn-outline-light btn-sm"><i class="fas fa-archive me-2"></i>Étudiants Archivés</a>
+        </div>
+    </div>
+    
+    <!-- Filter Panel -->
+    <div class="filter-panel mt-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-gradient-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-filter mr-2"></i>
+                    Filtres
+                    <button class="btn btn-sm btn-outline-light float-right" type="button" data-bs-toggle="collapse" data-bs-target="#filtersCollapse">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </h5>
+            </div>
+            <div class="collapse show" id="filtersCollapse">
+                <div class="card-body">
+                    <form method="GET" class="row g-3">
+                        <div class="col-md-3">
+                            <label for="search" class="form-label">
+                                <i class="fas fa-search text-primary"></i> Recherche
+                            </label>
+                            <input type="text" class="form-control" name="search" id="search" placeholder="Nom, ID, téléphone..." value="{{ search_query }}" />
+                        </div>
+                        <div class="col-md-2">
+                            <label for="centre" class="form-label">
+                                <i class="fas fa-map-marker-alt text-success"></i> Centre
+                            </label>
+                            <select name="centre" id="centre" class="form-select">
+                                <option value="">Tous les centres</option>
+                                {% for c in centres %}
+                                    <option value="{{ c }}" {% if c == centre_filter %}selected{% endif %}>{{ c }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="designation" class="form-label">
+                                <i class="fas fa-tags text-info"></i> Désignation
+                            </label>
+                            <select name="designation" id="designation" class="form-select">
+                                <option value="">Toutes</option>
+                                {% for d in designations %}
+                                    <option value="{{ d }}" {% if d == designation_filter %}selected{% endif %}>{{ d }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="institution" class="form-label">
+                                <i class="fas fa-university text-warning"></i> Institution
+                            </label>
+                            <select name="institution" id="institution" class="form-select">
+                                <option value="">Toutes</option>
+                                {% for i in institutions %}
+                                    <option value="{{ i }}" {% if i == institution_filter %}selected{% endif %}>{{ i }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="raison" class="form-label">
+                                <i class="fas fa-exclamation-triangle text-danger"></i> Raison
+                            </label>
+                            <select name="raison" id="raison" class="form-select">
+                                <option value="">Toutes</option>
+                                {% for r in raison_choices %}
+                                    <option value="{{ r }}" {% if r == raison_filter %}selected{% endif %}>{{ r }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="archive_type" class="form-label">
+                                <i class="fas fa-archive text-secondary"></i> Type
+                            </label>
+                            <select name="archive_type" id="archive_type" class="form-select">
+                                <option value="">Tous</option>
+                                {% for t in archive_choices %}
+                                    <option value="{{ t }}" {% if t == archive_type_filter %}selected{% endif %}>{{ t }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search mr-2"></i>Appliquer les filtres
+                            </button>
+                            <a href="{% url 'archived_universites' %}" class="btn btn-outline-secondary ml-2">
+                                <i class="fas fa-times mr-2"></i>Réinitialiser
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Key Metrics Cards -->
+<div class="row mb-6">
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="metric-card">
+            <div class="metric-icon">
+                <i class="fas fa-university"></i>
+            </div>
+            <div class="metric-content">
+                <h3>{{ archived_universites.paginator.count }}</h3>
+                <p>Universités Archivées</p>
+                <div class="metric-change">
+                    <span class="text-warning">Archives totales</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="metric-card">
+            <div class="metric-icon">
+                <i class="fas fa-map-marker-alt"></i>
+            </div>
+            <div class="metric-content">
+                <h3>{{ centres|length }}</h3>
+                <p>Centres</p>
+                <div class="metric-change">
+                    <span class="text-info">Centres représentés</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="metric-card">
+            <div class="metric-icon">
+                <i class="fas fa-tags"></i>
+            </div>
+            <div class="metric-content">
+                <h3>{{ designations|length }}</h3>
+                <p>Désignations</p>
+                <div class="metric-change">
+                    <span class="text-success">Catégories uniques</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="metric-card">
+            <div class="metric-icon">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <div class="metric-content">
+                <h3>{{ institutions|length }}</h3>
+                <p>Institutions</p>
+                <div class="metric-change">
+                    <span class="text-primary">Établissements</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Archived Universities Grid -->
+<div class="row mb-6">
+    <div class="col-12">
+        <div class="chart-card">
+            <div class="chart-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5><i class="fas fa-university text-primary"></i> Liste des Universités Archivées</h5>
+                    <div class="archived-info">
+                        <small class="text-muted ms-2">{{ archived_universites.paginator.count }} université{{ archived_universites.paginator.count|pluralize }} archivée{{ archived_universites.paginator.count|pluralize }}</small>
+                    </div>
+                </div>
+            </div>
+            <div class="chart-body">
+                {% if archived_universites %}
+                    <div class="archived-grid">
+                        {% for universite in archived_universites %}
+                        <div class="archived-card">
+                            <div class="archived-avatar">
+                                {% if universite.archive.imageprofile %}
+                                    <img src="{{ universite.archive.imageprofile.url }}" alt="Photo de {{ universite.archive.nom }}">
+                                {% else %}
+                                    <div class="avatar-placeholder">
+                                        <i class="fas fa-user-graduate"></i>
+                                    </div>
+                                {% endif %}
+                                <div class="archive-badge">
+                                    <i class="fas fa-university"></i>
+                                </div>
+                            </div>
+                            <div class="archived-info">
+                                <h6 class="archived-name">{{ universite.archive.nom }}</h6>
+                                <p class="archived-id">{{ universite.archive.identifiant }}</p>
+                                <div class="archived-details">
+                                    <div class="detail-item">
+                                        <i class="fas fa-venus-mars text-{% if universite.archive.genre == 'M' %}primary{% else %}pink{% endif %}"></i>
+                                        <span>{{ universite.archive.genre }}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <i class="fas fa-graduation-cap text-warning"></i>
+                                        <span>{{ universite.archive.Class|default:"N/A" }}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <i class="fas fa-map-marker-alt text-success"></i>
+                                        <span>{{ universite.archive.centre|default:"N/A" }}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <i class="fas fa-university text-info"></i>
+                                        <span>{{ universite.archive.institution|default:"N/A" }}</span>
+                                    </div>
+                                </div>
+                                <div class="archive-reason">
+                                    <span class="badge bg-secondary">
+                                        {{ universite.archive_type }} - {{ universite.raison }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="no-data-message text-center py-5">
+                        <i class="fas fa-university fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">Aucune université archivée trouvée</h5>
+                        <p class="text-muted">Les étudiants universitaires archivés apparaîtront ici.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Detailed Table (Collapsible) -->
+<div class="row mb-6">
+    <div class="col-12">
+        <div class="chart-card">
+            <div class="chart-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5><i class="fas fa-table text-info"></i> Tableau Détaillé</h5>
+                    <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#detailedTable">
+                        <i class="fas fa-chevron-down"></i> Afficher/Masquer
+                    </button>
+                </div>
+            </div>
+            <div class="collapse" id="detailedTable">
+                <div class="chart-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th><i class="fas fa-id-card text-primary"></i> Identifiant</th>
+                                    <th><i class="fas fa-user text-success"></i> Nom</th>
+                                    <th><i class="fas fa-venus-mars text-info"></i> Genre</th>
+                                    <th><i class="fas fa-graduation-cap text-warning"></i> Classe</th>
+                                    <th><i class="fas fa-university text-secondary"></i> Institution</th>
+                                    <th><i class="fas fa-map-marker-alt text-danger"></i> Centre</th>
+                                    <th><i class="fas fa-tags text-success"></i> Désignation</th>
+                                    <th><i class="fas fa-archive text-info"></i> Type</th>
+                                    <th><i class="fas fa-exclamation-triangle text-warning"></i> Raison</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for universite in archived_universites %}
+                                <tr>
+                                    <td><span class="badge bg-light text-dark">{{ universite.archive.identifiant }}</span></td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            {% if universite.archive.imageprofile %}
+                                                <img src="{{ universite.archive.imageprofile.url }}" alt="Photo" class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;">
+                                            {% else %}
+                                                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-2" style="width: 30px; height: 30px;">
+                                                    <i class="fas fa-user-graduate text-white" style="font-size: 12px;"></i>
+                                                </div>
+                                            {% endif %}
+                                            <span>{{ universite.archive.nom }}</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-{% if universite.archive.genre == 'M' %}primary{% else %}pink{% endif %}">
+                                            <i class="fas fa-{% if universite.archive.genre == 'M' %}mars{% else %}venus{% endif %} me-1"></i>
+                                            {{ universite.archive.genre }}
+                                        </span>
+                                    </td>
+                                    <td>{{ universite.archive.Class|default:"N/A" }}</td>
+                                    <td>{{ universite.archive.institution|default:"N/A" }}</td>
+                                    <td>{{ universite.archive.centre|default:"N/A" }}</td>
+                                    <td>{{ universite.archive.designation|default:"N/A" }}</td>
+                                    <td>
+                                        <span class="badge bg-info">{{ universite.archive_type }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-warning">{{ universite.raison }}</span>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="9" class="text-center text-muted py-4">
+                                        <i class="fas fa-university fa-2x mb-2 d-block"></i>
+                                        Aucune université archivée trouvée
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    {% if archived_universites.has_other_pages %}
+                    <nav aria-label="Pagination des universités archivées" class="mt-4">
+                        <ul class="pagination justify-content-center">
+                            {% if archived_universites.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if designation_filter %}&designation={{ designation_filter }}{% endif %}{% if institution_filter %}&institution={{ institution_filter }}{% endif %}{% if archive_type_filter %}&archive_type={{ archive_type_filter }}{% endif %}{% if raison_filter %}&raison={{ raison_filter }}{% endif %}">
+                                        <i class="fas fa-angle-double-left"></i>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ archived_universites.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if designation_filter %}&designation={{ designation_filter }}{% endif %}{% if institution_filter %}&institution={{ institution_filter }}{% endif %}{% if archive_type_filter %}&archive_type={{ archive_type_filter }}{% endif %}{% if raison_filter %}&raison={{ raison_filter }}{% endif %}">
+                                        <i class="fas fa-angle-left"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                            
+                            <li class="page-item active">
+                                <span class="page-link">
+                                    Page {{ archived_universites.number }} sur {{ archived_universites.paginator.num_pages }}
+                                </span>
+                            </li>
+                            
+                            {% if archived_universites.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ archived_universites.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if designation_filter %}&designation={{ designation_filter }}{% endif %}{% if institution_filter %}&institution={{ institution_filter }}{% endif %}{% if archive_type_filter %}&archive_type={{ archive_type_filter }}{% endif %}{% if raison_filter %}&raison={{ raison_filter }}{% endif %}">
+                                        <i class="fas fa-angle-right"></i>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ archived_universites.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if designation_filter %}&designation={{ designation_filter }}{% endif %}{% if institution_filter %}&institution={{ institution_filter }}{% endif %}{% if archive_type_filter %}&archive_type={{ archive_type_filter }}{% endif %}{% if raison_filter %}&raison={{ raison_filter }}{% endif %}">
+                                        <i class="fas fa-angle-double-right"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions Panel -->
+<div class="row mb-6">
+    <div class="col-12">
+        <div class="actions-card">
+            <div class="actions-header">
+                <h5><i class="fas fa-bolt text-primary"></i> Actions Rapides</h5>
+            </div>
+            <div class="actions-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'universite' %}" class="action-btn bg-primary">
+                            <i class="fas fa-university"></i>
+                            <span>Universités Actives</span>
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'universite_dashboard' %}" class="action-btn bg-success">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'notesuniversite' %}" class="action-btn bg-info">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Notes Université</span>
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'archived_universites' %}" class="action-btn bg-warning">
+                            <i class="fas fa-archive"></i>
+                            <span>Archivées</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+:root {
+    --age-color-1: #FF6384;
+    --age-color-2: #36A2EB;
+    --age-color-3: #FFCE56;
+    --age-color-4: #4BC0C0;
+    --age-color-5: #9966FF;
+    --age-color-6: #FF9F40;
+}
+
+.dashboard-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.bg-gradient-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+
+.metric-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    color: #2d3748;
+}
+.metric-card:hover { transform: translateY(-8px); box-shadow: 0 15px 40px rgba(0,0,0,0.2); }
+.metric-icon { font-size: 3rem; margin-right: 1.5rem; opacity: 0.8; }
+.metric-content h3 { font-size: 2.5rem; font-weight: bold; margin: 0; line-height: 1; }
+.metric-content p { margin: 0.5rem 0 0 0; opacity: 0.9; font-size: 1rem; }
+.metric-change { font-size: 0.8rem; opacity: 0.8; margin-top: 0.25rem; }
+
+.chart-card, .actions-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    overflow: hidden;
+    height: 100%;
+}
+.chart-header, .actions-header { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 1.5rem; border-bottom: 1px solid #dee2e6; }
+.chart-header h5, .actions-header h5 { margin: 0; font-weight: 600; color: #495057; }
+.chart-body, .actions-body { padding: 1.5rem; }
+
+/* Archived Universities Grid Styles */
+.archived-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+    gap: 1.5rem; 
+}
+.archived-card { 
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); 
+    border-radius: 15px; 
+    padding: 1.5rem; 
+    text-align: center; 
+    position: relative; 
+    transition: all 0.3s ease;
+    border: 1px solid #e3e6ea;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.04);
+}
+.archived-card:hover { 
+    transform: translateY(-5px); 
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+}
+.archived-avatar { 
+    position: relative; 
+    margin-bottom: 1rem; 
+}
+.archived-avatar img, .avatar-placeholder { 
+    width: 80px; 
+    height: 80px; 
+    border-radius: 50%; 
+    object-fit: cover; 
+    margin: 0 auto; 
+    display: block;
+    border: 3px solid #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.avatar-placeholder { 
+    background: linear-gradient(135deg, #667eea, #764ba2); 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    color: white; 
+    font-size: 2rem; 
+}
+.archive-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    color: #333;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.8rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.archived-name { 
+    font-weight: 600; 
+    margin-bottom: 0.5rem; 
+    color: #2d3748;
+}
+.archived-id { 
+    color: #6c757d; 
+    font-size: 0.9rem; 
+    margin-bottom: 1rem;
+}
+.archived-details { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 0.5rem; 
+    margin-bottom: 1rem; 
+}
+.detail-item { 
+    display: flex; 
+    align-items: center; 
+    gap: 0.5rem; 
+    font-size: 0.85rem; 
+    justify-content: center;
+}
+.archive-reason { 
+    margin-top: 1rem; 
+    padding-top: 1rem; 
+    border-top: 1px solid #e3e6ea;
+}
+.text-pink { color: #e91e63 !important; }
+
+.action-btn { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    padding: 2rem 1rem; 
+    border-radius: 15px; 
+    color: white; 
+    text-decoration: none; 
+    transition: all 0.3s ease; 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
+}
+.action-btn:hover { 
+    transform: translateY(-5px); 
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2); 
+    color: white; 
+    text-decoration: none; 
+}
+.action-btn i { font-size: 2rem; margin-bottom: 0.5rem; }
+
+@media (max-width: 768px) {
+    .dashboard-header { padding: 1rem; text-align: center; }
+    .metric-card { flex-direction: column; text-align: center; padding: 1.5rem; }
+    .metric-icon { margin-right: 0; margin-bottom: 1rem; }
+    .archived-grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
+}
+</style>
+
+{% endblock %}

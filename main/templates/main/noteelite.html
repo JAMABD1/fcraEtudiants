@@ -1,0 +1,428 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}Notes des Elites{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="mb-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="text-dark font-weight-bold mb-1">
+                            <i class="fas fa-graduation-cap text-warning mr-2"></i>
+                            Notes des Elites
+                        </h2>
+                        <p class="text-muted mb-0">Gestion académique spécialisée pour les étudiants élites</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-primary" onclick="exportEliteNotes()">
+                            <i class="fas fa-download mr-1"></i>
+                            Exporter
+                        </button>
+                        <button class="btn btn-primary" onclick="printEliteNotes()">
+                            <i class="fas fa-print mr-1"></i>
+                            Imprimer
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Elite-Specific Statistics Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card bg-gradient-warning text-white h-100">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="mr-3">
+                                <i class="fas fa-star fa-2x"></i>
+                            </div>
+                            <div>
+                                <h4 class="mb-0">{{ total_notes }}</h4>
+                                <small class="opacity-75">Notes d'Elites</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="card bg-gradient-info text-white h-100">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="mr-3">
+                                <i class="fas fa-chart-line fa-2x"></i>
+                            </div>
+                            <div>
+                                <h4 class="mb-0">{{ avg_score }}</h4>
+                                <small class="opacity-75">Moyenne Générale</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="card bg-gradient-success text-white h-100">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="mr-3">
+                                <i class="fas fa-check-circle fa-2x"></i>
+                            </div>
+                            <div>
+                                <h4 class="mb-0">{{ pass_rate }}%</h4>
+                                <small class="opacity-75">Taux de Réussite</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="card bg-gradient-primary text-white h-100">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="mr-3">
+                                <i class="fas fa-trophy fa-2x"></i>
+                            </div>
+                            <div>
+                                <h4 class="mb-0">{{ excellence_rate }}%</h4>
+                                <small class="opacity-75">Taux d'Excellence</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Elite Statistics Section -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header bg-warning text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-chart-pie mr-2"></i>
+                                Répartition par Centre
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            {% for stat in elite_center_stats %}
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="text-muted">{{ stat.identifiant__centre }}</span>
+                                <span class="badge badge-warning">{{ stat.count }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-venus-mars mr-2"></i>
+                                Répartition par Genre
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            {% for stat in elite_gender_stats %}
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="text-muted">
+                                    {% if stat.identifiant__genre == 'M' %}
+                                        <i class="fas fa-male text-primary mr-1"></i>Masculin
+                                    {% else %}
+                                        <i class="fas fa-female text-pink mr-1"></i>Féminin
+                                    {% endif %}
+                                </span>
+                                <span class="badge badge-info">{{ stat.count }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Performers Section -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-trophy mr-2"></i>
+                                Meilleurs Elites Performers
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                {% for performer in top_performers %}
+                                <div class="col-md-2">
+                                    <div class="performer-card">
+                                        <div class="performer-avatar">
+                                            {% if performer.identifiant.imageprofile %}
+                                                <img src="{{ performer.identifiant.imageprofile.url }}" 
+                                                     alt="Photo de {{ performer.identifiant.nom }}"
+                                                     class="performer-photo">
+                                                <div class="performer-overlay">
+                                                    <i class="fas fa-trophy"></i>
+                                                </div>
+                                            {% else %}
+                                                <div class="performer-placeholder">
+                                                    <i class="fas fa-user"></i>
+                                                    <div class="performer-shine"></div>
+                                                </div>
+                                            {% endif %}
+                                            <div class="performer-rank">
+                                                <span class="rank-number">{{ forloop.counter }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="performer-info">
+                                            <h6 class="performer-name">{{ performer.identifiant.nom }}</h6>
+                                            <div class="performer-score">
+                                                <span class="score-badge">
+                                                    <i class="fas fa-star"></i>
+                                                    {{ performer.moyen|floatformat:2 }}/20
+                                                </span>
+                                            </div>
+                                            {% if performer.identifiant.Class %}
+                                                <div class="performer-class">{{ performer.identifiant.Class }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notes Table Component -->
+            <div class="card">
+                <div class="card-body p-0">
+                    {% include "main/components/TableNotesElite.html" %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.bg-gradient-warning {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.bg-gradient-info {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.bg-gradient-success {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.card {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+.text-pink {
+    color: #e91e63 !important;
+}
+
+/* Enhanced Performer Cards */
+.performer-card {
+    text-align: center;
+    padding: 1rem;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    border: 1px solid #e3e6ea;
+    position: relative;
+    overflow: hidden;
+}
+
+.performer-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #ffd700, #ffed4e, #ffd700);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.performer-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.performer-card:hover::before {
+    opacity: 1;
+}
+
+.performer-avatar {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 1rem;
+}
+
+.performer-photo {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #fff;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+}
+
+.performer-card:hover .performer-photo {
+    transform: scale(1.1);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+.performer-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.7);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.performer-card:hover .performer-overlay {
+    opacity: 1;
+}
+
+.performer-overlay i {
+    color: white;
+    font-size: 1.5rem;
+}
+
+.performer-placeholder {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2rem;
+    border: 4px solid #fff;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+.performer-shine {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    animation: shimmer 2s infinite;
+}
+
+.performer-rank {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 10;
+}
+
+.rank-number {
+    font-weight: bold;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+.performer-info {
+    text-align: center;
+}
+
+.performer-name {
+    font-weight: 600;
+    color: #2d3748;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+}
+
+.performer-score {
+    margin-bottom: 0.5rem;
+}
+
+.score-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: linear-gradient(135deg, #43e97b, #38f9d7);
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.performer-class {
+    font-size: 0.7rem;
+    color: #6c757d;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+@media print {
+    .btn, .card-header {
+        display: none !important;
+    }
+    
+    .card {
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+    }
+}
+</style>
+
+<script>
+function exportEliteNotes() {
+    // Implementation for exporting elite notes
+    console.log('Exporting elite notes...');
+    // Add export functionality
+}
+
+function printEliteNotes() {
+    window.print();
+}
+
+// Initialize tooltips and other interactive elements
+document.addEventListener('DOMContentLoaded', function() {
+    // Add any initialization code here
+    console.log('Elite notes page initialized');
+});
+</script>
+
+{% endblock %} 

@@ -1,0 +1,512 @@
+<!-- Madrassah students table — aligned with TablesEtudiants.html -->
+<div class="madrassah-table-root">
+    <div class="table-controls mb-4">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="search-box">
+                    <div class="input-group">
+                        <span class="input-group-text bg-primary text-white">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <input type="text" class="form-control" id="madrassahSearchInput"
+                               placeholder="Rechercher par nom..." value="{{ search|default:'' }}">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="filter-controls d-flex flex-wrap gap-2">
+                    <select class="form-select form-select-sm" id="madrassahCenterFilter" style="width: auto;">
+                        <option value="">Tous les centres</option>
+                        {% for centre in centres %}
+                            <option value="{{ centre }}" {% if centre == centre_filter %}selected{% endif %}>{{ centre }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <select class="form-select form-select-sm" id="madrassahClassFilter" style="width: auto;">
+                        <option value="">Toutes les classes madrassah</option>
+                        {% for class_name in classes_madressah %}
+                            <option value="{{ class_name }}" {% if class_name == class_filter %}selected{% endif %}>{{ class_name }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <select class="form-select form-select-sm" id="madrassahGenderFilter" style="width: auto;">
+                        <option value="">Tous les genres</option>
+                        <option value="M" {% if genre_filter == 'M' %}selected{% endif %}>Masculin</option>
+                        <option value="F" {% if genre_filter == 'F' %}selected{% endif %}>Féminin</option>
+                    </select>
+
+                    <select class="form-select form-select-sm" id="madrassahAgeFilter" style="width: auto;">
+                        <option value="">Tous les âges</option>
+                        <option value="-12" {% if age_filter == '-12' %}selected{% endif %}>-12 ans</option>
+                        <option value="12-16" {% if age_filter == '12-16' %}selected{% endif %}>12-16 ans</option>
+                        <option value="17-20" {% if age_filter == '17-20' %}selected{% endif %}>17-20 ans</option>
+                        <option value="21+" {% if age_filter == '21+' %}selected{% endif %}>21+ ans</option>
+                    </select>
+
+                    <button type="button" class="btn btn-outline-secondary btn-sm" id="madrassahClearFilters">
+                        <i class="fas fa-times"></i> Effacer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="stats-card bg-primary text-white">
+                <div class="stats-icon"><i class="fas fa-users"></i></div>
+                <div class="stats-content">
+                    <h3>{{ total_madrassah }}</h3>
+                    <p>Total Madrassah</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card bg-success text-white">
+                <div class="stats-icon"><i class="fas fa-male"></i></div>
+                <div class="stats-content">
+                    <h3>{{ male_count }}</h3>
+                    <p>Hommes ({{ male_percentage }}%)</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card bg-info text-white">
+                <div class="stats-icon"><i class="fas fa-female"></i></div>
+                <div class="stats-content">
+                    <h3>{{ female_count }}</h3>
+                    <p>Femmes ({{ female_percentage }}%)</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card bg-warning text-white">
+                <div class="stats-icon"><i class="fas fa-filter"></i></div>
+                <div class="stats-content">
+                    <h3>{{ filtered_count }}</h3>
+                    <p>Résultats filtrés</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-wrapper">
+        <div class="table-responsive">
+            <table class="table table-hover students-table" id="madrassahTable">
+                <thead class="table-dark">
+                    <tr>
+                        <th width="60">Photo</th>
+                        <th>Identifiant</th>
+                        <th>Nom</th>
+                        <th>Âge</th>
+                        <th>Genre</th>
+                        <th>Classe</th>
+                        <th>Centre</th>
+                        <th>Cl. académique</th>
+                        <th>Parent</th>
+                        <th>Adresse</th>
+                        <th width="140">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="madrassahTableBody">
+                    {% for madrassah in datas %}
+                    <tr class="student-row">
+                        <td>
+                            <div class="student-avatar">
+                                {% if madrassah.imageprofile %}
+                                    <img src="{{ madrassah.imageprofile.url }}" alt="{{ madrassah.nom }}"
+                                         class="avatar-img cursor-pointer" loading="lazy"
+                                         onclick="openModal('{{ madrassah.imageprofile.url|escapejs }}')" role="button">
+                                {% else %}
+                                    <div class="avatar-placeholder">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge bg-secondary">{{ madrassah.madrassahid }}</span>
+                        </td>
+                        <td>
+                            <div class="student-name">
+                                <strong>{{ madrassah.nom }}</strong>
+                            </div>
+                        </td>
+                        <td>
+                            {% if madrassah.age %}
+                                <span class="age-badge">{{ madrassah.age }} ans</span>
+                            {% else %}
+                                <span class="text-muted small">N/A</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="badge {% if madrassah.genre == 'M' %}bg-primary{% else %}bg-pink{% endif %}">
+                                {% if madrassah.genre == 'M' %}
+                                    <i class="fas fa-mars"></i> Masculin
+                                {% else %}
+                                    <i class="fas fa-venus"></i> Féminin
+                                {% endif %}
+                            </span>
+                        </td>
+                        <td>
+                            {% if madrassah.class_madressah %}
+                                <span class="class-badge">{{ madrassah.class_madressah }}</span>
+                            {% else %}
+                                <span class="text-muted small">N/A</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="center-badge">{{ madrassah.centre|default:"N/A" }}</span>
+                        </td>
+                        <td>
+                            {% if madrassah.class_academic %}
+                                <span class="badge bg-info">{{ madrassah.class_academic }}</span>
+                            {% else %}
+                                <span class="text-muted small">N/A</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="institution-name">{{ madrassah.parent|default:"N/A" }}</span>
+                        </td>
+                        <td>
+                            <small class="text-muted">{{ madrassah.adress|default:"N/A" }}</small>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="{% url 'viewMadrassah' madrassah.madrassahid %}" class="btn btn-lg btn-primary view-student-btn text-white text-decoration-none">
+                                    <i class="fas fa-eye me-2"></i>
+                                    Voir étudiant
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="11" class="text-center py-5">
+                            <div class="no-data">
+                                <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                                <h5 class="text-muted">Aucun étudiant trouvé</h5>
+                                <p class="text-muted">Essayez de modifier vos critères de recherche</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% if datas.has_other_pages %}
+    <nav aria-label="Navigation des pages madrassah">
+        <ul class="pagination justify-content-center">
+            {% if datas.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1{% if search %}&search={{ search|urlencode }}{% endif %}{% if centre_filter %}&centre={{ centre_filter|urlencode }}{% endif %}{% if genre_filter %}&genre={{ genre_filter|urlencode }}{% endif %}{% if age_filter %}&age={{ age_filter|urlencode }}{% endif %}{% if class_filter %}&class_madressah={{ class_filter|urlencode }}{% endif %}">
+                        <i class="fas fa-angle-double-left"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ datas.previous_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if centre_filter %}&centre={{ centre_filter|urlencode }}{% endif %}{% if genre_filter %}&genre={{ genre_filter|urlencode }}{% endif %}{% if age_filter %}&age={{ age_filter|urlencode }}{% endif %}{% if class_filter %}&class_madressah={{ class_filter|urlencode }}{% endif %}">
+                        <i class="fas fa-angle-left"></i>
+                    </a>
+                </li>
+            {% endif %}
+
+            {% for num in datas.paginator.page_range %}
+                {% if datas.number == num %}
+                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                {% elif num > datas.number|add:'-3' and num < datas.number|add:'3' %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if centre_filter %}&centre={{ centre_filter|urlencode }}{% endif %}{% if genre_filter %}&genre={{ genre_filter|urlencode }}{% endif %}{% if age_filter %}&age={{ age_filter|urlencode }}{% endif %}{% if class_filter %}&class_madressah={{ class_filter|urlencode }}{% endif %}">{{ num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if datas.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ datas.next_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if centre_filter %}&centre={{ centre_filter|urlencode }}{% endif %}{% if genre_filter %}&genre={{ genre_filter|urlencode }}{% endif %}{% if age_filter %}&age={{ age_filter|urlencode }}{% endif %}{% if class_filter %}&class_madressah={{ class_filter|urlencode }}{% endif %}">
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ datas.paginator.num_pages }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if centre_filter %}&centre={{ centre_filter|urlencode }}{% endif %}{% if genre_filter %}&genre={{ genre_filter|urlencode }}{% endif %}{% if age_filter %}&age={{ age_filter|urlencode }}{% endif %}{% if class_filter %}&class_madressah={{ class_filter|urlencode }}{% endif %}">
+                        <i class="fas fa-angle-double-right"></i>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+
+<style>
+.madrassah-table-root .table-controls {
+    background: #f8f9fa;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    padding: 1rem 1rem 0;
+}
+
+.madrassah-table-root .search-box .input-group-text {
+    border: none;
+    background: linear-gradient(45deg, #007bff, #0056b3);
+}
+
+.madrassah-table-root .search-box .form-control {
+    border-left: none;
+    padding-left: 0;
+}
+
+.madrassah-table-root .search-box .form-control:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+    border-color: #007bff;
+}
+
+.madrassah-table-root .filter-controls .form-select {
+    min-width: 150px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+}
+
+.madrassah-table-root .filter-controls .form-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+
+.madrassah-table-root .stats-card {
+    border-radius: 15px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.madrassah-table-root .stats-card:hover {
+    transform: translateY(-5px);
+}
+
+.madrassah-table-root .stats-icon {
+    font-size: 2.5rem;
+    margin-right: 1rem;
+    opacity: 0.8;
+}
+
+.madrassah-table-root .stats-content h3 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.madrassah-table-root .stats-content p {
+    margin: 0;
+    opacity: 0.9;
+}
+
+.madrassah-table-root .bg-pink {
+    background-color: #e91e63 !important;
+}
+
+.madrassah-table-root .table-wrapper {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.madrassah-table-root .students-table {
+    margin: 0;
+}
+
+.madrassah-table-root .students-table thead th {
+    background: linear-gradient(45deg, #343a40, #495057);
+    border: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.madrassah-table-root .student-row {
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+}
+
+.madrassah-table-root .student-row:hover {
+    background-color: #f8f9fa;
+    border-left-color: #007bff;
+    transform: translateX(5px);
+}
+
+.madrassah-table-root .student-avatar { position: relative; }
+
+.madrassah-table-root .avatar-img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.madrassah-table-root .avatar-placeholder {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.madrassah-table-root .student-name strong {
+    color: #2c3e50;
+    font-size: 1rem;
+}
+
+.madrassah-table-root .age-badge {
+    background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.madrassah-table-root .class-badge {
+    background: linear-gradient(45deg, #4ecdc4, #44a08d);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.madrassah-table-root .center-badge {
+    background: linear-gradient(45deg, #f093fb, #f5576c);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.madrassah-table-root .institution-name {
+    color: #495057;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.madrassah-table-root .action-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.madrassah-table-root .view-student-btn {
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    border: none;
+    min-width: 100px;
+}
+
+.madrassah-table-root .view-student-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4);
+    color: #fff !important;
+}
+
+.madrassah-table-root .no-data { padding: 3rem; }
+
+.madrassah-table-root .pagination {
+    margin: 2rem 0 0 0;
+}
+
+.madrassah-table-root .page-link {
+    border-radius: 8px;
+    margin: 0 2px;
+    border: 1px solid #dee2e6;
+    color: #007bff;
+    transition: all 0.3s ease;
+}
+
+.madrassah-table-root .page-link:hover {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.madrassah-table-root .page-item.active .page-link {
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    border-color: #007bff;
+    box-shadow: 0 4px 8px rgba(0,123,255,0.3);
+}
+
+.madrassah-table-root .cursor-pointer { cursor: pointer; }
+
+@media (max-width: 768px) {
+    .madrassah-table-root .filter-controls .form-select {
+        margin-bottom: 0.5rem;
+        min-width: 100%;
+    }
+    .madrassah-table-root .stats-card {
+        text-align: center;
+        flex-direction: column;
+    }
+    .madrassah-table-root .stats-icon {
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('madrassahSearchInput');
+    const centerFilter = document.getElementById('madrassahCenterFilter');
+    const classFilter = document.getElementById('madrassahClassFilter');
+    const genderFilter = document.getElementById('madrassahGenderFilter');
+    const ageFilter = document.getElementById('madrassahAgeFilter');
+    const clearBtn = document.getElementById('madrassahClearFilters');
+
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    function applyMadrassahFilters() {
+        const params = new URLSearchParams();
+        if (searchInput && searchInput.value) params.set('search', searchInput.value);
+        if (centerFilter && centerFilter.value) params.set('centre', centerFilter.value);
+        if (classFilter && classFilter.value) params.set('class_madressah', classFilter.value);
+        if (genderFilter && genderFilter.value) params.set('genre', genderFilter.value);
+        if (ageFilter && ageFilter.value) params.set('age', ageFilter.value);
+        window.location.href = '?' + params.toString();
+    }
+
+    if (searchInput) searchInput.addEventListener('input', debounce(applyMadrassahFilters, 500));
+    if (centerFilter) centerFilter.addEventListener('change', applyMadrassahFilters);
+    if (classFilter) classFilter.addEventListener('change', applyMadrassahFilters);
+    if (genderFilter) genderFilter.addEventListener('change', applyMadrassahFilters);
+    if (ageFilter) ageFilter.addEventListener('change', applyMadrassahFilters);
+    if (clearBtn) clearBtn.addEventListener('click', function() {
+        window.location.href = window.location.pathname;
+    });
+});
+</script>

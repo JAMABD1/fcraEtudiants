@@ -1,0 +1,87 @@
+ 
+     
+        
+             
+            <div class="bg-white p-6 rounded-lg shadow-md     ">
+                <h1 class="text-2xl font-bold text-green-600 text-center mb-4">Distribution Selon Genre</h1>
+                <!-- Center Filter Dropdown -->
+                <div class="mb-4">
+                    <select id="centerSelectGender" class="block w-full p-2 border border-gray-300 rounded-md">
+                        <option value="">Tous les Centres</option>
+                        <option value="Antaniavo">Antaniavo</option>
+                        <option value="Ankarobato">Ankarobato</option>
+                        <option value="Manakara">Manakara</option>
+                        <option value="Andakana">Andakana</option>
+                        <option value="Sakoana">Sakoana</option>
+                    </select>
+                </div>
+                <div class="relative">
+                <canvas id="genderChart" width="200" height="200"></canvas>
+                </div>
+            </div>
+       
+   
+   
+ 
+ 
+<script>
+    const centerSelect = document.getElementById('centerSelectGender');
+    let genderChart;  // Variable to store the chart instance
+
+    // Function to fetch and render the gender distribution chart
+    const fetchGenderDistribution = (center) => {
+        fetch(`/api/gender-distribution/?center=${center}`)
+            .then(response => response.json())
+            .then(data => {
+                const ctx = document.getElementById('genderChart').getContext('2d');
+
+                // Destroy the existing chart instance if it exists
+                if (genderChart) {
+                    genderChart.destroy();
+                }
+
+                // Create a new chart instance
+                genderChart = new Chart(ctx, {
+                    type: 'pie',  // Change to 'bar' if you want a bar chart
+                    data: {
+                        labels: data.labels.map(label => label === 'M' ? 'Homme' : 'Femme'), // Map M and F to readable labels
+                        datasets: [{
+                            label: 'Distribution par Genre',
+                            data: data.data,
+                            backgroundColor: [
+                                'rgba(75, 192, 192, 0.6)',  // Color for Male
+                                'rgba(255, 99, 132, 0.6)',  // Color for Female
+                            ],
+                            borderColor: [
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(255, 99, 132, 1)',
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                display: true,
+                                text: 'Distribution des Étudiants par Genre'
+                            }
+                        }
+                    }
+                });
+            });
+    };
+
+    // Initial fetch for all centers
+    fetchGenderDistribution('');
+
+    // Event listener for the center select dropdown
+    centerSelect.addEventListener('change', (event) => {
+        const selectedCenter = event.target.value;
+        fetchGenderDistribution(selectedCenter);
+    });
+</script>
+

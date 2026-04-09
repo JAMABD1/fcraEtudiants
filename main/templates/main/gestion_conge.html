@@ -1,0 +1,321 @@
+{% extends "main/base.html" %}
+{% block title %} Gestionnaire de Congés {% endblock %}
+{% block content %}
+<div class="p-6">
+    <!-- Header Section -->
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800">
+                <i class="fas fa-calendar-alt text-primary mr-3"></i>
+                Gestionnaire de Congés
+            </h1>
+            <p class="text-gray-600">Suivi et administration des absences du personnel</p>
+        </div>
+        <div class="flex gap-2">
+            <a href="/personnel" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg border hover:bg-gray-200 transition duration-200">
+                <i class="fas fa-users mr-2"></i>Liste Personnel
+            </a>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-xl shadow-lg">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-primary text-sm font-medium">Total des Congés</p>
+                    <p class="text-2xl font-bold text-black">{{ total_conges }}</p>
+                </div>
+                <div class="text-3xl opacity-80"><i class="fas fa-history"></i></div>
+            </div>
+        </div>
+        
+        <div class="bg-gradient-to-r from-green-500 to-green-600 text-white p-4 rounded-xl shadow-lg">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-success text-sm font-medium">Congés en Cours</p>
+                    <p class="text-2xl font-bold text-black">{{ current_leaves_count }}</p>
+                </div>
+                <div class="text-3xl opacity-80"><i class="fas fa-user-clock"></i></div>
+            </div>
+        </div>
+
+        {% for stat in type_stats %}
+        <div class="bg-white p-4 rounded-xl shadow-md border-l-4 
+            {% if stat.statut == 'Congé' %}border-primary{% elif stat.statut == 'Maladie' %}border-success{% elif stat.statut == 'Famille' %}border-warning{% else %}border-black{% endif %}">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-black text-sm font-medium">{{ stat.statut }}</p>
+                    <p class="text-2xl font-bold text-black">{{ stat.count }}</p>
+                </div>
+                <div class="text-2xl text-black">
+                    {% if stat.statut == 'Congé' %}<i class="fas fa-sun"></i>{% elif stat.statut == 'Maladie' %}<i class="fas fa-briefcase-medical"></i>{% elif stat.statut == 'Famille' %}<i class="fas fa-users"></i>{% else %}<i class="fas fa-info-circle"></i>{% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Main Table Container -->
+    <div class="personnel-table-container bg-white rounded-2xl shadow-xl p-6 mb-8">
+        <!-- Search and Filters Section -->
+        <div class="table-controls mb-6 bg-gray-50 p-4 rounded-xl border border-gray-200">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text bg-primary text-white border-0">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <input type="text" class="form-control" id="searchInput" placeholder="Rechercher par nom ou matricule...">
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="flex flex-wrap gap-2 justify-md-end">
+                        <select class="form-select form-select-sm w-auto" id="typeFilter">
+                            <option value="">Tous les types</option>
+                            <option value="Congé">Congé annuel</option>
+                            <option value="Maladie">Maladie</option>
+                            <option value="Famille">Famille</option>
+                            <option value="Autre">Autre</option>
+                        </select>
+                        
+                        <select class="form-select form-select-sm w-auto" id="currentLeaveFilter">
+                            <option value="">Tous les congés</option>
+                            <option value="yes">En congé actuellement</option>
+                            <option value="no">Pas en congé actuellement</option>
+                        </select>
+                        
+                        <select class="form-select form-select-sm w-auto" id="remainingFilter">
+                            <option value="">Tous les congés restants</option>
+                            <option value="0">0 jour</option>
+                            <option value="<10">Moins de 10 jours</option>
+                            <option value="15">15 jours</option>
+                        </select>
+                        
+                        <button class="btn btn-outline-secondary btn-sm" id="clearFilters">
+                            <i class="fas fa-times mr-1"></i> Réinitialiser
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table Wrapper -->
+        <div class="table-wrapper rounded-xl overflow-hidden border border-gray-100 shadow-sm">
+            <div class="table-header bg-gradient-to-r from-gray-800 to-gray-900 text-white p-4">
+                <h2 class="table-title text-xl font-semibold flex justify-between items-center m-0">
+                    <span><i class="fas fa-list-ul mr-2"></i>Liste des Congés Enregistrés</span>
+                    <span class="result-count text-sm font-normal opacity-80">{{ conges|length }} entrées</span>
+                </h2>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-hover mb-0" id="congeTable">
+                    <thead class="bg-gray-100 text-gray-600 small uppercase font-bold">
+                        <tr>
+                            <th class="px-4 py-3 border-0">Personnel</th>
+                            <th class="py-3 border-0">Période</th>
+                            <th class="py-3 border-0">Durée</th>
+                            <th class="py-3 border-0">Congés Restants</th>
+                            <th class="py-3 border-0">Type</th>
+                            <th class="py-3 border-0">Raison</th>
+                            <th class="text-right px-4 py-3 border-0">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="congeTableBody">
+                        {% for conge in conges %}
+                        {% with remaining=conge.identifiant.get_remaining_conges %}
+                        <tr class="conge-row transition-all duration-200 hover:bg-gray-50" 
+                            data-date-debut="{{ conge.date_debut|date:'Y-m-d' }}"
+                            data-date-fin="{{ conge.date_fin|date:'Y-m-d' }}"
+                            data-remaining="{{ remaining }}">
+                            <td class="px-4 py-4">
+                                <div class="flex items-center">
+                                    <div class="mr-3">
+                                        {% if conge.identifiant.imageprofile %}
+                                            <img src="{{ conge.identifiant.imageprofile.url }}" class="rounded-full border shadow-sm object-cover" width="45" height="45">
+                                        {% else %}
+                                            <div class="bg-gray-200 text-gray-500 rounded-full flex items-center justify-center w-[45px] h-[45px] font-bold">
+                                                {{ conge.identifiant.nom.0|upper }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        <div class="font-bold text-gray-800 personnel-name">{{ conge.identifiant.nom }}</div>
+                                        <div class="text-xs text-gray-500 matricule-badge"><i class="fas fa-id-badge mr-1"></i>{{ conge.identifiant.identifiant }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-4">
+                                <div class="text-sm font-medium text-gray-700">
+                                    <span class="text-blue-600"><i class="far fa-calendar-alt mr-1"></i>{{ conge.date_debut|date:"d M Y" }}</span>
+                                    <span class="mx-1 text-gray-400">→</span>
+                                    <span class="text-red-500"><i class="far fa-calendar-check mr-1"></i>{{ conge.date_fin|date:"d M Y" }}</span>
+                                </div>
+                            </td>
+                            <td class="py-4">
+                                <span class="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-bold">
+                                    {{ conge.nombre_jours }} jour{{ conge.nombre_jours|pluralize }}
+                                </span>
+                            </td>
+                            <td class="py-4">
+                                <span class="px-3 py-1 rounded-full text-xs font-bold 
+                                    {% if remaining > 5 %}bg-green-100 text-green-700{% elif remaining > 0 %}bg-yellow-100 text-yellow-700{% else %}bg-red-100 text-red-700{% endif %}">
+                                    <i class="fas fa-calendar-check mr-1"></i>{{ remaining }} jour{{ remaining|pluralize }}
+                                </span>
+                            </td>
+                            <td class="py-4">
+                                <span class="type-badge px-3 py-1 rounded-full text-xs font-bold 
+                                    {% if conge.statut == 'Congé' %}bg-blue-100 text-blue-700{% elif conge.statut == 'Maladie' %}bg-red-100 text-red-700{% elif conge.statut == 'Famille' %}bg-yellow-100 text-yellow-700{% else %}bg-gray-100 text-gray-700{% endif %}">
+                                    {{ conge.statut }}
+                                </span>
+                            </td>
+                            <td class="py-4 text-sm text-gray-600" style="max-width: 250px;">
+                                <div class="truncate" title="{{ conge.raison }}">
+                                    {{ conge.raison|default:"-" }}
+                                </div>
+                            </td>
+                            <td class="text-right px-4 py-4">
+                                <a href="{% url 'viewPersonnel' conge.identifiant.id %}" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition" title="Voir Dossier Personnel">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endwith %}
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center py-12 text-gray-400">
+                                <div class="mb-4">
+                                    <i class="fas fa-calendar-times fa-4x opacity-20"></i>
+                                </div>
+                                <p class="text-lg">Aucun enregistrement de congé</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.personnel-table-container {
+    transition: all 0.3s ease;
+}
+
+.table-wrapper {
+    transition: all 0.3s ease;
+}
+
+.conge-row {
+    transition: all 0.2s ease;
+}
+
+.conge-row:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.type-badge {
+    transition: all 0.2s ease;
+}
+
+/* Modal animation */
+.modal.fade .modal-dialog {
+    transition: transform 0.3s ease-out;
+    transform: translateY(-20px);
+}
+.modal.show .modal-dialog {
+    transform: translateY(0);
+}
+
+#tableLoading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255,255,255,0.7);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const typeFilter = document.getElementById('typeFilter');
+    const currentLeaveFilter = document.getElementById('currentLeaveFilter');
+    const remainingFilter = document.getElementById('remainingFilter');
+    const clearFilters = document.getElementById('clearFilters');
+    const rows = document.querySelectorAll('.conge-row');
+    const resultCount = document.querySelector('.result-count');
+
+    function filterTable() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const typeValue = typeFilter.value.toLowerCase();
+        const currentLeaveValue = currentLeaveFilter.value;
+        const remainingValue = remainingFilter.value;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+            const name = row.querySelector('.personnel-name').textContent.toLowerCase();
+            const matricule = row.querySelector('.matricule-badge').textContent.toLowerCase();
+            const type = row.querySelector('.type-badge').textContent.toLowerCase();
+            const dateDebut = new Date(row.getAttribute('data-date-debut'));
+            const dateFin = new Date(row.getAttribute('data-date-fin'));
+            const remaining = parseInt(row.getAttribute('data-remaining')) || 0;
+            
+            dateDebut.setHours(0, 0, 0, 0);
+            dateFin.setHours(0, 0, 0, 0);
+            
+            const isCurrentlyOnLeave = dateDebut <= today && dateFin >= today;
+            
+            const matchesSearch = name.includes(searchTerm) || matricule.includes(searchTerm);
+            const matchesType = !typeValue || type.includes(typeValue);
+            const matchesCurrentLeave = !currentLeaveValue || 
+                (currentLeaveValue === 'yes' && isCurrentlyOnLeave) || 
+                (currentLeaveValue === 'no' && !isCurrentlyOnLeave);
+            
+            let matchesRemaining = true;
+            if (remainingValue) {
+                if (remainingValue === '0') {
+                    matchesRemaining = remaining === 0;
+                } else if (remainingValue === '<10') {
+                    matchesRemaining = remaining > 0 && remaining < 10;
+                } else if (remainingValue === '15') {
+                    matchesRemaining = remaining === 15;
+                }
+            }
+
+            if (matchesSearch && matchesType && matchesCurrentLeave && matchesRemaining) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        resultCount.textContent = `${visibleCount} entrées`;
+    }
+
+    searchInput.addEventListener('input', filterTable);
+    typeFilter.addEventListener('change', filterTable);
+    currentLeaveFilter.addEventListener('change', filterTable);
+    remainingFilter.addEventListener('change', filterTable);
+    
+    clearFilters.addEventListener('click', function() {
+        searchInput.value = '';
+        typeFilter.value = '';
+        currentLeaveFilter.value = '';
+        remainingFilter.value = '';
+        filterTable();
+    });
+});
+</script>
+{% endblock %}

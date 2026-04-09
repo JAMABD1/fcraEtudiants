@@ -1,0 +1,142 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block title%} Jamat {% endblock %}
+{% block content %}
+
+<div class="mx-auto mt-8">
+    <h1 class="text-2xl font-bold mb-4">Liste des Jamats de Zainabia</h1>
+    
+    <!-- Filter Toolbar (single-line with labels in French) -->
+    <form method="GET" action="{% url 'jamat' %}" class="mb-4">
+        <div class="flex items-end flex-nowrap gap-4 overflow-x-auto whitespace-nowrap bg-white border rounded-lg shadow p-3">
+            <div class="flex flex-col w-56 flex-shrink-0">
+                <label for="search" class="text-xs font-semibold text-gray-600 mb-1">Filtrer par nom</label>
+                <input id="search" type="text" name="search" value="{{ search }}" placeholder="Ex: Ahmed, Fatima..." class="border rounded-lg p-2 h-[42px] focus:outline-none focus:ring-2 focus:ring-green-500" />
+            </div>
+
+            <div class="flex flex-col w-56 flex-shrink-0">
+                <label for="centre" class="text-xs font-semibold text-gray-600 mb-1">Filtrer par centre</label>
+                <select id="centre" name="centre" class="border rounded-lg p-2 h-[42px] focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <option value="">Tous les centres</option>
+                    {% for centre in centres %}
+                        <option value="{{ centre }}" {% if centre == centre_filter %}selected{% endif %}>{{ centre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="flex flex-col w-44 flex-shrink-0">
+                <label for="genre" class="text-xs font-semibold text-gray-600 mb-1">Filtrer par genre</label>
+                <select id="genre" name="genre" class="border rounded-lg p-2 h-[42px] focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <option value="">Tous</option>
+                    <option value="M" {% if genre_filter == 'M' %}selected{% endif %}>Masculin</option>
+                    <option value="F" {% if genre_filter == 'F' %}selected{% endif %}>Féminin</option>
+                </select>
+            </div>
+
+            <div class="flex flex-col w-48 flex-shrink-0">
+                <label for="age" class="text-xs font-semibold text-gray-600 mb-1">Filtrer par âge</label>
+                <select id="age" name="age" class="border rounded-lg p-2 h-[42px] focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <option value="">Toutes les tranches</option>
+                    <option value="-25" {% if age_filter == '-25' %}selected{% endif %}>-25 ans</option>
+                    <option value="25-35" {% if age_filter == '25-35' %}selected{% endif %}>25-35 ans</option>
+                    <option value="36-50" {% if age_filter == '36-50' %}selected{% endif %}>36-50 ans</option>
+                    <option value="51+" {% if age_filter == '51+' %}selected{% endif %}>51+ ans</option>
+                </select>
+            </div>
+
+            <div class="flex flex-col w-56 flex-shrink-0">
+                <label for="conversion_year" class="text-xs font-semibold text-gray-600 mb-1">Année de conversion</label>
+                <select id="conversion_year" name="conversion_year" class="border rounded-lg p-2 h-[42px] focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <option value="">Toutes les années</option>
+                    {% for year in conversion_years %}
+                        <option value="{{ year }}" {% if year|stringformat:"s" == conversion_year_filter|stringformat:"s" %}selected{% endif %}>{{ year }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="flex flex-col w-56 flex-shrink-0">
+                <label for="travail" class="text-xs font-semibold text-gray-600 mb-1">Filtrer par travail</label>
+                <select id="travail" name="travail" class="border rounded-lg p-2 h-[42px] focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <option value="">Tous les travaux</option>
+                    {% for travail in travails %}
+                        <option value="{{ travail }}" {% if travail == travail_filter %}selected{% endif %}>{{ travail }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="flex flex-col w-56 flex-shrink-0">
+                <label for="adress" class="text-xs font-semibold text-gray-600 mb-1">Filtrer par adresse</label>
+                <select id="adress" name="adress" class="border rounded-lg p-2 h-[42px] focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <option value="">Toutes les adresses</option>
+                    {% for adress in adresses %}
+                        <option value="{{ adress }}" {% if adress == adress_filter %}selected{% endif %}>{{ adress }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="flex flex-col w-56 flex-shrink-0">
+                <label for="email" class="text-xs font-semibold text-gray-600 mb-1">Email disponible</label>
+                <select id="email" name="email" class="border rounded-lg p-2 h-[42px] focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <option value="">Tous</option>
+                    <option value="yes" {% if email_filter == 'yes' %}selected{% endif %}>Avec email</option>
+                    <option value="no" {% if email_filter == 'no' %}selected{% endif %}>Sans email</option>
+                </select>
+            </div>
+
+            <div class="flex items-center gap-2 flex-shrink-0">
+                <button type="submit" class="bg-primary hover:bg-green-700 text-white p-2 rounded-lg font-medium">Filtrer</button>
+                <a href="{% url 'jamat' %}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 h-[42px] rounded-lg font-medium inline-flex items-center">Réinitialiser</a>
+            </div>
+        </div>
+    </form>
+
+    <div class="mb-4">
+        <span class="text-sm text-gray-600">Total trouvé: {{ lenght_doc }} jamat{{ lenght_doc|pluralize }}</span>
+    </div>
+
+    {% include 'main/components/TableJamat.html' with datas=jamats %}
+</div>
+<div id="imageModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-lg p-4 relative">
+        <span id="closeModal" class="absolute top-2 right-2 cursor-pointer text-gray-600">&times;</span>
+        <img id="modalImage" src="" alt="Profile" class="max-w-full max-h-[80vh] object-contain" />
+    </div>
+</div>
+
+<!--Modal Script -->
+<script>
+    function openModal(imageUrl) {
+        document.getElementById('modalImage').src = imageUrl;
+        document.getElementById('imageModal').classList.remove('hidden');
+    }
+
+    document.getElementById('closeModal').onclick = function() {
+        document.getElementById('imageModal').classList.add('hidden');
+    }
+
+    // Close modal when clicking outside of the image
+    window.onclick = function(event) {
+        if (event.target == document.getElementById('imageModal')) {
+            document.getElementById('imageModal').classList.add('hidden');
+        }
+    }
+</script>
+ 
+{% endblock content %}
+
+{% block extra_css %}
+<style>
+  /* Prevent unexpected white strip at the bottom/footer by ensuring full-height and background */
+  html, body {
+    height: 100%;
+    background-color: #f3f4f6; /* tailwind gray-100 */
+  }
+  /* Ensure page container doesn't leave a gap at bottom */
+  #app, .min-h-screen {
+    min-height: 100vh;
+    background-color: #f3f4f6;
+  }
+  /* Remove extra margin/padding causing white footer if any */
+  footer { background-color: #f3f4f6; }
+</style>
+{% endblock %}

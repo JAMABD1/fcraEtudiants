@@ -1,0 +1,424 @@
+
+
+<!-- Enhanced Elite Table Component -->
+<div class="elites-table-container">
+    <!-- Search and Filters Section -->
+    <div class="table-controls mb-4">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="search-box">
+                    <div class="input-group">
+                        <span class="input-group-text bg-primary text-white">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <input type="text" class="form-control" id="searchInput" 
+                               placeholder="Rechercher par nom..." value="{{ search_query }}">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="filter-controls d-flex flex-wrap gap-2">
+                    <!-- Center Filter -->
+                    <select class="form-select form-select-sm" id="centerFilter" style="width: auto;">
+                        <option value="">Tous les centres</option>
+                        {% for center in centres %}
+                            <option value="{{ center }}" {% if center == centre_filter %}selected{% endif %}>
+                                {{ center }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <!-- Class Filter -->
+                    <select class="form-select form-select-sm" id="classFilter" style="width: auto;">
+                        <option value="">Toutes les classes</option>
+                        {% for class in classes %}
+                            <option value="{{ class }}" {% if class == class_filter %}selected{% endif %}>
+                                {{ class }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <!-- Gender Filter -->
+                    <select class="form-select form-select-sm" id="genderFilter" style="width: auto;">
+                        <option value="">Tous les genres</option>
+                        <option value="M" {% if genre_filter == 'M' %}selected{% endif %}>Masculin</option>
+                        <option value="F" {% if genre_filter == 'F' %}selected{% endif %}>Féminin</option>
+                    </select>
+
+                    <!-- Institution Filter -->
+                    <select class="form-select form-select-sm" id="institutionFilter" style="width: auto;">
+                        <option value="">Toutes les institutions</option>
+                        {% for institution in institutions %}
+                            <option value="{{ institution }}" {% if institution == institution_filter %}selected{% endif %}>
+                                {{ institution }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <!-- Age Filter -->
+                    <select class="form-select form-select-sm" id="ageFilter" style="width: auto;">
+                        <option value="">Tous les âges</option>
+                        <option value="3-10" {% if age_filter == '3-10' %}selected{% endif %}>3-10 ans</option>
+                        <option value="11-14" {% if age_filter == '11-14' %}selected{% endif %}>11-14 ans</option>
+                        <option value="15-18" {% if age_filter == '15-18' %}selected{% endif %}>15-18 ans</option>
+                        <option value="19-21" {% if age_filter == '19-21' %}selected{% endif %}>19-21 ans</option>
+                        <option value="22-25" {% if age_filter == '22-25' %}selected{% endif %}>22-25 ans</option>
+                        <option value="26+" {% if age_filter == '26+' %}selected{% endif %}>26+ ans</option>
+                    </select>
+
+                    <!-- Fillier Filter -->
+                    <select class="form-select form-select-sm" id="fillierFilter" style="width: auto;">
+                        <option value="">Toutes les filières</option>
+                        {% for fillier in filliers %}
+                            <option value="{{ fillier }}" {% if fillier == fillier_filter %}selected{% endif %}>
+                                {{ fillier }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <!-- Clear Filters Button -->
+                    <button class="btn btn-outline-secondary btn-sm" id="clearFilters">
+                        <i class="fas fa-times"></i> Effacer
+                        <span class="filter-count-badge" id="filterCountBadge" style="display: none;">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="stats-card bg-primary text-white">
+                <div class="stats-icon">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+                <div class="stats-content">
+                     <h3>{{ total_orphelins }}</h3>
+                    <p>Total Elites</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card bg-success text-white">
+                <div class="stats-icon">
+                    <i class="fas fa-mars"></i>
+                </div>
+                <div class="stats-content">
+                    <h3>{{ male_count }}</h3>
+                    <p>Garçons ({{ male_percentage }}%)</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card bg-info text-white">
+                <div class="stats-icon">
+                    <i class="fas fa-venus"></i>
+                </div>
+                <div class="stats-content">
+                    <h3>{{ female_count }}</h3>
+                    <p>Filles ({{ female_percentage }}%)</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card bg-warning text-white">
+                <div class="stats-icon">
+                    <i class="fas fa-filter"></i>
+                </div>
+                <div class="stats-content">
+                    <h3>{{ filtered_count }}</h3>
+                    <p>Résultats filtrés</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Statistics -->
+    <div class="row mb-4">
+        <!-- Age Distribution -->
+        <div class="col-md-3">
+            <div class="detail-card">
+                <h5 class="card-title">
+                    <i class="fas fa-chart-bar text-primary"></i>
+                    Distribution par Âge
+                </h5>
+                <div class="stats-list">
+                    {% for age_range, count in orphan_age_groups.items %}
+                    <div class="stat-item">
+                        <span class="stat-label">{{ age_range }} ans</span>
+                        <div class="stat-bar">
+                            <div class="stat-progress progress-bar" 
+                                 data-count="{{ count }}" 
+                                 data-total="{{ total_orphelins }}"></div>
+                        </div>
+                        <span class="stat-value">{{ count }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Center Distribution -->
+        <div class="col-md-3">
+            <div class="detail-card">
+                <h5 class="card-title">
+                    <i class="fas fa-building text-info"></i>
+                    Centres
+                </h5>
+                <div class="stats-list">
+                    {% for center in center_stats|slice:":5" %}
+                    <div class="stat-item">
+                        <span class="stat-label">{{ center.centre|default:"Non spécifié" }}</span>
+                        <span class="stat-badge badge-blue">{{ center.count }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Institution Distribution -->
+        <div class="col-md-3">
+            <div class="detail-card">
+                <h5 class="card-title">
+                    <i class="fas fa-university text-success"></i>
+                    Institutions
+                </h5>
+                <div class="stats-list">
+                    {% for institution in institution_stats|slice:":5" %}
+                    <div class="stat-item">
+                        <span class="stat-label">{{ institution.institution|default:"Non spécifié" }}</span>
+                        <span class="stat-badge badge-green">{{ institution.count }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Class Distribution -->
+        <div class="col-md-3">
+            <div class="detail-card">
+                <h5 class="card-title">
+                    <i class="fas fa-graduation-cap text-warning"></i>
+                    Classes
+                </h5>
+                <div class="stats-list">
+                    {% for class in class_stats|slice:":5" %}
+                    <div class="stat-item">
+                        <span class="stat-label">{{ class.Class|default:"Non spécifié" }}</span>
+                        <span class="stat-badge badge-yellow">{{ class.count }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Table -->
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="bg-light">
+                <tr>
+                    <th>Photo</th>
+                    <th>Nom</th>
+                    <th>Centre</th>
+                    <th>Institution</th>
+                    <th>Classe</th>
+                    <th>Genre</th>
+                    <th>Âge</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in datas %}
+                <tr>
+                    <td>
+                        {% if data.imageprofile %}
+                            <img src="{{ data.imageprofile.url }}" alt="Profile" 
+                                 class="rounded-circle cursor-pointer" 
+                                 style="width: 40px; height: 40px; object-fit: cover;"
+                                  onclick="openModal('{{ data.imageprofile.url }}')"
+                            >
+                        {% else %}
+                            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center"
+                                 style="width: 40px; height: 40px;">
+                                <i class="fas fa-user text-white"></i>
+                            </div>
+                        {% endif %}
+                    </td>
+                    <td>{{ data.nom }}</td>
+                    <td>{{ data.centre }}</td>
+                    <td>{{ data.institution }}</td>
+                    <td>{{ data.Class }}</td>
+                    <td>
+                        {% if data.genre == 'M' %}
+                            <span class="badge bg-primary">Masculin</span>
+                        {% else %}
+                            <span class="badge bg-pink">Féminin</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ data.Age }} ans</td>
+                    <td>
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-info" 
+                                    onclick="viewStudent('{{ data.identifiant }}')" 
+                                    title="Voir Étudiant">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-sm btn-warning" 
+                                    onclick="editStudent('{{ data.identifiant }}')" 
+                                    title="Modifier Étudiant">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" 
+                                    onclick="deleteStudent({{ data.id }})" 
+                                    title="Supprimer Étudiant">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Custom Styles -->
+<style>
+.stats-card {
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.stats-icon {
+    font-size: 2rem;
+    margin-right: 1rem;
+    opacity: 0.8;
+}
+
+.stats-content h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.stats-content p {
+    margin: 0;
+    opacity: 0.8;
+}
+
+.detail-card {
+    background: white;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card-title {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.stats-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: #666;
+}
+
+.stat-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.badge-blue { background: #e3f2fd; color: #1976d2; }
+.badge-green { background: #e8f5e9; color: #2e7d32; }
+.badge-yellow { background: #fff8e1; color: #f57f17; }
+.badge-purple { background: #f3e5f5; color: #7b1fa2; }
+.badge-orange { background: #fff3e0; color: #e65100; }
+.badge-red { background: #ffebee; color: #c62828; }
+.badge-gray { background: #f5f5f5; color: #616161; }
+
+.stat-bar {
+    flex: 1;
+    height: 4px;
+    background: #e0e0e0;
+    border-radius: 2px;
+    margin: 0 0.5rem;
+    overflow: hidden;
+}
+
+.stat-progress {
+    height: 100%;
+    background: #2196f3;
+    width: 0;
+    transition: width 0.3s ease;
+}
+
+.filter-count-badge {
+    background: #e91e63;
+    color: white;
+    padding: 0.125rem 0.375rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    margin-left: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .filter-controls {
+        flex-direction: column;
+    }
+    
+    .form-select {
+        width: 100% !important;
+        margin-bottom: 0.5rem;
+    }
+}
+</style>
+
+<!-- Initialize Progress Bars -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const progressBars = document.querySelectorAll('.stat-progress');
+    progressBars.forEach(bar => {
+        const count = parseInt(bar.dataset.count);
+        const total = parseInt(bar.dataset.total);
+        const percentage = (count / total) * 100;
+        bar.style.width = percentage + '%';
+    });
+});
+
+// Action functions for Elite students
+function viewStudent(identifiant) {
+    window.location.href = `/student/view/${identifiant}`;
+}
+
+function editStudent(identifiant) {
+    // Navigate to edit page - you may need to adjust this URL based on your routing
+    window.location.href = `/student/edit?identifiant=${identifiant}`;
+}
+
+function deleteStudent(studentId) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cet étudiant ?')) {
+        window.location.href = `/student/${studentId}`;
+    }
+}
+</script> 

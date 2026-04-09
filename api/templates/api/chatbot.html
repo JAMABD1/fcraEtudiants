@@ -1,0 +1,509 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Chatbot IA{% endblock %}
+
+{% block content %}
+<!-- Font Awesome pour les icônes -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Tailwind CDN pour s'assurer que toutes les classes fonctionnent -->
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+<!-- Marked.js pour le parsing Markdown -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<!-- Chart.js pour les graphiques -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="flex h-screen bg-[#f8f9fa] overflow-hidden font-sans m-0 p-0 border-none">
+    
+    <!-- Barre latérale pour l'historique -->
+    <div id="chat-sidebar" class="w-80 bg-white border-r border-gray-100 flex flex-col transition-all duration-300 z-20">
+        <div class="p-6 border-b border-gray-50">
+            <button id="new-chat-btn" class="w-full flex items-center justify-center gap-3 bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-2xl shadow-lg shadow-blue-100 transition-all transform active:scale-95 font-semibold">
+                <i class="fas fa-plus"></i> Nouvelle Discussion
+            </button>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto p-4 space-y-2" id="conversations-list">
+            <div class="flex items-center justify-between px-2 mb-4">
+                <p class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Historique</p>
+                <button id="delete-all-btn" class="text-[10px] font-bold text-red-400 hover:text-red-600 uppercase tracking-widest transition-colors flex items-center gap-1" title="Supprimer tout l'historique">
+                    <i class="fas fa-trash-can text-[9px]"></i> Effacer tout
+                </button>
+            </div>
+            <!-- Les conversations seront chargées ici -->
+            <div id="conversations-loading" class="flex justify-center py-8">
+                <span class="w-6 h-6 border-2 border-blue-100 border-t-blue-600 rounded-full animate-spin"></span>
+            </div>
+        </div>
+
+        <div class="p-4 border-t border-gray-50 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-500">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold text-gray-900 truncate">{{ user.username }}</p>
+                <p class="text-[11px] text-gray-400 uppercase font-medium">Utilisateur</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Zone de chat principale -->
+    <div class="flex-1 flex flex-col h-full overflow-hidden relative">
+        
+        <!-- Toggle de la barre latérale mobile -->
+        <button id="sidebar-toggle" class="md:hidden absolute top-4 left-4 z-30 p-2 bg-white rounded-lg shadow-md border border-gray-100 text-gray-500">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- En-tête du chat -->
+        <div class="px-8 py-4 flex items-center justify-between bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-10">
+            <div class="flex items-center gap-4 ml-10 md:ml-0">
+                <div class="relative">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white shadow-lg shadow-blue-200 rotate-3 hover:rotate-0 transition-transform duration-300">
+                        <i class="fas fa-robot text-2xl"></i>
+                    </div>
+                    <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></div>
+                </div>
+                <div>
+                    <h2 id="current-chat-title" class="font-bold text-xl text-gray-900 tracking-tight">Assistant FCRA</h2>
+                    <div class="flex items-center gap-2">
+                        <span class="flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-green-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                        </span>
+                        <p class="text-xs font-medium text-gray-500 uppercase tracking-wider">Propulsé par l'IA</p>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <a href="/" class="p-2.5 hover:bg-gray-100 rounded-xl transition-all text-gray-400 hover:text-blue-600" title="Retour à l'accueil">
+                    <i class="fas fa-home text-lg"></i>
+                </a>
+                <button class="p-2.5 hover:bg-gray-100 rounded-xl transition-all text-gray-400 hover:text-gray-600" onclick="window.location.reload()">
+                    <i class="fas fa-rotate text-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Zone des messages du chat -->
+        <div id="chat-messages" class="flex-1 overflow-y-auto px-4 py-6 md:px-8 lg:px-12 space-y-6 scroll-smooth bg-[#f8f9fa]">
+            <!-- Message de bienvenue de l'IA -->
+            <div id="welcome-message" class="flex gap-5 max-w-4xl group">
+                <div class="w-10 h-10 rounded-xl bg-blue-600 flex-shrink-0 flex items-center justify-center text-white shadow-md shadow-blue-100 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-robot text-sm"></i>
+                </div>
+                <div class="flex flex-col gap-2 max-w-[85%]">
+                    <div class="bg-white border border-gray-100 p-6 rounded-3xl rounded-tl-none shadow-sm text-gray-800 leading-relaxed text-[15px]">
+                        <p class="mb-3 font-semibold text-blue-600 flex items-center gap-2">
+                            <i class="fas fa-sparkles"></i> Bonjour !
+                        </p>
+                        Je suis votre assistant intelligent dédié au système FCRA. Je peux vous aider à analyser les données, générer des rapports ou répondre à vos questions sur les étudiants.
+                        <div class="mt-6 flex flex-wrap gap-3">
+                            <button onclick="setQuery('Statistiques des étudiants')" class="flex items-center gap-2 text-xs bg-blue-50 text-blue-600 px-4 py-2 rounded-full hover:bg-blue-100 transition-all border border-blue-100 font-medium">
+                                <i class="fas fa-chart-pie"></i> Statistiques
+                            </button>
+                            <button onclick="setQuery('Liste des orphelins')" class="flex items-center gap-2 text-xs bg-purple-50 text-purple-600 px-4 py-2 rounded-full hover:bg-purple-100 transition-all border border-purple-100 font-medium">
+                                <i class="fas fa-child"></i> Orphelins
+                            </button>
+                            <button onclick="setQuery('Aide utilisation')" class="flex items-center gap-2 text-xs bg-gray-50 text-gray-600 px-4 py-2 rounded-full hover:bg-gray-100 transition-all border border-gray-200 font-medium">
+                                <i class="fas fa-question-circle"></i> Aide
+                            </button>
+                        </div>
+                    </div>
+                    <span class="text-[11px] font-medium text-gray-400 ml-2">Assistant • À l'instant</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Zone de saisie du chat -->
+        <div class="p-4 md:px-8 lg:px-12 bg-gradient-to-t from-[#f8f9fa] via-[#f8f9fa] to-transparent">
+            <div class="max-w-4xl mx-auto">
+                <div class="relative group">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-[2.2rem] blur opacity-10 group-focus-within:opacity-20 transition duration-500"></div>
+                    <div class="relative flex items-center gap-2 bg-white border border-gray-200 rounded-[2rem] p-3 shadow-xl shadow-gray-200/50 focus-within:border-blue-400 transition-all">
+                        <!-- Sélecteur de catégorie -->
+                        <div class="pl-2">
+                            <select id="category-select" class="bg-gray-50 border border-gray-200 text-gray-700 text-xs rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 outline-none transition-all cursor-pointer hover:bg-gray-100">
+                                <option value="etudiants" selected>Étudiants</option>
+                                <option value="jamats">Jamats</option>
+                                <option value="orphelins">Orphelins</option>
+                                <option value="internationaux">Internationaux</option>
+                                <option value="universites">Universités</option>
+                                <option value="elites">Élites</option>
+                            </select>
+                        </div>
+                        <div class="flex-1 relative">
+                            <textarea 
+                                id="chat-input"
+                                rows="1"
+                                placeholder="Posez une question à l'IA..."
+                                class="w-full bg-transparent border-none focus:ring-0 py-3 px-4 resize-none text-gray-700 text-[15px] max-h-48"
+                            ></textarea>
+                        </div>
+                        <div class="flex items-center gap-2 pb-1 pr-1">
+                            <button class="p-3 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-2xl transition-all" title="Joindre un fichier">
+                                <i class="fas fa-paperclip text-lg"></i>
+                            </button>
+                            <button id="send-btn" class="bg-blue-600 hover:bg-blue-700 text-white w-12 h-12 rounded-2xl shadow-lg shadow-blue-500/30 transition-all transform active:scale-95 flex items-center justify-center">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-center text-[11px] text-gray-400 mt-4 font-medium">
+                    <i class="fas fa-info-circle mr-1"></i> L'IA peut générer des erreurs. Vérifiez les informations importantes.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentConversationId = null;
+
+    function setQuery(text) {
+        const textarea = document.getElementById('chat-input');
+        textarea.value = text;
+        textarea.focus();
+        textarea.dispatchEvent(new Event('input'));
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function addMessage(text, isUser = true, timestamp = null) {
+        const time = timestamp ? new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const messagesContainer = document.getElementById('chat-messages');
+        const welcomeMessage = document.getElementById('welcome-message');
+        
+        if (welcomeMessage) welcomeMessage.style.display = 'none';
+        
+        let content = '';
+        let chartConfigs = [];
+
+        if (isUser) {
+            content = text;
+        } else {
+            // Extraire les blocs de code JSON pour les graphiques
+            const chartRegex = /```json\s*({[\s\S]*?"type"\s*:\s*"(?:pie|bar|line|doughnut)"[\s\S]*?})\s*```/g;
+            let match;
+            let processedText = text;
+
+            // Debug: log the raw text to see what the AI is sending
+            console.log("Raw AI response:", text);
+
+            while ((match = chartRegex.exec(text)) !== null) {
+                try {
+                    const configStr = match[1];
+                    console.log("Found chart config:", configStr);
+                    const config = JSON.parse(configStr);
+                    
+                    // Validation simple pour éviter les graphiques vides {}
+                    if (!config.data || !config.data.labels || config.data.labels.length === 0) {
+                        console.warn("Skipping empty or invalid chart config");
+                        continue;
+                    }
+
+                    const chartId = 'chart-' + Math.random().toString(36).substr(2, 9);
+                    chartConfigs.push({ id: chartId, config: config });
+                    // Remplacer le bloc JSON par un conteneur de graphique
+                    processedText = processedText.replace(match[0], `<div class="chart-wrapper my-6 p-4 bg-gray-50 rounded-2xl border border-gray-100 shadow-inner"><div class="chart-container" style="position: relative; height:300px; width:100%"><canvas id="${chartId}"></canvas></div></div>`);
+                } catch (e) {
+                    console.error("Erreur de parsing JSON pour le graphique:", e);
+                }
+            }
+            content = marked.parse(processedText);
+        }
+        
+        const messageHtml = isUser ? `
+            <div class="flex gap-5 max-w-4xl ml-auto flex-row-reverse animate-message-in">
+                <div class="w-10 h-10 rounded-xl bg-gray-900 flex-shrink-0 flex items-center justify-center text-white text-xs shadow-md">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="flex flex-col gap-2 items-end max-w-[85%]">
+                    <div class="bg-gray-900 text-white p-5 rounded-3xl rounded-tr-none shadow-lg shadow-gray-200 leading-relaxed text-[15px] block">
+                        ${content}
+                    </div>
+                    <span class="text-[11px] font-medium text-gray-400 mr-2">Vous • ${time}</span>
+                </div>
+            </div>
+        ` : `
+            <div class="flex gap-5 max-w-4xl animate-message-in group">
+                <div class="w-10 h-10 rounded-xl bg-blue-600 flex-shrink-0 flex items-center justify-center text-white shadow-md shadow-blue-100 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-robot text-sm"></i>
+                </div>
+                <div class="flex flex-col gap-2 max-w-[85%]">
+                    <div class="bg-white border border-gray-100 p-6 rounded-3xl rounded-tl-none shadow-sm text-gray-800 leading-relaxed text-[15px] block prose prose-sm prose-blue max-w-none">
+                        ${content}
+                    </div>
+                    <span class="text-[11px] font-medium text-gray-400 ml-2">Assistant • ${time}</span>
+                </div>
+            </div>
+        `;
+        
+        messagesContainer.insertAdjacentHTML('beforeend', messageHtml);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+        // Initialiser les graphiques après l'insertion du HTML
+        chartConfigs.forEach(item => {
+            const ctx = document.getElementById(item.id).getContext('2d');
+            new Chart(ctx, item.config);
+        });
+    }
+
+    async function loadConversations() {
+        const listContainer = document.getElementById('conversations-list');
+        const loading = document.getElementById('conversations-loading');
+        
+        try {
+            const response = await fetch('/api/chatbot/api/conversations/');
+            const data = await response.json();
+            
+            if (loading) loading.remove();
+            
+            // Effacer les éléments existants sauf le titre
+            const items = listContainer.querySelectorAll('.conversation-item');
+            items.forEach(item => item.remove());
+            
+            data.forEach(conv => {
+                const itemHtml = `
+                    <div class="conversation-item group flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 cursor-pointer transition-all ${currentConversationId === conv.id ? 'bg-blue-50 text-blue-600' : 'text-gray-600'}" onclick="loadHistory(${conv.id})">
+                        <i class="fas fa-message text-sm opacity-50"></i>
+                        <span class="flex-1 truncate text-sm font-medium">${conv.title}</span>
+                        <button onclick="event.stopPropagation(); deleteConversation(${conv.id})" class="opacity-0 group-hover:opacity-100 p-1.5 hover:text-red-500 transition-all">
+                            <i class="fas fa-trash-can text-xs"></i>
+                        </button>
+                    </div>
+                `;
+                listContainer.insertAdjacentHTML('beforeend', itemHtml);
+            });
+        } catch (error) {
+            console.error('Erreur lors du chargement des conversations :', error);
+        }
+    }
+
+    async function loadHistory(id) {
+        currentConversationId = id;
+        const messagesContainer = document.getElementById('chat-messages');
+        const titleElement = document.getElementById('current-chat-title');
+        
+        messagesContainer.innerHTML = '';
+        
+        try {
+            const response = await fetch(`/api/chatbot/api/conversations/${id}/`);
+            const data = await response.json();
+            
+            titleElement.textContent = data.title;
+            
+            data.messages.forEach(msg => {
+                addMessage(msg.content, msg.is_user, msg.timestamp);
+            });
+            
+            loadConversations(); // Rafraîchir la barre latérale pour afficher l'état actif
+        } catch (error) {
+            console.error('Erreur lors du chargement de l\'historique :', error);
+        }
+    }
+
+    async function deleteConversation(id) {
+        if (!confirm('Voulez-vous vraiment supprimer cette conversation ?')) return;
+        
+        try {
+            await fetch(`/api/chatbot/api/conversations/${id}/delete/`, {
+                method: 'DELETE',
+                headers: { 'X-CSRFToken': getCookie('csrftoken') }
+            });
+            
+            if (currentConversationId === id) {
+                window.location.reload();
+            } else {
+                loadConversations();
+            }
+        } catch (error) {
+            console.error('Erreur lors de la suppression de la conversation :', error);
+        }
+    }
+
+    async function deleteAllConversations() {
+        if (!confirm('Voulez-vous vraiment supprimer TOUT l\'historique des conversations ? Cette action est irréversible.')) return;
+        
+        try {
+            const response = await fetch('/api/chatbot/api/conversations/delete-all/', {
+                method: 'DELETE',
+                headers: { 'X-CSRFToken': getCookie('csrftoken') }
+            });
+            
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                console.error('Erreur lors de la suppression de toutes les conversations');
+            }
+        } catch (error) {
+            console.error('Erreur lors de la suppression de toutes les conversations :', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const textarea = document.getElementById('chat-input');
+        const sendBtn = document.getElementById('send-btn');
+        const newChatBtn = document.getElementById('new-chat-btn');
+        const sidebar = document.getElementById('chat-sidebar');
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        const messagesContainer = document.getElementById('chat-messages');
+        const deleteAllBtn = document.getElementById('delete-all-btn');
+
+        loadConversations();
+
+        if (deleteAllBtn) {
+            deleteAllBtn.addEventListener('click', deleteAllConversations);
+        }
+
+        // Toggle de la barre latérale mobile
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('-translate-x-full');
+            sidebar.classList.toggle('fixed');
+            sidebar.classList.toggle('h-full');
+        });
+
+        newChatBtn.addEventListener('click', () => {
+            window.location.reload();
+        });
+
+        // Auto-expand textarea
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+
+        sendBtn.addEventListener('click', async function() {
+            const text = textarea.value.trim();
+            const category = document.getElementById('category-select').value;
+            
+            if (text) {
+                addMessage(text, true);
+                textarea.value = '';
+                textarea.style.height = 'auto';
+                
+                // Préparer le message avec la catégorie pour l'IA
+                const messageForAI = `[Catégorie: ${category}] ${text}`;
+                
+                // Afficher l'indicateur de saisie
+                const typingId = 'typing-' + Date.now();
+                const typingHtml = `
+                    <div id="${typingId}" class="flex gap-5 max-w-4xl animate-message-in">
+                        <div class="w-10 h-10 rounded-xl bg-blue-600 flex-shrink-0 flex items-center justify-center text-white shadow-md">
+                            <i class="fas fa-robot text-sm"></i>
+                        </div>
+                        <div class="bg-white border border-gray-100 p-5 rounded-3xl rounded-tl-none shadow-sm flex gap-1.5 items-center px-6 block">
+                            <span class="w-2 h-2 bg-blue-400 rounded-full animate-bounce inline-block"></span>
+                            <span class="w-2 h-2 bg-blue-400 rounded-full animate-bounce [animation-delay:0.2s] inline-block"></span>
+                            <span class="w-2 h-2 bg-blue-400 rounded-full animate-bounce [animation-delay:0.4s] inline-block"></span>
+                        </div>
+                    </div>
+                `;
+                messagesContainer.insertAdjacentHTML('beforeend', typingHtml);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                try {
+                    const response = await fetch('/api/chatbot/api/chat/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': getCookie('csrftoken')
+                        },
+                        body: JSON.stringify({ 
+                            message: messageForAI,
+                            conversation_id: currentConversationId
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    const typingElement = document.getElementById(typingId);
+                    if (typingElement) typingElement.remove();
+                    
+                    if (data.reply) {
+                        if (!currentConversationId) {
+                            currentConversationId = data.conversation_id;
+                            document.getElementById('current-chat-title').textContent = data.conversation_title;
+                            loadConversations();
+                        }
+                        addMessage(data.reply, false);
+                    } else if (data.error) {
+                        addMessage("Désolé, une erreur est survenue : " + data.error, false);
+                    }
+                } catch (error) {
+                    const typingElement = document.getElementById(typingId);
+                    if (typingElement) typingElement.remove();
+                    addMessage("Désolé, impossible de contacter l'assistant pour le moment.", false);
+                    console.error('Erreur :', error);
+                }
+            }
+        });
+
+        textarea.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendBtn.click();
+            }
+        });
+    });
+</script>
+
+<style>
+    @keyframes message-in {
+        from { opacity: 0; transform: translateY(20px) scale(0.95); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .animate-message-in {
+        animation: message-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    #chat-messages::-webkit-scrollbar { width: 6px; }
+    #chat-messages::-webkit-scrollbar-track { background: transparent; }
+    #chat-messages::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 10px; }
+    #chat-messages::-webkit-scrollbar-thumb:hover { background: #d1d5db; }
+
+    /* Style pour les images dans les messages de l'IA */
+    .prose img {
+        max-width: 200px;
+        height: auto;
+        border-radius: 1rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        border: 2px solid #f3f4f6;
+    }
+
+    .chart-wrapper {
+        background: #ffffff;
+        border-radius: 1.25rem;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+        border: 1px solid #f1f5f9;
+    }
+    
+    @media (max-width: 768px) {
+        #chat-sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            transform: translateX(-100%);
+        }
+        #chat-sidebar.translate-x-0 {
+            transform: translateX(0);
+        }
+    }
+</style>
+{% endblock %}

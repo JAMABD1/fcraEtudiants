@@ -1,0 +1,12 @@
+# SQLite databases
+*.sqlite3
+db.sqlite3
+db.sql3
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# User-uploaded media (Django MEDIA_ROOT)
+media/

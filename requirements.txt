@@ -1,0 +1,14 @@
+Django>=4.2.0,<5.0.0
+Pillow>=9.0.0
+django-crispy-forms>=2.0
+crispy-bootstrap5>=0.7
+python-decouple>=3.8
+whitenoise>=6.5.0
+psycopg2-binary>=2.9.0
+gunicorn>=21.2
+django-jazzmin>=3.0.0
+django-browser-reload>=1.0.0
+django-tailwind
+requests
+
+

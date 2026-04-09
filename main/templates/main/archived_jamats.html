@@ -1,0 +1,266 @@
+{% extends "main/base.html" %}
+{% block title%} Jamats Archivés {% endblock%}
+{% block content %}
+
+<!-- Header -->
+<div class="dashboard-header mb-8">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">
+                <i class="fas fa-archive text-danger mr-3"></i>
+                Jamats Archivés
+            </h1>
+            <p class="text-gray-200">Liste des jamats archivés</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'jamat' %}" class="btn btn-outline-light btn-sm"><i class="fas fa-users me-2"></i>Jamats Actifs</a>
+            <a href="{% url 'jamat_dashboard' %}" class="btn btn-outline-light btn-sm"><i class="fas fa-chart-bar me-2"></i>Dashboard</a>
+        </div>
+    </div>
+    
+    <!-- Simple Filter Panel -->
+    <div class="filter-panel mt-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-gradient-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-filter mr-2"></i>
+                    Filtres
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="GET" class="row g-3">
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" name="search" placeholder="Rechercher..." value="{{ search_query }}" />
+                    </div>
+                    <div class="col-md-2">
+                        <select name="centre" class="form-select">
+                            <option value="">Centre</option>
+                            {% for c in centers %}
+                                <option value="{{ c }}" {% if c == centre_filter %}selected{% endif %}>{{ c }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select name="genre" class="form-select">
+                            <option value="">Genre</option>
+                            {% for g in genres %}
+                                <option value="{{ g }}" {% if g == genre_filter %}selected{% endif %}>{{ g }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select name="age" class="form-select">
+                            <option value="">Âge</option>
+                            <option value="-25" {% if age_filter == '-25' %}selected{% endif %}>-25 ans</option>
+                            <option value="25-35" {% if age_filter == '25-35' %}selected{% endif %}>25-35 ans</option>
+                            <option value="36-50" {% if age_filter == '36-50' %}selected{% endif %}>36-50 ans</option>
+                            <option value="51+" {% if age_filter == '51+' %}selected{% endif %}>51+ ans</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select name="travail" class="form-select">
+                            <option value="">Travail</option>
+                            {% for t in travails %}
+                                <option value="{{ t }}" {% if t == travail_filter %}selected{% endif %}>{{ t }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select name="adress" class="form-select">
+                            <option value="">Adresse</option>
+                            {% for a in adresses %}
+                                <option value="{{ a }}" {% if a == adress_filter %}selected{% endif %}>{{ a }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select name="conversion_year" class="form-select">
+                            <option value="">Conversion</option>
+                            {% for year in conversion_years %}
+                                <option value="{{ year }}" {% if year|stringformat:"s" == conversion_year_filter|stringformat:"s" %}selected{% endif %}>{{ year }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select name="archive_type" class="form-select">
+                            <option value="">Type</option>
+                            {% for t in archive_choices %}
+                                <option value="{{ t }}" {% if t == archive_type_filter %}selected{% endif %}>{{ t }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select name="raison" class="form-select">
+                            <option value="">Raison</option>
+                            {% for r in raisons %}
+                                <option value="{{ r }}" {% if r == raison_filter %}selected{% endif %}>{{ r }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search me-2"></i>Filtrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Simple Metrics -->
+<div class="row mb-6">
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="metric-card">
+            <div class="metric-icon">
+                <i class="fas fa-archive"></i>
+            </div>
+            <div class="metric-content">
+                <h3>{{ total_archived_jamats }}</h3>
+                <p>Jamats Archivés</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="metric-card">
+            <div class="metric-icon">
+                <i class="fas fa-venus-mars"></i>
+            </div>
+            <div class="metric-content">
+                <h3>{{ archived_jamats_gender_stats|length }}</h3>
+                <p>Genres</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="metric-card">
+            <div class="metric-icon">
+                <i class="fas fa-map-marker-alt"></i>
+            </div>
+            <div class="metric-content">
+                <h3>{{ archived_jamats_center_stats|length }}</h3>
+                <p>Centres</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="metric-card">
+            <div class="metric-icon">
+                <i class="fas fa-briefcase"></i>
+            </div>
+            <div class="metric-content">
+                <h3>{{ archived_jamats_work_stats|length }}</h3>
+                <p>Travaux</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Table -->
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th><i class="fas fa-id-card text-primary"></i> ID</th>
+                        <th><i class="fas fa-user text-success"></i> Nom</th>
+                        <th><i class="fas fa-venus-mars text-info"></i> Genre</th>
+                        <th><i class="fas fa-birthday-cake text-warning"></i> Âge</th>
+                        <th><i class="fas fa-calendar-alt text-primary"></i> Conversion</th>
+                        <th><i class="fas fa-phone text-success"></i> Téléphone</th>
+                        <th><i class="fas fa-map-marker-alt text-danger"></i> Adresse</th>
+                        <th><i class="fas fa-briefcase text-warning"></i> Travail</th>
+                        <th><i class="fas fa-map-pin text-danger"></i> Centre</th>
+                        <th><i class="fas fa-envelope text-info"></i> Email</th>
+                        <th><i class="fas fa-archive text-secondary"></i> Type</th>
+                        <th><i class="fas fa-exclamation-triangle text-warning"></i> Raison</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for a in archived_jamats %}
+                    <tr>
+                        <td><span class="badge bg-light text-dark">{{ a.jamat.id|default:"N/A" }}</span></td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                {% if a.jamat.imageprofile %}
+                                    <img src="{{ a.jamat.imageprofile.url }}" alt="Photo" class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;">
+                                {% else %}
+                                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-2" style="width: 30px; height: 30px;">
+                                        <i class="fas fa-user text-white" style="font-size: 12px;"></i>
+                                    </div>
+                                {% endif %}
+                                <span>{{ a.jamat.nom }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge bg-{% if a.jamat.genre == 'M' %}primary{% else %}pink{% endif %}">
+                                <i class="fas fa-{% if a.jamat.genre == 'M' %}mars{% else %}venus{% endif %} me-1"></i>
+                                {{ a.jamat.genre|default:"N/A" }}
+                            </span>
+                        </td>
+                        <td>{{ a.jamat.age|default:"N/A" }}</td>
+                        <td>{{ a.jamat.conversion_year|default:"N/A" }}</td>
+                        <td>{{ a.jamat.telephone|default:"N/A" }}</td>
+                        <td>{{ a.jamat.adress|default:"N/A" }}</td>
+                        <td>{{ a.jamat.travail|default:"N/A" }}</td>
+                        <td>{{ a.jamat.centre|default:"N/A" }}</td>
+                        <td>{{ a.jamat.email|default:"N/A" }}</td>
+                        <td><span class="badge bg-secondary">{{ a.archive_type|default:"N/A" }}</span></td>
+                        <td><span class="badge bg-warning text-dark">{{ a.raison|default:"N/A" }}</span></td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="12" class="text-center text-muted py-4">
+                            <i class="fas fa-archive fa-2x mb-2 d-block"></i>
+                            Aucun jamat archivé trouvé
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-footer text-muted">
+        <i class="fas fa-info-circle me-1"></i> Les jamats archivés sont stockés dans ArchiveJamat.
+    </div>
+</div>
+
+<style>
+.dashboard-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.bg-gradient-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+
+.metric-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    color: #2d3748;
+}
+.metric-card:hover { transform: translateY(-8px); box-shadow: 0 15px 40px rgba(0,0,0,0.2); }
+.metric-icon { font-size: 3rem; margin-right: 1.5rem; opacity: 0.8; }
+.metric-content h3 { font-size: 2.5rem; font-weight: bold; margin: 0; line-height: 1; }
+.metric-content p { margin: 0.5rem 0 0 0; opacity: 0.9; font-size: 1rem; }
+
+.text-pink { color: #e91e63 !important; }
+
+@media (max-width: 768px) {
+    .dashboard-header { padding: 1rem; text-align: center; }
+    .metric-card { flex-direction: column; text-align: center; padding: 1.5rem; }
+    .metric-icon { margin-right: 0; margin-bottom: 1rem; }
+}
+</style>
+
+{% endblock %}
+

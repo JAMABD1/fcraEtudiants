@@ -1,0 +1,1921 @@
+<script>
+  $(document).ready(function () {
+    function selectElement(id, valueToSelect) {
+      let element = document.getElementById(id);
+      element.value = valueToSelect;
+    }
+    var csrf = $("input[name=csrfmiddlewaretoken]").val();
+
+    // Update student editImage
+    //addToMedal
+    $("#tbody").on("click", "#edit", function () {
+      var csrf = $("input[name=csrfmiddlewaretoken]").val();
+      let id = $(this).attr("data-sid");
+      myth = this;
+      mydata = { csrfmiddlewaretoken: csrf, id: id };
+
+      $.ajax({
+        url: "edit",
+        method: "POST",
+        data: mydata,
+        success: function (response) {
+          var id = response.data["id"];
+
+          var identifiant = response.data["identifiant"];
+          var nom = response.data["nom"];
+          var email = response.data["email"];
+          var date_naissance = response.data["date_naissance"];
+          var telephone = response.data["telephone"];
+          var ville = response.data["ville"];
+          var nom_pere = response.data["nom_pere"];
+          var nom_mere = response.data["nom_mere"];
+
+          var designation = response.data["designation"];
+          var institution = response.data["institution"];
+          var fillier = response.data["fillier"];
+          var batch = response.data["batch"];
+
+          var centre = response.data["centre"];
+          var telephone_mere = response.data["telephone_mere"];
+          var sex = response.data["sex"];
+
+          var date_entre = response.data["date_entre"];
+          var date_sortie = response.data["date_sortie"];
+
+          console.log("id:");
+          console.log(id);
+          $("#etudiant_id").attr("nom", "id");
+          $("#etudiant_id").val(id);
+
+          $("#id_identifiant_u").val(identifiant);
+          $("#id_nom_u").val(nom);
+          $("#email_u").val(email);
+          $("#id_telephone_u").val(telephone);
+
+          $("#id_date_naissance_u").val(date_naissance);
+
+          $("#id_ville_u").val(ville);
+          $("#id_nom_u").val(nom);
+          $("#id_nom_pere_u").val(nom_pere);
+          $("#id_nom_mere_u").val(nom_mere);
+
+          $("#id_designation_u").val(designation);
+          $("#id_institution_u").val(institution);
+          $("#id_fillier_u").val(fillier);
+          $("#id_batch_u").val(batch);
+
+          $("#id_centre_u").val(centre);
+          $("#id_telephone_mere_u").val(telephone_mere);
+
+          $("#id_sex_u").val(sex);
+
+          $("#id_date_entre_u").val(date_entre);
+          $("#id_date_sortie_u").val(date_sortie);
+
+          // selectElement("id_sex_u",sex)
+
+          $(".editclass").attr("data-bs-toggle", "modal");
+        },
+      });
+    });
+
+    $("#tbody").on("click", "#editImage", function () {
+      var csrf = $("input[name=csrfmiddlewaretoken]").val();
+      let id = $(this).attr("data-sid");
+      myth = this;
+      mydata = { csrfmiddlewaretoken: csrf, id: id };
+
+      $.ajax({
+        url: "edit",
+        method: "POST",
+        data: mydata,
+        success: function (response) {
+          console.log("ID");
+          console.log(id);
+          $("#studentid_u").attr("nom", "id");
+          $("#studentid_u").val(id);
+          $(".editimages").attr("data-bs-toggle", "modal");
+        },
+      });
+    });
+
+    $("#tbody").on("click", "#editImagePersonnel", function () {
+      var csrf = $("input[nom=csrfmiddlewaretoken]").val();
+      let id = $(this).attr("data-sid");
+      myth = this;
+      mydata = { csrfmiddlewaretoken: csrf, id: id };
+
+      $.ajax({
+        url: "edit",
+        method: "POST",
+        data: mydata,
+        success: function (response) {
+          console.log("ID");
+          console.log(id);
+          $("#personnel_u").attr("nom", "id");
+          $("#personnel_u").val(id);
+          $(".editimages").attr("data-bs-toggle", "modal");
+        },
+      });
+    });
+
+    // Update Personnel <!-- ["personnelid","nom","sex","telephone","section","travail","email"] -->
+
+    $("#tbody").on("click", "#edit", function () {
+      console.log("data");
+
+      var csrf = $("input[name=csrfmiddlewaretoken]").val();
+      let id = $(this).attr("data-sid");
+      myth = this;
+      mydata = { csrfmiddlewaretoken: csrf, id: id };
+      console.log(mydata);
+
+      $.ajax({
+        url: "edit",
+        method: "POST",
+        data: mydata,
+        success: function (response) {
+          var id = response.data["id"];
+
+          var personnelid = response.data["personnelid"];
+          var name = response.data["name"];
+          var sex = response.data["sex"];
+
+          var telephone = response.data["telephone"];
+          var section = response.data["section"];
+          var centre = response.data["centre"];
+          var travail = response.data["travail"];
+          var email = response.data["email"];
+          var situation = response.data["situation"];
+          var adress = response.data["adress"];
+
+          console.log(id);
+          $("#studentid_u").attr("name", "id");
+          $("#studentid_u").val(id);
+
+          $("#id_personnelid_u").val(personnelid);
+          $("#id_name_u").val(name);
+          $("#id_email_u").val(email);
+          $("#id_telephone_u").val(telephone);
+
+          $("#id_centre_u").val(centre);
+
+          $("#id_section_u").val(section);
+          $("#id_travail_u").val(travail);
+
+          $("#id_situation_u").val(situation);
+          $("#id_adress_u").val(adress);
+
+          $("#id_sex_u").val(sex);
+
+          // selectElement("id_sex_u",sex)
+
+          $(".editclass").attr("data-toggle", "modal");
+        },
+      });
+    });
+
+    // Update Jamat <!--["jamatid","name","sex","telephone","age","adress","centre","email"]-->
+    $("#tbody").on("click", "#edit", function () {
+      console.log("data");
+
+      var csrf = $("input[name=csrfmiddlewaretoken]").val();
+      let id = $(this).attr("data-sid");
+      myth = this;
+      mydata = { csrfmiddlewaretoken: csrf, id: id };
+      console.log(mydata);
+
+      $.ajax({
+        url: "edit",
+        method: "POST",
+        data: mydata,
+        success: function (response) {
+          var id = response.data["id"];
+
+          var jamatid = response.data["jamatid"];
+          var name = response.data["name"];
+          var sex = response.data["sex"];
+
+          var telephone = response.data["telephone"];
+          var age = response.data["age"];
+          var centre = response.data["centre"];
+          var adress = response.data["adress"];
+          var email = response.data["email"];
+
+          console.log(id);
+          $("#studentid_u").attr("name", "id");
+          $("#studentid_u").val(id);
+
+          $("#id_jamatid_u").val(jamatid);
+          $("#id_name_u").val(name);
+          $("#id_email_u").val(email);
+          $("#id_telephone_u").val(telephone);
+
+          $("#id_centre_u").val(centre);
+
+          $("#id_age_u").val(age);
+          $("#id_adress_u").val(adress);
+
+          $("#id_sex_u").val(sex);
+
+          // selectElement("id_sex_u",sex)
+
+          $(".editclass").attr("data-toggle", "modal");
+        },
+      });
+    });
+
+    $("#tbody").on("click", "#edit", function () {
+      console.log("data");
+
+      var csrf = $("input[name=csrfmiddlewaretoken]").val();
+      let id = $(this).attr("data-sid");
+      myth = this;
+      mydata = { csrfmiddlewaretoken: csrf, id: id };
+      console.log(mydata);
+
+      $.ajax({
+        url: "edit",
+        method: "POST",
+        data: mydata,
+        success: function (response) {
+          var id = response.data["id"];
+
+          var madrassahid = response.data["madrassahid"];
+          var name = response.data["name"];
+          var sex = response.data["sex"];
+
+          var telephone = response.data["telephone"];
+          var age = response.data["age"];
+          var centre = response.data["centre"];
+          var adress = response.data["adress"];
+
+          console.log(id);
+          $("#studentid_u").attr("name", "id");
+          $("#studentid_u").val(id);
+
+          $("#id_madrassahid_u").val(madrassahid);
+          $("#id_name_u").val(name);
+
+          $("#id_telephone_u").val(telephone);
+
+          $("#id_centre_u").val(centre);
+
+          $("#id_age_u").val(age);
+          $("#id_adress_u").val(adress);
+
+          $("#id_sex_u").val(sex);
+
+          // selectElement("id_sex_u",sex)
+
+          $(".editclass").attr("data-toggle", "modal");
+        },
+      });
+    });
+
+    // Recherche student
+
+    $("#searchbtn").click(function () {
+      var name = $("#namesearch").val();
+      mydata = { name: name };
+      output = "";
+      $.ajax({
+        url: "search",
+        method: "GET",
+        data: mydata,
+        success: function (response) {
+          console.log(response.data);
+          x = response.data;
+          for (var i = 0; i < x.length; i++) {
+            output +=
+              '<tr style="display: table-row;">' +
+              "<td >" +
+              (i + 1) +
+              "</td>" +
+              '<td class="image_name">' +
+              '<div class="image_info">' +
+              '<img src="/media/' +
+              x[i].imageprofile +
+              '"onclick="openModal();currentSlide(' +
+              x[i].id +
+              ')" class="info_image hover-shadow cursor"  id="myImg">' +
+              "</div>" +
+              "</td>" +
+              "<td>" +
+              x[i].identifiant +
+              "</td>" +
+              "<td >" +
+              x[i].nom +
+              "</td>" +
+              "<td >" +
+              x[i].date_naissance +
+              "</td>" +
+              "<td >" +
+              x[i].genre +
+              "</td>" +
+              "<td >" +
+              x[i].telephone +
+              "</td>" +
+              "<td >" +
+              x[i].nom_pere +
+              "</td>" +
+              "<td >" +
+              x[i].nom_mere +
+              "</td>" +
+              "<td >" +
+              x[i].telephone_mere +
+              "</td>" +
+              "<td >" +
+              x[i].Class +
+              "</td>" +
+              "<td >" +
+              x[i].designation +
+              "</td>" +
+              "<td >" +
+              x[i].fillier +
+              "</td>" +
+              "<td >" +
+              x[i].institution +
+              "</td>" +
+              "<td >" +
+              x[i].ville +
+              "</td>" +
+              "<td >" +
+              x[i].centre +
+              "</td>" +
+              "<td >" +
+              x[i].email +
+              "</td>" +
+              "<td >" +
+              x[i].date_entre +
+              "</td>" +
+              "<td >" +
+              x[i].date_sortie +
+              "</td>" +
+              "<td>" +
+              '<a href="/viewStudent/' +
+              x[i].identifiant +
+              '"><i class="fas fa-eye" style="color: #198754"></i></a>' +
+              "</td>" +
+              "</tr>";
+          }
+          $("#tbody").html(output);
+        },
+      });
+    });
+
+    $("#searchbtnO").click(function () {
+      var name = $("#namesearchO").val();
+      mydata = { name: name };
+      output = "";
+      $.ajax({
+        url: "search",
+        method: "GET",
+        data: mydata,
+        success: function (response) {
+          console.log(response.data);
+          x = response.data;
+          for (var i = 0; i < x.length; i++) {
+            output +=
+              '<tr style="display: table-row;">' +
+              "<td >" +
+              (i + 1) +
+              "</td>" +
+              '<td class="image_name">' +
+              '<div class="image_info">' +
+              '<img src="' +
+              x[i].imageprofile +
+              '" class="info_image" >' +
+              "</div>" +
+              "</td>" +
+              "<td>" +
+              x[i].etudiantid +
+              "</td>" +
+              "<td >" +
+              x[i].name +
+              "</td>" +
+              "<td >" +
+              x[i].date_naissance +
+              "</td>" +
+              "<td >" +
+              x[i].sex +
+              "</td>" +
+              "<td >" +
+              x[i].name_mere +
+              "</td>" +
+              "<td >" +
+              x[i].telephone_mere +
+              "</td>" +
+              "<td >" +
+              x[i].class +
+              "</td>" +
+              "<td >" +
+              x[i].institution +
+              "</td>" +
+              "<td >" +
+              x[i].ville +
+              "</td>" +
+              "<td >" +
+              x[i].centre +
+              "</td>" +
+              "<td >" +
+              x[i].date_entre +
+              "</td>" +
+              "<td >" +
+              x[i].date_sortie +
+              "</td>" +
+              "<td>" +
+              '<a href="#"  data-target="#OrphelinModalCenterUpdate" data-sid=' +
+              x[i].id +
+              ' class="editclass" id="edit"><i class="fas fa-pen" style="color: #0d6efd;"></i></a>' +
+              '<a href="/viewStudent/' +
+              x[i].id +
+              '"><i class="fas fa-eye" style="color: #198754"></i></a>' +
+              '<a href="/student/' +
+              x[i].id +
+              '"><i class="fas fa-trash" style="color: #dc3545;"></i></a>' +
+              "</td>" +
+              "</tr>";
+          }
+          $("#tbody").html(output);
+        },
+      });
+    });
+
+    $("#searchbtnnote").click(function () {
+      var name = $("#namenoteSearch").val();
+      mydata = { name: name };
+      output = "";
+      $.ajax({
+        url: "search",
+        method: "GET",
+        data: mydata,
+        success: function (response) {
+          console.log(response.data);
+          x = response.data;
+          for (var i = 0; i < x.length; i++) {
+            output +=
+              '<tr style="display: table-row;">' +
+              "<td >" +
+              (i + 1) +
+              "</td>" +
+              "<td>" +
+              x[i].identifiant +
+              "</td>" +
+              "<td >" +
+              x[i].name +
+              "</td>" +
+              "<td >" +
+              x[i].semestre +
+              "</td>" +
+              "<td >" +
+              x[i].year +
+              "</td>" +
+              "<td >" +
+              x[i].moyen +
+              "</td>" +
+              "<td >" +
+              x[i].statut +
+              "</td>" +
+              "<td>" +
+              '<a href="#"  data-target="#exampleModalCenterUpdate" data-sid=' +
+              x[i].id +
+              ' class="editclass" id="edit"><i class="fas fa-pen" style="color: #0d6efd;"></i></a>' +
+              '<a href="/viewStudent/' +
+              x[i].id +
+              '"><i class="fas fa-eye" style="color: #198754"></i></a>' +
+              '<a href="/student/' +
+              x[i].id +
+              '"><i class="fas fa-trash" style="color: #dc3545;"></i></a>' +
+              "</td>" +
+              "</tr>";
+          }
+          $("#tbody").html(output);
+        },
+      });
+    });
+
+    $("#idfilter").click(function () {
+      var sexR = $("#sexR").val();
+      var centerR = $("#centerR").val();
+      var designationR = $("#designationR").val();
+
+      var name = $("#namesearch").val();
+      mydata = { sex: sexR, centre: centerR, designation: designationR };
+      output = "";
+      $.ajax({
+        url: "groupby",
+        method: "GET",
+        data: mydata,
+
+        success: function (response) {
+          console.log(response.data);
+          x = response.data;
+          for (var i = 0; i < x.length; i++) {
+            output +=
+              '<tr style="display: table-row;">' +
+              "<td >" +
+              (i + 1) +
+              "</td>" +
+              '<td class="image_name">' +
+              '<div class="image_info">' +
+              '<img src="/media/' +
+              x[i].imageprofile +
+              '" class="info_image" >' +
+              "</div>" +
+              "</td>" +
+              "<td>" +
+              x[i].identifiant +
+              "</td>" +
+              "<td >" +
+              x[i].nom +
+              "</td>" +
+              "<td >" +
+              x[i].date_naissance +
+              "</td>" +
+              "<td >" +
+              x[i].genre +
+              "</td>" +
+              "<td >" +
+              x[i].telephone +
+              "</td>" +
+              "<td >" +
+              x[i].nom_pere +
+              "</td>" +
+              "<td >" +
+              x[i].nom_mere +
+              "</td>" +
+              "<td >" +
+              x[i].telephone_mere +
+              "</td>" +
+              "<td >" +
+              x[i].Class +
+              "</td>" +
+              "<td >" +
+              x[i].designation +
+              "</td>" +
+              "<td >" +
+              x[i].fillier +
+              "</td>" +
+              "<td >" +
+              x[i].institution +
+              "</td>" +
+              "<td >" +
+              x[i].ville +
+              "</td>" +
+              "<td >" +
+              x[i].centre +
+              "</td>" +
+              "<td >" +
+              x[i].email +
+              "</td>" +
+              "<td >" +
+              x[i].date_entre +
+              "</td>" +
+              "<td >" +
+              x[i].date_sortie +
+              "</td>" +
+              "<td>" +
+              '<a href="/viewStudent/' +
+              x[i].identifiant +
+              '"><i class="fas fa-eye" style="color: #198754"></i></a>' +
+              "</td>" +
+              "</tr>";
+          }
+          $("#tbody").html(output);
+        },
+      });
+    });
+
+    $("#idfilterO").click(function () {
+      var sexR = $("#sexRO").val();
+      var centerR = $("#centerRO").val();
+      var batchR = $("#id_batchO").val();
+
+      mydata = { sex: sexR, centre: centerR, batch: batchR };
+      output = "";
+      $.ajax({
+        url: "groupby",
+        method: "GET",
+        data: mydata,
+
+        success: function (response) {
+          console.log(response.data);
+          x = response.data;
+          for (var i = 0; i < x.length; i++) {
+            output +=
+              '<tr style="display: table-row;">' +
+              "<td >" +
+              (i + 1) +
+              "</td>" +
+              '<td class="image_name">' +
+              '<div class="image_info">' +
+              '<img src="/media/' +
+              x[i].imageprofile +
+              '" class="info_image" >' +
+              "</div>" +
+              "</td>" +
+              "<td>" +
+              x[i].identifiant +
+              "</td>" +
+              "<td >" +
+              x[i].name +
+              "</td>" +
+              "<td >" +
+              x[i].date_naissance +
+              "</td>" +
+              "<td >" +
+              x[i].sex +
+              "</td>" +
+              "<td >" +
+              x[i].name_mere +
+              "</td>" +
+              "<td >" +
+              x[i].telephone_mere +
+              "</td>" +
+              "<td >" +
+              x[i].batch +
+              "</td>" +
+              "<td >" +
+              x[i].institution +
+              "</td>" +
+              "<td >" +
+              x[i].ville +
+              "</td>" +
+              "<td >" +
+              x[i].centre +
+              "</td>" +
+              "<td >" +
+              x[i].date_entre +
+              "</td>" +
+              "<td >" +
+              x[i].date_sortie +
+              "</td>" +
+              "<td>" +
+              '<a href="#"  data-target="#exampleModalCenterUpdate" data-sid=' +
+              x[i].id +
+              ' class="editclass" id="edit"><i class="fas fa-pen" style="color: #0d6efd;"></i></a>' +
+              '<a href="/viewStudent/' +
+              x[i].id +
+              '"><i class="fas fa-eye" style="color: #198754"></i></a>' +
+              '<a href="/student/' +
+              x[i].id +
+              '"><i class="fas fa-trash" style="color: #dc3545;"></i></a>' +
+              "</td>" +
+              "</tr>";
+          }
+          $("#tbody").html(output);
+        },
+      });
+    });
+
+    // Recherche Personnel ["personnelid","name","sex","telephone","section","centre","travail","email"]
+
+    $("#searchbtnpersonnel").click(function () {
+      var name = $("#namesearch").val();
+      mydata = { name: name };
+      output = "";
+      $.ajax({
+        url: "search",
+        method: "GET",
+        data: mydata,
+        success: function (response) {
+          console.log(response.data);
+          x = response.data;
+          for (var i = 0; i < x.length; i++) {
+            output +=
+              '<tr style="display: table-row;">' +
+              "<td >" +
+              (i + 1) +
+              "</td>" +
+              '<td class="image_name">' +
+              '<div class="image_info">' +
+              '<img src="/media/' +
+              x[i].imageprofile +
+              '" class="info_image" >' +
+              ' <a href="#"  data-bs-target="#exampleModalCenterImage" data-sid=' +
+              x[i].id +
+              ' class="editimages" id="editImagePersonnel"><i class="fas fa-pen" style="color: #0d6efd;"></i></a> ' +
+              "</div>" +
+              "</td>" +
+              "<td>" +
+              x[i].personnelid +
+              "</td>" +
+              "<td >" +
+              x[i].name +
+              "</td>" +
+              "<td >" +
+              x[i].sex +
+              "</td>" +
+              "<td >" +
+              x[i].telephone +
+              "</td>" +
+              "<td >" +
+              x[i].section +
+              "</td>" +
+              "<td >" +
+              x[i].centre +
+              "</td>" +
+              "<td >" +
+              x[i].travail +
+              "</td>" +
+              "<td >" +
+              x[i].email +
+              "</td>" +
+              "<td >" +
+              x[i].situation +
+              "</td>" +
+              "<td >" +
+              x[i].adress +
+              "</td>" +
+              '<td class="image_name">' +
+              '<div class="image_info">' +
+              '<img src="/media/' +
+              x[i].cin +
+              '" class="info_image" >' +
+              "</div>" +
+              "</td>" +
+              '<td class="image_name">' +
+              '<div class="image_info">' +
+              '<img src="/media/' +
+              x[i].cv +
+              '" class="info_image" >' +
+              "</div>" +
+              "</td>" +
+              "<td>" +
+              '<a href="/viewpersonnel/' +
+              x[i].id +
+              '"><i class="fas fa-eye" style="color: #198754"></i></a>' +
+              "</td>" +
+              "</tr>";
+          }
+          $("#tbody").html(output);
+        },
+      });
+    });
+
+    $("#btnfilternotes").click(function () {
+      var note = $("#filternotes").val();
+      mydata = { note: note };
+      output = "";
+      $.ajax({
+        url: "filter",
+        method: "GET",
+        data: mydata,
+        success: function (response) {
+          console.log(response.data);
+          x = response.data;
+          for (var i = 0; i < x.length; i++) {
+            output +=
+              '<tr style="display: table-row;">' +
+              "<td >" +
+              (i + 1) +
+              "</td>" +
+              "<td>" +
+              x[i].identifiant +
+              "</td>" +
+              "<td >" +
+              x[i].name +
+              "</td>" +
+              "<td >" +
+              x[i].semestre +
+              "</td>" +
+              "<td >" +
+              x[i].year +
+              "</td>" +
+              "<td >" +
+              x[i].moyen +
+              "</td>" +
+              "<td >" +
+              x[i].statut +
+              "</td>" +
+              "<td>" +
+              '<a href="#"  data-target="#exampleModalCenterUpdate" data-sid=' +
+              x[i].id +
+              ' class="editclass" id="edit"><i class="fas fa-pen" style="color: #0d6efd;"></i></a>' +
+              '<a href="/viewStudent/' +
+              x[i].identifiant +
+              '"><i class="fas fa-eye" style="color: #198754"></i></a>' +
+              '<a href="/student/' +
+              x[i].id +
+              '"><i class="fas fa-trash" style="color: #dc3545;"></i></a>' +
+              "</td>" +
+              "</tr>";
+          }
+          $("#tbody").html(output);
+        },
+      });
+    });
+    // FILTER SEX ETUDIANTS
+
+    $("#sexF").on("click", function () {
+      var sex = $("#sexF").val();
+      var category = $("#sexF").attr("name");
+      mydata = { sex: sex, category: category };
+      console.log(mydata);
+      output = "";
+
+      $.ajax({
+        url: "filter",
+        method: "GET",
+        data: mydata,
+        success: function (response) {
+          console.log(response.data);
+          x = response.data;
+          for (var i = 0; i < x.length; i++) {
+            output +=
+              '<tr style="display: table-row;">' +
+              "<td >" +
+              (i + 1) +
+              "</td>" +
+              '<td class="image_name">' +
+              '<div class="image_info">' +
+              '<img src="/media/' +
+              x[i].imageprofile +
+              '" class="info_image" >' +
+              "</div>" +
+              "</td>" +
+              "<td>" +
+              x[i].identifiant +
+              "</td>" +
+              "<td >" +
+              x[i].nom +
+              "</td>" +
+              "<td >" +
+              x[i].date_naissance +
+              "</td>" +
+              "<td >" +
+              x[i].genre +
+              "</td>" +
+              "<td >" +
+              x[i].telephone +
+              "</td>" +
+              "<td >" +
+              x[i].nom_pere +
+              "</td>" +
+              "<td >" +
+              x[i].nom_mere +
+              "</td>" +
+              "<td >" +
+              x[i].telephone_mere +
+              "</td>" +
+              "<td >" +
+              x[i].Class +
+              "</td>" +
+              "<td >" +
+              x[i].designation +
+              "</td>" +
+              "<td >" +
+              x[i].fillier +
+              "</td>" +
+              "<td >" +
+              x[i].institution +
+              "</td>" +
+              "<td >" +
+              x[i].ville +
+              "</td>" +
+              "<td >" +
+              x[i].centre +
+              "</td>" +
+              "<td >" +
+              x[i].email +
+              "</td>" +
+              "<td >" +
+              x[i].date_entre +
+              "</td>" +
+              "<td >" +
+              x[i].date_sortie +
+              "</td>" +
+              "<td>" +
+              '<a href="/viewStudent/' +
+              x[i].identifiant +
+              '"><i class="fas fa-eye" style="color: #198754"></i></a>' +
+              "</td>" +
+              "</tr>";
+          }
+          $("#tbody").html(output);
+        },
+      });
+    });
+
+    $("#sexO").on("click", function () {
+      var sex = $("#sexO").val();
+      var category = $("#sexO").attr("name");
+      mydata = { sex: sex, category: category };
+      console.log(mydata);
+      output = "";
+
+      $.ajax({
+        url: "filter",
+        method: "GET",
+        data: mydata,
+        success: function (response) {
+          console.log(response.data);
+          x = response.data;
+          for (var i = 0; i < x.length; i++) {
+            output +=
+              '<tr style="display: table-row;">' +
+              "<td >" +
+              (i + 1) +
+              "</td>" +
+              '<td class="image_name">' +
+              '<div class="image_info">' +
+              '<img src="/media/' +
+              x[i].imageprofile +
+              '" class="info_image" >' +
+              "</div>" +
+              "</td>" +
+              "<td>" +
+              x[i].identifiant +
+              "</td>" +
+              "<td >" +
+              x[i].name +
+              "</td>" +
+              "<td >" +
+              x[i].date_naissance +
+              "</td>" +
+              "<td >" +
+              x[i].sex +
+              "</td>" +
+              "<td >" +
+              x[i].name_mere +
+              "</td>" +
+              "<td >" +
+              x[i].telephone_mere +
+              "</td>" +
+              "<td >" +
+              x[i].batch +
+              "</td>" +
+              "<td >" +
+              x[i].institution +
+              "</td>" +
+              "<td >" +
+              x[i].ville +
+              "</td>" +
+              "<td >" +
+              x[i].centre +
+              "</td>" +
+              "<td >" +
+              x[i].date_entre +
+              "</td>" +
+              "<td >" +
+              x[i].date_sortie +
+              "</td>" +
+              "<td>" +
+              '<a href="#"  data-target="#exampleModalCenterUpdate" data-sid=' +
+              x[i].id +
+              ' class="editclass" id="edit"><i class="fas fa-pen" style="color: #0d6efd;"></i></a>' +
+              '<a href="/viewStudent/' +
+              x[i].identifiant +
+              '"><i class="fas fa-eye" style="color: #198754"></i></a>' +
+              '<a href="/student/' +
+              x[i].id +
+              '"><i class="fas fa-trash" style="color: #dc3545;"></i></a>' +
+              "</td>" +
+              "</tr>";
+          }
+          $("#tbody").html(output);
+        },
+      });
+    });
+
+    // FILTER center ETUDIANTS
+
+    $("#centerF").on("click", function () {
+      var centre = $("#centerF").val();
+      var category = $("#centerF").attr("name");
+      mydata = { centre: centre, category: category };
+      console.log(mydata);
+      output = "";
+
+      $.ajax({
+        url: "filter",
+        method: "GET",
+        data: mydata,
+        success: function (response) {
+          console.log(response.data);
+          x = response.data;
+          for (var i = 0; i < x.length; i++) {
+            output +=
+              '<tr style="display: table-row;">' +
+              "<td >" +
+              (i + 1) +
+              "</td>" +
+              '<td class="image_name">' +
+              '<div class="image_info">' +
+              '<img src="/media/' +
+              x[i].imageprofile +
+              '" class="info_image" >' +
+              "</div>" +
+              "</td>" +
+              "<td>" +
+              x[i].identifiant +
+              "</td>" +
+              "<td >" +
+              x[i].nom +
+              "</td>" +
+              "<td >" +
+              x[i].date_naissance +
+              "</td>" +
+              "<td >" +
+              x[i].genre +
+              "</td>" +
+              "<td >" +
+              x[i].telephone +
+              "</td>" +
+              "<td >" +
+              x[i].nom_pere +
+              "</td>" +
+              "<td >" +
+              x[i].nom_mere +
+              "</td>" +
+              "<td >" +
+              x[i].telephone_mere +
+              "</td>" +
+              "<td >" +
+              x[i].Class +
+              "</td>" +
+              "<td >" +
+              x[i].designation +
+              "</td>" +
+              "<td >" +
+              x[i].fillier +
+              "</td>" +
+              "<td >" +
+              x[i].institution +
+              "</td>" +
+              "<td >" +
+              x[i].ville +
+              "</td>" +
+              "<td >" +
+              x[i].centre +
+              "</td>" +
+              "<td >" +
+              x[i].email +
+              "</td>" +
+              "<td >" +
+              x[i].date_entre +
+              "</td>" +
+              "<td >" +
+              x[i].date_sortie +
+              "</td>" +
+              "<td>" +
+              '<a href="/viewStudent/' +
+              x[i].identifiant +
+              '"><i class="fas fa-eye" style="color: #198754"></i></a>' +
+              "</td>" +
+              "</tr>";
+          }
+          $("#tbody").html(output);
+        },
+      });
+    });
+
+    $("#centerO").on("click", function () {
+      var centre = $("#centerO").val();
+      var category = $("#centerO").attr("name");
+      mydata = { centre: centre, category: category };
+      console.log(mydata);
+      output = "";
+
+      $.ajax({
+        url: "filter",
+        method: "GET",
+        data: mydata,
+        success: function (response) {
+          console.log(response.data);
+          x = response.data;
+          for (var i = 0; i < x.length; i++) {
+            output +=
+              '<tr style="display: table-row;">' +
+              "<td >" +
+              (i + 1) +
+              "</td>" +
+              '<td class="image_name">' +
+              '<div class="image_info">' +
+              '<img src="/media/' +
+              x[i].imageprofile +
+              '" class="info_image" >' +
+              "</div>" +
+              "</td>" +
+              "<td>" +
+              x[i].identifiant +
+              "</td>" +
+              "<td >" +
+              x[i].nom +
+              "</td>" +
+              "<td >" +
+              x[i].date_naissance +
+              "</td>" +
+              "<td >" +
+              x[i].genre +
+              "</td>" +
+              "<td >" +
+              x[i].nom_mere +
+              "</td>" +
+              "<td >" +
+              x[i].telephone_mere +
+              "</td>" +
+              "<td >" +
+              x[i].Class +
+              "</td>" +
+              "<td >" +
+              x[i].institution +
+              "</td>" +
+              "<td >" +
+              x[i].ville +
+              "</td>" +
+              "<td >" +
+              x[i].centre +
+              "</td>" +
+              "<td >" +
+              x[i].date_entre +
+              "</td>" +
+              "<td >" +
+              x[i].date_sortie +
+              "</td>" +
+              "<td>" +
+              '<a href="#"  data-target="#exampleModalCenterUpdate" data-sid=' +
+              x[i].id +
+              ' class="editclass" id="edit"><i class="fas fa-pen" style="color: #0d6efd;"></i></a>' +
+              '<a href="/viewStudent/' +
+              x[i].identifiant +
+              '"><i class="fas fa-eye" style="color: #198754"></i></a>' +
+              '<a href="/student/' +
+              x[i].id +
+              '"><i class="fas fa-trash" style="color: #dc3545;"></i></a>' +
+              "</td>" +
+              "</tr>";
+          }
+          $("#tbody").html(output);
+        },
+      });
+    });
+
+    // FILTER designation ETUDIANTS
+
+    $("#designationF").on("click", function () {
+      var designationF = $("#designationF").val();
+      var category = $("#designationF").attr("name");
+      mydata = { designation: designationF, category: category };
+      console.log(mydata);
+      output = "";
+
+      $.ajax({
+        url: "filter",
+        method: "GET",
+        data: mydata,
+        success: function (response) {
+          console.log(response.data);
+          x = response.data;
+          for (var i = 0; i < x.length; i++) {
+            output +=
+              '<tr style="display: table-row;">' +
+              "<td >" +
+              (i + 1) +
+              "</td>" +
+              '<td class="image_name">' +
+              '<div class="image_info">' +
+              '<img src="/media/' +
+              x[i].imageprofile +
+              '" class="info_image" >' +
+              "</div>" +
+              "</td>" +
+              "<td>" +
+              x[i].identifiant +
+              "</td>" +
+              "<td >" +
+              x[i].nom +
+              "</td>" +
+              "<td >" +
+              x[i].date_naissance +
+              "</td>" +
+              "<td >" +
+              x[i].genre +
+              "</td>" +
+              "<td >" +
+              x[i].telephone +
+              "</td>" +
+              "<td >" +
+              x[i].nom_pere +
+              "</td>" +
+              "<td >" +
+              x[i].nom_mere +
+              "</td>" +
+              "<td >" +
+              x[i].telephone_mere +
+              "</td>" +
+              "<td >" +
+              x[i].Class +
+              "</td>" +
+              "<td >" +
+              x[i].designation +
+              "</td>" +
+              "<td >" +
+              x[i].fillier +
+              "</td>" +
+              "<td >" +
+              x[i].institution +
+              "</td>" +
+              "<td >" +
+              x[i].ville +
+              "</td>" +
+              "<td >" +
+              x[i].centre +
+              "</td>" +
+              "<td >" +
+              x[i].email +
+              "</td>" +
+              "<td >" +
+              x[i].date_entre +
+              "</td>" +
+              "<td >" +
+              x[i].date_sortie +
+              "</td>" +
+              "<td>" +
+              '<a href="/viewStudent/' +
+              x[i].identifiant +
+              '"><i class="fas fa-eye" style="color: #198754"></i></a>' +
+              "</td>" +
+              "</tr>";
+          }
+          $("#tbody").html(output);
+        },
+      });
+    });
+
+    $("#id_batch_O").on("click", function () {
+      var designationF = $("#id_batch_O").val();
+      var category = $("#id_batch_O").attr("name");
+      mydata = { batch: designationF, category: category };
+      console.log(mydata);
+      output = "";
+
+      $.ajax({
+        url: "filter",
+        method: "GET",
+        data: mydata,
+        success: function (response) {
+          console.log(response.data);
+          x = response.data;
+          for (var i = 0; i < x.length; i++) {
+            output +=
+              '<tr style="display: table-row;">' +
+              "<td >" +
+              (i + 1) +
+              "</td>" +
+              '<td class="image_name">' +
+              '<div class="image_info">' +
+              '<img src="/media/' +
+              x[i].imageprofile +
+              '" class="info_image" >' +
+              "</div>" +
+              "</td>" +
+              "<td>" +
+              x[i].identifiant +
+              "</td>" +
+              "<td >" +
+              x[i].name +
+              "</td>" +
+              "<td >" +
+              x[i].date_naissance +
+              "</td>" +
+              "<td >" +
+              x[i].sex +
+              "</td>" +
+              "<td >" +
+              x[i].name_mere +
+              "</td>" +
+              "<td >" +
+              x[i].telephone_mere +
+              "</td>" +
+              "<td >" +
+              x[i].batch +
+              "</td>" +
+              "<td >" +
+              x[i].institution +
+              "</td>" +
+              "<td >" +
+              x[i].ville +
+              "</td>" +
+              "<td >" +
+              x[i].centre +
+              "</td>" +
+              "<td >" +
+              x[i].date_entre +
+              "</td>" +
+              "<td >" +
+              x[i].date_sortie +
+              "</td>" +
+              "<td>" +
+              '<a href="#"  data-target="#exampleModalCenterUpdate" data-sid=' +
+              x[i].id +
+              ' class="editclass" id="edit"><i class="fas fa-pen" style="color: #0d6efd;"></i></a>' +
+              '<a href="/viewStudent/' +
+              x[i].identifiant +
+              '"><i class="fas fa-eye" style="color: #198754"></i></a>' +
+              '<a href="/student/' +
+              x[i].id +
+              '"><i class="fas fa-trash" style="color: #dc3545;"></i></a>' +
+              "</td>" +
+              "</tr>";
+          }
+          $("#tbody").html(output);
+        },
+      });
+    });
+
+    // update Notes 'institution':u.institution,'designation':u.designation,'batch':u.batch,'fillier':u.fillier
+
+    $("#tbody").on("click", "#edit", function () {
+      console.log("data");
+
+      var csrf = $("input[name=csrfmiddlewaretoken]").val();
+      let id = $(this).attr("data-sid");
+      myth = this;
+      mydata = { csrfmiddlewaretoken: csrf, id: id };
+      console.log(mydata);
+
+      $.ajax({
+        url: "edit",
+        method: "POST",
+        data: mydata,
+        success: function (response) {
+          console.log(response.data);
+          var id = response.data["id"];
+
+          var name = response.data["name"];
+          var semestre = response.data["semestre"];
+
+          var year = response.data["year"];
+          var moyen = response.data["moyen"];
+
+          var institution = response.data["institution"];
+          var designation = response.data["designation"];
+          var batch = response.data["batch"];
+          var fillier = response.data["fillier"];
+
+          var statut = response.data["statut"];
+
+          console.log(id);
+          $("#studentid_u").attr("name", "id");
+          $("#studentid_u").val(id);
+
+          $("#id_name_u").val(name);
+
+          $("#id_semestre_u").val(semestre);
+
+          $("#id_year_u").val(year);
+
+          $("#id_moyen_u").val(moyen);
+          $("#id_statut_u").val(statut);
+
+          $("#id_batch_e").val(batch);
+          $("#id_designation_e").val(designation);
+          $("#id_fillier_e").val(fillier);
+          $("#id_institution_e").val(institution);
+
+          // selectElement("id_sex_u",sex)
+
+          $(".editclass").attr("data-toggle", "modal");
+        },
+      });
+    });
+
+    $("#addToMedal").click(function () {
+      var idetudiant = $("#identifiant_r").val();
+      console.log(idetudiant);
+      mydata = { identifiant: idetudiant };
+      $.ajax({
+        url: "GetId",
+        method: "GET",
+        data: mydata,
+        success: function (response) {
+          var identifiant = response.data["identifiant"];
+          var name = response.data["name"];
+          var batch = response.data["batch"];
+          var designation = response.data["designation"];
+          var institution = response.data["institution"];
+          var fillier = response.data["fillier"];
+          $("#id_identifiant").val(identifiant);
+          $("#id_name").val(name);
+          $("#id_fillier").val(fillier);
+          $("#id_institution").val(institution);
+          $("#id_designation").val(designation);
+          $("#id_batch").val(batch);
+
+          $("#addToMedal").attr("data-bs-toggle", "modal");
+        },
+      });
+    });
+
+    $("#tbody").on("click", "#edit", function () {
+      var csrf = $("input[name=csrfmiddlewaretoken]").val();
+      let id = $(this).attr("data-sid");
+      myth = this;
+      mydata = { csrfmiddlewaretoken: csrf, id: id };
+      console.log(mydata);
+      output = "";
+
+      $.ajax({
+        url: "edit",
+        method: "POST",
+        data: mydata,
+        success: function (response) {
+          var id = response.data["id"];
+
+          var identifiant = response.data["identifiant"];
+          var name = response.data["name"];
+          var date = response.data["date"];
+
+          var raison = response.data["raison"];
+
+          $("#studentid_u").attr("name", "id");
+          $("#studentid_u").val(id);
+
+          $("#id_identifiant_u").val(identifiant);
+          $("#id_name_u").val(name);
+
+          $("#id_date_u").val(date);
+
+          $("#id_raison_u").val(raison);
+
+          $(".editclass").attr("data-bs-toggle", "modal");
+        },
+      });
+    });
+
+    $("#tbody").on("click", "#upload", function () {
+      var csrf = $("input[name=csrfmiddlewaretoken]").val();
+      let id = $(this).attr("data-sid");
+      myth = this;
+      mydata = { csrfmiddlewaretoken: csrf, id: id };
+      console.log(mydata);
+      output = "";
+      $.ajax({
+        url: "upload",
+        method: "POST",
+        data: mydata,
+        success: function (response) {
+          console.log(response.data);
+
+          var identifiant = response.data["identifiant"];
+          $("#id_identifiant_up").val(identifiant);
+          $(".uploadclass").attr("data-bs-toggle", "modal");
+        },
+      });
+    });
+
+    $("#tbody").on("click", "#view", function () {
+      var csrf = $("input[name=csrfmiddlewaretoken]").val();
+      let id = $(this).attr("data-sid");
+      myth = this;
+      mydata = { csrfmiddlewaretoken: csrf, id: id };
+      console.log(mydata);
+      output = "";
+      $.ajax({
+        url: "view",
+        method: "POST",
+        data: mydata,
+        success: function (response) {
+          console.log(response.data);
+          var x = response.data;
+          for (var i = 0; i < x.length; i++) {
+            output =
+              +"<p>" +
+              '<i class="fas fa-file-pdf" style="color: #dc3545;"></i> <a  href="http://127.0.0.1:8000/media/' +
+              x[i].name +
+              '"  target="_blank" >' +
+              x[i].namefile +
+              "</a>" +
+              "</p>";
+          }
+
+          console.log(output);
+          $("#modalview").html(output);
+
+          $(".viewclass").attr("data-toggle", "modal");
+        },
+      });
+    });
+
+    // SEX FILTER PERSONNEL
+    $("#sexP").on("click", function () {
+      var sex = $("#sexP").val();
+      var category = $("#sexP").attr("name");
+      mydata = { sex: sex, category: category };
+      console.log(mydata);
+      output = "";
+
+      $.ajax({
+        url: "filter",
+        method: "GET",
+        data: mydata,
+        success: function (response) {
+          console.log(response.data);
+          x = response.data;
+          for (var i = 0; i < x.length; i++) {
+            output +=
+              '<tr style="display: table-row;">' +
+              "<td >" +
+              (i + 1) +
+              "</td>" +
+              '<td class="image_name">' +
+              '<div class="image_info">' +
+              '<img src="/media/' +
+              x[i].imageprofile +
+              '" class="info_image" >' +
+              "</div>" +
+              "</td>" +
+              "<td>" +
+              x[i].personnelid +
+              "</td>" +
+              "<td >" +
+              x[i].name +
+              "</td>" +
+              "<td >" +
+              x[i].sex +
+              "</td>" +
+              "<td >" +
+              x[i].telephone +
+              "</td>" +
+              "<td >" +
+              x[i].section +
+              "</td>" +
+              "<td >" +
+              x[i].centre +
+              "</td>" +
+              "<td >" +
+              x[i].travail +
+              "</td>" +
+              "<td >" +
+              x[i].email +
+              "</td>" +
+              "<td >" +
+              x[i].situation +
+              "</td>" +
+              "<td >" +
+              x[i].adress +
+              "</td>" +
+              '<td class="image_name">' +
+              '<div class="image_info">' +
+              '<img src="/media/' +
+              x[i].cin +
+              '" class="info_image" >' +
+              "</div>" +
+              "</td>" +
+              '<td class="image_name">' +
+              '<div class="image_info">' +
+              '<img src="/media/' +
+              x[i].cv +
+              '" class="info_image" >' +
+              "</div>" +
+              "</td>" +
+              "<td>" +
+              '<a href="/viewpersonnel/' +
+              x[i].id +
+              '"><i class="fas fa-eye" style="color: #198754"></i></a>' +
+              "</td>" +
+              "</tr>";
+          }
+          $("#tbody").html(output);
+        },
+      });
+    });
+
+    // CENTER FILTER PERSONNEL
+
+    $("#centerP").on("click", function () {
+      var centre = $("#centerP").val();
+      var category = $("#centerP").attr("name");
+      mydata = { centre: centre, category: category };
+      console.log(mydata);
+      output = "";
+
+      $.ajax({
+        url: "filter",
+        method: "GET",
+        data: mydata,
+        success: function (response) {
+          console.log(response.data);
+          x = response.data;
+          for (var i = 0; i < x.length; i++) {
+            output +=
+              '<tr style="display: table-row;">' +
+              "<td >" +
+              (i + 1) +
+              "</td>" +
+              '<td class="image_name">' +
+              '<div class="image_info">' +
+              '<img src="/media/' +
+              x[i].imageprofile +
+              '" class="info_image" >' +
+              "</div>" +
+              "</td>" +
+              "<td>" +
+              x[i].personnelid +
+              "</td>" +
+              "<td >" +
+              x[i].name +
+              "</td>" +
+              "<td >" +
+              x[i].sex +
+              "</td>" +
+              "<td >" +
+              x[i].telephone +
+              "</td>" +
+              "<td >" +
+              x[i].section +
+              "</td>" +
+              "<td >" +
+              x[i].centre +
+              "</td>" +
+              "<td >" +
+              x[i].travail +
+              "</td>" +
+              "<td >" +
+              x[i].email +
+              "</td>" +
+              "<td >" +
+              x[i].situation +
+              "</td>" +
+              "<td >" +
+              x[i].adress +
+              "</td>" +
+              '<td class="image_name">' +
+              '<div class="image_info">' +
+              '<img src="/media/' +
+              x[i].cin +
+              '" class="info_image" >' +
+              "</div>" +
+              "</td>" +
+              '<td class="image_name">' +
+              '<div class="image_info">' +
+              '<img src="/media/' +
+              x[i].cv +
+              '" class="info_image" >' +
+              "</div>" +
+              "</td>" +
+              "<td>" +
+              '<a href="/viewpersonnel/' +
+              x[i].id +
+              '"><i class="fas fa-eye" style="color: #198754"></i></a>' +
+              "</td>" +
+              "</tr>";
+          }
+          $("#tbody").html(output);
+        },
+      });
+    });
+
+    $("#situationP").on("click", function () {
+      var situation = $("#situationP").val();
+      var category = $("#situationP").attr("name");
+      mydata = { situation: situation, category: category };
+      console.log(mydata);
+      output = "";
+
+      $.ajax({
+        url: "filter",
+        method: "GET",
+        data: mydata,
+        success: function (response) {
+          console.log(response.data);
+          x = response.data;
+          for (var i = 0; i < x.length; i++) {
+            output +=
+              '<tr style="display: table-row;">' +
+              "<td >" +
+              (i + 1) +
+              "</td>" +
+              '<td class="image_name">' +
+              '<div class="image_info">' +
+              '<img src="/media/' +
+              x[i].imageprofile +
+              '" class="info_image" >' +
+              "</div>" +
+              "</td>" +
+              "<td>" +
+              x[i].personnelid +
+              "</td>" +
+              "<td >" +
+              x[i].name +
+              "</td>" +
+              "<td >" +
+              x[i].sex +
+              "</td>" +
+              "<td >" +
+              x[i].telephone +
+              "</td>" +
+              "<td >" +
+              x[i].section +
+              "</td>" +
+              "<td >" +
+              x[i].centre +
+              "</td>" +
+              "<td >" +
+              x[i].travail +
+              "</td>" +
+              "<td >" +
+              x[i].email +
+              "</td>" +
+              "<td >" +
+              x[i].situation +
+              "</td>" +
+              "<td >" +
+              x[i].adress +
+              "</td>" +
+              '<td class="image_name">' +
+              '<div class="image_info">' +
+              '<img src="/media/' +
+              x[i].cin +
+              '" class="info_image" >' +
+              "</div>" +
+              "</td>" +
+              '<td class="image_name">' +
+              '<div class="image_info">' +
+              '<img src="/media/' +
+              x[i].cv +
+              '" class="info_image" >' +
+              "</div>" +
+              "</td>" +
+              "<td>" +
+              '<a href="/viewpersonnel/' +
+              x[i].id +
+              '"><i class="fas fa-eye" style="color: #198754"></i></a>' +
+              "</td>" +
+              "</tr>";
+          }
+          $("#tbody").html(output);
+        },
+      });
+    });
+
+    $("#sectionP").on("click", function () {
+      var section = $("#sectionP").val();
+      var category = $("#sectionP").attr("name");
+      mydata = { section: section, category: category };
+      console.log(mydata);
+      output = "";
+
+      $.ajax({
+        url: "filter",
+        method: "GET",
+        data: mydata,
+        success: function (response) {
+          console.log(response.data);
+          x = response.data;
+          for (var i = 0; i < x.length; i++) {
+            output +=
+              '<tr style="display: table-row;">' +
+              "<td >" +
+              (i + 1) +
+              "</td>" +
+              '<td class="image_name">' +
+              '<div class="image_info">' +
+              '<img src="/media/' +
+              x[i].imageprofile +
+              '" class="info_image" >' +
+              "</div>" +
+              "</td>" +
+              "<td>" +
+              x[i].personnelid +
+              "</td>" +
+              "<td >" +
+              x[i].name +
+              "</td>" +
+              "<td >" +
+              x[i].sex +
+              "</td>" +
+              "<td >" +
+              x[i].telephone +
+              "</td>" +
+              "<td >" +
+              x[i].section +
+              "</td>" +
+              "<td >" +
+              x[i].centre +
+              "</td>" +
+              "<td >" +
+              x[i].travail +
+              "</td>" +
+              "<td >" +
+              x[i].email +
+              "</td>" +
+              "<td >" +
+              x[i].situation +
+              "</td>" +
+              "<td >" +
+              x[i].adress +
+              "</td>" +
+              '<td class="image_name">' +
+              '<div class="image_info">' +
+              '<img src="/media/' +
+              x[i].cin +
+              '" class="info_image" >' +
+              "</div>" +
+              "</td>" +
+              '<td class="image_name">' +
+              '<div class="image_info">' +
+              '<img src="/media/' +
+              x[i].cv +
+              '" class="info_image" >' +
+              "</div>" +
+              "</td>" +
+              "<td>" +
+              '<a href="/viewpersonnel/' +
+              x[i].id +
+              '"><i class="fas fa-eye" style="color: #198754"></i></a>' +
+              "</td>" +
+              "</tr>";
+          }
+          $("#tbody").html(output);
+        },
+      });
+    });
+
+    $("#btnshowstatistic").click(function () {
+      var sem = $("#id_semestre_st").val();
+      var year = $("#id_year_st").val();
+      mydata = { sem: sem, year: year };
+      $.ajax({
+        url: "showstat",
+        method: "GET",
+        data: mydata,
+        success: function (response) {},
+      });
+    });
+    //addToMedal
+    $("#tbody").on("click", "#edit", function () {
+      var csrf = $("input[name=csrfmiddlewaretoken]").val();
+      let id = $(this).attr("data-sid");
+      myth = this;
+      mydata = { csrfmiddlewaretoken: csrf, id: id };
+
+      $.ajax({
+        url: "edit",
+        method: "POST",
+        data: mydata,
+        success: function (response) {
+          var id = response.data["id"];
+
+          var identifiant = response.data["identifiant"];
+          var nom = response.data["nom"];
+          var email = response.data["email"];
+          var date_naissance = response.data["date_naissance"];
+
+          var ville = response.data["ville"];
+
+          var nom_mere = response.data["nom_mere"];
+
+          var institution = response.data["institution"];
+
+          var batch = response.data["batch"];
+
+          var centre = response.data["centre"];
+          var telephone_mere = response.data["telephone_mere"];
+          var sex = response.data["sex"];
+
+          var date_entre = response.data["date_entre"];
+          var date_sortie = response.data["date_sortie"];
+
+          console.log("id:");
+          console.log(response.data);
+          $("#etudiant_id").attr("nom", "id");
+          $("#etudiant_id").val(id);
+
+          $("#id_identifiant_o").val(identifiant);
+          $("#id_nom_o").val(nom);
+
+          $("#id_date_naissance_o").val(date_naissance);
+
+          $("#id_ville_o").val(ville);
+          $("#id_nom_o").val(nom);
+
+          $("#id_nom_mere_o").val(nom_mere);
+
+          $("#id_institution_o").val(institution);
+
+          $("#id_batch_o").val(batch);
+
+          $("#id_centre_o").val(centre);
+          $("#id_telephone_mere_o").val(telephone_mere);
+
+          $("#id_sex_o").val(sex);
+
+          $("#id_date_entre_o").val(date_entre);
+          $("#id_date_sortie_o").val(date_sortie);
+
+          // selectElement("id_sex_u",sex)
+
+          $(".editclass").attr("data-bs-toggle", "modal");
+        },
+      });
+    });
+  });
+</script>
+
+<!--
+
+   
+-->

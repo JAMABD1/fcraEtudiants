@@ -1,0 +1,235 @@
+{% extends "main/base.html" %}
+{% block title%} Elites Archivés {% endblock%}
+{% block content %}
+
+<!-- Header -->
+<div class="dashboard-header mb-8">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">
+                <i class="fas fa-star text-warning mr-3"></i>
+                Elites Archivés
+            </h1>
+            <p class="text-gray-200">Liste des étudiants élites archivés</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'elite' %}" class="btn btn-outline-light btn-sm"><i class="fas fa-star me-2"></i>Elites Actifs</a>
+            <a href="{% url 'archived_students' %}" class="btn btn-outline-light btn-sm"><i class="fas fa-archive me-2"></i>Étudiants Archivés</a>
+            <a href="{% url 'elite_dashboard' %}" class="btn btn-outline-light btn-sm"><i class="fas fa-chart-bar me-2"></i>Dashboard</a>
+        </div>
+    </div>
+    
+    <!-- Simple Filter Panel -->
+    <div class="filter-panel mt-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-gradient-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-filter mr-2"></i>
+                    Filtres
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="GET" class="row g-3">
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" name="search" placeholder="Rechercher..." value="{{ search_query }}" />
+                    </div>
+                    <div class="col-md-2">
+                        <select name="centre" class="form-select">
+                            <option value="">Centre</option>
+                            {% for c in centers %}
+                                <option value="{{ c }}" {% if c == centre_filter %}selected{% endif %}>{{ c }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select name="genre" class="form-select">
+                            <option value="">Genre</option>
+                            {% for g in genres %}
+                                <option value="{{ g }}" {% if g == genre_filter %}selected{% endif %}>{{ g }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select name="institution" class="form-select">
+                            <option value="">Institution</option>
+                            {% for i in institutions %}
+                                <option value="{{ i }}" {% if i == institution_filter %}selected{% endif %}>{{ i }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">Filtrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-6">
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm text-center">
+            <div class="card-body">
+                <h3 class="text-primary">{{ total_archived_elites }}</h3>
+                <p class="text-muted mb-0">Total Elites Archivés</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm text-center">
+            <div class="card-body">
+                <h3 class="text-success">{{ archived_elites_gender_stats|length }}</h3>
+                <p class="text-muted mb-0">Genres</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm text-center">
+            <div class="card-body">
+                <h3 class="text-info">{{ centers|length }}</h3>
+                <p class="text-muted mb-0">Centres</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm text-center">
+            <div class="card-body">
+                <h3 class="text-warning">{{ institutions|length }}</h3>
+                <p class="text-muted mb-0">Institutions</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Archived Elites Table -->
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white">
+        <h5 class="mb-0">
+            <i class="fas fa-list mr-2"></i>
+            Liste des Elites Archivés
+        </h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Photo</th>
+                        <th>Nom</th>
+                        <th>Identifiant</th>
+                        <th>Genre</th>
+                        <th>Centre</th>
+                        <th>Institution</th>
+                        <th>Classe</th>
+                        <th>Date d'Archivage</th>
+                        <th>Raison</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for archived_elite in archived_elites %}
+                    <tr>
+                        <td>
+                            {% if archived_elite.archive.imageprofile %}
+                                <img src="{{ archived_elite.archive.imageprofile.url }}" 
+                                     alt="{{ archived_elite.archive.nom }}" 
+                                     class="rounded-circle" 
+                                     width="40" 
+                                     height="40">
+                            {% else %}
+                                <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center" 
+                                     style="width: 40px; height: 40px;">
+                                    <i class="fas fa-user text-white"></i>
+                                </div>
+                            {% endif %}
+                        </td>
+                        <td>{{ archived_elite.archive.nom }}</td>
+                        <td>{{ archived_elite.archive.identifiant }}</td>
+                        <td>
+                            <span class="badge bg-{% if archived_elite.archive.genre == 'M' %}primary{% else %}danger{% endif %}">
+                                {{ archived_elite.archive.genre }}
+                            </span>
+                        </td>
+                        <td>{{ archived_elite.archive.centre|default:"N/A" }}</td>
+                        <td>{{ archived_elite.archive.institution|default:"N/A" }}</td>
+                        <td>{{ archived_elite.archive.Class|default:"N/A" }}</td>
+                        <td>{{ archived_elite.date_archivage|date:"d/m/Y" }}</td>
+                        <td>
+                            <span class="badge bg-warning">{{ archived_elite.raison|default:"N/A" }}</span>
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{% url 'viewStudentByIdentifiant' archived_elite.archive.identifiant %}" 
+                                   class="btn btn-outline-info" 
+                                   title="Voir">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <button class="btn btn-outline-warning" 
+                                        title="Restaurer" 
+                                        onclick="restoreElite({{ archived_elite.id }})">
+                                    <i class="fas fa-undo"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="10" class="text-center text-muted py-4">
+                            <i class="fas fa-inbox fa-3x mb-3"></i>
+                            <p>Aucun élite archivé trouvé</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Pagination -->
+{% if archived_elites.has_other_pages %}
+<div class="d-flex justify-content-center mt-4">
+    <nav aria-label="Pagination">
+        <ul class="pagination">
+            {% if archived_elites.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if institution_filter %}&institution={{ institution_filter }}{% endif %}">Premier</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ archived_elites.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if institution_filter %}&institution={{ institution_filter }}{% endif %}">Précédent</a>
+                </li>
+            {% endif %}
+
+            <li class="page-item active">
+                <span class="page-link">
+                    Page {{ archived_elites.number }} sur {{ archived_elites.paginator.num_pages }}
+                </span>
+            </li>
+
+            {% if archived_elites.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ archived_elites.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if institution_filter %}&institution={{ institution_filter }}{% endif %}">Suivant</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ archived_elites.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if institution_filter %}&institution={{ institution_filter }}{% endif %}">Dernier</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function restoreElite(archiveId) {
+    if (confirm('Êtes-vous sûr de vouloir restaurer cet élite ?')) {
+        // Implementation for restoring elite
+        console.log('Restoring elite with archive ID:', archiveId);
+        // You can add AJAX call here to restore the elite
+    }
+}
+</script>
+{% endblock %}

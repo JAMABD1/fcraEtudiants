@@ -1,0 +1,314 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block title%} Etudiants {% endblock %}
+{% block content %}
+<!--Filter Script -->
+<script>
+    // Function to fetch filtered results and update the table
+    async function fetchOrphelins(page = 1) {
+        const searchQuery = document.querySelector('input[name="search"]').value;
+        const centerFilter = document.querySelector('select[name="centre"]').value;
+        const fillierFilter = document.querySelector('select[name="fillier"]').value;
+        const classFilter = document.querySelector('select[name="class"]').value;
+        const genreFilter = document.querySelector('select[name="genre"]').value;
+        const institutionFilter = document.querySelector('select[name="institution"]').value;
+        const designationFilter = document.querySelector('select[name="designation"]').value;
+        const ageFilter = document.querySelector('select[name="age"]').value;
+
+        const urlParams = new URLSearchParams({
+            search: searchQuery,
+            centre: centerFilter,
+            fillier: fillierFilter,
+            class: classFilter,
+            genre: genreFilter,
+            institution: institutionFilter,
+            designation: designationFilter,
+            age: ageFilter,
+            page: page
+        });
+
+        const response = await fetch(`?${urlParams}`, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        });
+
+        const data = await response.json();
+        updateTable(data);
+    }
+
+    // Function to replace table content with fetched data
+    function updateTable(data) {
+        // This would need to be implemented based on your table structure
+        console.log('Updating table with:', data);
+    }
+
+    // Clear all filters function
+    function clearFilters() {
+        document.querySelector('input[name="search"]').value = '';
+        document.querySelector('select[name="centre"]').value = '';
+        document.querySelector('select[name="fillier"]').value = '';
+        document.querySelector('select[name="class"]').value = '';
+        document.querySelector('select[name="genre"]').value = '';
+        document.querySelector('select[name="institution"]').value = '';
+        document.querySelector('select[name="designation"]').value = '';
+        document.querySelector('select[name="age"]').value = '';
+        document.querySelector('select[name="status"]').value = '';
+        
+        // Submit the form to apply cleared filters
+        document.querySelector('form').submit();
+    }
+
+    // Attach click event listeners for pagination buttons
+    function attachPaginationListeners() {
+        const paginationLinks = document.querySelectorAll('.pagination-link');
+        paginationLinks.forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                const page = this.dataset.page;
+                fetchOrphelins(page);
+            });
+        });
+    }
+
+    // Modal functionality to view full-size image
+    function openModal(imageUrl) {
+        document.getElementById('modalImage').src = imageUrl;
+        document.getElementById('imageModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('imageModal').style.display = 'none';
+    }
+
+    // Function to open student information modal
+    async function openModalInfo(studentId) {
+        try {
+            const response = await fetch(`/student-data/${studentId}/`);
+            if (!response.ok) throw new Error('Failed to fetch student data');
+            
+            const student = await response.json();
+            
+            // Update modal with student information
+            document.getElementById('studentImage').src = student.imageprofile;
+            document.getElementById('studentName').textContent = student.nom;
+            
+            // Build info HTML
+            const infoHTML = `
+                <div class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <h4 class="font-semibold text-gray-700 mb-2">Informations personnelles</h4>
+                            <p><span class="font-medium">ID:</span> ${student.identifiant}</p>
+                            <p><span class="font-medium">Date de naissance:</span> ${student.date_naissance}</p>
+                            <p><span class="font-medium">Âge:</span> ${student.Age} ans</p>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <h4 class="font-semibold text-gray-700 mb-2">Parents</h4>
+                            <p><span class="font-medium">Père:</span> ${student.nom_pere || 'N/A'}</p>
+                            <p><span class="font-medium">Mère:</span> ${student.nom_mere || 'N/A'}</p>
+                            <p><span class="font-medium">Téléphone:</span> ${student.telephone || 'N/A'}</p>
+                            <p><span class="font-medium">Téléphone mère:</span> ${student.telephone_mere || 'N/A'}</p>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <h4 class="font-semibold text-gray-700 mb-2">Études</h4>
+                            <p><span class="font-medium">Désignation:</span> ${student.designation || 'N/A'}</p>
+                            <p><span class="font-medium">Institution:</span> ${student.institution || 'N/A'}</p>
+                            <p><span class="font-medium">Classe:</span> ${student.Class || 'N/A'}</p>
+                            <p><span class="font-medium">Filière:</span> ${student.fillier || 'N/A'}</p>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <h4 class="font-semibold text-gray-700 mb-2">Localisation</h4>
+                            <p><span class="font-medium">Ville:</span> ${student.ville || 'N/A'}</p>
+                            <p><span class="font-medium">Centre:</span> ${student.centre || 'N/A'}</p>
+                            <p><span class="font-medium">Date d'entrée:</span> ${student.date_entre || 'N/A'}</p>
+                            <p><span class="font-medium">Date de sortie:</span> ${student.date_sortie || 'N/A'}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('studentInfo').innerHTML = infoHTML;
+            document.getElementById('studentModal').classList.remove('hidden');
+        } catch (error) {
+            console.error('Error fetching student data:', error);
+            alert('Erreur lors du chargement des informations de l\'étudiant');
+        }
+    }
+
+    // Attach the modal functions to global scope
+    window.openModal = openModal;
+    window.closeModal = closeModal;
+    window.openModalInfo = openModalInfo;
+
+    // Close modal when clicking outside the image
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('imageModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeModal();
+            }
+        });
+    });
+</script>
+
+<script src="/static/javascript/modal.js"></script>
+
+<!--Tableaux-->
+<div class="p-6">
+    <h1 class="text-2xl font-bold mb-4">Liste des Étudiants</h1>
+      <div class="mb-4">
+      <form method="GET" action="{% url 'student' %}" class="flex flex-col md:flex-row gap-4 mb-4">
+    <!-- Search Query Input -->
+    <input type="text" name="search" placeholder="Rechercher par nom, ID, téléphone, institution..." 
+           value="{{ search_query }}" 
+           class="border rounded p-2 w-full md:w-1/4" />
+
+    <!-- Age Filter -->
+    <select name="age" class="border rounded p-2 w-full md:w-1/4">
+        <option value="">Sélectionnez un âge</option>  
+        <option value="3-10" {% if age_filter == "3-10" %}selected{% endif %}>3-10 ans</option>
+        <option value="11-14" {% if age_filter == "11-14" %}selected{% endif %}>11-14 ans</option>
+        <option value="15-18" {% if age_filter == "15-18" %}selected{% endif %}>15-18 ans</option>
+        <option value="19-21" {% if age_filter == "19-21" %}selected{% endif %}>19-21 ans</option>
+        <option value="22-25" {% if age_filter == "22-25" %}selected{% endif %}>22-25 ans</option>
+        <option value="26+" {% if age_filter == "26+" %}selected{% endif %}>26+ ans</option>
+    </select>
+
+    <!-- Designation Filter -->
+    <select name="designation" class="border rounded p-2 w-full md:w-1/4">
+        <option value="">Sélectionnez une désignation</option>
+        {% for designation in designations %}
+            <option value="{{ designation }}" {% if designation == designation_filter %}selected{% endif %}>{{ designation }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Class Filter -->
+    <select name="class" class="border rounded p-2 w-full md:w-1/4">
+        <option value="">Sélectionnez une classe</option>
+        {% for class in classes %}
+            <option value="{{ class }}" {% if class == class_filter %}selected{% endif %}>{{ class }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Centre Filter -->
+    <select name="centre" class="border rounded p-2 w-full md:w-1/4">
+        <option value="">Sélectionnez un centre</option>
+        {% for centre in centers %}
+            <option value="{{ centre }}" {% if centre == centre_filter %}selected{% endif %}>{{ centre }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Genre Filter -->
+    <select name="genre" class="border rounded p-2 w-full md:w-1/4">
+        <option value="">Sélectionnez un genre</option>
+        <option value="M" {% if genre_filter == "M" %}selected{% endif %}>Masculin</option>
+        <option value="F" {% if genre_filter == "F" %}selected{% endif %}>Féminin</option>
+    </select>
+
+    <!-- Institution Filter -->
+    <select name="institution" class="border rounded p-2 w-full md:w-1/4">
+        <option value="">Sélectionnez un institution</option>
+        {% for institution in institutions %}
+            <option value="{{ institution }}" {% if institution == institution_filter %}selected{% endif %}>{{ institution }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Fillier Filter -->
+    <select name="fillier" class="border rounded p-2 w-full md:w-1/4">
+        <option value="">Sélectionnez une filière</option>
+        {% for fillier in filliers %}
+            <option value="{{ fillier }}" {% if fillier == fillier_filter %}selected{% endif %}>{{ fillier }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Status Filter -->
+    <select name="status" class="border rounded p-2 w-full md:w-1/4">
+        <option value="">Sélectionnez un statut</option>
+        {% for status in statuses %}
+            <option value="{{ status }}" {% if status == status_filter %}selected{% endif %}>{{ status }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Filter Button -->
+    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Filtrer</button>
+    
+    <!-- Clear Filters Button -->
+    <button type="button" onclick="clearFilters()" class="bg-gray-500 text-white px-4 py-2 rounded">Effacer</button>
+</form>
+    </div>
+        
+                        
+ 
+   {% include  'main/components/TablesEtudiants.html' with datas=students %}
+    
+</div>
+  <!-- Pagination Controls -->
+    <div class="flex justify-between mt-4">
+        <div>
+            {% if students.has_previous %}
+                <a href="?page=1&search={{ search_query }}" class="bg-green-500 text-white font-medium px-4 py-2 rounded">Première</a>
+                <a href="?page={{ students.previous_page_number }}&search={{ search_query }}" class="bg-green-500 text-white font-medium px-4 py-2 rounded">Précédente</a>
+            {% endif %}
+            <span>Page {{ students.number }} sur {{ students.paginator.num_pages }}</span>
+            {% if students.has_next %}
+                <a href="?page={{ students.next_page_number }}&search={{ search_query }}" class="bg-green-500 text-white font-medium px-4 py-2 rounded">Suivante</a>
+                <a href="?page={{ students.paginator.num_pages }}&search={{ search_query }}" class="bg-green-500 text-white font-medium px-4 py-2 rounded">Dernière</a>
+            {% endif %}
+        </div>
+    </div>
+
+<div id="imageModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-lg p-4 relative">
+        <span id="closeModal" class="absolute top-2 right-2 cursor-pointer text-gray-600">&times;</span>
+        <img id="modalImage" src="" alt="Profile" class="max-w-full max-h-[80vh] object-contain" />
+    </div>
+</div>
+
+ <div id="studentModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+    <div class="relative top-20  p-5   border w-11/12 md:w-3/4 lg:w-3/4 shadow-lg rounded-md bg-white">
+        <div class="mt-3 text-center">
+             <span id="closeModalInfo" class="absolute top-2 right-2 cursor-pointer text-gray-600">&times;</span>
+             
+             
+            <img id="studentImage" src="" width="300"  height="300" alt="Photo de Profil" class="  rounded-full object-cover mx-auto mb-4">
+            <h2 id="studentName" class="text-2xl font-bold text-gray-900 mb-4"></h2>
+            
+            <div id="studentInfo" class="mt-2 text-left grid grid-cols-1 md:grid-cols-2 gap-4  md:w-2/3 lg:w-2/3">
+                <!-- Student information will be dynamically inserted here -->
+            
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal Script -->
+<script>
+    function openModal(imageUrl) {
+        document.getElementById('modalImage').src = imageUrl;
+        document.getElementById('imageModal').classList.remove('hidden');
+    }
+
+    document.getElementById('closeModal').onclick = function() {
+        document.getElementById('imageModal').classList.add('hidden');
+    }
+
+    // Close modal when clicking outside of the image
+    window.onclick = function(event) {
+        if (event.target == document.getElementById('imageModal')) {
+            document.getElementById('imageModal').classList.add('hidden');
+        }
+    }
+
+     document.getElementById('closeModalInfo').onclick = function() {
+        document.getElementById('studentModal').classList.add('hidden');
+        console.log("clicked")
+    }
+
+    // Close modal when clicking outside of the image
+    window.onclick = function(event) {
+        if (event.target == document.getElementById('studentModal')) {
+            document.getElementById('studentModal').classList.add('hidden');
+        }
+    }
+</script>
+{% endblock content %}

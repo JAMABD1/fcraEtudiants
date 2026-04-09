@@ -1,0 +1,648 @@
+{% load static tailwind_tags %}
+
+{% load i18n %}
+<head>
+
+  <title>{% block title%} {% endblock%} </title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
+  {% tailwind_css %}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+  <!-- Bootstrap CSS -->
+
+  <style>
+    .nav-collapsed {
+      width: 70px !important;
+      min-width: 70px !important;
+      max-width: 70px !important;
+    }
+    
+    .nav-expanded {
+      width: 280px !important;
+      min-width: 280px !important;
+      max-width: 280px !important;
+    }
+    
+    .nav-transition {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .nav-item {
+      position: relative;
+      margin-bottom: 4px;
+    }
+    
+    .nav-tooltip {
+      position: fixed;
+      left: 80px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 9999;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      pointer-events: none;
+    }
+    
+    .nav-tooltip::before {
+      content: '';
+      position: absolute;
+      right: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 6px solid transparent;
+      border-right-color: #1e40af;
+    }
+    
+    .nav-collapsed .nav-item:hover .nav-tooltip {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(-50%) translateX(5px);
+    }
+    
+    .nav-expanded .nav-tooltip {
+      display: none;
+    }
+    
+    .nav-logo-text {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .nav-item-text {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .nav-section-title {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .nav-item a {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav-item a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .nav-item a:hover::before {
+      left: 100%;
+    }
+
+    .nav-item a:hover {
+      background: linear-gradient(135deg, #f0f7ff 0%, #e0f2fe 100%);
+      border-left: 4px solid #3b82f6;
+      transform: translateX(4px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    }
+
+    .nav-item a.active {
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      color: white !important;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+      border-left: 4px solid #1e40af;
+    }
+
+    .nav-item a.active img {
+      filter: brightness(0) invert(1);
+    }
+
+    .sidebar-gradient {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    }
+
+    .logo-container {
+      background: linear-gradient(135deg, #f0f7ff 0%, #e0f2fe 100%);
+      border: 2px solid #e0f2fe;
+      border-radius: 16px;
+      padding: 12px;
+      margin-bottom: 24px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-collapsed .logo-container {
+      padding: 8px;
+      margin-bottom: 16px;
+      border-radius: 12px;
+    }
+
+    .nav-collapsed .nav-item a {
+      padding: 12px 8px !important;
+      justify-content: center;
+      border-radius: 12px;
+      margin-bottom: 8px;
+    }
+
+    .nav-collapsed .nav-section-title {
+      display: none !important;
+    }
+
+    .nav-collapsed .section-divider {
+      margin: 8px 0;
+    }
+
+    .nav-collapsed .toggle-btn {
+      padding: 8px !important;
+      margin: 0 auto 16px auto;
+    }
+
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #e2e8f0, transparent);
+      margin: 16px 0;
+    }
+
+    .toggle-btn {
+      background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+      border: 1px solid #cbd5e1;
+      transition: all 0.3s ease;
+    }
+
+    .toggle-btn:hover {
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      border-color: #1d4ed8;
+      transform: scale(1.05);
+    }
+
+    .toggle-btn:hover svg {
+      color: white;
+    }
+
+    .nav-section {
+      margin-bottom: 24px;
+    }
+
+    .nav-section:last-child {
+      border-top: 1px solid #f1f5f9;
+      padding-top: 16px;
+      margin-top: auto;
+    }
+
+    /* Nested menu styles */
+    .submenu {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-in-out;
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      border-radius: 8px;
+      margin: 4px 0;
+    }
+
+    .submenu.open {
+      max-height: 300px;
+    }
+
+    .submenu-item {
+      padding: 8px 16px 8px 48px;
+      margin: 2px 8px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .submenu-item:hover {
+      background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+      transform: translateX(4px);
+    }
+
+    .submenu-item a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #64748b;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .submenu-item a:hover {
+      color: #1e40af;
+    }
+
+    .submenu-item a.active {
+      color: #1e40af;
+      font-weight: 600;
+    }
+
+    .submenu-icon {
+      width: 16px;
+      height: 16px;
+      opacity: 0.7;
+    }
+
+    .chevron-icon {
+      transition: transform 0.3s ease;
+      width: 16px;
+      height: 16px;
+    }
+
+    .chevron-icon.rotated {
+      transform: rotate(90deg);
+    }
+
+    .nav-collapsed .submenu {
+      display: none;
+    }
+
+    .nav-collapsed .chevron-icon {
+      display: none;
+    }
+
+    /* Prevent horizontal scroll */
+    html, body {
+      overflow-x: hidden !important;
+      max-width: 100vw !important;
+    }
+    
+    .main-container {
+      overflow-x: hidden !important;
+      width: 100vw !important;
+      max-width: 100vw !important;
+    }
+    
+    #mainContent {
+      overflow-x: hidden !important;
+      min-width: 0 !important;
+      flex: 1 !important;
+      width: calc(100vw - 280px) !important;
+    }
+
+    .nav-collapsed + #mainContent {
+      width: calc(100vw - 70px) !important;
+    }
+
+    @media (max-width: 768px) {
+      .nav-expanded {
+        width: 240px !important;
+        min-width: 240px !important;
+        max-width: 240px !important;
+      }
+      
+      .nav-collapsed {
+        width: 60px !important;
+        min-width: 60px !important;
+        max-width: 60px !important;
+      }
+      
+      .nav-tooltip {
+        left: 70px;
+      }
+
+      #mainContent {
+        width: calc(100vw - 240px) !important;
+      }
+
+      .nav-collapsed + #mainContent {
+        width: calc(100vw - 60px) !important;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .nav-expanded {
+        width: 200px !important;
+        min-width: 200px !important;
+        max-width: 200px !important;
+      }
+
+      #mainContent {
+        width: calc(100vw - 200px) !important;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <div class="h-screen flex main-container">
+    {% if not hide_sidebar %}
+    <div id="sidebar" class="nav-expanded nav-transition sidebar-gradient shadow-2xl border-r border-gray-100 flex flex-col">
+      
+      <!-- Header Section -->
+      <div class="p-4">
+        <!-- Toggle Button -->
+        <div class="flex justify-center mb-4">
+          <button id="toggleSidebar" class="toggle-btn p-3 rounded-xl transition-all duration-300">
+            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Logo Section -->
+        <a href="/" class="block">
+          <div class="logo-container">
+            <div class="flex items-center gap-4">
+              <div class="flex-shrink-0">
+                <img src="/static/image/logo.jpeg" class="rounded-xl shadow-lg" alt="logo" width="48" height="48">
+              </div>
+              <div class="nav-logo-text">
+                <h1 class="font-bold text-xl text-gray-800">FCRA ADMIN</h1>
+                <p class="text-sm text-gray-500">Système de Gestion</p>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Navigation Section -->
+      <nav class="flex-1 px-4 pb-6 overflow-y-auto">
+        <div class="space-y-1">
+          {% for item in menuItems %}
+          <div class="nav-section">
+            {% if not forloop.first %}
+              <div class="section-divider"></div>
+            {% endif %}
+            
+            <div class="nav-section-title block text-xs font-bold text-gray-400 uppercase tracking-wider mb-4 px-3">
+              {{ item.title }}
+            </div>
+
+            {% for i in item.items %}
+            {% if role in i.visible %}
+            <div class="nav-item">
+              {% if i.hasSubmenu %}
+                <!-- Parent menu item with submenu -->
+                <div class="parent-menu-item">
+                  <a href="#" 
+                    class="flex items-center gap-4 px-4 py-3 text-gray-700 rounded-xl transition-all duration-300 group relative cursor-pointer"
+                    onclick="toggleSubmenu(this)">
+                    <div class="flex-shrink-0 z-10">
+                      <img src="{{i.icon}}" alt="{{ i.label }}" width="22" height="22" class="group-hover:scale-110 transition-transform duration-300">
+                    </div>
+                    <span class="nav-item-text font-medium text-sm z-10 flex-1">{{ i.label }}</span>
+                    <svg class="chevron-icon w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                  </a>
+                  <div class="nav-tooltip">{{ i.label }}</div>
+                  
+                  <!-- Submenu -->
+                  <div class="submenu" id="submenu-{{ forloop.counter }}">
+                    {% for subitem in i.submenu %}
+                    {% if role in subitem.visible %}
+                    <div class="submenu-item">
+                      <a href="{{ subitem.href }}" class="submenu-link">
+                        <img src="{{ subitem.icon }}" alt="{{ subitem.label }}" class="submenu-icon">
+                        <span>{{ subitem.label }}</span>
+                      </a>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                  </div>
+                </div>
+              {% else %}
+                <!-- Regular menu item -->
+                <a href="{{ i.href }}"
+                  class="flex items-center gap-4 px-4 py-3 text-gray-700 rounded-xl transition-all duration-300 group relative">
+                  <div class="flex-shrink-0 z-10">
+                    <img src="{{i.icon}}" alt="{{ i.label }}" width="22" height="22" class="group-hover:scale-110 transition-transform duration-300">
+                  </div>
+                  <span class="nav-item-text font-medium text-sm z-10">{{ i.label }}</span>
+                </a>
+                <div class="nav-tooltip">{{ i.label }}</div>
+              {% endif %}
+            </div>
+            {% endif %}
+            {% endfor %}
+          </div>
+          {% endfor %}
+        </div>
+      </nav>
+
+    </div>
+    {% endif %}
+
+    <div id="mainContent" class="flex-1 bg-gradient-to-br from-gray-50 to-gray-100 overflow-auto flex flex-col" {% if hide_sidebar %}style="width: 100vw !important;"{% endif %}>
+
+      {% if not hide_sidebar %}
+      <div class="flex justify-between py-4 px-6 items-center bg-white shadow-sm border-b border-gray-100">
+
+        <div class="hidden md:flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-2 border border-gray-200">
+          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+          <input type="text" placeholder="Rechercher ..."
+            class="w-[300px] bg-transparent border-none outline-none text-gray-700 placeholder-gray-400" />
+        </div>
+
+        <div class="flex items-center gap-4">
+          <div class="relative">
+            <button class="bg-gray-50 hover:bg-gray-100 rounded-xl w-10 h-10 flex items-center justify-center transition-colors duration-200 border border-gray-200">
+              <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+              </svg>
+            </button>
+          </div>
+          
+          <div class="relative">
+            <button class="bg-gray-50 hover:bg-gray-100 rounded-xl w-10 h-10 flex items-center justify-center transition-colors duration-200 border border-gray-200">
+              <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM4.828 7l6.586 6.586a2 2 0 002.828 0l6.586-6.586A2 2 0 0021.414 7H4.828z"></path>
+              </svg>
+            </button>
+            <div class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">
+              1
+            </div>
+          </div>
+          
+          <div class="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-2 border border-gray-200">
+            <div class="text-right">
+              <div class="text-sm font-semibold text-gray-800">Jaolaza Abdallah</div>
+              <div class="text-xs text-gray-500">Admin</div>
+            </div>
+            <img src="{% static 'image/avatar.png' %}" alt="" width="40" height="40" class="rounded-full border-2 border-white shadow-sm" />
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="flex-1 {% if not hide_sidebar %}p-6{% endif %}">
+        {% block content %}
+        {% endblock content %}
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const sidebar = document.getElementById('sidebar');
+      const toggleBtn = document.getElementById('toggleSidebar');
+      const logoText = document.querySelector('.nav-logo-text');
+      const itemTexts = document.querySelectorAll('.nav-item-text');
+      const sectionTitles = document.querySelectorAll('.nav-section-title');
+      const navLinks = document.querySelectorAll('.nav-item a');
+      const navItems = document.querySelectorAll('.nav-item');
+      
+      let isCollapsed = false;
+
+      // Set active state based on current URL
+      function setActiveState() {
+        const currentPath = window.location.pathname;
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === currentPath) {
+            link.classList.add('active');
+          }
+        });
+        
+        // Also check submenu links
+        const submenuLinks = document.querySelectorAll('.submenu-link');
+        submenuLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === currentPath) {
+            link.classList.add('active');
+          }
+        });
+      }
+
+      // Position tooltips dynamically
+      function positionTooltips() {
+        navItems.forEach(item => {
+          const tooltip = item.querySelector('.nav-tooltip');
+          if (tooltip) {
+            item.addEventListener('mouseenter', function() {
+              if (isCollapsed) {
+                const rect = this.getBoundingClientRect();
+                tooltip.style.top = rect.top + (rect.height / 2) + 'px';
+                tooltip.style.left = (sidebar.offsetWidth + 5) + 'px';
+              }
+            });
+          }
+        });
+      }
+
+      // Update main content width
+      function updateMainContentWidth() {
+        const mainContent = document.getElementById('mainContent');
+        if (isCollapsed) {
+          mainContent.style.width = 'calc(100vw - 70px)';
+        } else {
+          mainContent.style.width = 'calc(100vw - 280px)';
+        }
+      }
+
+      // Initialize active state and tooltip positioning
+      setActiveState();
+      positionTooltips();
+      
+      toggleBtn.addEventListener('click', function() {
+        isCollapsed = !isCollapsed;
+        
+        if (isCollapsed) {
+          sidebar.classList.remove('nav-expanded');
+          sidebar.classList.add('nav-collapsed');
+          
+          // Hide text elements with smooth transition
+          logoText.style.opacity = '0';
+          itemTexts.forEach(text => text.style.opacity = '0');
+          sectionTitles.forEach(title => title.style.opacity = '0');
+          
+          setTimeout(() => {
+            if (isCollapsed) {
+              logoText.style.display = 'none';
+              itemTexts.forEach(text => text.style.display = 'none');
+              sectionTitles.forEach(title => title.style.display = 'none');
+            }
+          }, 300);
+          
+        } else {
+          sidebar.classList.remove('nav-collapsed');
+          sidebar.classList.add('nav-expanded');
+          
+          // Show text elements with smooth transition
+          logoText.style.display = 'block';
+          itemTexts.forEach(text => text.style.display = 'block');
+          sectionTitles.forEach(title => title.style.display = 'block');
+          
+          setTimeout(() => {
+            logoText.style.opacity = '1';
+            itemTexts.forEach(text => text.style.opacity = '1');
+            sectionTitles.forEach(title => title.style.opacity = '1');
+          }, 50);
+        }
+        
+        // Update toggle button icon with smooth animation
+        const icon = toggleBtn.querySelector('svg path');
+        if (isCollapsed) {
+          icon.setAttribute('d', 'M15 19l-7-7 7-7');
+        } else {
+          icon.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+        }
+
+        // Reposition tooltips and update content width after toggle
+        setTimeout(() => {
+          positionTooltips();
+          updateMainContentWidth();
+        }, 300);
+      });
+
+      // Add click handlers for navigation links
+      navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          // Only handle regular links, not submenu toggles
+          if (!this.onclick) {
+            // Remove active class from all links
+            navLinks.forEach(l => l.classList.remove('active'));
+            // Add active class to clicked link
+            this.classList.add('active');
+          }
+        });
+      });
+
+      // Add smooth scrolling for sidebar if content overflows
+      const navContainer = sidebar.querySelector('nav');
+      if (navContainer.scrollHeight > navContainer.clientHeight) {
+        navContainer.style.scrollBehavior = 'smooth';
+      }
+
+      // Handle window resize
+      window.addEventListener('resize', function() {
+        positionTooltips();
+      });
+    });
+
+    // Toggle submenu function
+    function toggleSubmenu(element) {
+      const submenu = element.parentElement.querySelector('.submenu');
+      const chevron = element.querySelector('.chevron-icon');
+      
+      if (submenu.classList.contains('open')) {
+        submenu.classList.remove('open');
+        chevron.classList.remove('rotated');
+      } else {
+        // Close all other submenus
+        document.querySelectorAll('.submenu.open').forEach(menu => {
+          menu.classList.remove('open');
+        });
+        document.querySelectorAll('.chevron-icon.rotated').forEach(icon => {
+          icon.classList.remove('rotated');
+        });
+        
+        // Open current submenu
+        submenu.classList.add('open');
+        chevron.classList.add('rotated');
+      }
+    }
+  </script>
+
+</body>
+
+</html>

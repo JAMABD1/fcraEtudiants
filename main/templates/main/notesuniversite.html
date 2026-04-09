@@ -1,0 +1,542 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}Notes des Universités{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="mb-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="text-dark font-weight-bold mb-1">
+                            <i class="fas fa-university text-primary mr-2"></i>
+                            Notes des Universités
+                        </h2>
+                        <p class="text-muted mb-0">Gestion académique pour les étudiants universitaires</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'universite' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-university mr-1"></i>
+                            Universités
+                        </a>
+                        <a href="{% url 'universite_dashboard' %}" class="btn btn-outline-success">
+                            <i class="fas fa-chart-bar mr-1"></i>
+                            Dashboard
+                        </a>
+                        <button class="btn btn-primary" onclick="printUniversiteNotes()">
+                            <i class="fas fa-print mr-1"></i>
+                            Imprimer
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- University Notes Statistics Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card bg-gradient-primary text-white h-100">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="mr-3">
+                                <i class="fas fa-chart-line fa-2x"></i>
+                            </div>
+                            <div>
+                                <h4 class="mb-0">{{ total_notes }}</h4>
+                                <small class="opacity-75">Notes Total</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="card bg-gradient-info text-white h-100">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="mr-3">
+                                <i class="fas fa-filter fa-2x"></i>
+                            </div>
+                            <div>
+                                <h4 class="mb-0">{{ filtered_count }}</h4>
+                                <small class="opacity-75">Notes Filtrées</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="card bg-gradient-success text-white h-100">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="mr-3">
+                                <i class="fas fa-tags fa-2x"></i>
+                            </div>
+                            <div>
+                                <h4 class="mb-0">{{ designation_stats|length }}</h4>
+                                <small class="opacity-75">Désignations</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="card bg-gradient-warning text-white h-100">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="mr-3">
+                                <i class="fas fa-university fa-2x"></i>
+                            </div>
+                            <div>
+                                <h4 class="mb-0">{{ institution_stats|length }}</h4>
+                                <small class="opacity-75">Institutions</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Advanced Filter Panel -->
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">
+                        <i class="fas fa-filter text-primary mr-2"></i>
+                        Filtres Avancés
+                        <button class="btn btn-sm btn-outline-primary float-right" type="button" data-bs-toggle="collapse" data-bs-target="#filtersCollapse">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </h5>
+                </div>
+                <div class="collapse show" id="filtersCollapse">
+                    <div class="card-body">
+                        <form method="GET" class="row g-3">
+                            <div class="col-md-2">
+                                <label for="search" class="form-label">
+                                    <i class="fas fa-search text-primary"></i> Recherche
+                                </label>
+                                <input type="text" class="form-control" name="search" id="search" 
+                                       placeholder="Nom, ID, téléphone..." value="{{ search_query }}" />
+                            </div>
+                            <div class="col-md-2">
+                                <label for="centre" class="form-label">
+                                    <i class="fas fa-map-marker-alt text-success"></i> Centre
+                                </label>
+                                <select name="centre" id="centre" class="form-select">
+                                    <option value="">Tous les centres</option>
+                                    {% for c in centres %}
+                                        <option value="{{ c }}" {% if c == centre_filter %}selected{% endif %}>{{ c }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="designation" class="form-label">
+                                    <i class="fas fa-tags text-info"></i> Désignation
+                                </label>
+                                <select name="designation" id="designation" class="form-select">
+                                    <option value="">Toutes</option>
+                                    {% for d in designations %}
+                                        <option value="{{ d }}" {% if d == designation_filter %}selected{% endif %}>{{ d }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="institution" class="form-label">
+                                    <i class="fas fa-university text-warning"></i> Institution
+                                </label>
+                                <select name="institution" id="institution" class="form-select">
+                                    <option value="">Toutes</option>
+                                    {% for i in institutions %}
+                                        <option value="{{ i }}" {% if i == institution_filter %}selected{% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="class" class="form-label">
+                                    <i class="fas fa-graduation-cap text-primary"></i> Classe
+                                </label>
+                                <select name="class" id="class" class="form-select">
+                                    <option value="">Toutes</option>
+                                    {% for c in classes %}
+                                        <option value="{{ c }}" {% if c == class_filter %}selected{% endif %}>{{ c }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="decision" class="form-label">
+                                    <i class="fas fa-gavel text-danger"></i> Décision
+                                </label>
+                                <select name="decision" id="decision" class="form-select">
+                                    <option value="">Toutes</option>
+                                    {% for decision in decisions %}
+                                        <option value="{{ decision.0 }}" {% if decision.0 == decision_filter %}selected{% endif %}>{{ decision.1 }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="note_range" class="form-label">
+                                    <i class="fas fa-chart-bar text-success"></i> Plage de notes
+                                </label>
+                                <select name="note_range" id="note_range" class="form-select">
+                                    <option value="">Toutes</option>
+                                    <option value="0-8" {% if note_range_filter == '0-8' %}selected{% endif %}>0 - 8</option>
+                                    <option value="8-10" {% if note_range_filter == '8-10' %}selected{% endif %}>8 - 10</option>
+                                    <option value="10-12" {% if note_range_filter == '10-12' %}selected{% endif %}>10 - 12</option>
+                                    <option value="12-14" {% if note_range_filter == '12-14' %}selected{% endif %}>12 - 14</option>
+                                    <option value="14-16" {% if note_range_filter == '14-16' %}selected{% endif %}>14 - 16</option>
+                                    <option value="16-18" {% if note_range_filter == '16-18' %}selected{% endif %}>16 - 18</option>
+                                    <option value="18-20" {% if note_range_filter == '18-20' %}selected{% endif %}>18 - 20</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="annee" class="form-label">
+                                    <i class="fas fa-calendar text-info"></i> Année
+                                </label>
+                                <select name="annee" id="annee" class="form-select">
+                                    <option value="">Toutes</option>
+                                    {% for a in annees %}
+                                        <option value="{{ a }}" {% if a == annee_filter %}selected{% endif %}>{{ a }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">&nbsp;</label>
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-search mr-2"></i>Filtrer
+                                    </button>
+                                    <a href="{% url 'notesuniversite' %}" class="btn btn-outline-secondary">
+                                        <i class="fas fa-times mr-2"></i>Réinitialiser
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notes Table -->
+            <div class="card">
+                <div class="card-header bg-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-chart-line text-primary mr-2"></i>
+                            Notes des Étudiants Université
+                        </h5>
+                        <div class="text-muted">
+                            <small>{{ notes.paginator.count }} note{{ notes.paginator.count|pluralize }} trouvée{{ notes.paginator.count|pluralize }}</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    {% if notes %}
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="border-0">
+                                            <i class="fas fa-id-card text-primary mr-1"></i>
+                                            Identifiant
+                                        </th>
+                                        <th class="border-0">
+                                            <i class="fas fa-user text-success mr-1"></i>
+                                            Nom Complet
+                                        </th>
+                                        <th class="border-0">
+                                            <i class="fas fa-tags text-info mr-1"></i>
+                                            Désignation
+                                        </th>
+                                        <th class="border-0">
+                                            <i class="fas fa-graduation-cap text-warning mr-1"></i>
+                                            Classe
+                                        </th>
+                                        <th class="border-0">
+                                            <i class="fas fa-university text-secondary mr-1"></i>
+                                            Institution
+                                        </th>
+                                        <th class="border-0">
+                                            <i class="fas fa-chart-bar text-primary mr-1"></i>
+                                            S1
+                                        </th>
+                                        <th class="border-0">
+                                            <i class="fas fa-chart-bar text-primary mr-1"></i>
+                                            S2
+                                        </th>
+                                        <th class="border-0">
+                                            <i class="fas fa-chart-bar text-primary mr-1"></i>
+                                            S3
+                                        </th>
+                                        <th class="border-0">
+                                            <i class="fas fa-calculator text-success mr-1"></i>
+                                            Moyen
+                                        </th>
+                                        <th class="border-0">
+                                            <i class="fas fa-gavel text-danger mr-1"></i>
+                                            Décision
+                                        </th>
+                                        <th class="border-0">
+                                            <i class="fas fa-calendar text-info mr-1"></i>
+                                            Année
+                                        </th>
+                                        <th class="border-0">
+                                            <i class="fas fa-cog text-primary mr-1"></i>
+                                            Actions
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for note in notes %}
+                                    <tr>
+                                        <td>
+                                            <span class="badge bg-light text-dark font-weight-bold">
+                                                {{ note.identifiant.identifiant }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                {% if note.identifiant.imageprofile %}
+                                                    <img src="{{ note.identifiant.imageprofile.url }}" 
+                                                         alt="Photo de {{ note.identifiant.nom }}" 
+                                                         class="rounded-circle me-2" 
+                                                         style="width: 35px; height: 35px; object-fit: cover;">
+                                                {% else %}
+                                                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-2" 
+                                                         style="width: 35px; height: 35px;">
+                                                        <i class="fas fa-user-graduate text-white" style="font-size: 14px;"></i>
+                                                    </div>
+                                                {% endif %}
+                                                <div>
+                                                    <div class="font-weight-bold text-dark">{{ note.identifiant.nom }}</div>
+                                                    {% if note.identifiant.telephone %}
+                                                        <small class="text-muted">
+                                                            <i class="fas fa-phone mr-1"></i>{{ note.identifiant.telephone }}
+                                                        </small>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-info text-white">
+                                                {{ note.identifiant.designation|default:"N/A" }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-warning text-white">
+                                                {{ note.identifiant.Class|default:"N/A" }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="text-dark font-weight-medium">
+                                                {{ note.identifiant.institution|default:"N/A" }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-{% if note.S1 >= 10 %}success{% else %}danger{% endif %} text-white">
+                                                {{ note.S1|default:"N/A" }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-{% if note.S2 >= 10 %}success{% else %}danger{% endif %} text-white">
+                                                {{ note.S2|default:"N/A" }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-{% if note.S3 >= 10 %}success{% else %}danger{% endif %} text-white">
+                                                {{ note.S3|default:"N/A" }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-{% if note.moyen >= 10 %}success{% elif note.moyen >= 8 %}warning{% else %}danger{% endif %} text-white font-weight-bold">
+                                                {{ note.moyen|default:"N/A" }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-{% if note.decision == 'Admis' %}success{% elif note.decision == 'Repechage' %}warning{% else %}danger{% endif %} text-white">
+                                                {{ note.decision|default:"N/A" }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary text-white">
+                                                {{ note.annee|default:"N/A" }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <a href="{% url 'viewStudentByIdentifiant' note.identifiant.identifiant %}" 
+                                                   class="btn btn-sm btn-outline-primary" 
+                                                   title="Voir l'étudiant">
+                                                    <i class="fas fa-user-graduate"></i>
+                                                </a>
+                                                <button type="button" class="btn btn-sm btn-outline-success" 
+                                                        onclick="editNote('{{ note.id }}')"
+                                                        title="Modifier la note">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-outline-info" 
+                                                        onclick="printNote('{{ note.id }}')"
+                                                        title="Imprimer la note">
+                                                    <i class="fas fa-print"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">Aucune note trouvée</h5>
+                            <p class="text-muted">Les notes des étudiants universitaires apparaîtront ici.</p>
+                            <a href="{% url 'universite' %}" class="btn btn-primary">
+                                <i class="fas fa-university mr-2"></i>Voir les Universités
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Pagination -->
+                {% if notes.has_other_pages %}
+                <div class="card-footer bg-white">
+                    <nav aria-label="Pagination des notes">
+                        <ul class="pagination justify-content-center mb-0">
+                            {% if notes.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if designation_filter %}&designation={{ designation_filter }}{% endif %}{% if institution_filter %}&institution={{ institution_filter }}{% endif %}{% if class_filter %}&class={{ class_filter }}{% endif %}{% if decision_filter %}&decision={{ decision_filter }}{% endif %}{% if note_range_filter %}&note_range={{ note_range_filter }}{% endif %}{% if annee_filter %}&annee={{ annee_filter }}{% endif %}">
+                                        <i class="fas fa-angle-double-left"></i>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ notes.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if designation_filter %}&designation={{ designation_filter }}{% endif %}{% if institution_filter %}&institution={{ institution_filter }}{% endif %}{% if class_filter %}&class={{ class_filter }}{% endif %}{% if decision_filter %}&decision={{ decision_filter }}{% endif %}{% if note_range_filter %}&note_range={{ note_range_filter }}{% endif %}{% if annee_filter %}&annee={{ annee_filter }}{% endif %}">
+                                        <i class="fas fa-angle-left"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                            
+                            <li class="page-item active">
+                                <span class="page-link">
+                                    Page {{ notes.number }} sur {{ notes.paginator.num_pages }}
+                                </span>
+                            </li>
+                            
+                            {% if notes.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ notes.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if designation_filter %}&designation={{ designation_filter }}{% endif %}{% if institution_filter %}&institution={{ institution_filter }}{% endif %}{% if class_filter %}&class={{ class_filter }}{% endif %}{% if decision_filter %}&decision={{ decision_filter }}{% endif %}{% if note_range_filter %}&note_range={{ note_range_filter }}{% endif %}{% if annee_filter %}&annee={{ annee_filter }}{% endif %}">
+                                        <i class="fas fa-angle-right"></i>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ notes.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if designation_filter %}&designation={{ designation_filter }}{% endif %}{% if institution_filter %}&institution={{ institution_filter }}{% endif %}{% if class_filter %}&class={{ class_filter }}{% endif %}{% if decision_filter %}&decision={{ decision_filter }}{% endif %}{% if note_range_filter %}&note_range={{ note_range_filter }}{% endif %}{% if annee_filter %}&annee={{ annee_filter }}{% endif %}">
+                                        <i class="fas fa-angle-double-right"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.bg-gradient-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+.bg-gradient-info { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+.bg-gradient-success { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+.bg-gradient-warning { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+
+.text-pink { color: #e91e63 !important; }
+
+.card {
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border-radius: 0.5rem;
+}
+
+.card-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 0.5rem 0.5rem 0 0 !important;
+}
+
+.table th {
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.table td {
+    vertical-align: middle;
+    border-top: 1px solid #dee2e6;
+}
+
+.btn-group .btn {
+    border-radius: 0.25rem;
+    margin: 0 1px;
+}
+
+.btn-group .btn:first-child {
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+}
+
+.btn-group .btn:last-child {
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+}
+
+@media (max-width: 768px) {
+    .table-responsive {
+        font-size: 0.875rem;
+    }
+    
+    .btn-group .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+}
+</style>
+
+<script>
+// Function to edit a note
+function editNote(noteId) {
+    // This would typically open a modal to edit the note
+    alert('Modifier la note ID: ' + noteId + '\n\nCette fonctionnalité ouvrira un formulaire pour modifier la note.');
+}
+
+// Function to print a specific note
+function printNote(noteId) {
+    // This would typically generate a printable version of the specific note
+    alert('Imprimer la note ID: ' + noteId + '\n\nCette fonctionnalité générera une version imprimable de la note.');
+}
+
+// Function to print all university notes
+function printUniversiteNotes() {
+    // This would typically generate a printable version of all notes
+    alert('Impression de toutes les notes universitaires\n\nCette fonctionnalité générera une version imprimable de toutes les notes.');
+    // window.print(); // Uncomment this line to enable actual printing
+}
+
+// Add smooth scrolling for better UX
+document.addEventListener('DOMContentLoaded', function() {
+    // Add loading animation for the table
+    const table = document.querySelector('.table');
+    if (table) {
+        table.style.opacity = '0';
+        setTimeout(() => {
+            table.style.transition = 'opacity 0.5s ease-in-out';
+            table.style.opacity = '1';
+        }, 100);
+    }
+    
+    // Add hover effects to table rows
+    const tableRows = document.querySelectorAll('.table tbody tr');
+    tableRows.forEach(row => {
+        row.addEventListener('mouseenter', function() {
+            this.style.backgroundColor = '#f8f9fa';
+        });
+        row.addEventListener('mouseleave', function() {
+            this.style.backgroundColor = '';
+        });
+    });
+});
+</script>
+
+{% endblock %}

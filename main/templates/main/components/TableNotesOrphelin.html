@@ -1,0 +1,1354 @@
+<!-- Orphan Notes Table Component -->
+<div class="orphan-notes-container">
+    <!-- Statistics Cards -->
+    <div class="stats-grid mb-4">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-heart-broken"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ total_notes }}</h3>
+                <p>Total Notes Orphelins</p>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ avg_score }}</h3>
+                <p>Moyenne Générale</p>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ pass_rate }}%</h3>
+                <p>Taux de Réussite</p>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-star"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ excellence_rate }}%</h3>
+                <p>Taux d'Excellence</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters Section -->
+    <div class="filters-section">
+        <div class="filters-header">
+            <h3><i class="fas fa-filter"></i> Filtres Spéciaux Orphelins</h3>
+            <button class="btn btn-outline-secondary btn-sm" onclick="clearOrphanFilters()">
+                <i class="fas fa-times"></i> Effacer
+            </button>
+        </div>
+        
+        <form method="get" class="filters-form">
+            <div class="row g-3">
+                <!-- Search -->
+                <div class="col-md-3">
+                    <div class="form-floating">
+                        <input type="text" 
+                               class="form-control" 
+                               id="search" 
+                               name="search" 
+                               value="{{ search_query }}" 
+                               placeholder="Rechercher par nom...">
+                        <label for="search">
+                            <i class="fas fa-search"></i> Rechercher
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Class Filter -->
+                <div class="col-md-2">
+                    <div class="form-floating">
+                        <select class="form-select" id="class" name="class">
+                            <option value="">Toutes</option>
+                            {% for class in classes %}
+                                <option value="{{ class }}" {% if class == class_filter %}selected{% endif %}>
+                                    {{ class }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <label for="class">
+                            <i class="fas fa-graduation-cap"></i> Classe
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Designation Filter -->
+                <div class="col-md-2">
+                    <div class="form-floating">
+                        <select class="form-select" id="designation" name="designation">
+                            <option value="">Toutes</option>
+                            {% for designation in designations %}
+                                <option value="{{ designation }}" {% if designation == designation_filter %}selected{% endif %}>
+                                    {{ designation }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <label for="designation">
+                            <i class="fas fa-tag"></i> Désignation
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Institution Filter -->
+                <div class="col-md-2">
+                    <div class="form-floating">
+                        <select class="form-select" id="institution" name="institution">
+                            <option value="">Toutes</option>
+                            {% for institution in institutions %}
+                                <option value="{{ institution }}" {% if institution == institution_filter %}selected{% endif %}>
+                                    {{ institution }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <label for="institution">
+                            <i class="fas fa-university"></i> Institution
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Genre Filter -->
+                <div class="col-md-2">
+                    <div class="form-floating">
+                        <select class="form-select" id="genre" name="genre">
+                            <option value="">Tous</option>
+                            {% for genre in genres %}
+                                <option value="{{ genre }}" {% if genre == genre_filter %}selected{% endif %}>
+                                    {% if genre == 'M' %}Masculin{% elif genre == 'F' %}Féminin{% else %}{{ genre }}{% endif %}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <label for="genre">
+                            <i class="fas fa-venus-mars"></i> Genre
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Decision Filter -->
+                <div class="col-md-2">
+                    <div class="form-floating">
+                        <select class="form-select" id="decision" name="decision">
+                            <option value="">Toutes</option>
+                            {% for decision in decisions %}
+                                <option value="{{ decision }}" {% if decision == decision_filter %}selected{% endif %}>
+                                    {{ decision }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <label for="decision">
+                            <i class="fas fa-gavel"></i> Décision
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Year Filter -->
+                <div class="col-md-1">
+                    <div class="form-floating">
+                        <select class="form-select" id="annee" name="annee">
+                            <option value="">Toutes</option>
+                            {% for annee in annees %}
+                                <option value="{{ annee }}" {% if annee == annee_filter %}selected{% endif %}>
+                                    {{ annee }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <label for="annee">
+                            <i class="fas fa-calendar-alt"></i> Année
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Orphan Status Filter (Unique to this table) -->
+                <div class="col-md-1">
+                    <div class="form-floating">
+                        <select class="form-select" id="orphan_status" name="orphan_status">
+                            <option value="">Tous</option>
+                            {% for status in orphan_statuses %}
+                                <option value="{{ status }}" {% if status == orphan_status_filter %}selected{% endif %}>
+                                    {{ status }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <label for="orphan_status">
+                            <i class="fas fa-heart-broken"></i> Statut
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Center Filter -->
+                <div class="col-md-2">
+                    <div class="form-floating">
+                        <select class="form-select" id="centre" name="centre">
+                            <option value="">Tous</option>
+                            {% for centre in centres %}
+                                <option value="{{ centre }}" {% if centre == centre_filter %}selected{% endif %}>
+                                    {{ centre }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <label for="centre">
+                            <i class="fas fa-map-marker-alt"></i> Centre
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Rank Filter -->
+                <div class="col-md-1">
+                    <div class="form-floating">
+                        <select class="form-select" id="rang" name="rang">
+                            <option value="">Tous</option>
+                            <option value="1" {% if rang_filter == '1' %}selected{% endif %}>1</option>
+                            <option value="1-3" {% if rang_filter == '1-3' %}selected{% endif %}>1 - 3</option>
+                            <option value="1-10" {% if rang_filter == '1-10' %}selected{% endif %}>1 - 10</option>
+                            <option value="others" {% if rang_filter == 'others' %}selected{% endif %}>Autres</option>
+                        </select>
+                        <label for="rang">
+                            <i class="fas fa-trophy"></i> Rang
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Ville Filter -->
+                <div class="col-md-2">
+                    <div class="form-floating">
+                        <select class="form-select" id="ville" name="ville">
+                            <option value="">Toutes</option>
+                            {% for ville in villes %}
+                                <option value="{{ ville }}" {% if ville == ville_filter %}selected{% endif %}>{{ ville }}</option>
+                            {% endfor %}
+                        </select>
+                        <label for="ville">
+                            <i class="fas fa-map-marker-alt"></i> Ville
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-3">
+                <!-- Note Range Filter -->
+                <div class="col-md-2">
+                    <div class="form-floating">
+                        <select class="form-select" id="note_range" name="note_range">
+                            <option value="">Toutes</option>
+                            <option value="0-8" {% if note_range == "0-8" %}selected{% endif %}>0-8</option>
+                            <option value="8-10" {% if note_range == "8-10" %}selected{% endif %}>8-10</option>
+                            <option value="10-12" {% if note_range == "10-12" %}selected{% endif %}>10-12</option>
+                            <option value="12-14" {% if note_range == "12-14" %}selected{% endif %}>12-14</option>
+                            <option value="14-16" {% if note_range == "14-16" %}selected{% endif %}>14-16</option>
+                            <option value="16-18" {% if note_range == "16-18" %}selected{% endif %}>16-18</option>
+                            <option value="18-20" {% if note_range == "18-20" %}selected{% endif %}>18-20</option>
+                        </select>
+                        <label for="note_range">
+                            <i class="fas fa-chart-bar"></i> Notes
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="col-md-10">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Filtrer
+                    </button>
+                    <button type="button" class="btn btn-outline-primary ms-2" onclick="exportOrphanData()">
+                        <i class="fas fa-download"></i> Exporter
+                    </button>
+                    <button type="button" class="btn btn-outline-info ms-2" onclick="viewOrphanStatistics()">
+                        <i class="fas fa-chart-pie"></i> Statistiques
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Enhanced Results Info with Filter Details -->
+    <div class="results-info">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <span class="badge bg-primary fs-6">
+                    {{ filtered_count|default:total_notes }} orphelin{{ filtered_count|default:total_notes|pluralize }} trouvé{{ filtered_count|default:total_notes|pluralize }}
+                    {% if total_notes != filtered_count and filtered_count %}
+                        sur {{ total_notes }}
+                    {% endif %}
+                </span>
+                <span class="badge bg-info fs-6 ms-2">
+                    <i class="fas fa-heart-broken mr-1"></i>
+                    Notes d'Orphelins Seulement
+                </span>
+            </div>
+            <div class="view-options">
+                <button class="btn btn-sm btn-outline-secondary active" onclick="toggleOrphanView('table')">
+                    <i class="fas fa-table"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-secondary" onclick="toggleOrphanView('cards')">
+                    <i class="fas fa-th-large"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Active Filters Display -->
+        <div class="active-filters">
+            {% if search_query or class_filter or designation_filter or institution_filter or genre_filter or ville_filter or decision_filter or note_range or annee_filter or orphan_status_filter or centre_filter or rang_filter %}
+                <div class="filter-tags">
+                    <small class="text-muted me-2">
+                        <i class="fas fa-filter"></i> Filtres actifs:
+                    </small>
+                    
+                    {% if search_query %}
+                        <span class="filter-tag">
+                            <i class="fas fa-search"></i> Recherche: "{{ search_query }}"
+                            <button type="button" class="btn-close-filter" onclick="removeFilter('search')">×</button>
+                        </span>
+                    {% endif %}
+                    
+                    {% if class_filter %}
+                        <span class="filter-tag">
+                            <i class="fas fa-graduation-cap"></i> Classe: {{ class_filter }}
+                            <button type="button" class="btn-close-filter" onclick="removeFilter('class')">×</button>
+                        </span>
+                    {% endif %}
+                    
+                    {% if designation_filter %}
+                        <span class="filter-tag">
+                            <i class="fas fa-tag"></i> Désignation: {{ designation_filter }}
+                            <button type="button" class="btn-close-filter" onclick="removeFilter('designation')">×</button>
+                        </span>
+                    {% endif %}
+                    
+                    {% if institution_filter %}
+                        <span class="filter-tag">
+                            <i class="fas fa-university"></i> Institution: {{ institution_filter }}
+                            <button type="button" class="btn-close-filter" onclick="removeFilter('institution')">×</button>
+                        </span>
+                    {% endif %}
+                    
+                    {% if genre_filter %}
+                        <span class="filter-tag">
+                            <i class="fas fa-venus-mars"></i> Genre: {% if genre_filter == 'M' %}Masculin{% elif genre_filter == 'F' %}Féminin{% else %}{{ genre_filter }}{% endif %}
+                            <button type="button" class="btn-close-filter" onclick="removeFilter('genre')">×</button>
+                        </span>
+                    {% endif %}
+
+                    {% if ville_filter %}
+                        <span class="filter-tag">
+                            <i class="fas fa-map-marker-alt"></i> Ville: {{ ville_filter }}
+                            <button type="button" class="btn-close-filter" onclick="removeFilter('ville')">×</button>
+                        </span>
+                    {% endif %}
+                    
+                    {% if decision_filter %}
+                        <span class="filter-tag">
+                            <i class="fas fa-gavel"></i> Décision: {{ decision_filter }}
+                            <button type="button" class="btn-close-filter" onclick="removeFilter('decision')">×</button>
+                        </span>
+                    {% endif %}
+                    
+                    {% if note_range %}
+                        <span class="filter-tag">
+                            <i class="fas fa-chart-bar"></i> Notes: {{ note_range }}
+                            <button type="button" class="btn-close-filter" onclick="removeFilter('note_range')">×</button>
+                        </span>
+                    {% endif %}
+                    
+                    {% if annee_filter %}
+                        <span class="filter-tag">
+                            <i class="fas fa-calendar-alt"></i> Année: {{ annee_filter }}
+                            <button type="button" class="btn-close-filter" onclick="removeFilter('annee')">×</button>
+                        </span>
+                    {% endif %}
+                    
+                    {% if orphan_status_filter %}
+                        <span class="filter-tag">
+                            <i class="fas fa-heart-broken"></i> Statut: {{ orphan_status_filter }}
+                            <button type="button" class="btn-close-filter" onclick="removeFilter('orphan_status')">×</button>
+                        </span>
+                    {% endif %}
+
+                    {% if centre_filter %}
+                        <span class="filter-tag">
+                            <i class="fas fa-map-marker-alt"></i> Centre: {{ centre_filter }}
+                            <button type="button" class="btn-close-filter" onclick="removeFilter('centre')">×</button>
+                        </span>
+                    {% endif %}
+
+                    {% if rang_filter %}
+                        <span class="filter-tag">
+                            <i class="fas fa-trophy"></i>
+                            Rang:
+                            {% if rang_filter == '1' %}1{% elif rang_filter == '1-3' %}1-3{% elif rang_filter == '1-10' %}1-10{% elif rang_filter == 'others' %}Autres{% else %}{{ rang_filter }}{% endif %}
+                            <button type="button" class="btn-close-filter" onclick="removeFilter('rang')">×</button>
+                        </span>
+                    {% endif %}
+                    
+                    <button type="button" class="btn btn-sm btn-outline-danger ms-2" onclick="clearOrphanFilters()">
+                        <i class="fas fa-times"></i> Effacer tous les filtres
+                    </button>
+                </div>
+            {% else %}
+                <small class="text-muted">
+                    <i class="fas fa-info-circle"></i> Aucun filtre appliqué - Affichage de tous les orphelins
+                </small>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Table View -->
+    <div id="orphan-table-view" class="table-container">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped orphan-table">
+                <thead class="table-dark sticky-top">
+                    <tr>
+                        <th scope="col">
+                            <input type="checkbox" class="form-check-input" id="selectAllOrphan">
+                        </th>
+                        <th scope="col" class="sortable" onclick="sortOrphanTable('identifiant')">
+                            <i class="fas fa-id-card"></i> Identifiant
+                            <i class="fas fa-sort sort-icon"></i>
+                        </th>
+                        <th scope="col" class="sortable" onclick="sortOrphanTable('s1')">
+                            <i class="fas fa-calendar"></i> S1
+                            <i class="fas fa-sort sort-icon"></i>
+                        </th>
+                        <th scope="col" class="sortable" onclick="sortOrphanTable('s2')">
+                            <i class="fas fa-calendar"></i> S2
+                            <i class="fas fa-sort sort-icon"></i>
+                        </th>
+                        <th scope="col" class="sortable" onclick="sortOrphanTable('s3')">
+                            <i class="fas fa-calendar"></i> S3
+                            <i class="fas fa-sort sort-icon"></i>
+                        </th>
+                        <th scope="col" class="sortable" onclick="sortOrphanTable('annee')">
+                            <i class="fas fa-calendar-alt"></i> Année
+                            <i class="fas fa-sort sort-icon"></i>
+                        </th>
+                        <th scope="col" class="sortable" onclick="sortOrphanTable('moyen')">
+                            <i class="fas fa-chart-line"></i> Moyenne
+                            <i class="fas fa-sort sort-icon"></i>
+                        </th>
+                        <th scope="col" class="sortable" onclick="sortOrphanTable('centre')">
+                            <i class="fas fa-map-marker-alt"></i> Centre
+                            <i class="fas fa-sort sort-icon"></i>
+                        </th>
+                        <th scope="col" class="sortable" onclick="sortOrphanTable('rang')">
+                            <i class="fas fa-trophy"></i> Rang
+                            <i class="fas fa-sort sort-icon"></i>
+                        </th>
+                        <th scope="col" class="sortable" onclick="sortOrphanTable('decision')">
+                            <i class="fas fa-gavel"></i> Décision
+                            <i class="fas fa-sort sort-icon"></i>
+                        </th>
+                        <th scope="col">
+                            <i class="fas fa-map-marker-alt"></i> Ville
+                        </th>
+                        <th scope="col">
+                            <i class="fas fa-graduation-cap"></i> Classe
+                        </th>
+                        <th scope="col">
+                            <i class="fas fa-university"></i> Institution
+                        </th>
+                        <th scope="col" class="text-center">
+                            <i class="fas fa-cogs"></i> Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for note in notes %}
+                    <tr class="orphan-table-row" data-id="{{ note.id }}">
+                        <td>
+                            <input type="checkbox" class="form-check-input row-checkbox" value="{{ note.id }}">
+                        </td>
+                        <td class="fw-bold text-primary">
+                            <div class="d-flex align-items-center">
+                                {% if note.identifiant.imageprofile %}
+                                    <img src="{{ note.identifiant.imageprofile.url }}" 
+                                         alt="Photo" 
+                                         width="50"
+                                         height="50"
+                                         class="avatar me-2">
+                                {% else %}
+                                    <div class="avatar-placeholder orphan-avatar me-2">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                {% endif %}
+                                <div>
+                                    <div class="fw-bold">{{ note.identifiant.identifiant }}</div>
+                                    <small class="text-muted">{{ note.identifiant.nom }}</small>
+                                    <div class="orphan-badge">
+                                        <i class="fas fa-heart-broken text-warning"></i>
+                                        <small class="text-warning fw-bold">Orphelin</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge {% if note.S1 >= 10 %}bg-success{% elif note.S1 >= 8 %}bg-warning{% else %}bg-danger{% endif %}">
+                                {{ note.S1|default:"-" }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge {% if note.S2 >= 10 %}bg-success{% elif note.S2 >= 8 %}bg-warning{% else %}bg-danger{% endif %}">
+                                {{ note.S2|default:"-" }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge {% if note.S3 >= 10 %}bg-success{% elif note.S3 >= 8 %}bg-warning{% else %}bg-danger{% endif %}">
+                                {{ note.S3|default:"-" }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge bg-info">{{ note.annee }}</span>
+                        </td>
+                        <td>
+                            <div class="average-score">
+                                <span class="score {% if note.moyen >= 16 %}excellent{% elif note.moyen >= 14 %}very-good{% elif note.moyen >= 12 %}good{% elif note.moyen >= 10 %}average{% else %}poor{% endif %}">
+                                    {{ note.moyen|floatformat:2 }}
+                                </span>
+                                <div class="progress progress-sm mt-1">
+                                    <div class="progress-bar {% if note.moyen >= 16 %}bg-success{% elif note.moyen >= 14 %}bg-info{% elif note.moyen >= 12 %}bg-primary{% elif note.moyen >= 10 %}bg-warning{% else %}bg-danger{% endif %}" 
+                                         style="width: {{ note.moyen|floatformat:0 }}%"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge bg-secondary">{{ note.identifiant.centre }}</span>
+                        </td>
+                        <td>
+                            <span class="badge bg-secondary">{{ note.rang|default:"-" }}</span>
+                        </td>
+                        <td>
+                            <span class="badge {% if note.decision == 'Admis' %}bg-success{% elif note.decision == 'Redoublant' %}bg-warning{% else %}bg-danger{% endif %}">
+                                {{ note.decision }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="ville-badge">{{ note.identifiant.ville|default:"N/A" }}</span>
+                        </td>
+                        <td>
+                            <small class="text-muted">{{ note.identifiant.Class }}</small>
+                        </td>
+                        <td>
+                            <small class="text-muted">{{ note.identifiant.institution }}</small>
+                        </td>
+                        <td class="text-center">
+                            <button type="button" 
+                                    class="btn btn-primary btn-sm" 
+                                    onclick="viewOrphanNote('{{ note.identifiant.identifiant }}')"
+                                    title="Voir Étudiant">
+                                <i class="fas fa-eye me-1"></i>
+                                Voir Étudiant
+                            </button>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="14" class="text-center py-5">
+                            <div class="empty-state">
+                                <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                                <h5 class="text-muted">Aucune note d'orphelin trouvée</h5>
+                                <p class="text-muted">Essayez de modifier vos critères de recherche.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Cards View (Hidden by default) -->
+    <div id="orphan-cards-view" class="cards-container" style="display: none;">
+        <div class="row g-3">
+            {% for note in notes %}
+            <div class="col-md-6 col-lg-4">
+                <div class="orphan-note-card">
+                    <div class="card-header">
+                        <div class="d-flex align-items-center">
+                            {% if note.identifiant.imageprofile %}
+                                <img src="{{ note.identifiant.imageprofile.url }}" 
+                                     alt="Photo" 
+                                     class="avatar me-3">
+                            {% else %}
+                                <div class="avatar-placeholder orphan-avatar me-3">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            {% endif %}
+                            <div>
+                                <h6 class="mb-0">{{ note.identifiant.nom }}</h6>
+                                <small class="text-muted">{{ note.identifiant.identifiant }}</small>
+                                <div class="orphan-badge mt-1">
+                                    <i class="fas fa-heart-broken text-warning"></i>
+                                    <small class="text-warning fw-bold">Orphelin</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="scores-row">
+                            <div class="score-item">
+                                <span class="label">S1</span>
+                                <span class="value {% if note.S1 >= 10 %}text-success{% elif note.S1 >= 8 %}text-warning{% else %}text-danger{% endif %}">
+                                    {{ note.S1|default:"-" }}
+                                </span>
+                            </div>
+                            <div class="score-item">
+                                <span class="label">S2</span>
+                                <span class="value {% if note.S2 >= 10 %}text-success{% elif note.S2 >= 8 %}text-warning{% else %}text-danger{% endif %}">
+                                    {{ note.S2|default:"-" }}
+                                </span>
+                            </div>
+                            <div class="score-item">
+                                <span class="label">S3</span>
+                                <span class="value {% if note.S3 >= 10 %}text-success{% elif note.S3 >= 8 %}text-warning{% else %}text-danger{% endif %}">
+                                    {{ note.S3|default:"-" }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="average-section">
+                            <div class="average-label">Moyenne</div>
+                            <div class="average-value {% if note.moyen >= 16 %}excellent{% elif note.moyen >= 14 %}very-good{% elif note.moyen >= 12 %}good{% elif note.moyen >= 10 %}average{% else %}poor{% endif %}">
+                                {{ note.moyen|floatformat:2 }}
+                            </div>
+                        </div>
+                        <div class="card-footer-info">
+                            <div class="info-item">
+                                <i class="fas fa-graduation-cap"></i>
+                                <span>{{ note.identifiant.Class }}</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-university"></i>
+                                <span>{{ note.identifiant.institution }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span>{{ note.identifiant.centre }}</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-gavel"></i>
+                                <span class="badge {% if note.decision == 'Admis' %}bg-success{% elif note.decision == 'Redoublant' %}bg-warning{% else %}bg-danger{% endif %}">
+                                    {{ note.decision }}
+                                </span>
+                            </div>
+                            <div class="info-item ville-info">
+                                <i class="fas fa-map-marker-alt text-primary"></i>
+                                <span class="ville-badge">{{ note.identifiant.ville|default:"N/A" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn btn-primary btn-sm w-100" onclick="viewOrphanNote('{{ note.identifiant.identifiant }}')">
+                            <i class="fas fa-eye me-1"></i> Voir Étudiant
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    {% if notes.has_other_pages %}
+    <nav aria-label="Navigation des notes orphelins" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if notes.has_previous %}
+                <li class="page-item">
+                        <a class="page-link" href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if class_filter %}class={{ class_filter }}&{% endif %}{% if designation_filter %}designation={{ designation_filter }}&{% endif %}{% if institution_filter %}institution={{ institution_filter }}&{% endif %}{% if genre_filter %}genre={{ genre_filter }}&{% endif %}{% if ville_filter %}ville={{ ville_filter }}&{% endif %}{% if decision_filter %}decision={{ decision_filter }}&{% endif %}{% if note_range %}note_range={{ note_range }}&{% endif %}{% if annee_filter %}annee={{ annee_filter }}&{% endif %}{% if orphan_status_filter %}orphan_status={{ orphan_status_filter }}&{% endif %}{% if centre_filter %}centre={{ centre_filter }}&{% endif %}{% if rang_filter %}rang={{ rang_filter }}&{% endif %}page=1">
+                        <i class="fas fa-angle-double-left"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                        <a class="page-link" href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if class_filter %}class={{ class_filter }}&{% endif %}{% if designation_filter %}designation={{ designation_filter }}&{% endif %}{% if institution_filter %}institution={{ institution_filter }}&{% endif %}{% if genre_filter %}genre={{ genre_filter }}&{% endif %}{% if ville_filter %}ville={{ ville_filter }}&{% endif %}{% if decision_filter %}decision={{ decision_filter }}&{% endif %}{% if note_range %}note_range={{ note_range }}&{% endif %}{% if annee_filter %}annee={{ annee_filter }}&{% endif %}{% if orphan_status_filter %}orphan_status={{ orphan_status_filter }}&{% endif %}{% if centre_filter %}centre={{ centre_filter }}&{% endif %}{% if rang_filter %}rang={{ rang_filter }}&{% endif %}page={{ notes.previous_page_number }}">
+                        <i class="fas fa-angle-left"></i>
+                    </a>
+                </li>
+            {% endif %}
+
+            {% for num in notes.paginator.page_range %}
+                {% if notes.number == num %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                {% elif num > notes.number|add:'-3' and num < notes.number|add:'3' %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if class_filter %}class={{ class_filter }}&{% endif %}{% if designation_filter %}designation={{ designation_filter }}&{% endif %}{% if institution_filter %}institution={{ institution_filter }}&{% endif %}{% if genre_filter %}genre={{ genre_filter }}&{% endif %}{% if ville_filter %}ville={{ ville_filter }}&{% endif %}{% if decision_filter %}decision={{ decision_filter }}&{% endif %}{% if note_range %}note_range={{ note_range }}&{% endif %}{% if annee_filter %}annee={{ annee_filter }}&{% endif %}{% if orphan_status_filter %}orphan_status={{ orphan_status_filter }}&{% endif %}{% if centre_filter %}centre={{ centre_filter }}&{% endif %}{% if rang_filter %}rang={{ rang_filter }}&{% endif %}page={{ num }}">{{ num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if notes.has_next %}
+                <li class="page-item">
+                        <a class="page-link" href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if class_filter %}class={{ class_filter }}&{% endif %}{% if designation_filter %}designation={{ designation_filter }}&{% endif %}{% if institution_filter %}institution={{ institution_filter }}&{% endif %}{% if genre_filter %}genre={{ genre_filter }}&{% endif %}{% if ville_filter %}ville={{ ville_filter }}&{% endif %}{% if decision_filter %}decision={{ decision_filter }}&{% endif %}{% if note_range %}note_range={{ note_range }}&{% endif %}{% if annee_filter %}annee={{ annee_filter }}&{% endif %}{% if orphan_status_filter %}orphan_status={{ orphan_status_filter }}&{% endif %}{% if centre_filter %}centre={{ centre_filter }}&{% endif %}{% if rang_filter %}rang={{ rang_filter }}&{% endif %}page={{ notes.next_page_number }}">
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                        <a class="page-link" href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if class_filter %}class={{ class_filter }}&{% endif %}{% if designation_filter %}designation={{ designation_filter }}&{% endif %}{% if institution_filter %}institution={{ institution_filter }}&{% endif %}{% if genre_filter %}genre={{ genre_filter }}&{% endif %}{% if ville_filter %}ville={{ ville_filter }}&{% endif %}{% if decision_filter %}decision={{ decision_filter }}&{% endif %}{% if note_range %}note_range={{ note_range }}&{% endif %}{% if annee_filter %}annee={{ annee_filter }}&{% endif %}{% if orphan_status_filter %}orphan_status={{ orphan_status_filter }}&{% endif %}{% if centre_filter %}centre={{ centre_filter }}&{% endif %}{% if rang_filter %}rang={{ rang_filter }}&{% endif %}page={{ notes.paginator.num_pages }}">
+                        <i class="fas fa-angle-double-right"></i>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    
+    <div class="pagination-info text-center text-muted">
+        Page {{ notes.number }} sur {{ notes.paginator.num_pages }} 
+        ({{ notes.start_index }}-{{ notes.end_index }} sur {{ notes.paginator.count }} orphelins)
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.orphan-notes-container {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1.5rem;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+}
+
+.stat-card:nth-child(2) {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.stat-card:nth-child(3) {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.stat-card:nth-child(4) {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.stat-icon {
+    font-size: 2.5rem;
+    margin-right: 1rem;
+    opacity: 0.8;
+}
+
+.stat-content h3 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.stat-content p {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 0.9rem;
+}
+
+.filters-section {
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+}
+
+.filters-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #f1f3f5;
+    padding-bottom: 1rem;
+}
+
+.filters-header h3 {
+    margin: 0;
+    color: #495057;
+    font-weight: 600;
+}
+
+.results-info {
+    background: white;
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.table-container {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.orphan-table {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.orphan-table th {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    border: none;
+    padding: 1rem 0.75rem;
+}
+
+.orphan-table td {
+    padding: 1rem 0.75rem;
+    vertical-align: middle;
+    border-color: #e9ecef;
+}
+
+.orphan-table tbody tr:hover {
+    background-color: #f8f9fa;
+    transform: scale(1.01);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #dee2e6;
+}
+
+.avatar-placeholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.average-score {
+    text-align: center;
+}
+
+.score {
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    color: white;
+}
+
+.score.excellent {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.score.very-good {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.score.good {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.score.average {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.score.poor {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+}
+
+.ville-badge {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.progress-sm {
+    height: 4px;
+}
+
+.sortable {
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+}
+
+.sortable:hover {
+    background-color: rgba(255,255,255,0.1);
+}
+
+.sort-icon {
+    font-size: 0.7rem;
+    margin-left: 0.5rem;
+    opacity: 0.6;
+}
+
+.empty-state {
+    padding: 3rem;
+}
+
+/* Cards View Styles */
+.cards-container {
+    background: transparent;
+}
+
+.orphan-note-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+}
+
+.orphan-note-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+}
+
+.orphan-note-card .card-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1rem;
+}
+
+.orphan-note-card .card-body {
+    padding: 1.5rem;
+}
+
+.scores-row {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 1rem;
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 10px;
+}
+
+.score-item {
+    text-align: center;
+}
+
+.score-item .label {
+    display: block;
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-bottom: 0.25rem;
+}
+
+.score-item .value {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.average-section {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.average-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+
+.average-value {
+    font-size: 1.8rem;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    color: black;
+}
+
+.card-footer-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.info-item i {
+    margin-right: 0.5rem;
+    width: 16px;
+}
+
+.card-actions {
+    padding: 1rem;
+    background: #f8f9fa;
+    display: flex;
+    justify-content: center;
+}
+
+.view-options .btn.active {
+    background-color: #007bff;
+    color: white;
+}
+
+/* Filter Tags Styles */
+.active-filters {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 10px;
+    border: 1px solid #e9ecef;
+}
+
+.filter-tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filter-tag {
+    display: inline-flex;
+    align-items: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    gap: 0.25rem;
+    position: relative;
+    animation: slideInFilter 0.3s ease-out;
+}
+
+.filter-tag i {
+    font-size: 0.7rem;
+}
+
+.btn-close-filter {
+    background: rgba(255, 255, 255, 0.3);
+    border: none;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 0.5rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-close-filter:hover {
+    background: rgba(255, 255, 255, 0.5);
+    transform: scale(1.1);
+}
+
+@keyframes slideInFilter {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Enhanced Results Info */
+.results-info {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    border: 1px solid #e9ecef;
+}
+
+.orphan-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.ville-info {
+    border-top: 1px solid #e9ecef;
+    padding-top: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .orphan-notes-container {
+        padding: 1rem;
+        border-radius: 10px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .stat-card {
+        padding: 1rem;
+    }
+    
+    .filters-form .row {
+        gap: 0.5rem;
+    }
+    
+    .orphan-table {
+        font-size: 0.8rem;
+    }
+    
+    .orphan-table th,
+    .orphan-table td {
+        padding: 0.5rem 0.25rem;
+    }
+    
+    .btn-group-sm .btn {
+        padding: 0.25rem 0.4rem;
+        font-size: 0.75rem;
+    }
+    
+    /* Mobile filter tags */
+    .filter-tags {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+    
+    .filter-tag {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.6rem;
+    }
+    
+    .results-info {
+        padding: 1rem;
+    }
+    
+    .active-filters {
+        padding: 0.75rem;
+    }
+    
+    .d-flex.justify-content-between {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .view-options {
+        align-self: flex-end;
+    }
+}
+
+/* Animation Classes */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.orphan-table-row {
+    animation: fadeInUp 0.3s ease-out;
+}
+
+.orphan-table-row:nth-child(even) {
+    animation-delay: 0.1s;
+}
+
+.orphan-table-row:nth-child(odd) {
+    animation-delay: 0.05s;
+}
+</style>
+
+<script>
+// Toggle between table and cards view for orphans
+function toggleOrphanView(viewType) {
+    const tableView = document.getElementById('orphan-table-view');
+    const cardsView = document.getElementById('orphan-cards-view');
+    const buttons = document.querySelectorAll('.view-options .btn');
+    
+    buttons.forEach(btn => btn.classList.remove('active'));
+    
+    if (viewType === 'table') {
+        tableView.style.display = 'block';
+        cardsView.style.display = 'none';
+        event.target.classList.add('active');
+    } else {
+        tableView.style.display = 'none';
+        cardsView.style.display = 'block';
+        event.target.classList.add('active');
+    }
+}
+
+// Clear all orphan filters
+function clearOrphanFilters() {
+    const form = document.querySelector('.filters-form');
+    const inputs = form.querySelectorAll('input, select');
+    inputs.forEach(input => {
+        if (input.type === 'text' || input.type === 'search') {
+            input.value = '';
+        } else if (input.tagName === 'SELECT') {
+            input.selectedIndex = 0;
+        }
+    });
+    form.submit();
+}
+
+// Remove individual filter
+function removeFilter(filterName) {
+    const form = document.querySelector('.filters-form');
+    const filterInput = form.querySelector(`[name="${filterName}"]`);
+    
+    if (filterInput) {
+        if (filterInput.type === 'text' || filterInput.type === 'search') {
+            filterInput.value = '';
+        } else if (filterInput.tagName === 'SELECT') {
+            filterInput.selectedIndex = 0;
+        }
+        
+        // Add fade out animation to the filter tag
+        const filterTag = event.target.closest('.filter-tag');
+        if (filterTag) {
+            filterTag.style.animation = 'slideOutFilter 0.3s ease-out';
+            setTimeout(() => {
+                form.submit();
+            }, 300);
+        } else {
+            form.submit();
+        }
+    }
+}
+
+// Add CSS animation for filter removal
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideOutFilter {
+        from {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+        }
+        to {
+            opacity: 0;
+            transform: translateX(-20px) scale(0.8);
+        }
+    }
+`;
+document.head.appendChild(style);
+
+// Select all checkboxes for orphans
+document.getElementById('selectAllOrphan')?.addEventListener('change', function() {
+    const checkboxes = document.querySelectorAll('.row-checkbox');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = this.checked;
+    });
+});
+
+// Sort orphan table function
+function sortOrphanTable(column) {
+    console.log('Sorting orphan table by:', column);
+    // Add sorting logic here
+}
+
+// View orphan note details
+function viewOrphanNote(identifiant) {
+    window.location.href = `/student/view/${identifiant}`;
+}
+
+// Edit orphan note
+function editOrphanNote(noteId) {
+    console.log('Editing orphan note:', noteId);
+    // Add edit functionality
+}
+
+// Delete orphan note
+function deleteOrphanNote(noteId) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cette note d\'orphelin?')) {
+        console.log('Deleting orphan note:', noteId);
+        // Add delete functionality
+    }
+}
+
+// View orphan details
+function viewOrphanDetails(orphanId) {
+    // Navigate to orphan details page or show modal
+    console.log('Viewing orphan details:', orphanId);
+    // You could open a modal or navigate to orphan page
+}
+
+// Export orphan data
+function exportOrphanData() {
+    console.log('Exporting orphan data...');
+    // Add export functionality
+}
+
+// View orphan statistics
+function viewOrphanStatistics() {
+    console.log('Viewing orphan statistics...');
+    // Add statistics modal or page
+}
+
+// Auto-submit form when filters change for orphans
+document.addEventListener('DOMContentLoaded', function() {
+    const filterInputs = document.querySelectorAll('.filters-form input, .filters-form select');
+    filterInputs.forEach(input => {
+        if (input.type !== 'text' && input.type !== 'search') {
+            input.addEventListener('change', function() {
+                // Auto-submit for select dropdowns
+                setTimeout(() => {
+                    this.form.submit();
+                }, 100);
+            });
+        }
+    });
+    
+    // Submit search on Enter key
+    const searchInput = document.querySelector('input[name="search"]');
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                this.form.submit();
+            }
+        });
+    }
+});
+</script> 

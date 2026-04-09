@@ -1,0 +1,965 @@
+<!-- Notes Table Component -->
+<div class="notes-container">
+    <!-- Statistics Cards -->
+    <div class="stats-grid mb-4">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ total_notes }}</h3>
+                <p>Total Notes</p>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ avg_score }}</h3>
+                <p>Moyenne Générale</p>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ pass_rate }}%</h3>
+                <p>Taux de Réussite</p>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-star"></i>
+            </div>
+            <div class="stat-content">
+                <h3>{{ excellence_rate }}%</h3>
+                <p>Taux d'Excellence</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters Section -->
+    <div class="filters-section">
+        <div class="filters-header">
+            <h3><i class="fas fa-filter"></i> Filtres</h3>
+            <button class="btn btn-outline-secondary btn-sm" onclick="clearFilters()">
+                <i class="fas fa-times"></i> Effacer
+            </button>
+        </div>
+        
+        <form method="get" class="filters-form">
+            <div class="row g-3">
+                <!-- Search -->
+                <div class="col-md-3">
+                    <div class="form-floating">
+                        <input type="text" 
+                               class="form-control" 
+                               id="search" 
+                               name="search" 
+                               value="{{ search_query }}" 
+                               placeholder="Rechercher par nom...">
+                        <label for="search">
+                            <i class="fas fa-search"></i> Rechercher
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Class Filter -->
+                <div class="col-md-2">
+                    <div class="form-floating">
+                        <select class="form-select" id="class" name="class">
+                            <option value="">Toutes</option>
+                            {% for class in classes %}
+                                <option value="{{ class }}" {% if class == class_filter %}selected{% endif %}>
+                                    {{ class }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <label for="class">
+                            <i class="fas fa-graduation-cap"></i> Classe
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Designation Filter -->
+                <div class="col-md-2">
+                    <div class="form-floating">
+                        <select class="form-select" id="designation" name="designation">
+                            <option value="">Toutes</option>
+                            {% for designation in designations %}
+                                <option value="{{ designation }}" {% if designation == designation_filter %}selected{% endif %}>
+                                    {{ designation }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <label for="designation">
+                            <i class="fas fa-tag"></i> Désignation
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Institution Filter -->
+                <div class="col-md-2">
+                    <div class="form-floating">
+                        <select class="form-select" id="institution" name="institution">
+                            <option value="">Toutes</option>
+                            {% for institution in institutions %}
+                                <option value="{{ institution }}" {% if institution == institution_filter %}selected{% endif %}>
+                                    {{ institution }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <label for="institution">
+                            <i class="fas fa-university"></i> Institution
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Decision Filter -->
+                <div class="col-md-2">
+                    <div class="form-floating">
+                        <select class="form-select" id="decision" name="decision">
+                            <option value="">Toutes</option>
+                            {% for decision in decisions %}
+                                <option value="{{ decision }}" {% if decision == decision_filter %}selected{% endif %}>
+                                    {{ decision }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <label for="decision">
+                            <i class="fas fa-gavel"></i> Décision
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Note Range Filter -->
+                <div class="col-md-1">
+                    <div class="form-floating">
+                        <select class="form-select" id="note_range" name="note_range">
+                            <option value="">Toutes</option>
+                            <option value="0-8" {% if note_range == "0-8" %}selected{% endif %}>0-8</option>
+                            <option value="8-10" {% if note_range == "8-10" %}selected{% endif %}>8-10</option>
+                            <option value="10-12" {% if note_range == "10-12" %}selected{% endif %}>10-12</option>
+                            <option value="12-14" {% if note_range == "12-14" %}selected{% endif %}>12-14</option>
+                            <option value="14-16" {% if note_range == "14-16" %}selected{% endif %}>14-16</option>
+                            <option value="16-18" {% if note_range == "16-18" %}selected{% endif %}>16-18</option>
+                            <option value="18-20" {% if note_range == "18-20" %}selected{% endif %}>18-20</option>
+                        </select>
+                        <label for="note_range">
+                            <i class="fas fa-chart-bar"></i> Notes
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-3">
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Filtrer
+                    </button>
+                    <button type="button" class="btn btn-outline-primary ms-2" onclick="exportData()">
+                        <i class="fas fa-download"></i> Exporter
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Results Info -->
+    <div class="results-info">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <span class="badge bg-primary fs-6">
+                    {{ filtered_count }} résultat{{ filtered_count|pluralize }} trouvé{{ filtered_count|pluralize }}
+                    {% if total_notes != filtered_count %}
+                        sur {{ total_notes }}
+                    {% endif %}
+                </span>
+            </div>
+            <div class="view-options">
+                <button class="btn btn-sm btn-outline-secondary active" onclick="toggleView('table')">
+                    <i class="fas fa-table"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-secondary" onclick="toggleView('cards')">
+                    <i class="fas fa-th-large"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table View -->
+    <div id="table-view" class="table-container">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped modern-table">
+                <thead class="table-dark sticky-top">
+                    <tr>
+                        <th scope="col">
+                            <input type="checkbox" class="form-check-input" id="selectAll">
+                        </th>
+                        <th scope="col" class="sortable" onclick="sortTable('identifiant')">
+                            <i class="fas fa-id-card"></i> Identifiant
+                            <i class="fas fa-sort sort-icon"></i>
+                        </th>
+                        <th scope="col" class="sortable" onclick="sortTable('s1')">
+                            <i class="fas fa-calendar"></i> S1
+                            <i class="fas fa-sort sort-icon"></i>
+                        </th>
+                        <th scope="col" class="sortable" onclick="sortTable('s2')">
+                            <i class="fas fa-calendar"></i> S2
+                            <i class="fas fa-sort sort-icon"></i>
+                        </th>
+                        <th scope="col" class="sortable" onclick="sortTable('s3')">
+                            <i class="fas fa-calendar"></i> S3
+                            <i class="fas fa-sort sort-icon"></i>
+                        </th>
+                        <th scope="col" class="sortable" onclick="sortTable('annee')">
+                            <i class="fas fa-calendar-alt"></i> Année
+                            <i class="fas fa-sort sort-icon"></i>
+                        </th>
+                        <th scope="col" class="sortable" onclick="sortTable('moyen')">
+                            <i class="fas fa-chart-line"></i> Moyenne
+                            <i class="fas fa-sort sort-icon"></i>
+                        </th>
+                        <th scope="col" class="sortable" onclick="sortTable('centre')">
+                            <i class="fas fa-calendar"></i> Centre
+                            <i class="fas fa-sort sort-icon"></i>
+                        </th>
+                        <th scope="col" class="sortable" onclick="sortTable('ville')">
+                            <i class="fas fa-calendar"></i> Ville
+                            <i class="fas fa-sort sort-icon"></i>
+                        </th>
+                        <th scope="col" class="sortable" onclick="sortTable('rang')">
+                            <i class="fas fa-trophy"></i> Rang
+                            <i class="fas fa-sort sort-icon"></i>
+                        </th>
+                        <th scope="col" class="sortable" onclick="sortTable('decision')">
+                            <i class="fas fa-gavel"></i> Décision
+                            <i class="fas fa-sort sort-icon"></i>
+                        </th>
+                        <th scope="col">
+                            <i class="fas fa-graduation-cap"></i> Classe
+                        </th>
+                        <th scope="col">
+                            <i class="fas fa-university"></i> Institution
+                        </th>
+                        <th scope="col" class="text-center">
+                            <i class="fas fa-cogs"></i> Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for note in notes %}
+                    <tr class="table-row" data-id="{{ note.id }}">
+                        <td>
+                            <input type="checkbox" class="form-check-input row-checkbox" value="{{ note.id }}">
+                        </td>
+                        <td class="fw-bold text-primary">
+                            <div class="d-flex align-items-center">
+                                {% if note.identifiant.imageprofile %}
+                                    <img src="{{ note.identifiant.imageprofile.url }}" 
+                                         alt="Photo" 
+                                         class="avatar me-2">
+                                {% else %}
+                                    <div class="avatar-placeholder me-2">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                {% endif %}
+                                <div>
+                                    <div class="fw-bold">{{ note.identifiant.identifiant }}</div>
+                                    <small class="text-muted">{{ note.identifiant.nom }}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge {% if note.S1 >= 10 %}bg-success{% elif note.S1 >= 8 %}bg-warning{% else %}bg-danger{% endif %}">
+                                {{ note.S1|default:"-" }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge {% if note.S2 >= 10 %}bg-success{% elif note.S2 >= 8 %}bg-warning{% else %}bg-danger{% endif %}">
+                                {{ note.S2|default:"-" }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge {% if note.S3 >= 10 %}bg-success{% elif note.S3 >= 8 %}bg-warning{% else %}bg-danger{% endif %}">
+                                {{ note.S3|default:"-" }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge bg-info">{{ note.annee }}</span>
+                        </td>
+                        <td>
+                            <div class="average-score">
+                                <span class="score {% if note.moyen >= 16 %}excellent{% elif note.moyen >= 14 %}very-good{% elif note.moyen >= 12 %}good{% elif note.moyen >= 10 %}average{% else %}poor{% endif %}">
+                                    {{ note.moyen|floatformat:2 }}
+                                </span>
+                                <div class="progress progress-sm mt-1">
+                                    <div class="progress-bar {% if note.moyen >= 16 %}bg-success{% elif note.moyen >= 14 %}bg-info{% elif note.moyen >= 12 %}bg-primary{% elif note.moyen >= 10 %}bg-warning{% else %}bg-danger{% endif %}" 
+                                         style="width: {{ note.moyen|floatformat:0 }}%"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge bg-secondary">{{ note.identifiant.centre }}</span>
+                        </td>
+                        <td>
+                            <span class="badge bg-secondary">{{ note.identifiant.ville }}</span>
+                        </td>
+                        <td>
+                            <span class="badge bg-secondary">{{ note.rang|default:"-" }}</span>
+                        </td>
+                        <td>
+                            <span class="badge {% if note.decision == 'Admis' %}bg-success{% elif note.decision == 'Redoublant' %}bg-warning{% else %}bg-danger{% endif %}">
+                                {{ note.decision }}
+                            </span>
+                        </td>
+                        <td>
+                            <small class="text-muted">{{ note.identifiant.Class }}</small>
+                        </td>
+                        <td>
+                            <small class="text-muted">{{ note.identifiant.institution }}</small>
+                        </td>
+                        <td class="text-center">
+                            <div class="btn-group btn-group-sm" role="group">
+                                <button type="button" 
+                                        class="btn btn-outline-primary" 
+                                        onclick="viewNote('{{ note.identifiant.identifiant }}')"
+                                        title="Voir détails">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button type="button" 
+                                        class="btn btn-outline-success" 
+                                        onclick="editNote('{{ note.id }}')"
+                                        title="Modifier">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button type="button" 
+                                        class="btn btn-outline-danger" 
+                                        onclick="deleteNote('{{ note.id }}')"
+                                        title="Supprimer">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="12" class="text-center py-5">
+                            <div class="empty-state">
+                                <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                                <h5 class="text-muted">Aucune note trouvée</h5>
+                                <p class="text-muted">Essayez de modifier vos critères de recherche.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Cards View (Hidden by default) -->
+    <div id="cards-view" class="cards-container" style="display: none;">
+        <div class="row g-3">
+            {% for note in notes %}
+            <div class="col-md-6 col-lg-4">
+                <div class="note-card">
+                    <div class="card-header">
+                        <div class="d-flex align-items-center">
+                            {% if note.identifiant.imageprofile %}
+                                <img src="{{ note.identifiant.imageprofile.url }}" 
+                                     alt="Photo" 
+                                     class="avatar me-3">
+                            {% else %}
+                                <div class="avatar-placeholder me-3">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            {% endif %}
+                            <div>
+                                <h6 class="mb-0">{{ note.identifiant.nom }}</h6>
+                                <small class="text-muted">{{ note.identifiant.identifiant }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="scores-row">
+                            <div class="score-item">
+                                <span class="label">S1</span>
+                                <span class="value {% if note.S1 >= 10 %}text-success{% elif note.S1 >= 8 %}text-warning{% else %}text-danger{% endif %}">
+                                    {{ note.S1|default:"-" }}
+                                </span>
+                            </div>
+                            <div class="score-item">
+                                <span class="label">S2</span>
+                                <span class="value {% if note.S2 >= 10 %}text-success{% elif note.S2 >= 8 %}text-warning{% else %}text-danger{% endif %}">
+                                    {{ note.S2|default:"-" }}
+                                </span>
+                            </div>
+                            <div class="score-item">
+                                <span class="label">S3</span>
+                                <span class="value {% if note.S3 >= 10 %}text-success{% elif note.S3 >= 8 %}text-warning{% else %}text-danger{% endif %}">
+                                    {{ note.S3|default:"-" }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="average-section">
+                            <div class="average-label">Moyenne</div>
+                            <div class="average-value {% if note.moyen >= 16 %}excellent{% elif note.moyen >= 14 %}very-good{% elif note.moyen >= 12 %}good{% elif note.moyen >= 10 %}average{% else %}poor{% endif %}">
+                                {{ note.moyen|floatformat:2 }}
+                            </div>
+                        </div>
+                        <div class="card-footer-info">
+                            <div class="info-item">
+                                <i class="fas fa-graduation-cap"></i>
+                                <span>{{ note.identifiant.Class }}</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-university"></i>
+                                <span>{{ note.identifiant.institution }}</span>
+                            </div>
+                            <div class="info-item">
+                                 <span>{{ note.identifiant.centre }}</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-gavel"></i>
+                                <span class="badge {% if note.decision == 'Admis' %}bg-success{% elif note.decision == 'Redoublant' %}bg-warning{% else %}bg-danger{% endif %}">
+                                    {{ note.decision }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn btn-sm btn-outline-primary" onclick="viewNote('{{ note.identifiant.identifiant }}')">
+                            <i class="fas fa-eye"></i> Voir
+                        </button>
+                        <button class="btn btn-sm btn-outline-success" onclick="editNote('{{ note.id }}')">
+                            <i class="fas fa-edit"></i> Modifier
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    {% if notes.has_other_pages %}
+    <nav aria-label="Navigation des notes" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if notes.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if class_filter %}class={{ class_filter }}&{% endif %}{% if designation_filter %}designation={{ designation_filter }}&{% endif %}{% if institution_filter %}institution={{ institution_filter }}&{% endif %}{% if decision_filter %}decision={{ decision_filter }}&{% endif %}{% if note_range %}note_range={{ note_range }}&{% endif %}page=1">
+                        <i class="fas fa-angle-double-left"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if class_filter %}class={{ class_filter }}&{% endif %}{% if designation_filter %}designation={{ designation_filter }}&{% endif %}{% if institution_filter %}institution={{ institution_filter }}&{% endif %}{% if decision_filter %}decision={{ decision_filter }}&{% endif %}{% if note_range %}note_range={{ note_range }}&{% endif %}page={{ notes.previous_page_number }}">
+                        <i class="fas fa-angle-left"></i>
+                    </a>
+                </li>
+            {% endif %}
+
+            {% for num in notes.paginator.page_range %}
+                {% if notes.number == num %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                {% elif num > notes.number|add:'-3' and num < notes.number|add:'3' %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if class_filter %}class={{ class_filter }}&{% endif %}{% if designation_filter %}designation={{ designation_filter }}&{% endif %}{% if institution_filter %}institution={{ institution_filter }}&{% endif %}{% if decision_filter %}decision={{ decision_filter }}&{% endif %}{% if note_range %}note_range={{ note_range }}&{% endif %}page={{ num }}">{{ num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if notes.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if class_filter %}class={{ class_filter }}&{% endif %}{% if designation_filter %}designation={{ designation_filter }}&{% endif %}{% if institution_filter %}institution={{ institution_filter }}&{% endif %}{% if decision_filter %}decision={{ decision_filter }}&{% endif %}{% if note_range %}note_range={{ note_range }}&{% endif %}page={{ notes.next_page_number }}">
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if class_filter %}class={{ class_filter }}&{% endif %}{% if designation_filter %}designation={{ designation_filter }}&{% endif %}{% if institution_filter %}institution={{ institution_filter }}&{% endif %}{% if decision_filter %}decision={{ decision_filter }}&{% endif %}{% if note_range %}note_range={{ note_range }}&{% endif %}page={{ notes.paginator.num_pages }}">
+                        <i class="fas fa-angle-double-right"></i>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    
+    <div class="pagination-info text-center text-muted">
+        Page {{ notes.number }} sur {{ notes.paginator.num_pages }} 
+        ({{ notes.start_index }}-{{ notes.end_index }} sur {{ notes.paginator.count }} résultats)
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.notes-container {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1.5rem;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+}
+
+.stat-card:nth-child(2) {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.stat-card:nth-child(3) {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.stat-card:nth-child(4) {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.stat-icon {
+    font-size: 2.5rem;
+    margin-right: 1rem;
+    opacity: 0.8;
+}
+
+.stat-content h3 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.stat-content p {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 0.9rem;
+}
+
+.filters-section {
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+}
+
+.filters-header {
+    display: flex;
+    justify-content: between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #f1f3f5;
+    padding-bottom: 1rem;
+}
+
+.filters-header h3 {
+    margin: 0;
+    color: #495057;
+    font-weight: 600;
+}
+
+.results-info {
+    background: white;
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.table-container {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.modern-table {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.modern-table th {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    border: none;
+    padding: 1rem 0.75rem;
+}
+
+.modern-table td {
+    padding: 1rem 0.75rem;
+    vertical-align: middle;
+    border-color: #e9ecef;
+}
+
+.modern-table tbody tr:hover {
+    background-color: #f8f9fa;
+    transform: scale(1.01);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #dee2e6;
+}
+
+.avatar-placeholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.average-score {
+    text-align: center;
+}
+
+.score {
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    color: white;
+}
+
+.score.excellent {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.score.very-good {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.score.good {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.score.average {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.score.poor {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+}
+
+.progress-sm {
+    height: 4px;
+}
+
+.sortable {
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+}
+
+.sortable:hover {
+    background-color: rgba(255,255,255,0.1);
+}
+
+.sort-icon {
+    font-size: 0.7rem;
+    margin-left: 0.5rem;
+    opacity: 0.6;
+}
+
+.empty-state {
+    padding: 3rem;
+}
+
+/* Cards View Styles */
+.cards-container {
+    background: transparent;
+}
+
+.note-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+}
+
+.note-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+}
+
+.note-card .card-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1rem;
+}
+
+.note-card .card-body {
+    padding: 1.5rem;
+}
+
+.scores-row {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 1rem;
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 10px;
+}
+
+.score-item {
+    text-align: center;
+}
+
+.score-item .label {
+    display: block;
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-bottom: 0.25rem;
+}
+
+.score-item .value {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.average-section {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.average-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+
+.average-value {
+    font-size: 1.8rem;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    color: white;
+}
+
+.card-footer-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.info-item i {
+    margin-right: 0.5rem;
+    width: 16px;
+}
+
+.card-actions {
+    padding: 1rem;
+    background: #f8f9fa;
+    display: flex;
+    justify-content: space-between;
+}
+
+.view-options .btn.active {
+    background-color: #007bff;
+    color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .notes-container {
+        padding: 1rem;
+        border-radius: 10px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .stat-card {
+        padding: 1rem;
+    }
+    
+    .filters-form .row {
+        gap: 0.5rem;
+    }
+    
+    .modern-table {
+        font-size: 0.8rem;
+    }
+    
+    .modern-table th,
+    .modern-table td {
+        padding: 0.5rem 0.25rem;
+    }
+    
+    .btn-group-sm .btn {
+        padding: 0.25rem 0.4rem;
+        font-size: 0.75rem;
+    }
+}
+
+/* Animation Classes */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.table-row {
+    animation: fadeInUp 0.3s ease-out;
+}
+
+.table-row:nth-child(even) {
+    animation-delay: 0.1s;
+}
+
+.table-row:nth-child(odd) {
+    animation-delay: 0.05s;
+}
+</style>
+
+<script>
+// Toggle between table and cards view
+function toggleView(viewType) {
+    const tableView = document.getElementById('table-view');
+    const cardsView = document.getElementById('cards-view');
+    const buttons = document.querySelectorAll('.view-options .btn');
+    
+    buttons.forEach(btn => btn.classList.remove('active'));
+    
+    if (viewType === 'table') {
+        tableView.style.display = 'block';
+        cardsView.style.display = 'none';
+        event.target.classList.add('active');
+    } else {
+        tableView.style.display = 'none';
+        cardsView.style.display = 'block';
+        event.target.classList.add('active');
+    }
+}
+
+// Clear all filters
+function clearFilters() {
+    const form = document.querySelector('.filters-form');
+    const inputs = form.querySelectorAll('input, select');
+    inputs.forEach(input => {
+        if (input.type === 'text' || input.type === 'search') {
+            input.value = '';
+        } else if (input.tagName === 'SELECT') {
+            input.selectedIndex = 0;
+        }
+    });
+    form.submit();
+}
+
+// Select all checkboxes
+document.getElementById('selectAll')?.addEventListener('change', function() {
+    const checkboxes = document.querySelectorAll('.row-checkbox');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = this.checked;
+    });
+});
+
+// Sort table function
+function sortTable(column) {
+    // This would typically make an AJAX request to sort the data
+    console.log('Sorting by:', column);
+    // Add sorting logic here
+}
+
+// View note details
+function viewNote(identifiant) {
+    window.location.href = `/student/view/${identifiant}`;
+}
+
+// Edit note
+function editNote(noteId) {
+    // Add edit functionality
+    console.log('Editing note:', noteId);
+}
+
+// Delete note
+function deleteNote(noteId) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cette note?')) {
+        // Add delete functionality
+        console.log('Deleting note:', noteId);
+    }
+}
+
+// Export data
+function exportData() {
+    // Add export functionality
+    console.log('Exporting data...');
+}
+
+// Auto-submit form when filters change
+document.addEventListener('DOMContentLoaded', function() {
+    const filterInputs = document.querySelectorAll('.filters-form input, .filters-form select');
+    filterInputs.forEach(input => {
+        if (input.type !== 'text' && input.type !== 'search') {
+            input.addEventListener('change', function() {
+                // Auto-submit for select dropdowns
+                setTimeout(() => {
+                    this.form.submit();
+                }, 100);
+            });
+        }
+    });
+    
+    // Submit search on Enter key
+    const searchInput = document.querySelector('input[name="search"]');
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                this.form.submit();
+            }
+        });
+    }
+});
+</script>

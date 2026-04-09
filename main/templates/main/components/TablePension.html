@@ -1,0 +1,413 @@
+<!-- Statistics Cards for Pensions -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+
+    <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-lg shadow-lg">
+        <div class="flex items-center justify-between">
+            <div class="bg-white text-black">
+                <p class="text-black text-sm">Total Pensionnés</p>
+                <p class="text-2xl font-bold">{{ total_pensions }}</p>
+            </div>
+            <div class="text-3xl opacity-80">👴</div>
+        </div>
+    </div>
+    
+    <div class="bg-gradient-to-r from-green-500 to-green-600 text-white p-4 rounded-lg shadow-lg">
+        <div class="flex items-center justify-between">
+            <div class="bg-white text-black">
+                <p class="text-black text-sm">Avec Documents</p>
+                <p class="text-2xl font-bold">{{ with_documents }} <span class="text-sm">({{ document_percentage }}%)</span></p>
+            </div>
+            <div class="text-3xl opacity-80">📄</div>
+        </div>
+    </div>
+    
+    <div class="bg-gradient-to-r from-purple-500 to-purple-600 text-white p-4 rounded-lg shadow-lg">
+        <div class="flex items-center justify-between">
+            <div class="bg-white text-black">
+                <p class="text-black text-sm">Hommes</p>
+                <p class="text-2xl font-bold">{{ male_count }} <span class="text-sm">({{ male_percentage }}%)</span></p>
+            </div>
+            <div class="text-3xl opacity-80">👨</div>
+        </div>
+    </div>
+    
+    <div class="bg-gradient-to-r from-pink-500 to-pink-600 text-white p-4 rounded-lg shadow-lg">
+        <div class="flex items-center justify-between">
+            <div class="bg-white text-black">
+                <p class="text-black text-sm">Femmes</p>
+                <p class="text-2xl font-bold">{{ female_count }} <span class="text-sm">({{ female_percentage }}%)</span></p>
+            </div>
+            <div class="text-3xl opacity-80">👩</div>
+        </div>
+    </div>
+</div>
+
+<!-- Additional Statistics -->
+<div class="flex flex-row gap-4 mb-6 justify-center">
+    <!-- Age Distribution -->
+    <div class="bg-white w-1/4 p-4 rounded-lg shadow-md border">
+        <h3 class="text-lg font-semibold text-gray-800 mb-3">📊 Distribution par Âge</h3>
+        <div class="space-y-2">
+            {% for age_range, count in pension_age_groups.items %}
+            <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-600">{{ age_range }} ans</span>
+                <div class="flex items-center">
+                    <div class="w-16 bg-gray-200 rounded-full h-2 mr-2">
+                        <div class="bg-blue-500 h-2 rounded-full progress-bar" 
+                             data-count="{{ count }}" 
+                             data-total="{{ total_pensions }}"></div>
+                    </div>
+                    <span class="text-sm font-medium">{{ count }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="flex justify-between items-center">
+            <span class="text-sm text-gray-600">Total</span>
+            <span class="text-sm font-medium bg-blue-100 text-blue-800 px-2 py-1 rounded">{{ total_pensions }}</span>
+        </div>
+    </div>
+    
+    <!-- Cause Distribution -->
+    <div class="bg-white w-1/4 p-4 rounded-lg shadow-md border">
+        <h3 class="text-lg font-semibold text-gray-800 mb-3">💼 Causes de Pension</h3>
+        <div class="space-y-2">
+            {% for cause in cause_stats|slice:":5" %}
+            <div class="flex justify-between items-center py-1">
+                <span class="text-sm text-gray-600">{{ cause.cause|default:"Non spécifié" }}</span>
+                <span class="text-sm font-medium bg-orange-100 text-orange-800 px-2 py-1 rounded">{{ cause.count }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Financial Statistics -->
+    <div class="bg-white w-1/4 p-4 rounded-lg shadow-md border">
+        <h3 class="text-lg font-semibold text-gray-800 mb-3">💰 Statistiques Financières</h3>
+        <div class="space-y-2">
+            <div class="flex justify-between items-center py-1">
+                <span class="text-sm text-gray-600">Pension Moyenne</span>
+                <span class="text-sm font-medium bg-green-100 text-green-800 px-2 py-1 rounded">{{ avg_pension|floatformat:0 }} Ar</span>
+            </div>
+            <div class="flex justify-between items-center py-1">
+                <span class="text-sm text-gray-600">Total Mensuel</span>
+                <span class="text-sm font-medium bg-blue-100 text-blue-800 px-2 py-1 rounded">{{ total_pension_amount|floatformat:0 }} Ar</span>
+            </div>
+            <div class="flex justify-between items-center py-1">
+                <span class="text-sm text-gray-600">Enfants Moyenne</span>
+                <span class="text-sm font-medium bg-purple-100 text-purple-800 px-2 py-1 rounded">{{ avg_children|floatformat:1 }}</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Document Status -->
+    <div class="bg-white w-1/4 p-4 rounded-lg shadow-md border">
+        <h3 class="text-lg font-semibold text-gray-800 mb-3">📋 État des Documents</h3>
+        <div class="space-y-2">
+            <div class="flex justify-between items-center py-1">
+                <span class="text-sm text-gray-600">Avec Documents</span>
+                <span class="text-sm font-medium bg-green-100 text-green-800 px-2 py-1 rounded">{{ with_documents }}</span>
+            </div>
+            <div class="flex justify-between items-center py-1">
+                <span class="text-sm text-gray-600">Sans Documents</span>
+                <span class="text-sm font-medium bg-red-100 text-red-800 px-2 py-1 rounded">{{ without_documents }}</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Enhanced Pension Table Component -->
+<div class="pensions-table-container">
+    <!-- Enhanced Pension Table -->
+    <div class="table-wrapper">
+        <div class="table-header">
+            <h2 class="table-title">
+                <i class="fas fa-user-clock"></i>
+                Pensionnés de Zainabia
+                <span class="result-count">{{ filtered_count|default:total_pensions }} résultat{{ filtered_count|default:total_pensions|pluralize }}</span>
+            </h2>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table table-hover pensions-table" id="pensionsTable">
+                <thead class="table-dark">
+                    <tr>
+                        <th width="80">Photo</th>
+                        <th>Nom</th>
+                        <th>Âge</th>
+                        <th>Genre</th>
+                        <th>Téléphone</th>
+                        <th>Adresse</th>
+                        <th>Date Pension</th>
+                        <th>Montant Pension</th>
+                        <th>Cause</th>
+                        <th>Enfants</th>
+                        <th>Documents</th>
+                        <th width="150">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="pensionsTableBody">
+                    {% for pension in datas %}
+                    <tr class="pension-row" data-pension-id="{{ pension.id }}">
+                        <td>
+                            <div class="pension-avatar">
+                                {% if pension.imageprofile %}
+                                    <img src="{{ pension.imageprofile.url }}" 
+                                         alt="Photo de {{ pension.nom }}" 
+                                         class="avatar-img" 
+                                         loading="lazy"
+                                         onclick="openImageModal('{{ pension.imageprofile.url }}', '{{ pension.nom }}')">
+                                {% else %}
+                                    <div class="avatar-placeholder">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="pension-info">
+                                <strong class="pension-name">{{ pension.nom }}</strong>
+                            </div>
+                        </td>
+                        <td>
+                            {% if pension.age %}
+                                <span class="age-badge">{{ pension.age }} ans</span>
+                            {% else %}
+                                <span class="text-muted">N/A</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="badge {% if pension.genre == 'M' %}bg-primary{% else %}bg-pink{% endif %}">
+                                {% if pension.genre == 'M' %}
+                                    <i class="fas fa-mars"></i> Homme
+                                {% else %}
+                                    <i class="fas fa-venus"></i> Femme
+                                {% endif %}
+                            </span>
+                        </td>
+                        <td>
+                            {% if pension.telephone %}
+                                <small class="contact-info">
+                                    <i class="fas fa-phone"></i> {{ pension.telephone }}
+                                </small>
+                            {% else %}
+                                <small class="text-muted">N/A</small>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="address-info">{{ pension.adress|default:"N/A" }}</span>
+                        </td>
+                        <td>
+                            {% if pension.date_pension %}
+                                <span class="date-badge">{{ pension.date_pension|date:"d/m/Y" }}</span>
+                            {% else %}
+                                <span class="text-muted">N/A</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if pension.pension %}
+                                <span class="pension-amount">{{ pension.pension|floatformat:0 }} Ar</span>
+                            {% else %}
+                                <span class="text-muted">N/A</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="cause-badge">{{ pension.cause|default:"N/A" }}</span>
+                        </td>
+                        <td>
+                            {% if pension.nombre_enfants %}
+                                <span class="children-badge">{{ pension.nombre_enfants }}</span>
+                            {% else %}
+                                <span class="text-muted">0</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if pension.dossierpension_set.exists %}
+                                <span class="document-badge document-complete">
+                                    <i class="fas fa-check-circle"></i> Complet
+                                </span>
+                            {% else %}
+                                <span class="document-badge document-incomplete">
+                                    <i class="fas fa-times-circle"></i> Incomplet
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-sm btn-outline-primary" 
+                                        onclick="viewPension({{ pension.id }})" 
+                                        title="Voir les détails">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-warning" 
+                                        onclick="editPension({{ pension.id }})" 
+                                        title="Modifier">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="12" class="text-center py-4">
+                            <div class="empty-state">
+                                <i class="fas fa-user-clock fa-3x text-gray-400 mb-3"></i>
+                                <p class="text-gray-500">Aucun pensionné trouvé</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Progress Bar Animation Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate progress bars
+    const progressBars = document.querySelectorAll('.progress-bar');
+    progressBars.forEach(bar => {
+        const count = parseInt(bar.dataset.count);
+        const total = parseInt(bar.dataset.total);
+        const percentage = total > 0 ? (count / total) * 100 : 0;
+        
+        setTimeout(() => {
+            bar.style.width = percentage + '%';
+        }, 100);
+    });
+});
+
+// Action functions
+function viewPension(pensionId) {
+    // Implement view pension details
+    window.location.href = `/pension/view/${pensionId}`;
+}
+
+function editPension(pensionId) {
+    // Implement edit pension
+    console.log('Edit pension:', pensionId);
+}
+
+function downloadPensionPDF(pensionId) {
+    // Implement PDF download
+    console.log('Download PDF for pension:', pensionId);
+}
+
+function openImageModal(imageUrl, name) {
+    // Implement image modal
+    console.log('Open image modal:', imageUrl, name);
+}
+</script>
+
+<!-- Custom CSS for pension table -->
+<style>
+.pension-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f3f4f6;
+}
+
+.avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.avatar-img:hover {
+    transform: scale(1.1);
+}
+
+.avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e5e7eb;
+    color: #6b7280;
+}
+
+.age-badge {
+    background-color: #dbeafe;
+    color: #1e40af;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.pension-amount {
+    font-weight: 600;
+    color: #059669;
+}
+
+.cause-badge {
+    background-color: #fef3c7;
+    color: #92400e;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+}
+
+.children-badge {
+    background-color: #e0e7ff;
+    color: #3730a3;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.document-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.document-complete {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.document-incomplete {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 4px;
+}
+
+.action-buttons .btn {
+    padding: 4px 8px;
+}
+
+.progress-bar {
+    transition: width 0.8s ease-in-out;
+    width: 0%;
+}
+
+.empty-state {
+    padding: 2rem;
+}
+
+.bg-pink {
+    background-color: #ec4899;
+}
+
+.text-pink {
+    color: #ec4899;
+}
+</style> 

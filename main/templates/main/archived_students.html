@@ -1,0 +1,1186 @@
+{% extends "main/base.html" %}
+{% block title%} Étudiants Archivés {% endblock%}
+{% block content %}
+
+<!-- Header -->
+<div class="dashboard-header mb-8">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">
+                <i class="fas fa-archive text-warning mr-3"></i>
+                Étudiants Archivés
+            </h1>
+            <p class="text-gray-200">Statistiques complètes et analyses des étudiants archivés</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'student' %}" class="btn btn-outline-light btn-sm"><i class="fas fa-users me-2"></i>Étudiants Actifs</a>
+            <a href="{% url 'archived_orphelins' %}" class="btn btn-outline-light btn-sm"><i class="fas fa-heart-broken me-2"></i>Orphelins Archivés</a>
+            <a href="{% url 'etudiants_dashboard' %}" class="btn btn-outline-light btn-sm"><i class="fas fa-chart-bar me-2"></i>Dashboard</a>
+            <a href="{% url 'notes' %}" class="btn btn-outline-light btn-sm"><i class="fas fa-chart-line me-2"></i>Notes</a>
+        </div>
+    </div>
+    
+    <!-- Advanced Filter Panel -->
+    <div class="filter-panel mt-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-gradient-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-filter mr-2"></i>
+                    Filtres Avancés
+                    <button class="btn btn-sm btn-outline-light float-right" type="button" data-bs-toggle="collapse" data-bs-target="#filtersCollapse">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </h5>
+            </div>
+            <div class="collapse show" id="filtersCollapse">
+                <div class="card-body">
+                    <form method="GET" class="row g-3">
+                        <div class="col-md-3">
+                            <label for="search" class="form-label">
+                                <i class="fas fa-search text-primary"></i> Recherche
+                            </label>
+                            <input type="text" class="form-control" name="search" id="search" placeholder="Nom, ID, téléphone..." value="{{ search_query }}" />
+                        </div>
+                        <div class="col-md-2">
+                            <label for="centre" class="form-label">
+                                <i class="fas fa-map-marker-alt text-success"></i> Centre
+                            </label>
+                            <select name="centre" id="centre" class="form-select">
+                                <option value="">Tous les centres</option>
+                                {% for c in centers %}
+                                    <option value="{{ c }}" {% if c == centre_filter %}selected{% endif %}>{{ c }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="institution" class="form-label">
+                                <i class="fas fa-university text-info"></i> Institution
+                            </label>
+                            <select name="institution" id="institution" class="form-select">
+                                <option value="">Toutes</option>
+                                {% for it in institutions %}
+                                    <option value="{{ it }}" {% if it == institution_filter %}selected{% endif %}>{{ it }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="class" class="form-label">
+                                <i class="fas fa-graduation-cap text-warning"></i> Classe
+                            </label>
+                            <select name="class" id="class" class="form-select">
+                                <option value="">Toutes</option>
+                                {% for cl in classes %}
+                                    <option value="{{ cl }}" {% if cl == class_filter %}selected{% endif %}>{{ cl }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="genre" class="form-label">
+                                <i class="fas fa-venus-mars text-danger"></i> Genre
+                            </label>
+                            <select name="genre" id="genre" class="form-select">
+                                <option value="">Tous</option>
+                                {% for g in genres %}
+                                    <option value="{{ g }}" {% if g == genre_filter %}selected{% endif %}>{{ g }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="fillier" class="form-label">
+                                <i class="fas fa-book text-secondary"></i> Filière
+                            </label>
+                            <select name="fillier" id="fillier" class="form-select">
+                                <option value="">Toutes</option>
+                                {% for f in filliers %}
+                                    <option value="{{ f }}" {% if f == fillier_filter %}selected{% endif %}>{{ f }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="designation" class="form-label">
+                                <i class="fas fa-tags text-primary"></i> Désignation
+                            </label>
+                            <select name="designation" id="designation" class="form-select">
+                                <option value="">Toutes</option>
+                                {% for d in designations %}
+                                    <option value="{{ d }}" {% if d == designation_filter %}selected{% endif %}>{{ d }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="archive_type" class="form-label">
+                                <i class="fas fa-archive text-warning"></i> Type d'archive
+                            </label>
+                            <select name="archive_type" id="archive_type" class="form-select">
+                                <option value="">Tous</option>
+                                {% for t in archive_types %}
+                                    <option value="{{ t }}" {% if t == archive_type_filter %}selected{% endif %}>{{ t }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="raison" class="form-label">
+                                <i class="fas fa-exclamation-triangle text-danger"></i> Raison
+                            </label>
+                            <select name="raison" id="raison" class="form-select">
+                                <option value="">Toutes</option>
+                                {% for r in raisons %}
+                                    <option value="{{ r }}" {% if r == raison_filter %}selected{% endif %}>{{ r }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="age" class="form-label">
+                                <i class="fas fa-birthday-cake text-success"></i> Tranche d'âge
+                            </label>
+                            <select name="age" id="age" class="form-select">
+                                <option value="">Tous les âges</option>
+                                <option value="3-10" {% if age_filter == '3-10' %}selected{% endif %}>3-10 ans</option>
+                                <option value="11-14" {% if age_filter == '11-14' %}selected{% endif %}>11-14 ans</option>
+                                <option value="15-18" {% if age_filter == '15-18' %}selected{% endif %}>15-18 ans</option>
+                                <option value="19-21" {% if age_filter == '19-21' %}selected{% endif %}>19-21 ans</option>
+                                <option value="22-25" {% if age_filter == '22-25' %}selected{% endif %}>22-25 ans</option>
+                                <option value="26+" {% if age_filter == '26+' %}selected{% endif %}>26+ ans</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search mr-2"></i>Appliquer les filtres
+                            </button>
+                            <a href="{% url 'archived_students' %}" class="btn btn-outline-secondary ml-2">
+                                <i class="fas fa-times mr-2"></i>Réinitialiser
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Key Metrics Cards -->
+<div class="row mb-6">
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="metric-card">
+            <div class="metric-icon">
+                <i class="fas fa-box-archive"></i>
+            </div>
+            <div class="metric-content">
+                <h3>{{ total_archived }}</h3>
+                <p>Étudiants Archivés</p>
+                <div class="metric-change">
+                    <span class="text-warning">Archives totales</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="metric-card">
+            <div class="metric-icon">
+                <i class="fas fa-venus-mars"></i>
+            </div>
+            <div class="metric-content">
+                <h3>{% with m=0 f=0 %}{% for s in archived_gender_stats %}{% if s.archive__genre == 'M' %}{% widthratio s.count 1 1 as m %}{% endif %}{% if s.archive__genre == 'F' %}{% widthratio s.count 1 1 as f %}{% endif %}{% endfor %}{{ m|add:f }}{% endwith %}</h3>
+                <p>Répartition Genre</p>
+                <div class="metric-change">
+                    <span class="text-info">Garçons: {% for s in archived_gender_stats %}{% if s.archive__genre == 'M' %}{{ s.count }}{% endif %}{% endfor %}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="metric-card">
+            <div class="metric-icon">
+                <i class="fas fa-tags"></i>
+            </div>
+            <div class="metric-content">
+                <h3>{{ archived_designation_stats|length }}</h3>
+                <p>Désignations</p>
+                <div class="metric-change">
+                    <span class="text-success">Catégories uniques</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="metric-card">
+            <div class="metric-icon">
+                <i class="fas fa-layer-group"></i>
+            </div>
+            <div class="metric-content">
+                <h3>{{ archived_type_stats|length }}</h3>
+                <p>Types d'archive</p>
+                <div class="metric-change">
+                    <span class="text-primary">Classifications</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Grid -->
+<div class="row mb-6">
+    <!-- Age Distribution Chart -->
+    <div class="col-lg-6 mb-4">
+        <div class="chart-card">
+            <div class="chart-header">
+                <h5><i class="fas fa-chart-pie text-primary"></i> Répartition par Âge</h5>
+            </div>
+            <div class="chart-body">
+                <div class="chart-container" style="position: relative; height: 300px;">
+                    <canvas id="ageChart"></canvas>
+                </div>
+                <div class="chart-legend mt-3">
+                    {% for age_group, count in archived_age_groups.items %}
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: var(--age-color-{{ forloop.counter }})"></span>
+                        <span>{{ age_group }} ans: {{ count }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Gender Distribution -->
+    <div class="col-lg-6 mb-4">
+        <div class="chart-card">
+            <div class="chart-header">
+                <h5><i class="fas fa-venus-mars text-info"></i> Répartition par Genre</h5>
+            </div>
+            <div class="chart-body">
+                <div class="chart-container" style="position: relative; height: 300px;">
+                    <canvas id="genderChart"></canvas>
+                </div>
+                <div class="gender-stats mt-3">
+                    {% for stat in archived_gender_stats %}
+                    <div class="stat-item">
+                        <i class="fas {% if stat.archive__genre == 'M' %}fa-mars text-primary{% else %}fa-venus text-pink{% endif %}"></i>
+                        <span>{% if stat.archive__genre == 'M' %}Garçons{% else %}Filles{% endif %}: {{ stat.count }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Status and Centers Row -->
+<div class="row mb-6">
+    <!-- Designation Distribution -->
+    <div class="col-lg-6 mb-4">
+        <div class="chart-card">
+            <div class="chart-header">
+                <h5><i class="fas fa-tags text-danger"></i> Désignations</h5>
+            </div>
+            <div class="chart-body">
+                <div class="status-bars">
+                    {% for stat in archived_designation_stats %}
+                    <div class="status-bar-item">
+                        <div class="status-info">
+                            <span class="status-label">{{ stat.archive__designation|default:"Non spécifié" }}</span>
+                            <span class="status-count">{{ stat.count }}</span>
+                        </div>
+                        <div class="progress status-progress">
+                            <div class="progress-bar bg-secondary" style="width: {{ stat.count|floatformat:0 }}%"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Centers Distribution -->
+    <div class="col-lg-6 mb-4">
+        <div class="chart-card">
+            <div class="chart-header">
+                <h5><i class="fas fa-map-marker-alt text-success"></i> Répartition par Centre</h5>
+            </div>
+            <div class="chart-body">
+                <div class="chart-container" style="position: relative; height: 300px;">
+                    <canvas id="centersChart"></canvas>
+                </div>
+                <div class="centers-list mt-3">
+                    {% for center in archived_center_stats|slice:":5" %}
+                    <div class="center-item">
+                        <span class="center-name">{{ center.archive__centre|default:"Non spécifié" }}</span>
+                        <span class="center-count badge bg-primary">{{ center.count }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Archived Students Grid -->
+<div class="row mb-6">
+    <div class="col-12">
+        <div class="chart-card">
+            <div class="chart-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5><i class="fas fa-archive text-warning"></i> Liste des Étudiants Archivés</h5>
+                    <div class="archived-info">
+                        <small class="text-muted ms-2">{{ total_archived }} étudiant{{ total_archived|pluralize }} archivé{{ total_archived|pluralize }}</small>
+                    </div>
+                </div>
+            </div>
+            <div class="chart-body">
+                {% if archived %}
+                    <div class="archived-grid">
+                        {% for a in archived|slice:":20" %}
+                        <div class="archived-card enhanced-card">
+                            <div class="archived-avatar enhanced-avatar">
+                                {% if a.archive.imageprofile %}
+                                    <img src="{{ a.archive.imageprofile.url }}" alt="Photo de {{ a.archive.nom }}" class="student-photo">
+                                    <div class="image-overlay">
+                                        <i class="fas fa-search-plus"></i>
+                                    </div>
+                                {% else %}
+                                    <div class="avatar-placeholder enhanced-placeholder">
+                                        <i class="fas fa-user"></i>
+                                        <div class="placeholder-gradient"></div>
+                                    </div>
+                                {% endif %}
+                                <div class="archive-badge enhanced-badge">
+                                    <i class="fas fa-archive"></i>
+                                </div>
+                                <div class="status-indicator {% if a.archive_type == 'Temporaire' %}temp{% elif a.archive_type == 'Définitif' %}permanent{% else %}unknown{% endif %}"></div>
+                            </div>
+                            <div class="archived-info enhanced-info">
+                                <h6 class="archived-name enhanced-name">{{ a.archive.nom }}</h6>
+                                <p class="archived-id enhanced-id">{{ a.archive.identifiant }}</p>
+                                
+                                <div class="academic-badges">
+                                    {% if a.archive.fillier %}
+                                        <span class="academic-badge fillier">
+                                            <i class="fas fa-book"></i>
+                                            {{ a.archive.fillier }}
+                                        </span>
+                                    {% endif %}
+                                    {% if a.archive.designation %}
+                                        <span class="academic-badge designation">
+                                            <i class="fas fa-tags"></i>
+                                            {{ a.archive.designation }}
+                                        </span>
+                                    {% endif %}
+                                </div>
+
+                                <div class="archived-details enhanced-details">
+                                    <div class="detail-item enhanced-item">
+                                        <div class="detail-icon gender-icon {% if a.archive.genre == 'M' %}male{% else %}female{% endif %}">
+                                            <i class="fas fa-{% if a.archive.genre == 'M' %}mars{% else %}venus{% endif %}"></i>
+                                        </div>
+                                        <div class="detail-content">
+                                            <span class="detail-label">Genre</span>
+                                            <span class="detail-value">{{ a.archive.genre }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="detail-item enhanced-item">
+                                        <div class="detail-icon class-icon">
+                                            <i class="fas fa-graduation-cap"></i>
+                                        </div>
+                                        <div class="detail-content">
+                                            <span class="detail-label">Classe</span>
+                                            <span class="detail-value">{{ a.archive.Class|default:"N/A" }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="detail-item enhanced-item">
+                                        <div class="detail-icon center-icon">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                        </div>
+                                        <div class="detail-content">
+                                            <span class="detail-label">Centre</span>
+                                            <span class="detail-value">{{ a.archive.centre|default:"N/A" }}</span>
+                                        </div>
+                                    </div>
+                                    {% if a.archive.institution %}
+                                    <div class="detail-item enhanced-item">
+                                        <div class="detail-icon institution-icon">
+                                            <i class="fas fa-university"></i>
+                                        </div>
+                                        <div class="detail-content">
+                                            <span class="detail-label">Institution</span>
+                                            <span class="detail-value">{{ a.archive.institution }}</span>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="archive-reason enhanced-reason">
+                                    <div class="reason-header">
+                                        <span class="badge enhanced-badge-archive bg-{% if a.archive_type == 'Temporaire' %}warning{% elif a.archive_type == 'Définitif' %}danger{% else %}secondary{% endif %}">
+                                            <i class="fas fa-{% if a.archive_type == 'Temporaire' %}clock{% elif a.archive_type == 'Définitif' %}ban{% else %}question{% endif %}"></i>
+                                            {{ a.archive_type|default:"N/A" }}
+                                        </span>
+                                    </div>
+                                    <div class="reason-content">
+                                        <small class="text-muted">{{ a.raison|default:"Aucune raison spécifiée" }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% if archived|length > 20 %}
+                    <div class="text-center mt-4">
+                        <button class="btn btn-outline-primary" onclick="loadMoreArchived()">
+                            <i class="fas fa-plus me-2"></i>Voir plus d'étudiants archivés
+                        </button>
+                    </div>
+                    {% endif %}
+                {% else %}
+                    <div class="no-data-message text-center py-5">
+                        <i class="fas fa-archive fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">Aucun étudiant archivé trouvé</h5>
+                        <p class="text-muted">Les étudiants archivés apparaîtront ici.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Detailed Table (Collapsible) -->
+<div class="row mb-6">
+    <div class="col-12">
+        <div class="chart-card">
+            <div class="chart-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5><i class="fas fa-table text-info"></i> Tableau Détaillé</h5>
+                    <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#detailedTable">
+                        <i class="fas fa-chevron-down"></i> Afficher/Masquer
+                    </button>
+                </div>
+            </div>
+            <div class="collapse" id="detailedTable">
+                <div class="chart-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th><i class="fas fa-id-card text-primary"></i> Identifiant</th>
+                                    <th><i class="fas fa-user text-success"></i> Nom</th>
+                                    <th><i class="fas fa-venus-mars text-info"></i> Genre</th>
+                                    <th><i class="fas fa-graduation-cap text-warning"></i> Classe</th>
+                                    <th><i class="fas fa-university text-secondary"></i> Institution</th>
+                                    <th><i class="fas fa-map-marker-alt text-danger"></i> Centre</th>
+                                    <th><i class="fas fa-book text-primary"></i> Filière</th>
+                                    <th><i class="fas fa-tags text-success"></i> Désignation</th>
+                                    <th><i class="fas fa-archive text-warning"></i> Type</th>
+                                    <th><i class="fas fa-exclamation-triangle text-danger"></i> Raison</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for a in archived %}
+                                <tr>
+                                    <td><span class="badge bg-light text-dark">{{ a.archive.identifiant }}</span></td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            {% if a.archive.imageprofile %}
+                                                <div class="table-avatar-container">
+                                                    <img src="{{ a.archive.imageprofile.url }}" alt="Photo de {{ a.archive.nom }}" class="table-student-photo">
+                                                    <div class="table-image-overlay">
+                                                        <i class="fas fa-search-plus"></i>
+                                                    </div>
+                                                </div>
+                                            {% else %}
+                                                <div class="table-avatar-placeholder">
+                                                    <i class="fas fa-user"></i>
+                                                    <div class="placeholder-shine"></div>
+                                                </div>
+                                            {% endif %}
+                                            <div class="student-name-container">
+                                                <span class="student-name-table">{{ a.archive.nom }}</span>
+                                                <small class="student-id-table text-muted">{{ a.archive.identifiant }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-{% if a.archive.genre == 'M' %}primary{% else %}pink{% endif %}">
+                                            <i class="fas fa-{% if a.archive.genre == 'M' %}mars{% else %}venus{% endif %} me-1"></i>
+                                            {{ a.archive.genre }}
+                                        </span>
+                                    </td>
+                                    <td>{{ a.archive.Class|default:"N/A" }}</td>
+                                    <td>{{ a.archive.institution|default:"N/A" }}</td>
+                                    <td>{{ a.archive.centre|default:"N/A" }}</td>
+                                    <td>{{ a.archive.fillier|default:"N/A" }}</td>
+                                    <td>{{ a.archive.designation|default:"N/A" }}</td>
+                                    <td><span class="badge bg-{% if a.archive_type == 'Temporaire' %}warning{% elif a.archive_type == 'Définitif' %}danger{% else %}secondary{% endif %}">{{ a.archive_type|default:"N/A" }}</span></td>
+                                    <td>{{ a.raison|default:"N/A" }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="10" class="text-center text-muted py-4">
+                                        <i class="fas fa-archive fa-2x mb-2 d-block"></i>
+                                        Aucun étudiant archivé trouvé
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions Panel -->
+<div class="row mb-6">
+    <div class="col-12">
+        <div class="actions-card">
+            <div class="actions-header">
+                <h5><i class="fas fa-bolt text-primary"></i> Actions Rapides</h5>
+            </div>
+            <div class="actions-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'student' %}" class="action-btn bg-primary">
+                            <i class="fas fa-users"></i>
+                            <span>Étudiants Actifs</span>
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'etudiants_dashboard' %}" class="action-btn bg-success">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'notes' %}" class="action-btn bg-info">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Notes</span>
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'archived_students' %}" class="action-btn bg-warning">
+                            <i class="fas fa-archive"></i>
+                            <span>Archivés</span>
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'archived_orphelins' %}" class="action-btn bg-danger">
+                            <i class="fas fa-heart-broken"></i>
+                            <span>Orphelins Archivés</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+:root {
+    --age-color-1: #FF6384;
+    --age-color-2: #36A2EB;
+    --age-color-3: #FFCE56;
+    --age-color-4: #4BC0C0;
+    --age-color-5: #9966FF;
+    --age-color-6: #FF9F40;
+}
+
+.dashboard-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.bg-gradient-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+.bg-gradient-warning { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+.bg-gradient-info { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+.bg-gradient-success { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+
+.metric-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    color: #2d3748;
+}
+.metric-card:hover { transform: translateY(-8px); box-shadow: 0 15px 40px rgba(0,0,0,0.2); }
+.metric-icon { font-size: 3rem; margin-right: 1.5rem; opacity: 0.8; }
+.metric-content h3 { font-size: 2.5rem; font-weight: bold; margin: 0; line-height: 1; }
+.metric-content p { margin: 0.5rem 0 0 0; opacity: 0.9; font-size: 1rem; }
+.metric-change { font-size: 0.8rem; opacity: 0.8; margin-top: 0.25rem; }
+
+.chart-card, .actions-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    overflow: hidden;
+    height: 100%;
+}
+.chart-header, .actions-header { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 1.5rem; border-bottom: 1px solid #dee2e6; }
+.chart-header h5, .actions-header h5 { margin: 0; font-weight: 600; color: #495057; }
+.chart-body, .actions-body { padding: 1.5rem; }
+.chart-container { position: relative !important; height: 300px !important; width: 100% !important; }
+.chart-container canvas { max-height: 300px !important; }
+.chart-legend { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
+.legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; }
+.legend-color { width: 16px; height: 16px; border-radius: 50%; display: inline-block; }
+.gender-stats, .centers-list { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
+.stat-item, .center-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; }
+.center-name { font-weight: 500; }
+.status-bar-item { margin-bottom: 1rem; }
+.status-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+.status-progress { height: 8px; border-radius: 4px; }
+
+/* Enhanced Archived Students Grid Styles */
+.archived-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
+    gap: 2rem; 
+}
+
+.enhanced-card { 
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); 
+    border-radius: 20px; 
+    padding: 2rem; 
+    text-align: center; 
+    position: relative; 
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 1px solid #e3e6ea;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+.enhanced-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.enhanced-card:hover { 
+    transform: translateY(-8px) scale(1.02); 
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.enhanced-card:hover::before {
+    opacity: 1;
+}
+
+.enhanced-avatar { 
+    position: relative; 
+    margin-bottom: 1.5rem;
+    display: inline-block;
+}
+
+.student-photo {
+    width: 100px; 
+    height: 100px; 
+    border-radius: 50%; 
+    object-fit: cover; 
+    margin: 0 auto; 
+    display: block;
+    border: 4px solid #fff;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+}
+
+.enhanced-card:hover .student-photo {
+    transform: scale(1.05);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.7);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.image-overlay i {
+    color: white;
+    font-size: 1.5rem;
+}
+
+.enhanced-card:hover .image-overlay {
+    opacity: 1;
+}
+
+.enhanced-placeholder { 
+    width: 100px; 
+    height: 100px; 
+    border-radius: 50%; 
+    background: linear-gradient(135deg, #667eea, #764ba2); 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    color: white; 
+    font-size: 2.5rem;
+    position: relative;
+    overflow: hidden;
+    border: 4px solid #fff;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.placeholder-gradient {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+.enhanced-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    color: #333;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 10;
+}
+
+.status-indicator {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.status-indicator.temp {
+    background: linear-gradient(135deg, #ffc107, #ff8f00);
+}
+
+.status-indicator.permanent {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+}
+
+.status-indicator.unknown {
+    background: linear-gradient(135deg, #6c757d, #495057);
+}
+
+.enhanced-name {
+    font-weight: 700; 
+    margin-bottom: 0.5rem; 
+    color: #2d3748;
+    font-size: 1.1rem;
+}
+
+.enhanced-id {
+    color: #6c757d; 
+    font-size: 0.85rem; 
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+.academic-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.academic-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.academic-badge.fillier {
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    color: white;
+}
+
+.academic-badge.designation {
+    background: linear-gradient(135deg, #43e97b, #38f9d7);
+    color: white;
+}
+
+.enhanced-details {
+    display: flex; 
+    flex-direction: column; 
+    gap: 0.75rem; 
+    margin-bottom: 1.5rem; 
+}
+
+.enhanced-item { 
+    display: flex; 
+    align-items: center; 
+    gap: 0.75rem; 
+    padding: 0.5rem;
+    background: rgba(248, 249, 250, 0.8);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.enhanced-item:hover {
+    background: rgba(248, 249, 250, 1);
+    transform: translateX(5px);
+}
+
+.detail-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    color: white;
+    flex-shrink: 0;
+}
+
+.gender-icon.male {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.gender-icon.female {
+    background: linear-gradient(135deg, #f093fb, #f5576c);
+}
+
+.class-icon {
+    background: linear-gradient(135deg, #ffd89b, #19547b);
+}
+
+.center-icon {
+    background: linear-gradient(135deg, #89f7fe, #66a6ff);
+}
+
+.institution-icon {
+    background: linear-gradient(135deg, #fdbb2d, #22c1c3);
+}
+
+.detail-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.detail-label {
+    font-size: 0.7rem;
+    color: #6c757d;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.detail-value {
+    font-size: 0.85rem;
+    color: #2d3748;
+    font-weight: 600;
+}
+
+.enhanced-reason {
+    margin-top: 1rem; 
+    padding-top: 1rem; 
+    border-top: 1px solid #e3e6ea;
+}
+
+.reason-header {
+    margin-bottom: 0.5rem;
+}
+
+.enhanced-badge-archive {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.reason-content {
+    font-size: 0.8rem;
+    line-height: 1.4;
+}
+
+/* Enhanced Table Styles */
+.table-avatar-container {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 1rem;
+}
+
+.table-student-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: 3px solid #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.table-image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.table-avatar-container:hover .table-image-overlay {
+    opacity: 1;
+}
+
+.table-image-overlay i {
+    color: white;
+    font-size: 1rem;
+}
+
+.table-avatar-placeholder {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    margin-right: 1rem;
+    position: relative;
+    overflow: hidden;
+    border: 3px solid #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.placeholder-shine {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    animation: shimmer 2s infinite;
+}
+
+.student-name-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.student-name-table {
+    font-weight: 600;
+    color: #2d3748;
+    font-size: 0.95rem;
+    line-height: 1.2;
+}
+
+.student-id-table {
+    font-size: 0.75rem;
+    margin-top: 0.1rem;
+}
+.archived-name { 
+    font-weight: 600; 
+    margin-bottom: 0.5rem; 
+    color: #2d3748;
+}
+.archived-id { 
+    color: #6c757d; 
+    font-size: 0.9rem; 
+    margin-bottom: 1rem;
+}
+.archived-details { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 0.5rem; 
+    margin-bottom: 1rem; 
+}
+.detail-item { 
+    display: flex; 
+    align-items: center; 
+    gap: 0.5rem; 
+    font-size: 0.85rem; 
+    justify-content: center;
+}
+.archive-reason { 
+    margin-top: 1rem; 
+    padding-top: 1rem; 
+    border-top: 1px solid #e3e6ea;
+}
+.text-pink { color: #e91e63 !important; }
+
+.action-btn { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    padding: 2rem 1rem; 
+    border-radius: 15px; 
+    color: white; 
+    text-decoration: none; 
+    transition: all 0.3s ease; 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
+}
+.action-btn:hover { 
+    transform: translateY(-5px); 
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2); 
+    color: white; 
+    text-decoration: none; 
+}
+.action-btn i { font-size: 2rem; margin-bottom: 0.5rem; }
+
+@media (max-width: 768px) {
+    .dashboard-header { padding: 1rem; text-align: center; }
+    .metric-card { flex-direction: column; text-align: center; padding: 1.5rem; }
+    .metric-icon { margin-right: 0; margin-bottom: 1rem; }
+    .archived-grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof Chart === 'undefined') { return; }
+
+    // Age Chart
+    const ageCanvas = document.getElementById('ageChart');
+    if (ageCanvas) {
+        const ageCtx = ageCanvas.getContext('2d');
+        new Chart(ageCtx, {
+            type: 'doughnut',
+            data: {
+                labels: [{% for age_group, count in archived_age_groups.items %}'{{ age_group }} ans'{% if not forloop.last %},{% endif %}{% endfor %}],
+                datasets: [{
+                    data: [{% for age_group, count in archived_age_groups.items %}{{ count }}{% if not forloop.last %},{% endif %}{% endfor %}],
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'],
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+    }
+
+    // Gender Chart
+    const genderCanvas = document.getElementById('genderChart');
+    if (genderCanvas) {
+        const genderCtx = genderCanvas.getContext('2d');
+        new Chart(genderCtx, {
+            type: 'pie',
+            data: {
+                labels: [{% for stat in archived_gender_stats %}'{% if stat.archive__genre == "M" %}Garçons{% else %}Filles{% endif %}'{% if not forloop.last %},{% endif %}{% endfor %}],
+                datasets: [{
+                    data: [{% for stat in archived_gender_stats %}{{ stat.count }}{% if not forloop.last %},{% endif %}{% endfor %}],
+                    backgroundColor: ['#36A2EB', '#FF6384'],
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+    }
+
+    // Centers Chart
+    const centersCanvas = document.getElementById('centersChart');
+    if (centersCanvas) {
+        const centersCtx = centersCanvas.getContext('2d');
+        new Chart(centersCtx, {
+            type: 'bar',
+            data: {
+                labels: [{% for center in archived_center_stats|slice:":5" %}'{{ center.archive__centre|default:"Non spécifié" }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+                datasets: [{
+                    label: 'Nombre d\'étudiants archivés',
+                    data: [{% for center in archived_center_stats|slice:":5" %}{{ center.count }}{% if not forloop.last %},{% endif %}{% endfor %}],
+                    backgroundColor: 'rgba(255, 193, 7, 0.8)',
+                    borderColor: 'rgba(255, 193, 7, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+        });
+    }
+
+    // Load more archived students function
+    window.loadMoreArchived = function() {
+        // This would typically make an AJAX call to load more students
+        // For now, we'll just show an alert
+        alert('Fonctionnalité "Voir plus" à implémenter - AJAX call nécessaire');
+    };
+
+    // Add smooth scrolling for better UX
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+
+    // Add loading animation for charts
+    const chartContainers = document.querySelectorAll('.chart-container');
+    chartContainers.forEach(container => {
+        container.style.opacity = '0';
+        setTimeout(() => {
+            container.style.transition = 'opacity 0.5s ease-in-out';
+            container.style.opacity = '1';
+        }, 100);
+    });
+});
+</script>
+
+{% endblock %}
+
+

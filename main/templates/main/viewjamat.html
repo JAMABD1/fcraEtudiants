@@ -1,0 +1,365 @@
+{% extends "main/base.html" %}
+
+{% block title%} {{ jamat.nom }} - Profil Jamat {% endblock %}
+
+{% block content %}
+<style>
+  /* Modern Jamat Profile Styles */
+  .jamat-profile {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+  
+  .profile-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .hero-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .profile-header {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .profile-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #fff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  }
+  
+  .profile-info h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1a202c;
+    margin: 0 0 0.5rem 0;
+  }
+  
+  .profile-info .jamat-id {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 1rem;
+  }
+  
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+  
+  .info-item {
+    background: rgba(255, 255, 255, 0.7);
+    padding: 1rem;
+    border-radius: 12px;
+    border-left: 4px solid #667eea;
+  }
+  
+  .info-item .label {
+    font-size: 0.875rem;
+    color: #6b7280;
+    font-weight: 500;
+  }
+  
+  .info-item .value {
+    font-size: 1rem;
+    color: #1f2937;
+    font-weight: 600;
+    margin-top: 0.25rem;
+  }
+  
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .stat-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1.5rem;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+  }
+  
+  .stat-card .number {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  
+  .stat-card .label {
+    font-size: 0.875rem;
+    opacity: 0.9;
+  }
+  
+  .section-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .section-icon {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 16px;
+  }
+  
+  @media (max-width: 768px) {
+    .profile-header {
+      flex-direction: column;
+      text-align: center;
+    }
+    
+    .profile-info h1 {
+      font-size: 2rem;
+    }
+    
+    .stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .info-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<div class="jamat-profile">
+  <div class="profile-container">
+    
+    <!-- Hero Section -->
+    <div class="hero-card">
+      <div class="profile-header">
+        <img src="{{ jamat.imageprofile.url }}" alt="{{ jamat.nom }}" class="profile-image">
+        <div class="profile-info">
+          <h1>{{ jamat.nom }}</h1>
+          <div class="jamat-id">{{ jamat.jamatid }}</div>
+          <div class="info-grid">
+            <div class="info-item">
+              <div class="label">Âge</div>
+              <div class="value">{{ jamat.age }} ans</div>
+            </div>
+            <div class="info-item">
+              <div class="label">Genre</div>
+              <div class="value">{% if jamat.genre == 'M' %}Masculin{% else %}Féminin{% endif %}</div>
+            </div>
+            <div class="info-item">
+              <div class="label">Centre</div>
+              <div class="value">{{ jamat.centre }}</div>
+            </div>
+            <div class="info-item">
+              <div class="label">Téléphone</div>
+              <div class="value">{{ jamat.telephone|default:"Non renseigné" }}</div>
+            </div>
+            <div class="info-item">
+              <div class="label">Email</div>
+              <div class="value">{{ jamat.email|default:"Non renseigné" }}</div>
+            </div>
+            {% if jamat.conversion_year %}
+            <div class="info-item">
+              <div class="label">Année de conversion</div>
+              <div class="value">{{ jamat.conversion_year }}</div>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Statistics -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="number">{{ jamat.age }}</div>
+        <div class="label">Âge</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">{{ jamat.centre }}</div>
+        <div class="label">Centre</div>
+      </div>
+      {% if jamat.conversion_year %}
+      <div class="stat-card">
+        <div class="number">{{ jamat.conversion_year }}</div>
+        <div class="label">Année de Conversion</div>
+      </div>
+      {% endif %}
+      <div class="stat-card">
+        <div class="number">{% if jamat.telephone %}✓{% else %}✗{% endif %}</div>
+        <div class="label">Contact Disponible</div>
+      </div>
+    </div>
+
+    <!-- Contact Information -->
+    <div class="section-card">
+      <h2 class="section-title">
+        <div class="section-icon">📞</div>
+        Informations de Contact
+      </h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+        {% if jamat.telephone %}
+        <div style="background: rgba(59, 130, 246, 0.1); padding: 1.5rem; border-radius: 16px; border: 2px solid rgba(59, 130, 246, 0.2); transition: all 0.3s ease;">
+          <h3 style="font-size: 1.125rem; font-weight: 600; color: #1f2937; margin-bottom: 0.5rem;">📱 Téléphone</h3>
+          <p style="color: #6b7280; margin: 0;">{{ jamat.telephone }}</p>
+        </div>
+        {% endif %}
+        {% if jamat.email %}
+        <div style="background: rgba(16, 185, 129, 0.1); padding: 1.5rem; border-radius: 16px; border: 2px solid rgba(16, 185, 129, 0.2); transition: all 0.3s ease;">
+          <h3 style="font-size: 1.125rem; font-weight: 600; color: #1f2937; margin-bottom: 0.5rem;">✉️ Email</h3>
+          <p style="color: #6b7280; margin: 0;">{{ jamat.email }}</p>
+        </div>
+        {% endif %}
+        {% if jamat.adress %}
+        <div style="background: rgba(236, 72, 153, 0.1); padding: 1.5rem; border-radius: 16px; border: 2px solid rgba(236, 72, 153, 0.2); transition: all 0.3s ease;">
+          <h3 style="font-size: 1.125rem; font-weight: 600; color: #1f2937; margin-bottom: 0.5rem;">📍 Adresse</h3>
+          <p style="color: #6b7280; margin: 0;">{{ jamat.adress }}</p>
+        </div>
+        {% endif %}
+      </div>
+      {% if not jamat.telephone and not jamat.email and not jamat.adress %}
+      <div style="text-align: center; padding: 3rem 1rem; color: #6b7280;">
+        <div style="width: 64px; height: 64px; background: rgba(107, 114, 128, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 24px;">📞</div>
+        <h3 style="margin: 0 0 0.5rem 0;">Aucune information de contact disponible</h3>
+        <p style="margin: 0;">Les informations de contact apparaîtront ici une fois renseignées.</p>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Professional Information -->
+    {% if jamat.travail %}
+    <div class="section-card">
+      <h2 class="section-title">
+        <div class="section-icon">💼</div>
+        Informations Professionnelles
+      </h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+        <div style="background: rgba(102, 126, 234, 0.1); padding: 1.5rem; border-radius: 16px; border: 2px solid rgba(102, 126, 234, 0.2); transition: all 0.3s ease;">
+          <h3 style="font-size: 1.125rem; font-weight: 600; color: #1f2937; margin-bottom: 0.5rem;">💼 Profession</h3>
+          <p style="color: #6b7280; margin: 0;">{{ jamat.travail }}</p>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Additional Information -->
+    <div class="section-card">
+      <h2 class="section-title">
+        <div class="section-icon">ℹ️</div>
+        Informations Complémentaires
+      </h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+        <div style="background: rgba(102, 126, 234, 0.1); padding: 1.5rem; border-radius: 16px; border: 2px solid rgba(102, 126, 234, 0.2); transition: all 0.3s ease;">
+          <h3 style="font-size: 1.125rem; font-weight: 600; color: #1f2937; margin-bottom: 0.5rem;">🏢 Centre</h3>
+          <p style="color: #6b7280; margin: 0;">{{ jamat.centre }}</p>
+        </div>
+        {% if jamat.conversion_year %}
+        <div style="background: rgba(16, 185, 129, 0.1); padding: 1.5rem; border-radius: 16px; border: 2px solid rgba(16, 185, 129, 0.2); transition: all 0.3s ease;">
+          <h3 style="font-size: 1.125rem; font-weight: 600; color: #1f2937; margin-bottom: 0.5rem;">🕊️ Année de Conversion</h3>
+          <p style="color: #6b7280; margin: 0;">{{ jamat.conversion_year }}</p>
+        </div>
+        {% endif %}
+        <div style="background: rgba(245, 158, 11, 0.1); padding: 1.5rem; border-radius: 16px; border: 2px solid rgba(245, 158, 11, 0.2); transition: all 0.3s ease;">
+          <h3 style="font-size: 1.125rem; font-weight: 600; color: #1f2937; margin-bottom: 0.5rem;">🆔 Identifiant</h3>
+          <p style="color: #6b7280; margin: 0;">{{ jamat.jamatid }}</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// Add smooth animations on load
+document.addEventListener('DOMContentLoaded', function() {
+  // Animate cards on scroll
+  const cards = document.querySelectorAll('.section-card, .hero-card');
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+  
+  cards.forEach((card, index) => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(30px)';
+    card.style.transition = `all 0.6s ease ${index * 0.1}s`;
+    observer.observe(card);
+  });
+  
+  // Add hover effects to stat cards
+  const statCards = document.querySelectorAll('.stat-card');
+  statCards.forEach(card => {
+    card.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateY(-8px) scale(1.05)';
+    });
+    
+    card.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateY(-5px) scale(1)';
+    });
+  });
+  
+  // Add hover effects to info cards
+  const hoverCards = document.querySelectorAll('[style*="transition: all 0.3s ease"]');
+  hoverCards.forEach(card => {
+    card.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateY(-3px)';
+      this.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.15)';
+    });
+    
+    card.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateY(0)';
+      this.style.boxShadow = 'none';
+    });
+  });
+});
+</script>
+{% endblock %}

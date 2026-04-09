@@ -1,0 +1,109 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block content %}
+ <form method="GET" action="{% url 'notes' %}" class="flex flex-col md:flex-row gap-4 mb-4">
+    <!-- Search by student name -->
+    <input type="text" name="search" placeholder="Rechercher par nom d'étudiant" 
+           value="{{ search_query }}" 
+           class="border rounded p-2 w-full md:w-1/4" />
+
+    <!-- Filter by Class -->
+    <select name="class" class="border rounded p-2 w-full md:w-1/4">
+        <option value="">Sélectionnez une classe</option>
+        {% for class in classes %}
+            <option value="{{ class }}" {% if class == class_filter %}selected{% endif %}>{{ class }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Filter by Designation -->
+    <select name="designation" class="border rounded p-2 w-full md:w-1/4">
+        <option value="">Sélectionnez une désignation</option>
+        {% for designation in designations %}
+            <option value="{{ designation }}" {% if designation == designation_filter %}selected{% endif %}>{{ designation }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Filter by Institution -->
+    <select name="institution" class="border rounded p-2 w-full md:w-1/4">
+        <option value="">Sélectionnez une institution</option>
+        {% for institution in institutions %}
+            <option value="{{ institution }}" {% if institution == institution_filter %}selected{% endif %}>{{ institution }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Filter by Decision -->
+    <select name="decision" class="border rounded p-2 w-full md:w-1/4">
+        <option value="">Sélectionnez une décision</option>
+        {% for decision in decisions %}
+            <option value="{{ decision }}" {% if decision == decision_filter %}selected{% endif %}>{{ decision }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Filter by Note Range -->
+    <select name="note_range" class="border rounded p-2 w-full md:w-1/4">
+        <option value="">Sélectionnez une plage de notes</option>
+        <option value="8-9.9" {% if note_range == '8-9.9' %}selected{% endif %}>8 - 9.9</option>
+        <option value="10-11.9" {% if note_range == '10-11.9' %}selected{% endif %}>10 - 11.9</option>
+        <option value="12-13.9" {% if note_range == '12-13.9' %}selected{% endif %}>12 - 13.9</option>
+        <option value="14-15.9" {% if note_range == '14-15.9' %}selected{% endif %}>14 - 15.9</option>
+        <option value="16-17.9" {% if note_range == '16-17.9' %}selected{% endif %}>16 - 17.9</option>
+        <option value="18-20" {% if note_range == '18-20' %}selected{% endif %}>18 - 20</option>
+    </select>
+
+    <!-- Filter by Year -->
+    <select name="annee" class="border rounded p-2 w-full md:w-1/4">
+        <option value="">Sélectionnez une année</option>
+        {% for annee in annees %}
+            <option value="{{ annee }}" {% if annee == annee_filter %}selected{% endif %}>{{ annee }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Submit button -->
+    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Filtrer</button>
+</form>
+
+   {% include  'main/components/TableNotes.html' with datas=notes %}
+    <div class="flex justify-between mt-4">
+        <div>
+            {% if students.has_previous %}
+                <a href="?page=1&search={{ search_query }}&class={{ class_filter }}&designation={{ designation_filter }}&institution={{ institution_filter }}&decision={{ decision_filter }}&note_range={{ note_range }}&annee={{ annee_filter }}" class="bg-green-500 text-white font-medium px-4 py-2 rounded">Première</a>
+                <a href="?page={{ students.previous_page_number }}&search={{ search_query }}&class={{ class_filter }}&designation={{ designation_filter }}&institution={{ institution_filter }}&decision={{ decision_filter }}&note_range={{ note_range }}&annee={{ annee_filter }}" class="bg-green-500 text-white font-medium px-4 py-2 rounded">Précédente</a>
+            {% endif %}
+            <span>Page {{ students.number }} sur {{ students.paginator.num_pages }}</span>
+            {% if students.has_next %}
+                <a href="?page={{ students.next_page_number }}&search={{ search_query }}&class={{ class_filter }}&designation={{ designation_filter }}&institution={{ institution_filter }}&decision={{ decision_filter }}&note_range={{ note_range }}&annee={{ annee_filter }}" class="bg-green-500 text-white font-medium px-4 py-2 rounded">Suivante</a>
+                <a href="?page={{ students.paginator.num_pages }}&search={{ search_query }}&class={{ class_filter }}&designation={{ designation_filter }}&institution={{ institution_filter }}&decision={{ decision_filter }}&note_range={{ note_range }}&annee={{ annee_filter }}" class="bg-green-500 text-white font-medium px-4 py-2 rounded">Dernière</a>
+            {% endif %}
+        </div>
+    </div>
+
+<div id="imageModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-lg p-4 relative">
+        <span id="closeModal" class="absolute top-2 right-2 cursor-pointer text-gray-600">&times;</span>
+        <img id="modalImage" src="" alt="Profile" class="max-w-full max-h-[80vh] object-contain" />
+    </div>
+</div>
+
+
+<!--Modal Script -->
+<script>
+    function openModal(imageUrl) {
+        document.getElementById('modalImage').src = imageUrl;
+        document.getElementById('imageModal').classList.remove('hidden');
+    }
+
+    document.getElementById('closeModal').onclick = function() {
+        document.getElementById('imageModal').classList.add('hidden');
+    }
+
+    // Close modal when clicking outside of the image
+    window.onclick = function(event) {
+        if (event.target == document.getElementById('imageModal')) {
+            document.getElementById('imageModal').classList.add('hidden');
+        }
+    }
+</script>
+{% endblock content %}
+ 
+
+

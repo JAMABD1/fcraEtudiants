@@ -1,0 +1,34 @@
+{% load static %}
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1'>
+        <title>Document</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                padding: 20px;
+                text-align: center;
+            }
+            .document-link {
+                display: inline-block;
+                margin: 20px;
+                padding: 10px 20px;
+                background-color: #f8f9fa;
+                border: 1px solid #dee2e6;
+                border-radius: 4px;
+                color: #0d6efd;
+                text-decoration: none;
+            }
+            .document-link:hover {
+                background-color: #e9ecef;
+            }
+        </style>
+    </head>
+    <body> 
+        <h2>Document</h2>
+        <a href="/media/{{ path }}" class="document-link" target="_blank">
+            Ouvrir le document
+        </a>
+    </body>
+</html>

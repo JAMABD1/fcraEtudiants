@@ -1,0 +1,410 @@
+<!-- Enhanced Jamat Table Component -->
+<div class="jamats-table-container">
+    <!-- Enhanced Jamat Table -->
+    <div class="table-wrapper">
+        <div class="table-header">
+            <h2 class="table-title">
+                <i class="fas fa-users"></i>
+                Jamats de Zainabia
+                <span class="result-count">{{ filtered_count|default:total_jamats }} résultat{{ filtered_count|default:total_jamats|pluralize }}</span>
+            </h2>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table table-hover jamats-table" id="jamatsTable">
+                <thead class="table-dark">
+                    <tr>
+                        <th width="80">Photo</th>
+                        <th>ID</th>
+                        <th>ID Jamat</th>
+                        <th>Nom</th>
+                        <th>Genre</th>
+                        <th>Âge</th>
+                        <th>Année conversion</th>
+                        <th>Téléphone</th>
+                        <th>Adresse</th>
+                        <th>Travail</th>
+                        <th>Centre</th>
+                        <th>Email</th>
+                        <th width="150">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="jamatsTableBody">
+                    {% for d in datas %}
+                    <tr class="jamat-row" data-jamat-id="{{ d.id }}">
+                        <td>
+                            <div class="jamat-avatar">
+                                {% if d.imageprofile %}
+                                    <img src="{{ d.imageprofile.url }}" 
+                                         alt="Photo de {{ d.nom }}" 
+                                         class="avatar-img" 
+                                         loading="lazy"
+                                         onclick="openImageModal('{{ d.imageprofile.url }}', '{{ d.nom }}')">
+                                {% else %}
+                                    <div class="avatar-placeholder">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge bg-light text-dark">{{ d.id }}</span>
+                        </td>
+                        <td>
+                            <span class="badge bg-secondary">{{ d.jamatid }}</span>
+                        </td>
+                        <td>
+                            <div class="jamat-info">
+                                <strong class="jamat-name">{{ d.nom }}</strong>
+                                {% if d.email %}
+                                    <small class="text-muted d-block">
+                                        <i class="fas fa-envelope"></i> {{ d.email }}
+                                    </small>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge {% if d.genre == 'M' %}bg-primary{% else %}bg-pink{% endif %}">
+                                {% if d.genre == 'M' %}
+                                    <i class="fas fa-mars"></i> Homme
+                                {% else %}
+                                    <i class="fas fa-venus"></i> Femme
+                                {% endif %}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="age-badge">{{ d.age|default:"N/A" }} ans</span>
+                        </td>
+                        <td>
+                            <span class="age-badge">{{ d.conversion_year|default:"N/A" }}</span>
+                        </td>
+                        <td>
+                            {% if d.telephone %}
+                                <small class="contact-info">
+                                    <i class="fas fa-phone"></i> {{ d.telephone }}
+                                </small>
+                            {% else %}
+                                <small class="text-muted">N/A</small>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="address-info">{{ d.adress|default:"N/A" }}</span>
+                        </td>
+                        <td>
+                            <span class="work-badge">{{ d.travail|default:"N/A" }}</span>
+                        </td>
+                        <td>
+                            <span class="center-badge">{{ d.centre|default:"N/A" }}</span>
+                        </td>
+                        <td>
+                            {% if d.email %}
+                                <small class="email-info">
+                                    <i class="fas fa-envelope"></i> {{ d.email }}
+                                </small>
+                            {% else %}
+                                <small class="text-muted">N/A</small>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-lg btn-primary view-jamat-btn" 
+                                        onclick="viewJamat('{{ d.id }}')" 
+                                        title="Voir Jamat">
+                                    <i class="fas fa-eye me-2"></i>
+                                    Voir Jamat
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="13" class="text-center py-5">
+                            <div class="no-data">
+                                <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                                <h5 class="text-muted">Aucun jamat trouvé</h5>
+                                <p class="text-muted">Essayez de modifier vos critères de recherche</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    {% if jamats.has_other_pages %}
+    <nav aria-label="Navigation des pages" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if jamats.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?{% if page_query %}{{ page_query }}&{% endif %}page=1">
+                        <i class="fas fa-angle-double-left"></i> Première
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?{% if page_query %}{{ page_query }}&{% endif %}page={{ jamats.previous_page_number }}">
+                        <i class="fas fa-angle-left"></i> Précédente
+                    </a>
+                </li>
+            {% endif %}
+
+            {% for num in jamats.paginator.page_range %}
+                {% if jamats.number == num %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                {% elif num > jamats.number|add:'-3' and num < jamats.number|add:'3' %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{% if page_query %}{{ page_query }}&{% endif %}page={{ num }}">{{ num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if jamats.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?{% if page_query %}{{ page_query }}&{% endif %}page={{ jamats.next_page_number }}">
+                        Suivante <i class="fas fa-angle-right"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?{% if page_query %}{{ page_query }}&{% endif %}page={{ jamats.paginator.num_pages }}">
+                        Dernière <i class="fas fa-angle-double-right"></i>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+
+<!-- Custom Styles for Jamat Table -->
+<style>
+.jamats-table-container {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.table-header {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.table-title {
+    color: #2c3e50;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.result-count {
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-weight: normal;
+}
+
+.jamats-table {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.jamats-table thead th {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-weight: 600;
+    text-align: center;
+    padding: 15px 10px;
+    border: none;
+}
+
+.jamats-table tbody tr {
+    transition: all 0.3s ease;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.jamats-table tbody tr:hover {
+    background-color: #f8f9fa;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.jamat-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    cursor: pointer;
+}
+
+.avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.avatar-img:hover {
+    transform: scale(1.1);
+}
+
+.avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+}
+
+.jamat-info {
+    text-align: left;
+}
+
+.jamat-name {
+    color: #2c3e50;
+    font-size: 1rem;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.badge {
+    font-size: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 20px;
+}
+
+.bg-pink {
+    background-color: #e91e63 !important;
+}
+
+.age-badge, .work-badge, .center-badge {
+    background-color: #17a2b8;
+    color: white;
+    padding: 0.3rem 0.6rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+}
+
+.contact-info, .email-info {
+    color: #28a745;
+    font-weight: 500;
+}
+
+.address-info {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.view-jamat-btn {
+    border-radius: 12px;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    border: none;
+    min-width: 140px;
+}
+
+.view-jamat-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4);
+    background: linear-gradient(135deg, #0056b3, #007bff);
+}
+
+.view-jamat-btn:active {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+}
+
+.no-data {
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.progress-bar {
+    transition: width 0.6s ease;
+}
+
+/* Pagination Styles */
+.pagination {
+    margin-top: 30px;
+}
+
+.pagination .page-link {
+    color: #667eea;
+    border: 1px solid #dee2e6;
+    padding: 0.75rem 1rem;
+    margin: 0 2px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.pagination .page-link:hover {
+    background-color: #667eea;
+    color: white;
+    border-color: #667eea;
+    transform: translateY(-1px);
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #667eea;
+    border-color: #667eea;
+    color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .jamats-table-container {
+        padding: 10px;
+    }
+    
+    .table-responsive {
+        font-size: 0.8rem;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        gap: 2px;
+    }
+    
+    .jamat-avatar {
+        width: 40px;
+        height: 40px;
+    }
+}
+</style>
+
+<!-- JavaScript Functions -->
+<script>
+// Action Functions
+function viewJamat(jamatId) {
+    window.location.href = `/viewjamat/${jamatId}`;
+}
+
+function openImageModal(imageUrl, name) {
+    const modal = document.getElementById('imageModal');
+    const img = document.getElementById('modalImage');
+    img.src = imageUrl;
+    img.alt = 'Photo de ' + name;
+    modal.style.display = 'flex';
+}
+
+</script> 

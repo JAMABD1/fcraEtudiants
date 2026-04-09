@@ -1,0 +1,72 @@
+<div class="bg-white   rounded-lg shadow-md   ">
+    <h2 class="text-2xl font-bold text-green-600 text-center mb-4">Distribution Selon Désignation</h2>
+    <div class="mb-4">
+        <select id="designationCenterSelect" class="block w-full p-2 border border-gray-300 rounded-md">
+            <option value="">Tous les Centres</option>
+            <option value="Antaniavo">Antaniavo</option>
+            <option value="Ankarobato">Ankarobato</option>
+            <option value="Manakara">Manakara</option>
+            <option value="Andakana">Andakana</option>
+            <option value="Sakoana">Sakoana</option>
+        </select>
+    </div>
+    <canvas id="designationChart" width="400" height="200"></canvas>
+</div>
+
+ <script>
+       // main.js
+
+let designationChart;
+
+function fetchDesignationData(center) {
+    fetch(`/api/designation-distribution/?center=${center}`)
+        .then(response => response.json())
+        .then(data => {
+            if (designationChart) {
+                designationChart.destroy(); // Destroy previous chart instance
+            }
+
+            const ctx = document.getElementById('designationChart').getContext('2d');
+            designationChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Nombre d\'étudiants',
+                        data: data.data,
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Nombre d\'étudiants'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Désignation'
+                            }
+                        }
+                    }
+                }
+            });
+        });
+}
+
+document.getElementById('designationCenterSelect').addEventListener('change', function() {
+    const selectedCenter = this.value;
+    fetchDesignationData(selectedCenter);
+});
+
+// Initialize chart on page load
+fetchDesignationData('');
+
+    </script>

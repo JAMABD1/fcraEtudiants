@@ -1,0 +1,110 @@
+ 
+      
+
+      <div class="bg-white   rounded-lg shadow-md    ">
+        <!-- Chart Title -->
+        <h1 class="text-3xl font-bold text-green-600 text-center mb-6">Distribution Selon Âge</h1>
+
+        <!-- Center Filter Dropdown -->
+        <div class="mb-6">
+          <select id="centerSelect" class="block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-300 focus:outline-none">
+            <option value="">Tous les Centres</option>
+            <option value="Antaniavo">Antaniavo</option>
+            <option value="Ankarobato">Ankarobato</option>
+            <option value="Manakara">Manakara</option>
+            <option value="Andakana">Andakana</option>
+            <option value="Sakoana">Sakoana</option>
+          </select>
+        </div>
+
+        <!-- Chart Container -->
+        <div class="relative">
+          <canvas id="myChart" width="400" height="200"></canvas>
+        </div>
+      </div>
+   
+   <!--Distribution Selon age -->
+<script>
+  let myChart; // Declare myChart outside of fetchData
+
+  const fetchData = (center) => {
+    const url = center ? `/api/chart-data/?center=${center}` : '/api/chart-data/';
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        const ctx = document.getElementById('myChart').getContext('2d');
+
+        // Destroy the previous chart instance if it exists
+        if (myChart) {
+          myChart.destroy();
+        }
+
+        // Create a new chart instance
+        myChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: data.labels, // Dynamic labels from Django
+            datasets: [
+              {
+                label: 'Répartition des Âges',
+                data: data.data, // Dynamic data from Django
+                backgroundColor: data.colors, // Dynamic colors from Django
+                borderColor: data.borderColors, // Dynamic border colors from Django
+                borderWidth: 1,
+                barThickness: 'flex' // Bar thickness
+              },
+              {
+                label: 'Indicateur de Ligne',
+                data: data.data, // Using the same data for positioning the line
+                type: 'line',
+                borderColor: 'rgba(0, 0, 0, 1)', // Color for the line
+                borderWidth: 2,
+                fill: false,
+                pointRadius: 0, // No points on the line
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: {
+                  display: true,
+                  text: 'Nombre d\'Étudiants',
+                }
+              },
+              x: {
+                title: {
+                  display: true,
+                  text: 'Tranches d\'Âge',
+                }
+              }
+            },
+            plugins: {
+              legend: {
+                display: true,
+                position: 'top',
+              },
+              tooltip: {
+                callbacks: {
+                  label: function (tooltipItem) {
+                    return tooltipItem.dataset.label + ': ' + tooltipItem.raw;
+                  }
+                }
+              }
+            }
+          }
+        });
+      });
+  };
+
+  // Listen for change event on the select element
+  document.getElementById('centerSelect').addEventListener('change', (event) => {
+    const selectedCenter = event.target.value;
+    fetchData(selectedCenter); // Fetch data based on selected center
+  });
+
+  // Initial fetch for all data
+  fetchData();
+</script>

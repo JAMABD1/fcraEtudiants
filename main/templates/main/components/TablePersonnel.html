@@ -1,0 +1,1380 @@
+<!-- Statistics Cards for Personnel -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+
+    <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-lg shadow-lg">
+        <div class="flex items-center justify-between">
+            <div class="bg-white text-black">
+                <p class="text-black text-sm">Total Personnel</p>
+                <p class="text-2xl font-bold">{{ total_personnel }}</p>
+            </div>
+            <div class="text-3xl opacity-80">👥</div>
+        </div>
+    </div>
+    
+    <div class="bg-gradient-to-r from-green-500 to-green-600 text-white p-4 rounded-lg shadow-lg">
+        <div class="flex items-center justify-between">
+            <div class="bg-white text-black">
+                <p class="text-black text-sm">Personnel Actif</p>
+                <p class="text-2xl font-bold">{{ active_count }} <span class="text-sm">({{ active_percentage }}%)</span></p>
+            </div>
+            <div class="text-3xl opacity-80">✅</div>
+        </div>
+    </div>
+    
+    <div class="bg-gradient-to-r from-purple-500 to-purple-600 text-white p-4 rounded-lg shadow-lg">
+        <div class="flex items-center justify-between">
+            <div class="bg-white text-black">
+                <p class="text-black text-sm">Hommes</p>
+                <p class="text-2xl font-bold">{{ male_count }} <span class="text-sm">({{ male_percentage }}%)</span></p>
+            </div>
+            <div class="text-3xl opacity-80">👨</div>
+        </div>
+    </div>
+    
+    <div class="bg-gradient-to-r from-pink-500 to-pink-600 text-white p-4 rounded-lg shadow-lg">
+        <div class="flex items-center justify-between">
+            <div class="bg-white text-black">
+                <p class="text-black text-sm">Femmes</p>
+                <p class="text-2xl font-bold">{{ female_count }} <span class="text-sm">({{ female_percentage }}%)</span></p>
+            </div>
+            <div class="text-3xl opacity-80">👩</div>
+        </div>
+    </div>
+</div>
+
+<!-- Additional Statistics -->
+<div class="flex flex-row gap-4 mb-6 justify-center">
+    <!-- Department Distribution 
+    <div class="bg-white w-1/4 p-4 rounded-lg shadow-md border">
+        <h3 class="text-lg font-semibold text-gray-800 mb-3">🏢 Distribution par Département</h3>
+        <div class="space-y-2">
+            {% for dept in department_stats %}
+            <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-600">{{ dept.department|default:"Non spécifié" }}</span>
+                <div class="flex items-center">
+                    <div class="w-16 bg-gray-200 rounded-full h-2 mr-2">
+                        <div class="bg-blue-500 h-2 rounded-full progress-bar" 
+                             data-count="{{ dept.count }}" 
+                             data-total="{{ total_personnel }}"></div>
+                    </div>
+                    <span class="text-sm font-medium">{{ dept.count }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="flex justify-between items-center">
+            <span class="text-sm text-gray-600">Total</span>
+            <span class="text-sm font-medium bg-blue-100 text-blue-800 px-2 py-1 rounded">{{ total_personnel }}</span>
+        </div>
+    </div>
+    -->
+    <!-- Position Distribution -->
+    <div class="bg-white w-1/4 p-4 rounded-lg shadow-md border">
+        <h3 class="text-lg font-semibold text-gray-800 mb-3">💼 Postes</h3>
+        <div class=" flex flex-row gap-2 space-y-2">
+            {% for section in section_stats %}
+            <div class=" py-1">
+                <span class="text-sm text-gray-600">{{ section.section|default:"Non spécifié" }} :</span> 
+                <span class="text-sm font-medium text-center bg-purple-100 text-purple-800 px-2 py-1 rounded">{{ section.count }}  </span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Experience Distribution -->
+     
+    
+    <!-- Status Distribution -->
+    
+
+</div>
+
+<!-- Enhanced Personnel Table Component -->
+<div class="personnel-table-container">
+    <!-- Search and Filters Section -->
+    <div class="table-controls mb-4">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="search-box">
+                    <div class="input-group">
+                        <span class="input-group-text bg-primary text-white">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <input type="text" class="form-control" id="searchInput" 
+                               placeholder="Rechercher par nom..." value="{{ search_query|default:'' }}">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="filter-controls d-flex flex-wrap gap-2">
+                    <!-- Department Filter -->
+                    <select class="form-select form-select-sm" id="departmentFilter" style="width: auto;">
+                        <option value="">Tous les départements</option>
+                        {% for sect in section_stats %}
+                            <option value="{{ sect.section }}" {% if sect.section == department_filter %}selected{% endif %}>
+                                {{ sect.section }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <!-- Position Filter -->
+                    <select class="form-select form-select-sm" id="positionFilter" style="width: auto;">
+                        <option value="">Tous les postes</option>
+                        {% for pos in travail_stats %}
+                            <option value="{{ pos.travail }}" {% if pos.travail == section_filter %}selected{% endif %}>
+                                {{ pos.travail }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <!-- Gender Filter -->
+                    <select class="form-select form-select-sm" id="genderFilter" style="width: auto;">
+                        <option value="">Tous les genres</option>
+                        <option value="M" {% if genre_filter == 'M' %}selected{% endif %}>Hommes</option>
+                        <option value="F" {% if genre_filter == 'F' %}selected{% endif %}>Femmes</option>
+                    </select>
+
+                    <!-- Status Filter -->
+                    <select class="form-select form-select-sm" id="statusFilter" style="width: auto;">
+                        <option value="">Tous les statuts</option>
+                        <option value="active" {% if status_filter == 'active' %}selected{% endif %}>Actif</option>
+                        <option value="inactive" {% if status_filter == 'inactive' %}selected{% endif %}>Inactif</option>
+                        <option value="suspended" {% if status_filter == 'suspended' %}selected{% endif %}>Suspendu</option>
+                    </select>
+
+                    <!-- Clear Filters Button -->
+                    <button class="btn btn-outline-secondary btn-sm" id="clearFilters">
+                        <i class="fas fa-times"></i> Effacer
+                        <span class="filter-count-badge" id="filterCountBadge" style="display: none;">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="stats-card bg-gradient-primary text-white">
+                <div class="stats-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stats-content">
+                    <h3>{{ total_personnel }}</h3>
+                    <p>Total Personnel</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="stats-card bg-gradient-info text-white">
+                <div class="stats-icon">
+                    <i class="fas fa-mars"></i>
+                </div>
+                <div class="stats-content">
+                    <h3>{{ male_count }}</h3>
+                    <p>Hommes ({{ male_percentage }}%)</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card bg-gradient-pink text-white">
+                <div class="stats-icon">
+                    <i class="fas fa-venus"></i>
+                </div>
+                <div class="stats-content">
+                    <h3>{{ female_count }}</h3>
+                    <p>Femmes ({{ female_percentage }}%)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Statistics -->
+  
+
+    <!-- Enhanced Personnel Table -->
+    <div class="table-wrapper">
+        <div class="table-header">
+            <h2 class="table-title">
+                <i class="fas fa-users"></i>
+                Personnel de l'Institution
+                <span class="result-count">{{ filtered_count|default:total_personnel }} résultat{{ filtered_count|default:total_personnel|pluralize }}</span>
+            </h2>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table table-hover personnel-table" id="personnelTable">
+                <thead class="table-dark">
+                    <tr>
+                        <th width="80">Photo</th>
+                       
+                        <th>Nom Complet</th>
+                        <th>Matricule</th>
+                        <th>Poste</th>
+                        <th>Département</th>
+                        <th>Statut</th>
+                        <th>Genre</th>
+                         <th>Contact</th>
+                        <th>Email</th>
+                        <th width="150">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="personnelTableBody">
+                     {% for p in personnel %}
+                    <tr class="personnel-row" data-personnel-id="{{ p.id }}">
+                        <td>
+                            <div class="personnel-avatar">
+                                {% if p.imageprofile %}
+                                    <img src="{{ p.imageprofile.url }}" 
+                                         alt="Photo de {{ p.nom }}" 
+                                         class="avatar-img" 
+                                         loading="lazy"
+                                         onclick="openImageModal('{{ p.imageprofile.url }}', '{{ p.nom }}')">
+                                {% else %}
+                                    <div class="avatar-placeholder">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </td>
+                       
+                        <td>
+                            <div class="personnel-info">
+                                <strong class="personnel-name">{{ p.nom }} </strong>
+                            
+                            </div>
+                        </td>
+                        <td>
+                            <span class="matricule-badge">
+                                <i class="fas fa-id-card"></i>
+                                {{ p.identifiant|default:"N/A" }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="position-badge">
+                                <i class="fas fa-briefcase"></i>
+                                {{ p.travail|default:"N/A" }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="department-badge">{{ p.section|default:"N/A" }}</span>
+                        </td>
+                        <td>
+                            <span class="status-badge 
+                                {% if p.situation == 'celibataire' %}status-green
+                                {% elif p.situation == 'marié' %}status-gray
+                                {% elif p.situation == 'veuf' %}status-red
+                                {% elif p.situation == 'divorce' %}status-yellow{% endif %}">
+                                {% if p.situation == 'celibataire' %}
+                                    <i class="fas fa-check-circle"></i> Celibataire
+                                {% elif p.situation == 'marié' %}
+                                    <i class="fas fa-times-circle"></i> Marié
+                                {% elif p.situation == 'veuf' %}
+                                    <i class="fas fa-pause-circle"></i> Veuf
+                                {% elif p.situation == 'divorce' %}
+                                    <i class="fas fa-question-circle"></i> Divorcé
+                                {% endif %}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge {% if p.genre == 'M' %}bg-primary{% else %}bg-green-500{% endif %}">
+                                {% if p.genre == 'M' %}
+                                    <i class="fas fa-mars"></i> Homme
+                                {% else %}
+                                    <i class="fas fa-venus"></i> Femme
+                                {% endif %}
+                            </span>
+                        </td>
+                        
+                       
+                        <td>
+                            {% if p.telephone %}
+                                <small class="contact-info">
+                                    <i class="fas fa-phone"></i> {{ p.telephone }}
+                                </small>
+                            {% else %}
+                                <small class="text-muted">N/A</small>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if p.email %}
+                                <small class="email-info">
+                                    <i class="fas fa-envelope"></i> {{ p.email }}
+                                </small>
+                            {% else %}
+                                <small class="text-muted">N/A</small>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="{% url 'viewPersonnel' p.id %}" class="btn btn-sm btn-outline-primary" 
+                                        title="Voir détails">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                 
+                                <button class="btn btn-sm btn-outline-warning" 
+                                        onclick="editPersonnel('{{ p.id }}')" 
+                                        title="Modifier">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <a href="{% url 'personneldelete' p.id %}" class="btn btn-sm btn-outline-danger" 
+                                        onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce membre du personnel ?')" 
+                                        title="Supprimer">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="13" class="text-center py-5">
+                            <div class="no-data">
+                                <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                                <h5 class="text-muted">Aucun personnel trouvé</h5>
+                                <p class="text-muted">Essayez de modifier vos critères de recherche</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    {% if personnel.has_other_pages %}
+    <nav aria-label="Navigation des pages" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if personnel.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if department_filter %}&department={{ department_filter }}{% endif %}{% if position_filter %}&position={{ position_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">
+                        <i class="fas fa-angle-double-left"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ personnel.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if department_filter %}&department={{ department_filter }}{% endif %}{% if position_filter %}&position={{ position_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">
+                        <i class="fas fa-angle-left"></i>
+                    </a>
+                </li>
+            {% endif %}
+
+            {% for num in personnel.paginator.page_range %}
+                {% if personnel.number == num %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                {% elif num > personnel.number|add:'-3' and num < personnel.number|add:'3' %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if department_filter %}&department={{ department_filter }}{% endif %}{% if position_filter %}&position={{ position_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">{{ num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if personnel.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ personnel.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if department_filter %}&department={{ department_filter }}{% endif %}{% if position_filter %}&position={{ position_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ personnel.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if department_filter %}&department={{ department_filter }}{% endif %}{% if position_filter %}&position={{ position_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">
+                        <i class="fas fa-angle-double-right"></i>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+
+<!-- Image Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel">Photo du personnel</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="modalImage" src="" alt="" class="img-fluid rounded">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Enhanced Styles -->
+<style>
+.personnel-table-container {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    padding: 2rem;
+    margin: 1rem 0;
+}
+
+.table-controls {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 1.5rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    border: 1px solid #dee2e6;
+}
+
+.search-box .input-group-text {
+    border: none;
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    border-radius: 10px 0 0 10px;
+}
+
+.search-box .form-control {
+    border-left: none;
+    border-radius: 0 10px 10px 0;
+    padding-left: 0;
+}
+
+.search-box .form-control:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+    border-color: #007bff;
+}
+
+.filter-controls .form-select {
+    min-width: 160px;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    background: white;
+}
+
+.filter-controls .form-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+
+.stats-card {
+    border-radius: 20px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.stats-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+    transform: translateX(-100%);
+    transition: transform 0.6s;
+}
+
+.stats-card:hover::before {
+    transform: translateX(100%);
+}
+
+.stats-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+}
+
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+.bg-gradient-success {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
+}
+
+.bg-gradient-info {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%) !important;
+}
+
+.bg-gradient-pink {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%) !important;
+}
+
+.stats-icon {
+    font-size: 2.5rem;
+    margin-right: 1rem;
+    opacity: 0.9;
+}
+
+.stats-content h3 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.stats-content p {
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.detail-card {
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    border: 1px solid #f0f0f0;
+    height: 100%;
+}
+
+.card-title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.card-title i {
+    margin-right: 0.5rem;
+}
+
+.stats-list .stat-item {
+    display: flex;
+    justify-content: between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f8f9fa;
+}
+
+.stats-list .stat-item:last-child {
+    border-bottom: none;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: #666;
+    flex: 1;
+}
+
+.stat-bar {
+    width: 60px;
+    height: 6px;
+    background: #e9ecef;
+    border-radius: 3px;
+    margin: 0 0.5rem;
+    overflow: hidden;
+}
+
+.stat-progress {
+    height: 100%;
+    background: linear-gradient(90deg, #007bff, #0056b3);
+    border-radius: 3px;
+    transition: width 1s ease;
+}
+
+.stat-value {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #333;
+    min-width: 30px;
+    text-align: right;
+}
+
+.stat-badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.badge-purple { background: #e1bee7; color: #7b1fa2; }
+.badge-orange { background: #ffe0b2; color: #f57c00; }
+.badge-green { background: #c8e6c9; color: #388e3c; }
+.badge-blue { background: #bbdefb; color: #1976d2; }
+
+.table-wrapper {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    position: relative;
+}
+
+.table-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1.5rem;
+}
+
+.table-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.table-title i {
+    margin-right: 0.5rem;
+}
+
+.result-count {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    font-weight: 400;
+}
+
+.personnel-table {
+    margin: 0;
+}
+
+.personnel-table thead th {
+    background: #343a40;
+    color: white;
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 1rem 0.75rem;
+    border: none;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.personnel-table tbody td {
+    padding: 1rem 0.75rem;
+    vertical-align: middle;
+    border-color: #f8f9fa;
+}
+
+.personnel-row:hover {
+    background: #f8f9fa;
+    transform: scale(1.01);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.personnel-avatar {
+    width: 50px;
+    height: 50px;
+    position: relative;
+}
+
+.avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #e9ecef;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.avatar-img:hover {
+    transform: scale(1.1);
+    border-color: #007bff;
+}
+
+.avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #e9ecef, #dee2e6);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    font-size: 1.2rem;
+}
+
+.personnel-info .personnel-name {
+    font-size: 0.95rem;
+    color: #333;
+    font-weight: 600;
+}
+
+.position-badge {
+    background: #e3f2fd;
+    color: #1565c0;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+}
+
+.position-badge i {
+    margin-right: 0.25rem;
+}
+
+.department-badge {
+    background: #f3e5f5;
+    color: #7b1fa2;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.status-badge {
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-badge i {
+    margin-right: 0.25rem;
+}
+
+.status-green { background: #c8e6c9; color: #2e7d32; }
+.status-red { background: #ffcdd2; color: #c62828; }
+.status-gray { background: #e0e0e0; color: #424242; }
+.status-yellow { background: #fff3e0; color: #ef6c00; }
+
+.date-badge, .experience-badge, .salary-badge {
+    background: #f5f5f5;
+    color: #333;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.salary-badge {
+    background: #e8f5e8;
+    color: #2e7d32;
+}
+
+.salary-badge i {
+    margin-right: 0.25rem;
+}
+
+.contact-info, .email-info {
+    display: flex;
+    align-items: center;
+    font-size: 0.8rem;
+}
+
+.contact-info i, .email-info i {
+    margin-right: 0.25rem;
+    color: #6c757d;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.action-buttons .btn {
+    padding: 0.375rem 0.5rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.action-buttons .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.no-data {
+    padding: 3rem;
+    text-align: center;
+}
+
+.no-data i {
+    opacity: 0.5;
+}
+
+/* Progress bar animation */
+@keyframes progressAnimation {
+    from { width: 0%; }
+    to { width: var(--progress-width); }
+}
+
+.progress-bar {
+    animation: progressAnimation 1s ease-out;
+}
+
+/* Loading Overlay */
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(2px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    border-radius: 15px;
+}
+
+.loading-spinner {
+    text-align: center;
+    color: #007bff;
+}
+
+.loading-spinner .spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+/* Filter Message */
+.filter-message {
+    margin-top: 1rem;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+}
+
+.filter-message.alert-success {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    color: #155724;
+    border-left: 4px solid #28a745;
+}
+
+.filter-message.alert-info {
+    background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+    color: #0c5460;
+    border-left: 4px solid #17a2b8;
+}
+
+/* Enhanced Table Animations */
+.personnel-row {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.personnel-row:hover {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+/* Search Input Enhancement */
+.search-box .form-control:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+    border-color: #007bff;
+    transform: scale(1.02);
+    transition: all 0.2s ease;
+}
+
+/* Filter Select Enhancement */
+.filter-controls .form-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+    transform: scale(1.02);
+    transition: all 0.2s ease;
+}
+
+/* Active Filter Indicators */
+.filter-active {
+    border-color: #28a745 !important;
+    background: linear-gradient(135deg, #f8fff9 0%, #f0f9f0 100%) !important;
+    box-shadow: 0 0 0 0.1rem rgba(40, 167, 69, 0.2) !important;
+}
+
+.search-box .filter-active {
+    background: linear-gradient(135deg, #f8fff9 0%, #f0f9f0 100%) !important;
+}
+
+/* Button Hover Effects */
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: all 0.2s ease;
+}
+
+/* Clear Button Special Effect */
+#clearFilters:hover {
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+    color: white;
+    border-color: #495057;
+}
+
+/* Filter Count Badge */
+.filter-count-badge {
+    background: #dc3545;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 0.5rem;
+    position: relative;
+    top: -2px;
+}
+
+/* Pulse Animation */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .personnel-table-container {
+        padding: 1rem;
+        margin: 0.5rem 0;
+    }
+    
+    .table-controls {
+        padding: 1rem;
+    }
+    
+    .filter-controls {
+        flex-direction: column;
+    }
+    
+    .filter-controls .form-select {
+        width: 100% !important;
+        margin-bottom: 0.5rem;
+    }
+    
+    .stats-card {
+        padding: 1rem;
+    }
+    
+    .stats-icon {
+        font-size: 2rem;
+    }
+    
+    .stats-content h3 {
+        font-size: 1.5rem;
+    }
+    
+    .detail-card {
+        margin-bottom: 1rem;
+    }
+    
+    .loading-spinner .spinner-border {
+        width: 2rem;
+        height: 2rem;
+    }
+    
+    .filter-message {
+        font-size: 0.9rem;
+        padding: 0.75rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .personnel-table {
+        font-size: 0.8rem;
+    }
+    
+    .personnel-table thead th {
+        padding: 0.5rem 0.25rem;
+        font-size: 0.75rem;
+    }
+    
+    .personnel-table tbody td {
+        padding: 0.5rem 0.25rem;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        gap: 0.125rem;
+    }
+    
+    .action-buttons .btn {
+        padding: 0.25rem 0.375rem;
+        font-size: 0.75rem;
+    }
+}
+</style>
+
+<!-- JavaScript for Table Functionality -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize progress bars
+    initializeProgressBars();
+    
+    // Search functionality with real-time filtering
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('input', debounce(filterTable, 200));
+    }
+    
+    // Filter functionality with real-time filtering
+    const filters = ['departmentFilter', 'positionFilter', 'genderFilter', 'statusFilter'];
+    filters.forEach(filterId => {
+        const filter = document.getElementById(filterId);
+        if (filter) {
+            filter.addEventListener('change', filterTable);
+        }
+    });
+    
+    // Clear filters
+    const clearButton = document.getElementById('clearFilters');
+    if (clearButton) {
+        clearButton.addEventListener('click', clearAllFilters);
+    }
+    
+    // Add loading indicator
+    createLoadingIndicator();
+});
+
+function createLoadingIndicator() {
+    const loadingHtml = `
+        <div id="tableLoading" class="loading-overlay" style="display: none;">
+            <div class="loading-spinner">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Chargement...</span>
+                </div>
+                <p class="mt-2">Filtrage en cours...</p>
+            </div>
+        </div>
+    `;
+    document.querySelector('.table-wrapper').insertAdjacentHTML('beforeend', loadingHtml);
+}
+
+function showLoading() {
+    document.getElementById('tableLoading').style.display = 'flex';
+}
+
+function hideLoading() {
+    document.getElementById('tableLoading').style.display = 'none';
+}
+
+function initializeProgressBars() {
+    const progressBars = document.querySelectorAll('.progress-bar[data-count]');
+    progressBars.forEach(bar => {
+        const count = parseInt(bar.dataset.count);
+        const total = parseInt(bar.dataset.total);
+        const percentage = total > 0 ? (count / total) * 100 : 0;
+        
+        // Set CSS custom property for animation
+        bar.style.setProperty('--progress-width', percentage + '%');
+        
+        // Trigger animation
+        setTimeout(() => {
+            bar.style.width = percentage + '%';
+        }, 100);
+    });
+}
+
+function filterTable() {
+    showLoading();
+    
+    setTimeout(() => {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+        const departmentFilter = document.getElementById('departmentFilter').value.toLowerCase();
+        const positionFilter = document.getElementById('positionFilter').value.toLowerCase();
+        const genderFilter = document.getElementById('genderFilter').value.toLowerCase();
+        const statusFilter = document.getElementById('statusFilter').value.toLowerCase();
+        
+        // Update active filter indicators
+        updateActiveFilterIndicators();
+        
+        const tableBody = document.getElementById('personnelTableBody');
+        const rows = tableBody.querySelectorAll('.personnel-row');
+        let visibleCount = 0;
+        
+        rows.forEach(row => {
+            const name = row.querySelector('.personnel-name').textContent.toLowerCase();
+            const matricule = row.querySelector('.matricule-badge').textContent.toLowerCase();
+            const position = row.querySelector('.position-badge').textContent.toLowerCase();
+            const department = row.querySelector('.department-badge').textContent.toLowerCase();
+            const statusBadge = row.querySelector('.status-badge').textContent.toLowerCase();
+            const genderBadge = row.querySelector('.badge').textContent.toLowerCase();
+            
+            // Check if row matches all filters
+            const matchesSearch = !searchTerm || 
+                name.includes(searchTerm) || 
+                matricule.includes(searchTerm) ||
+                position.includes(searchTerm) ||
+                department.includes(searchTerm);
+                
+            const matchesDepartment = !departmentFilter || department.includes(departmentFilter);
+            const matchesPosition = !positionFilter || position.includes(positionFilter);
+            const matchesGender = !genderFilter || genderBadge.includes(genderFilter === 'm' ? 'homme' : 'femme');
+            const matchesStatus = !statusFilter || statusBadge.includes(statusFilter);
+            
+            const shouldShow = matchesSearch && matchesDepartment && matchesPosition && matchesGender && matchesStatus;
+            
+            if (shouldShow) {
+                showRowWithAnimation(row);
+                visibleCount++;
+            } else {
+                hideRowWithAnimation(row);
+            }
+        });
+        
+        // Update result count
+        updateResultCount(visibleCount);
+        
+        // Show no results message if needed
+        toggleNoResultsMessage(visibleCount === 0);
+        
+        hideLoading();
+    }, 100);
+}
+
+function showRowWithAnimation(row) {
+    if (row.style.display === 'none') {
+        row.style.display = '';
+        row.style.opacity = '0';
+        row.style.transform = 'translateY(-10px)';
+        
+        // Force reflow
+        row.offsetHeight;
+        
+        row.style.transition = 'all 0.3s ease';
+        row.style.opacity = '1';
+        row.style.transform = 'translateY(0)';
+    }
+}
+
+function hideRowWithAnimation(row) {
+    if (row.style.display !== 'none') {
+        row.style.transition = 'all 0.2s ease';
+        row.style.opacity = '0';
+        row.style.transform = 'translateY(-5px)';
+        
+        setTimeout(() => {
+            row.style.display = 'none';
+        }, 200);
+    }
+}
+
+function updateResultCount(count) {
+    const resultCountElement = document.querySelector('.result-count');
+    if (resultCountElement) {
+        const text = count === 0 ? 'Aucun résultat' : 
+                     count === 1 ? '1 résultat' : 
+                     `${count} résultats`;
+        
+        // Animate count change
+        resultCountElement.style.transition = 'all 0.2s ease';
+        resultCountElement.style.opacity = '0.5';
+        
+        setTimeout(() => {
+            resultCountElement.textContent = text;
+            resultCountElement.style.opacity = '1';
+        }, 100);
+    }
+}
+
+function toggleNoResultsMessage(show) {
+    let noResultsRow = document.getElementById('noResultsRow');
+    
+    if (show && !noResultsRow) {
+        // Create no results message
+        const tableBody = document.getElementById('personnelTableBody');
+        const colCount = document.querySelectorAll('#personnelTable thead th').length;
+        
+        noResultsRow = document.createElement('tr');
+        noResultsRow.id = 'noResultsRow';
+        noResultsRow.innerHTML = `
+            <td colspan="${colCount}" class="text-center py-5">
+                <div class="no-data">
+                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">Aucun personnel trouvé</h5>
+                    <p class="text-muted">Essayez de modifier vos critères de recherche</p>
+                    <button class="btn btn-outline-primary btn-sm" onclick="clearAllFilters()">
+                        <i class="fas fa-refresh"></i> Réinitialiser les filtres
+                    </button>
+                </div>
+            </td>
+        `;
+        
+        tableBody.appendChild(noResultsRow);
+        
+        // Animate in
+        noResultsRow.style.opacity = '0';
+        setTimeout(() => {
+            noResultsRow.style.transition = 'opacity 0.3s ease';
+            noResultsRow.style.opacity = '1';
+        }, 10);
+        
+    } else if (!show && noResultsRow) {
+        // Remove no results message
+        noResultsRow.style.transition = 'opacity 0.2s ease';
+        noResultsRow.style.opacity = '0';
+        setTimeout(() => {
+            if (noResultsRow.parentNode) {
+                noResultsRow.parentNode.removeChild(noResultsRow);
+            }
+        }, 200);
+    }
+}
+
+function clearAllFilters() {
+    // Clear all inputs with animation
+    const searchInput = document.getElementById('searchInput');
+    const filterSelects = document.querySelectorAll('.filter-controls select');
+    
+    // Animate clearing
+    [searchInput, ...filterSelects].forEach(element => {
+        if (element) {
+            element.style.transition = 'all 0.2s ease';
+            element.style.backgroundColor = '#e3f2fd';
+            
+            setTimeout(() => {
+                element.value = '';
+                element.style.backgroundColor = '';
+                
+                // Trigger change event for selects
+                if (element.tagName === 'SELECT') {
+                    element.dispatchEvent(new Event('change'));
+                }
+            }, 100);
+        }
+    });
+    
+    // Show success message
+    showFilterMessage('Filtres réinitialisés', 'success');
+    
+    // Filter table
+    setTimeout(() => {
+        filterTable();
+    }, 200);
+}
+
+function updateActiveFilterIndicators() {
+    const filters = [
+        { id: 'searchInput', type: 'input' },
+        { id: 'departmentFilter', type: 'select' },
+        { id: 'positionFilter', type: 'select' },
+        { id: 'genderFilter', type: 'select' },
+        { id: 'statusFilter', type: 'select' }
+    ];
+    
+    let activeCount = 0;
+    
+    filters.forEach(filter => {
+        const element = document.getElementById(filter.id);
+        if (element) {
+            const hasValue = element.value.trim() !== '';
+            
+            if (hasValue) {
+                element.classList.add('filter-active');
+                activeCount++;
+            } else {
+                element.classList.remove('filter-active');
+            }
+        }
+    });
+    
+    // Update filter count badge
+    const filterCountBadge = document.getElementById('filterCountBadge');
+    if (filterCountBadge) {
+        if (activeCount > 0) {
+            filterCountBadge.textContent = activeCount;
+            filterCountBadge.style.display = 'inline-block';
+            filterCountBadge.style.animation = 'pulse 0.3s ease-in-out';
+        } else {
+            filterCountBadge.style.display = 'none';
+        }
+    }
+}
+
+function showFilterMessage(message, type = 'info') {
+    // Remove existing message
+    const existingMessage = document.getElementById('filterMessage');
+    if (existingMessage) {
+        existingMessage.remove();
+    }
+    
+    const messageDiv = document.createElement('div');
+    messageDiv.id = 'filterMessage';
+    messageDiv.className = `alert alert-${type} filter-message`;
+    messageDiv.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check' : 'info'}-circle me-2"></i>
+        ${message}
+    `;
+    
+    const tableControls = document.querySelector('.table-controls');
+    tableControls.appendChild(messageDiv);
+    
+    // Animate in
+    messageDiv.style.opacity = '0';
+    messageDiv.style.transform = 'translateY(-10px)';
+    
+    setTimeout(() => {
+        messageDiv.style.transition = 'all 0.3s ease';
+        messageDiv.style.opacity = '1';
+        messageDiv.style.transform = 'translateY(0)';
+    }, 10);
+    
+    // Auto remove after 3 seconds
+    setTimeout(() => {
+        if (messageDiv.parentNode) {
+            messageDiv.style.opacity = '0';
+            messageDiv.style.transform = 'translateY(-10px)';
+            setTimeout(() => {
+                if (messageDiv.parentNode) {
+                    messageDiv.remove();
+                }
+            }, 300);
+        }
+    }, 3000);
+}
+
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+function openImageModal(imageUrl, name) {
+    const modal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+    const modalLabel = document.getElementById('imageModalLabel');
+    
+    modalImage.src = imageUrl;
+    modalImage.alt = 'Photo de ' + name;
+    modalLabel.textContent = 'Photo de ' + name;
+    
+    // Show modal (using Bootstrap 5)
+    const bsModal = new bootstrap.Modal(modal);
+    bsModal.show();
+}
+
+function viewPersonnel(id) {
+    // Redirect to personnel detail view
+    window.location.href = `/viewpersonnel/${id}`;
+}
+
+function editPersonnel(id) {
+    // Redirect to personnel edit form
+    // Note: You might need to adjust this URL if it's different in your urls.py
+    window.location.href = `/personnel/edit?id=${id}`;
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script> 

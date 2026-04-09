@@ -1,0 +1,80 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block title%} Pension {% endblock %}
+{% block content %}
+ 
+<div class="mx-auto mt-8">
+    <h1 class="text-2xl font-bold mb-4">Liste des Pensionnés </h1>
+    <form method="get">
+        <input type="text" name="search" value="{{ search }}" placeholder="Rechercher par nom" class="border border-gray-300 rounded p-2 mr-2">
+        
+        <select name="genre" class="border border-gray-300 rounded p-2 mr-2">
+            <option value="">Genre</option>
+            <option value="M" {% if genre_filter == 'M' %}selected{% endif %}>Masculin</option>
+            <option value="F" {% if genre_filter == 'F' %}selected{% endif %}>Féminin</option>
+        </select>
+        
+        <select name="age" class="border border-gray-300 rounded p-2 mr-2">
+            <option value="">Âge</option>
+            <option value="-60" {% if age_filter == "-60" %}selected{% endif %}>Moins de 60 ans</option>
+            <option value="60-70" {% if age_filter == "60-70" %}selected{% endif %}>60-70 ans</option>
+            <option value="70+" {% if age_filter == "70+" %}selected{% endif %}>Plus de 70 ans</option>
+        </select>
+        
+        <select name="cause" class="border border-gray-300 rounded p-2 mr-2">
+            <option value="">Cause de pension</option>
+            {% for cause in causes %}
+                <option value="{{ cause }}" {% if cause == cause_filter %}selected{% endif %}>{{ cause }}</option>
+            {% endfor %}
+        </select>
+        
+        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Rechercher</button>
+        ({{ lenght_doc }})
+    </form>
+    
+    <div id="tableWrapper">
+        {% include 'main/components/TablePension.html' with datas=pensions %}
+    </div>
+</div>
+
+<div class="flex justify-between mt-4">
+    <div>
+        {% if pensions.has_previous %}
+            <a href="?page=1&search={{ search }}&genre={{ genre_filter }}&age={{ age_filter }}&cause={{ cause_filter }}" class="bg-green-500 text-white font-medium px-4 py-2 rounded">Première</a>
+            <a href="?page={{ pensions.previous_page_number }}&search={{ search }}&genre={{ genre_filter }}&age={{ age_filter }}&cause={{ cause_filter }}" class="bg-green-500 text-white font-medium px-4 py-2 rounded">Précédente</a>
+        {% endif %}
+        <span>Page {{ pensions.number }} sur {{ pensions.paginator.num_pages }}</span>
+        {% if pensions.has_next %}
+            <a href="?page={{ pensions.next_page_number }}&search={{ search }}&genre={{ genre_filter }}&age={{ age_filter }}&cause={{ cause_filter }}" class="bg-green-500 text-white font-medium px-4 py-2 rounded">Suivante</a>
+            <a href="?page={{ pensions.paginator.num_pages }}&search={{ search }}&genre={{ genre_filter }}&age={{ age_filter }}&cause={{ cause_filter }}" class="bg-green-500 text-white font-medium px-4 py-2 rounded">Dernière</a>
+        {% endif %}
+    </div>  
+</div>
+    
+<div id="imageModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-lg p-4 relative">
+        <span id="closeModal" class="absolute top-2 right-2 cursor-pointer text-gray-600">&times;</span>
+        <img id="modalImage" src="" alt="Profile" class="max-w-full max-h-[80vh] object-contain" />
+    </div>
+</div>
+
+<!--Modal Script -->
+<script>
+    function openModal(imageUrl) {
+        document.getElementById('modalImage').src = imageUrl;
+        document.getElementById('imageModal').classList.remove('hidden');
+    }
+
+    document.getElementById('closeModal').onclick = function() {
+        document.getElementById('imageModal').classList.add('hidden');
+    }
+
+    // Close modal when clicking outside of the image
+    window.onclick = function(event) {
+        if (event.target == document.getElementById('imageModal')) {
+            document.getElementById('imageModal').classList.add('hidden');
+        }
+    }
+</script>
+ 
+{% endblock content %}

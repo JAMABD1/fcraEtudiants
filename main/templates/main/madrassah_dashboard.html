@@ -1,0 +1,379 @@
+{% extends "main/base.html" %}
+{% block title %}Tableau de bord — Madrassah{% endblock %}
+{% block content %}
+
+<div class="dashboard-header mb-8">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div>
+            <h1 class="text-3xl font-bold mb-2">
+                <i class="fas fa-mosque text-white mr-3"></i>
+                Tableau de bord — Madrassah
+            </h1>
+            <p class="mb-0 opacity-90">Statistiques et répartition des élèves madrassah</p>
+        </div>
+        <div class="d-flex gap-2 flex-wrap">
+            <a href="{% url 'madrassah' %}" class="btn btn-outline-light btn-sm"><i class="fas fa-list me-2"></i>Liste</a>
+            <a href="{% url 'archived_madrassahs' %}" class="btn btn-outline-light btn-sm"><i class="fas fa-archive me-2"></i>Archives</a>
+        </div>
+    </div>
+</div>
+
+<div class="filter-panel mb-6">
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-gradient-primary text-white">
+            <h5 class="mb-0"><i class="fas fa-filter mr-2"></i>Filtres</h5>
+        </div>
+        <div class="card-body">
+            <form method="GET" class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">Centre</label>
+                    <select name="centre" class="form-select">
+                        <option value="">Tous les centres</option>
+                        {% for c in centres %}
+                            <option value="{{ c }}" {% if c == centre_filter %}selected{% endif %}>{{ c }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Tranche d'âge (stockage)</label>
+                    <select name="age" class="form-select">
+                        <option value="">Tous</option>
+                        <option value="-12" {% if age_filter == '-12' %}selected{% endif %}>-12 ans</option>
+                        <option value="12-16" {% if age_filter == '12-16' %}selected{% endif %}>12-16 ans</option>
+                        <option value="17-20" {% if age_filter == '17-20' %}selected{% endif %}>17-20 ans</option>
+                        <option value="21+" {% if age_filter == '21+' %}selected{% endif %}>21+ ans</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Genre</label>
+                    <select name="genre" class="form-select">
+                        <option value="">Tous</option>
+                        <option value="M" {% if genre_filter == 'M' %}selected{% endif %}>Masculin</option>
+                        <option value="F" {% if genre_filter == 'F' %}selected{% endif %}>Féminin</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Classe madrassah</label>
+                    <select name="class_madressah" class="form-select">
+                        <option value="">Toutes</option>
+                        {% for cl in classes_madressah %}
+                            <option value="{{ cl }}" {% if cl == class_filter %}selected{% endif %}>{{ cl }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search me-1"></i>Appliquer</button>
+                </div>
+                <div class="col-12">
+                    <a href="{% url 'madrassah_dashboard' %}" class="btn btn-outline-secondary btn-sm"><i class="fas fa-times me-1"></i>Réinitialiser</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-6">
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="metric-card bg-gradient-warning">
+            <div class="metric-icon"><i class="fas fa-users"></i></div>
+            <div class="metric-content">
+                <h3>{{ total_madrassahs }}</h3>
+                <p>Total Madrassah</p>
+                <div class="metric-change"><i class="fas fa-filter"></i> {% if centre_filter or age_filter or genre_filter or class_filter %}Filtré{% else %}Global{% endif %}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="metric-card bg-gradient-info">
+            <div class="metric-icon"><i class="fas fa-user-friends"></i></div>
+            <div class="metric-content">
+                <h3>{{ with_parent }}</h3>
+                <p>Avec parent renseigné</p>
+                <div class="metric-change">{{ parent_percentage }}%</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="metric-card bg-gradient-success">
+            <div class="metric-icon"><i class="fas fa-mars"></i></div>
+            <div class="metric-content">
+                <h3>{{ male_count }}</h3>
+                <p>Hommes</p>
+                <div class="metric-change">{{ male_percentage }}%</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="metric-card bg-gradient-warning">
+            <div class="metric-icon"><i class="fas fa-venus"></i></div>
+            <div class="metric-content">
+                <h3>{{ female_count }}</h3>
+                <p>Femmes</p>
+                <div class="metric-change">{{ female_percentage }}%</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-6">
+    <div class="col-lg-6 mb-4">
+        <div class="chart-card">
+            <div class="chart-header">
+                <h5><i class="fas fa-chart-pie text-primary"></i> Tranches d'âge (estimées)</h5>
+            </div>
+            <div class="chart-body">
+                {% if total_madrassahs > 0 %}
+                <div class="chart-container" style="position: relative; height: 300px;">
+                    <canvas id="madrassahAgeChart"></canvas>
+                </div>
+                <div class="chart-legend mt-3">
+                    {% for age_group, count in madrassah_age_groups.items %}
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: hsl({{ forloop.counter0|add:200 }}, 65%, 55%);"></span>
+                        <span>{{ age_group }} : {{ count }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center text-muted py-5"><i class="fas fa-chart-pie fa-3x mb-3 d-block"></i>Aucune donnée</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-4">
+        <div class="chart-card">
+            <div class="chart-header">
+                <h5><i class="fas fa-venus-mars text-info"></i> Répartition par genre</h5>
+            </div>
+            <div class="chart-body">
+                {% if total_madrassahs > 0 %}
+                <div class="chart-container" style="position: relative; height: 300px;">
+                    <canvas id="madrassahGenderChart"></canvas>
+                </div>
+                <div class="gender-stats mt-3">
+                    {% for stat in madrassah_gender_stats %}
+                    <div class="stat-item">
+                        <i class="fas {% if stat.genre == 'M' %}fa-mars text-primary{% else %}fa-venus text-pink{% endif %}"></i>
+                        <span>{% if stat.genre == 'M' %}Hommes{% else %}Femmes{% endif %} : {{ stat.count }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center text-muted py-5"><i class="fas fa-venus-mars fa-3x mb-3 d-block"></i>Aucune donnée</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-6">
+    <div class="col-lg-6 mb-4">
+        <div class="chart-card">
+            <div class="chart-header">
+                <h5><i class="fas fa-map-marker-alt text-success"></i> Par centre</h5>
+            </div>
+            <div class="chart-body">
+                {% if total_madrassahs > 0 %}
+                <div class="chart-container" style="position: relative; height: 300px;">
+                    <canvas id="madrassahCentersChart"></canvas>
+                </div>
+                {% else %}
+                <div class="text-center text-muted py-5">Aucune donnée</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-4">
+        <div class="chart-card">
+            <div class="chart-header">
+                <h5><i class="fas fa-book text-warning"></i> Par classe madrassah</h5>
+            </div>
+            <div class="chart-body">
+                {% if total_madrassahs > 0 %}
+                <div class="chart-container" style="position: relative; height: 300px;">
+                    <canvas id="madrassahClassChart"></canvas>
+                </div>
+                {% else %}
+                <div class="text-center text-muted py-5">Aucune donnée</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-6">
+    <div class="col-12">
+        <div class="actions-card">
+            <div class="actions-header">
+                <h5><i class="fas fa-bolt text-primary"></i> Actions rapides</h5>
+            </div>
+            <div class="actions-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <a href="{% url 'madrassah' %}" class="action-btn bg-warning text-white">
+                            <i class="fas fa-list"></i>
+                            <span>Liste de Madrassah</span>
+                        </a>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <a href="{% url 'archived_madrassahs' %}" class="action-btn bg-info text-white">
+                            <i class="fas fa-archive"></i>
+                            <span>Archive Madrassah</span>
+                        </a>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <a href="{% url 'home' %}" class="action-btn bg-success text-white">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Dashboard global</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.dashboard-header {
+    background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 50%, #10b981 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+.filter-panel .card { border-radius: 15px; overflow: hidden; }
+.bg-gradient-primary { background: linear-gradient(135deg, #0ea5e9 0%, #0369a1 100%); }
+.metric-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    color: white;
+    transition: transform 0.3s ease;
+}
+.metric-card:hover { transform: translateY(-6px); }
+.bg-gradient-warning { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+.bg-gradient-info { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+.bg-gradient-success { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+.metric-icon { font-size: 3rem; margin-right: 1.5rem; opacity: 0.85; }
+.metric-content h3 { font-size: 2.5rem; font-weight: bold; margin: 0; line-height: 1; }
+.metric-content p { margin: 0.5rem 0 0 0; opacity: 0.95; font-size: 1rem; }
+.metric-change { font-size: 0.8rem; opacity: 0.85; margin-top: 0.25rem; }
+.chart-card, .actions-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    overflow: hidden;
+    height: 100%;
+}
+.chart-header, .actions-header {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 1.5rem;
+    border-bottom: 1px solid #dee2e6;
+}
+.chart-body, .actions-body { padding: 1.5rem; }
+.chart-container { position: relative !important; height: 300px !important; width: 100% !important; }
+.chart-legend { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
+.legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; }
+.legend-color { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
+.gender-stats { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
+.stat-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; }
+.text-pink { color: #e91e63 !important; }
+.action-btn {
+    display: flex; flex-direction: column; align-items: center; padding: 2rem 1rem;
+    border-radius: 15px; text-decoration: none; transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+.action-btn:hover { transform: translateY(-5px); color: white; text-decoration: none; }
+.action-btn i { font-size: 2rem; margin-bottom: 0.5rem; }
+@media (max-width: 768px) {
+    .metric-card { flex-direction: column; text-align: center; }
+    .metric-icon { margin-right: 0; margin-bottom: 1rem; }
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof Chart === 'undefined') return;
+    Chart.defaults.font.family = 'system-ui, -apple-system, sans-serif';
+
+    const ageCanvas = document.getElementById('madrassahAgeChart');
+    if (ageCanvas) {
+        const ageData = [{% for age_group, count in madrassah_age_groups.items %}{{ count }}{% if not forloop.last %},{% endif %}{% endfor %}];
+        const ageLabels = [{% for age_group, count in madrassah_age_groups.items %}'{{ age_group }}'{% if not forloop.last %},{% endif %}{% endfor %}];
+        if (ageData.some(v => v > 0)) {
+            new Chart(ageCanvas.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: ageLabels,
+                    datasets: [{
+                        data: ageData,
+                        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#C9CBCF'],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+        }
+    }
+
+    const genderCanvas = document.getElementById('madrassahGenderChart');
+    if (genderCanvas) {
+        new Chart(genderCanvas.getContext('2d'), {
+            type: 'pie',
+            data: {
+                labels: [{% for stat in madrassah_gender_stats %}'{% if stat.genre == "M" %}Hommes{% else %}Femmes{% endif %}'{% if not forloop.last %},{% endif %}{% endfor %}],
+                datasets: [{
+                    data: [{% for stat in madrassah_gender_stats %}{{ stat.count }}{% if not forloop.last %},{% endif %}{% endfor %}],
+                    backgroundColor: ['#36A2EB', '#FF6384'],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+    }
+
+    const centersCanvas = document.getElementById('madrassahCentersChart');
+    if (centersCanvas) {
+        new Chart(centersCanvas.getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: [{% for c in madrassah_center_stats|slice:":8" %}'{{ c.centre|default:"N/A"|escapejs }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+                datasets: [{
+                    label: 'Effectif',
+                    data: [{% for c in madrassah_center_stats|slice:":8" %}{{ c.count }}{% if not forloop.last %},{% endif %}{% endfor %}],
+                    backgroundColor: 'rgba(14, 165, 233, 0.75)',
+                    borderColor: 'rgba(3, 105, 161, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+    }
+
+    const classCanvas = document.getElementById('madrassahClassChart');
+    if (classCanvas) {
+        new Chart(classCanvas.getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: [{% for c in madrassah_class_stats|slice:":8" %}'{{ c.class_madressah|default:""|escapejs }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+                datasets: [{
+                    label: 'Effectif',
+                    data: [{% for c in madrassah_class_stats|slice:":8" %}{{ c.count }}{% if not forloop.last %},{% endif %}{% endfor %}],
+                    backgroundColor: 'rgba(245, 158, 11, 0.8)',
+                    borderColor: 'rgba(217, 119, 6, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+    }
+});
+</script>
+{% endblock %}

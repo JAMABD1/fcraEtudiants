@@ -1,0 +1,457 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Étudiant - {{ student.nom }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" />
+</head>
+<body>
+<style>
+  /* Modern Student Profile Styles */
+  .student-profile {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 50%, #10b981 100%);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+  
+  .profile-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .hero-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .profile-header {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .profile-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #fff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .profile-image:hover {
+    transform: scale(1.05);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+  }
+  
+  .profile-info h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1a202c;
+    margin: 0 0 0.5rem 0;
+  }
+  
+  .profile-info .student-id {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 1rem;
+  }
+  
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+  
+  .info-item {
+    background: rgba(255, 255, 255, 0.7);
+    padding: 1rem;
+    border-radius: 12px;
+    border-left: 4px solid #0ea5e9;
+  }
+  
+  .info-item .label {
+    font-size: 0.875rem;
+    color: #6b7280;
+    font-weight: 500;
+  }
+  
+  .info-item .value {
+    font-size: 1rem;
+    color: #1f2937;
+    font-weight: 600;
+    margin-top: 0.25rem;
+  }
+  
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .stat-card {
+    background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+    color: white;
+    padding: 1.5rem;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(14, 165, 233, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(14, 165, 233, 0.4);
+  }
+  
+  .stat-card .number {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  
+  .stat-card .label {
+    font-size: 0.875rem;
+    opacity: 0.9;
+  }
+  
+  .section-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .section-icon {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 16px;
+  }
+  
+  .back-btn {
+    background: linear-gradient(135deg, #6b7280, #4b5563);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(107, 114, 128, 0.3);
+  }
+  
+  .back-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(107, 114, 128, 0.4);
+    color: white;
+    text-decoration: none;
+  }
+  
+  .table-modern {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .table-modern th {
+    background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+    color: white;
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .table-modern td {
+    padding: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    color: #374151;
+  }
+  
+  .table-modern tr:hover {
+    background: #f8fafc;
+  }
+  
+  .timeline-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .timeline-item:last-child {
+    border-bottom: none;
+  }
+  
+  .timeline-dot {
+    width: 12px;
+    height: 12px;
+    background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+    border-radius: 50%;
+    margin-right: 1rem;
+    flex-shrink: 0;
+  }
+  
+  .timeline-content {
+    color: #374151;
+    font-weight: 500;
+  }
+  
+  @media (max-width: 768px) {
+    .profile-header {
+      flex-direction: column;
+      text-align: center;
+    }
+    
+    .profile-info h1 {
+      font-size: 2rem;
+    }
+    
+    .stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .info-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<div class="student-profile">
+  <div class="profile-container">
+    
+    <!-- Hero Section -->
+    <div class="hero-card">
+      <div class="profile-header">
+        {% if student.imageprofile %}
+          <img src="{{ student.imageprofile.url }}" alt="{{ student.nom }}" class="profile-image" onclick="openImageModal('{{ student.imageprofile.url }}')">
+        {% else %}
+          <div class="profile-image" style="background: linear-gradient(135deg, #0ea5e9, #06b6d4); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem; font-weight: 700;">
+            {{ student.nom|first|upper }}
+          </div>
+        {% endif %}
+        <div class="profile-info">
+          <h1>{{ student.nom }}</h1>
+          <div class="student-id">{{ student.identifiant }}</div>
+          <div class="info-grid">
+            {% if age %}
+            <div class="info-item">
+              <div class="label">Âge</div>
+              <div class="value">{{ age }} ans</div>
+            </div>
+            {% endif %}
+            <div class="info-item">
+              <div class="label">Genre</div>
+              <div class="value">{{ student.genre|default:"-" }}</div>
+            </div>
+            <div class="info-item">
+              <div class="label">Classe</div>
+              <div class="value">{{ student.Class|default:"-" }}</div>
+            </div>
+            <div class="info-item">
+              <div class="label">Institution</div>
+              <div class="value">{{ student.institution|default:"-" }}</div>
+            </div>
+            <div class="info-item">
+              <div class="label">Filière</div>
+              <div class="value">{{ student.fillier|default:"-" }}</div>
+            </div>
+            <div class="info-item">
+              <div class="label">Centre</div>
+              <div class="value">{{ student.centre|default:"-" }}</div>
+            </div>
+            <div class="info-item">
+              <div class="label">Téléphone</div>
+              <div class="value">{{ student.telephone|default:"-" }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="flex justify-end">
+        <a href="/student" class="back-btn">
+          <i class="fas fa-arrow-left mr-2"></i>Retour à la liste
+        </a>
+      </div>
+    </div>
+
+    <!-- Performance and Presence Summary -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="number">{{ latest_decision }}</div>
+        <div class="label">Dernière Décision</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">{{ latest_average }}</div>
+        <div class="label">Dernière Moyenne</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">{{ avg_performance }}</div>
+        <div class="label">Moyenne Globale</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">{{ presence_percentage }}%</div>
+        <div class="label">Présence</div>
+      </div>
+    </div>
+
+    <!-- Notes (Yearly) -->
+    {% if new_notes %}
+    <div class="section-card">
+      <div class="section-title">
+        <div class="section-icon">
+          <i class="fas fa-book"></i>
+        </div>
+        Notes Annuelles
+      </div>
+      <div class="overflow-x-auto">
+        <table class="table-modern">
+          <thead>
+            <tr>
+              <th>Année</th>
+              <th>Moyenne</th>
+              <th>Décision</th>
+              <th>S1</th>
+              <th>S2</th>
+              <th>S3</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for note in new_notes %}
+            <tr>
+              <td>{{ note.annee }}</td>
+              <td>{{ note.moyen|default:"-" }}</td>
+              <td>{{ note.decision|default:"-" }}</td>
+              <td>{{ note.S1|default:"-" }}</td>
+              <td>{{ note.S2|default:"-" }}</td>
+              <td>{{ note.S3|default:"-" }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Academic History -->
+    {% if historique_etudiant %}
+    <div class="section-card">
+      <div class="section-title">
+        <div class="section-icon">
+          <i class="fas fa-timeline"></i>
+        </div>
+        Historique Académique
+      </div>
+      <div>
+        {% for evt in historique_etudiant %}
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            {{ evt.date|date:"d/m/Y" }} - {{ evt.description }}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Documents -->
+    {% if dossiers %}
+    <div class="section-card">
+      <div class="section-title">
+        <div class="section-icon">
+          <i class="fas fa-folder-open"></i>
+        </div>
+        Documents
+      </div>
+      <div>
+        {% for d in dossiers %}
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            {% if d.file %}
+              <a href="{{ d.file.url }}" target="_blank" style="color: #0ea5e9; text-decoration: none;">{{ d.nom|default:"Document" }}</a>
+            {% else %}
+              {{ d.nom|default:"Document" }}
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Image Modal -->
+<div id="imageModal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center" style="z-index: 9999;">
+  <div class="bg-white rounded-lg p-4 relative max-w-4xl w-11/12">
+    <button id="closeModal" class="absolute top-2 right-2 text-2xl text-gray-600 hover:text-red-500">&times;</button>
+    <img id="modalImage" src="" alt="Profile" class="max-w-full max-h-[80vh] object-contain mx-auto" />
+  </div>
+</div>
+
+    <script>
+        function openImageModal(url) {
+            document.getElementById('modalImage').src = url;
+            const modal = document.getElementById('imageModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+        document.getElementById('closeModal').onclick = function() {
+            const modal = document.getElementById('imageModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+        document.getElementById('imageModal').onclick = function(e) {
+            if (e.target === this) {
+                const modal = document.getElementById('imageModal');
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+    </script>
+</body>
+</html>
+
+

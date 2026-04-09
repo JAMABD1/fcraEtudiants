@@ -1,0 +1,428 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block title%} Voir Sortant - {{ sortant.sortant.nom }} {% endblock %}
+{% block content %}
+
+<div class="p-6">
+    <!-- Breadcrumb Navigation -->
+   
+
+    <!-- Header Section -->
+    <div class="mb-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">Détails du Sortant</h1>
+                <p class="text-gray-600 mt-2">Informations complètes sur {{ sortant.sortant.nom }}</p>
+            </div>
+            <div class="flex space-x-3">
+                <a href="{% url 'sortant' %}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors">
+                    <i class="fas fa-arrow-left me-2"></i>Retour à la liste
+                </a>
+             
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Left Column - Profile Information -->
+        <div class="lg:col-span-1">
+            <!-- Profile Card -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <div class="text-center">
+                    <div class="relative inline-block">
+                        {% if sortant.sortant.imageprofile %}
+                            <img src="{{ sortant.sortant.imageprofile.url }}" alt="{{ sortant.sortant.nom }}" 
+                                style="width: 200px; height: 200px; object-fit: cover; margin: 0 auto;"
+                                 class=" rounded-full object-cover border-4 border-white shadow-lg cursor-pointer hover:opacity-80 transition-opacity"
+                                 onclick="openModal('{{ sortant.sortant.imageprofile.url }}')">
+                        {% else %}
+                            <div class="w-48 h-48 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-6xl font-bold border-4 border-white shadow-lg">
+                                {{ sortant.sortant.nom|first|upper }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+                    
+                    <h2 class="text-2xl font-bold text-gray-900 mt-4">{{ sortant.sortant.nom }}</h2>
+                    <p class="text-gray-600">{{ age }} ans</p>
+                    
+                    <!-- Status Badges -->
+                    <div class="flex justify-center space-x-2 mt-3">
+                        <span class="badge {% if sortant.sortant.genre == 'M' %}bg-blue-500{% else %}bg-pink-500{% endif %} text-white px-3 py-1 rounded-full text-sm">
+                            {% if sortant.sortant.genre == 'M' %}
+                                <i class="fas fa-mars me-1"></i>Masculin
+                            {% else %}
+                                <i class="fas fa-venus me-1"></i>Féminin
+                            {% endif %}
+                        </span>
+                        
+                        <span class="badge {% if sortant.status == 'Embauche' %}bg-green-500{% else %}bg-yellow-500{% endif %} text-white px-3 py-1 rounded-full text-sm">
+                            {{ sortant.status }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                    <i class="fas fa-chart-bar me-2 text-blue-500"></i>Statistiques Rapides
+                </h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600">Type de placement:</span>
+                        <span class="font-semibold text-gray-900">{{ sortant.placement_type }}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600">Statut matrimonial:</span>
+                        <span class="font-semibold text-gray-900">{{ sortant.statut_matrimonial }}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600">Ville actuelle:</span>
+                        <span class="font-semibold text-gray-900">{{ sortant.adresse_actuelle|default:"N/A" }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column - Detailed Information -->
+        <div class="lg:col-span-2">
+            <!-- Personal Information -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <h3 class="text-xl font-semibold text-gray-900 mb-4 border-b pb-2">
+                    <i class="fas fa-user me-2 text-blue-500"></i>Informations Personnelles
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nom complet</label>
+                        <p class="text-gray-900 font-semibold">{{ sortant.sortant.nom }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Date de naissance</label>
+                        <p class="text-gray-900">{{ sortant.sortant.date_naissance|date:"d/m/Y" }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Âge</label>
+                        <p class="text-gray-900">{{ age }} ans</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Genre</label>
+                        <p class="text-gray-900">
+                            {% if sortant.sortant.genre == 'M' %}
+                                <i class="fas fa-mars text-blue-500 me-1"></i>Masculin
+                            {% else %}
+                                <i class="fas fa-venus text-pink-500 me-1"></i>Féminin
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Statut matrimonial</label>
+                        <p class="text-gray-900">{{ sortant.statut_matrimonial }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Type de placement</label>
+                        <p class="text-gray-900">{{ sortant.placement_type }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <h3 class="text-xl font-semibold text-gray-900 mb-4 border-b pb-2">
+                    <i class="fas fa-address-book me-2 text-green-500"></i>Informations de Contact
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+                        <p class="text-gray-900">
+                            {% if sortant.sortant.telephone %}
+                                <i class="fas fa-phone text-green-500 me-2"></i>{{ sortant.sortant.telephone }}
+                            {% else %}
+                                <span class="text-gray-400">Non renseigné</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <p class="text-gray-900">
+                            {% if sortant.sortant.telephone %}
+                                <i class="fas fa-envelope text-blue-500 me-2"></i>{{ sortant.sortant.telephone }}
+                            {% else %}
+                                <span class="text-gray-400">Non renseigné</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Employment Information -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <h3 class="text-xl font-semibold text-gray-900 mb-4 border-b pb-2">
+                    <i class="fas fa-briefcase me-2 text-purple-500"></i>Informations Professionnelles
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Statut d'emploi</label>
+                        <p class="text-gray-900">
+                            <span class="badge {% if sortant.status == 'Embauche' %}bg-green-500{% else %}bg-yellow-500{% endif %} text-white px-3 py-1 rounded-full">
+                                {{ sortant.status }}
+                            </span>
+                        </p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Poste actuel</label>
+                        <p class="text-gray-900">
+                            {% if sortant.poste_actuel %}
+                                <i class="fas fa-user-tie text-purple-500 me-2"></i>{{ sortant.poste_actuel }}
+                            {% else %}
+                                <span class="text-gray-400">Non renseigné</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Entreprise</label>
+                        <p class="text-gray-900">
+                            {% if sortant.entreprise %}
+                                <i class="fas fa-building text-purple-500 me-2"></i>{{ sortant.entreprise }}
+                            {% else %}
+                                <span class="text-gray-400">Non renseigné</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Date d'embauche</label>
+                        <p class="text-gray-900">
+                            {% if sortant.date_embauche %}
+                                <i class="fas fa-calendar text-purple-500 me-2"></i>{{ sortant.date_embauche|date:"d/m/Y" }}
+                            {% else %}
+                                <span class="text-gray-400">Non renseigné</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                
+                {% if sortant.poste_actuel or sortant.entreprise %}
+                <div class="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                    <h4 class="font-semibold text-green-800 mb-2">
+                        <i class="fas fa-info-circle me-2"></i>Résumé de l'emploi
+                    </h4>
+                    <p class="text-green-700">
+                        {% if sortant.poste_actuel and sortant.entreprise %}
+                            {{ sortant.sortant.nom }} travaille actuellement comme <strong>{{ sortant.poste_actuel }}</strong> chez <strong>{{ sortant.entreprise }}</strong>
+                            {% if sortant.date_embauche %}
+                                depuis le {{ sortant.date_embauche|date:"d/m/Y" }}
+                            {% endif %}.
+                        {% elif sortant.poste_actuel %}
+                            {{ sortant.sortant.nom }} occupe le poste de <strong>{{ sortant.poste_actuel }}</strong>
+                            {% if sortant.date_embauche %}
+                                depuis le {{ sortant.date_embauche|date:"d/m/Y" }}
+                            {% endif %}.
+                        {% elif sortant.entreprise %}
+                            {{ sortant.sortant.nom }} travaille chez <strong>{{ sortant.entreprise }}</strong>
+                            {% if sortant.date_embauche %}
+                                depuis le {{ sortant.date_embauche|date:"d/m/Y" }}
+                            {% endif %}.
+                        {% endif %}
+                    </p>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Address Information -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <h3 class="text-xl font-semibold text-gray-900 mb-4 border-b pb-2">
+                    <i class="fas fa-map-marker-alt me-2 text-red-500"></i>Adresse et Localisation
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Ville actuelle</label>
+                        <p class="text-gray-900">
+                            {% if sortant.lieu_travail %}
+                                <i class="fas fa-city text-red-500 me-2"></i>{{ sortant.lieu_travail }}
+                            {% else %}
+                                <span class="text-gray-400">Non renseigné</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Adresse complète</label>
+                        <p class="text-gray-900">
+                            {% if sortant.adresse_actuelle %}
+                                <i class="fas fa-home text-red-500 me-2"></i>{{ sortant.adresse_actuelle }}
+                            {% else %}
+                                <span class="text-gray-400">Non renseigné</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Academic History (if available) -->
+            {% if sortant.sortant %}
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <h3 class="text-xl font-semibold text-gray-900 mb-4 border-b pb-2">
+                    <i class="fas fa-graduation-cap me-2 text-indigo-500"></i>Historique Académique
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Étudiant enregistré</label>
+                        <p class="text-gray-900">
+                            <span class="badge bg-green-500 text-white px-3 py-1 rounded-full">
+                                <i class="fas fa-check me-1"></i>Oui
+                            </span>
+                        </p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Identifiant étudiant</label>
+                        <p class="text-gray-900">{{ sortant.sortant.identifiant }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Institution</label>
+                        <p class="text-gray-900">{{ sortant.sortant.institution }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Classe</label>
+                        <p class="text-gray-900">{{ sortant.sortant.Class }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Additional Notes -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-xl font-semibold text-gray-900 mb-4 border-b pb-2">
+                    <i class="fas fa-sticky-note me-2 text-yellow-500"></i>Notes et Observations
+                </h3>
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                    <p class="text-yellow-800">
+                        <i class="fas fa-lightbulb me-2"></i>
+                        Cette personne a été formée dans notre institution et est maintenant un sortant actif. 
+                        {% if sortant.status == 'Embauche' %}
+                            Elle est actuellement employée et contribue au développement de la société.
+                        {% else %}
+                            Elle est en recherche d'emploi et pourrait bénéficier de notre réseau de contacts.
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Image Modal -->
+<div id="imageModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center" style="display: none; z-index: 9999;">
+    <div class="bg-white rounded-lg p-4 relative max-w-4xl max-h-4xl">
+        <span id="closeModal" class="absolute top-2 right-2 cursor-pointer text-gray-600 text-2xl font-bold hover:text-red-500">&times;</span>
+        <img id="modalImage" src="" alt="Profile" class="max-w-full max-h-[80vh] object-contain" />
+    </div>
+</div>
+
+<!-- Modal Script -->
+<script>
+    function openModal(imageUrl) {
+        console.log('Opening modal with image:', imageUrl);
+        document.getElementById('modalImage').src = imageUrl;
+        document.getElementById('imageModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        console.log('Closing modal');
+        document.getElementById('imageModal').style.display = 'none';
+    }
+
+    // Wait for DOM to be ready
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('closeModal').onclick = closeModal;
+        
+        // Close modal when clicking outside of the image
+        document.getElementById('imageModal').onclick = function(event) {
+            if (event.target === this) {
+                closeModal();
+            }
+        };
+    });
+</script>
+
+<!-- Print Styles -->
+<style>
+/* Enhanced styling for the view sortant page */
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 9999px;
+}
+
+.bg-blue-500 { background-color: #3b82f6 !important; }
+.bg-pink-500 { background-color: #ec4899 !important; }
+.bg-green-500 { background-color: #10b981 !important; }
+.bg-yellow-500 { background-color: #f59e0b !important; }
+.bg-purple-500 { background-color: #8b5cf6 !important; }
+.bg-red-500 { background-color: #ef4444 !important; }
+.bg-indigo-500 { background-color: #6366f1 !important; }
+
+.text-white { color: white !important; }
+.text-blue-500 { color: #3b82f6 !important; }
+.text-pink-500 { color: #ec4899 !important; }
+.text-green-500 { color: #10b981 !important; }
+.text-purple-500 { color: #8b5cf6 !important; }
+.text-red-500 { color: #ef4444 !important; }
+.text-indigo-500 { color: #6366f1 !important; }
+
+/* Hover effects */
+.bg-white:hover {
+    transform: translateY(-2px);
+    transition: transform 0.2s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .lg\:col-span-1,
+    .lg\:col-span-2 {
+        width: 100% !important;
+    }
+    
+    .w-48 {
+        width: 12rem !important;
+        height: 12rem !important;
+    }
+}
+
+@media print {
+    .bg-white {
+        background-color: white !important;
+        box-shadow: none !important;
+    }
+    
+    .shadow-lg {
+        box-shadow: none !important;
+    }
+    
+    .p-6 {
+        padding: 1rem !important;
+    }
+    
+    .mb-6 {
+        margin-bottom: 1rem !important;
+    }
+    
+    .grid {
+        display: block !important;
+    }
+    
+    .lg\:col-span-1,
+    .lg\:col-span-2 {
+        width: 100% !important;
+        margin-bottom: 1rem !important;
+    }
+}
+</style>
+
+{% endblock content %}

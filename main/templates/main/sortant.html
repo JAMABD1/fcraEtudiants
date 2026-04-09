@@ -1,0 +1,340 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block title%} Sortants {% endblock %}
+{% block content %}
+<!--Filter Script -->
+<script>
+    // Function to fetch filtered results and update the table
+    async function fetchSortants(page = 1) {
+        const searchQuery = document.querySelector('input[name="search"]').value;
+        const centerFilter = document.querySelector('select[name="centre"]').value;
+        const placementFilter = document.querySelector('select[name="placement"]').value;
+        const genreFilter = document.querySelector('select[name="genre"]').value;
+        const statusFilter = document.querySelector('select[name="status"]').value;
+        const statutMatrimonialFilter = document.querySelector('select[name="statut_matrimonial"]').value;
+        const ageFilter = document.querySelector('select[name="age"]').value;
+        const villeFilter = document.querySelector('select[name="ville"]').value;
+        const posteFilter = document.querySelector('select[name="poste"]').value;
+        const entrepriseFilter = document.querySelector('select[name="entreprise"]').value;
+        const lieuTravailFilter = document.querySelector('select[name="lieu_travail"]').value;
+        const dateEmbaucheFilter = document.querySelector('select[name="date_embauche"]').value;
+        const hasEmailFilter = document.querySelector('select[name="has_email"]').value;
+        const orphelinFilter = document.querySelector('select[name="orphelin"]').value;
+
+        const urlParams = new URLSearchParams({
+            search: searchQuery,
+            centre: centerFilter,
+            placement: placementFilter,
+            genre: genreFilter,
+            status: statusFilter,
+            statut_matrimonial: statutMatrimonialFilter,
+            age: ageFilter,
+            ville: villeFilter,
+            poste: posteFilter,
+            entreprise: entrepriseFilter,
+            lieu_travail: lieuTravailFilter,
+            date_embauche: dateEmbaucheFilter,
+            has_email: hasEmailFilter,
+            orphelin: orphelinFilter,
+            page: page
+        });
+
+        const response = await fetch(`?${urlParams}`, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        });
+
+        const data = await response.json();
+        updateTable(data);
+    }
+
+    // Function to replace table content with fetched data
+    function updateTable(data) {
+        // This would need to be implemented based on your table structure
+        console.log('Updating table with:', data);
+    }
+
+    // Attach click event listeners for pagination buttons
+    function attachPaginationListeners() {
+        const paginationLinks = document.querySelectorAll('.pagination-link');
+        paginationLinks.forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                const page = this.dataset.page;
+                fetchSortants(page);
+            });
+        });
+    }
+
+    // Modal functionality to view full-size image
+    function openModal(imageUrl) {
+        document.getElementById('modalImage').src = imageUrl;
+        document.getElementById('imageModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('imageModal').style.display = 'none';
+    }
+
+    // Function to open sortant information modal
+    async function openModalInfo(sortantId) {
+        try {
+            const response = await fetch(`/sortant-data/${sortantId}/`);
+            if (!response.ok) throw new Error('Failed to fetch sortant data');
+            
+            const sortant = await response.json();
+            
+            // Update modal with sortant information
+            document.getElementById('sortantImage').src = sortant.imageprofile;
+            document.getElementById('sortantName').textContent = sortant.nom;
+            
+            // Build info HTML
+            const infoHTML = `
+                <div class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <h4 class="font-semibold text-gray-700 mb-2">Informations personnelles</h4>
+                            <p><span class="font-medium">Nom:</span> ${sortant.nom}</p>
+                            <p><span class="font-medium">Date de naissance:</span> ${sortant.date_naissance}</p>
+                            <p><span class="font-medium">Âge:</span> ${sortant.age} ans</p>
+                            <p><span class="font-medium">Genre:</span> ${sortant.genre}</p>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <h4 class="font-semibold text-gray-700 mb-2">Contact</h4>
+                            <p><span class="font-medium">Téléphone:</span> ${sortant.telephone || 'N/A'}</p>
+                            <p><span class="font-medium">Email:</span> ${sortant.email || 'N/A'}</p>
+                            <p><span class="font-medium">Statut matrimonial:</span> ${sortant.statut_matrimonial || 'N/A'}</p>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <h4 class="font-semibold text-gray-700 mb-2">Placement</h4>
+                            <p><span class="font-medium">Type de placement:</span> ${sortant.placement_type || 'N/A'}</p>
+                            <p><span class="font-medium">Statut:</span> ${sortant.status || 'N/A'}</p>
+                            <p><span class="font-medium">Ville actuelle:</span> ${sortant.ville_actuelle || 'N/A'}</p>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <h4 class="font-semibold text-gray-700 mb-2">Emploi</h4>
+                            <p><span class="font-medium">Poste actuel:</span> ${sortant.poste_actuel || 'N/A'}</p>
+                            <p><span class="font-medium">Entreprise:</span> ${sortant.entreprise || 'N/A'}</p>
+                            <p><span class="font-medium">Date d'embauche:</span> ${sortant.date_embauche || 'N/A'}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('sortantInfo').innerHTML = infoHTML;
+            document.getElementById('sortantModal').classList.remove('hidden');
+        } catch (error) {
+            console.error('Error fetching sortant data:', error);
+            alert('Erreur lors du chargement des informations du sortant');
+        }
+    }
+
+    // Attach the modal functions to global scope
+    window.openModal = openModal;
+    window.closeModal = closeModal;
+    window.openModalInfo = openModalInfo;
+
+    // Close modal when clicking outside the image
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('imageModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeModal();
+            }
+        });
+    });
+</script>
+
+<!--Tableaux-->
+<div class="p-6">
+    <h1 class="text-2xl font-bold mb-4">Liste des Sortants</h1>
+      <div class="mb-4">
+      <form method="GET" action="{% url 'sortant' %}" class="flex flex-col md:flex-row gap-4 mb-4">
+    <!-- Search Query Input -->
+    <input type="text" name="search" placeholder="Rechercher par nom" 
+           value="{{ search_query }}" 
+           class="border rounded p-2 w-full md:w-1/4" />
+
+    <!-- Age Filter -->
+    <select name="age" class="border rounded p-2 w-full md:w-1/4">
+        <option value="">Sélectionnez un âge</option>  
+        <option value="18-21" {% if age_filter == "18-21" %}selected{% endif %}>18-21 ans</option>
+        <option value="22-25" {% if age_filter == "22-25" %}selected{% endif %}>22-25 ans</option>
+        <option value="26-30" {% if age_filter == "26-30" %}selected{% endif %}>26-30 ans</option>
+        <option value="31+" {% if age_filter == "31+" %}selected{% endif %}>31+ ans</option>
+    </select>
+
+    <!-- Placement Type Filter -->
+    <select name="placement" class="border rounded p-2 w-full md:w-1/4">
+        <option value="">Sélectionnez un type de placement</option>
+        {% for placement in placements %}
+            <option value="{{ placement }}" {% if placement == placement_filter %}selected{% endif %}>{{ placement }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Genre Filter -->
+    <select name="genre" class="border rounded p-2 w-full md:w-1/4">
+        <option value="">Sélectionnez un genre</option>
+        <option value="M" {% if genre_filter == "M" %}selected{% endif %}>Masculin</option>
+        <option value="F" {% if genre_filter == "F" %}selected{% endif %}>Féminin</option>
+    </select>
+
+    <!-- Status Filter -->
+    <select name="status" class="border rounded p-2 w-full md:w-1/4">
+        <option value="">Sélectionnez un statut</option>
+        {% for status in statuses %}
+            <option value="{{ status }}" {% if status == status_filter %}selected{% endif %}>{{ status }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Statut Matrimonial Filter -->
+    <select name="statut_matrimonial" class="border rounded p-2 w-full md:w-1/4">
+        <option value="">Sélectionnez un statut matrimonial</option>
+        <option value="Célibataire" {% if statut_matrimonial_filter == "Célibataire" %}selected{% endif %}>Célibataire</option>
+        <option value="Marié" {% if statut_matrimonial_filter == "Marié" %}selected{% endif %}>Marié</option>
+        <option value="Divorcé" {% if statut_matrimonial_filter == "Divorcé" %}selected{% endif %}>Divorcé</option>
+        <option value="Veuf" {% if statut_matrimonial_filter == "Veuf" %}selected{% endif %}>Veuf</option>
+    </select>
+
+    <!-- Centre Filter -->
+    <select name="centre" class="border rounded p-2 w-full md:w-1/4">
+        <option value="">Sélectionnez un centre</option>
+        {% for centre in centers %}
+            <option value="{{ centre }}" {% if centre == centre_filter %}selected{% endif %}>{{ centre }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Ville Filter -->
+    <select name="ville" class="border rounded p-2 w-full md:w-1/4">
+        <option value="">Sélectionnez une ville</option>
+        {% for ville in villes %}
+            <option value="{{ ville }}" {% if ville == ville_filter %}selected{% endif %}>{{ ville }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Poste Actuel Filter -->
+    <select name="poste" class="border rounded p-2 w-full md:w-1/4">
+        <option value="">Sélectionnez un poste</option>
+        {% for poste in postes %}
+            <option value="{{ poste }}" {% if poste == poste_filter %}selected{% endif %}>{{ poste }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Entreprise Filter -->
+    <select name="entreprise" class="border rounded p-2 w-full md:w-1/4">
+        <option value="">Sélectionnez une entreprise</option>
+        {% for entreprise in entreprises %}
+            <option value="{{ entreprise }}" {% if entreprise == entreprise_filter %}selected{% endif %}>{{ entreprise }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Lieu de travail Filter -->
+    <select name="lieu_travail" class="border rounded p-2 w-full md:w-1/4">
+        <option value="">Sélectionnez un lieu de travail</option>
+        {% for lieu in lieux_travail %}
+            <option value="{{ lieu }}" {% if lieu == lieu_travail_filter %}selected{% endif %}>{{ lieu }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Date Embauche Filter (by year) -->
+    <select name="date_embauche" class="border rounded p-2 w-full md:w-1/4">
+        <option value="">Année d'embauche</option>
+        {% for annee in annees_embauche %}
+            <option value="{{ annee }}" {% if annee|stringformat:"s" == date_embauche_filter %}selected{% endif %}>{{ annee }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Has Email Filter -->
+    <select name="has_email" class="border rounded p-2 w-full md:w-1/4">
+        <option value="">Email disponible</option>
+        <option value="yes" {% if has_email_filter == "yes" %}selected{% endif %}>Avec email</option>
+        <option value="no" {% if has_email_filter == "no" %}selected{% endif %}>Sans email</option>
+    </select>
+
+    <!-- Orphelin Filter -->
+    <select name="orphelin" class="border rounded p-2 w-full md:w-1/4">
+        <option value="">Statut orphelin</option>
+        <option value="yes" {% if orphelin_filter == "yes" %}selected{% endif %}>Orphelin</option>
+        <option value="no" {% if orphelin_filter == "no" %}selected{% endif %}>Non orphelin</option>
+    </select>
+
+    <!-- Filter Button -->
+    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Filtrer</button>
+</form>
+    </div>
+        
+                        
+ 
+   {% include  'main/components/TablesSortants.html' with datas=sortants %}
+    
+</div>
+  <!-- Pagination Controls -->
+    <div class="flex justify-between mt-4">
+        <div>
+            {% if sortants.has_previous %}
+                <a href="?page=1&search={{ search_query }}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if placement_filter %}&placement={{ placement_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if statut_matrimonial_filter %}&statut_matrimonial={{ statut_matrimonial_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if ville_filter %}&ville={{ ville_filter }}{% endif %}{% if poste_filter %}&poste={{ poste_filter }}{% endif %}{% if entreprise_filter %}&entreprise={{ entreprise_filter }}{% endif %}{% if lieu_travail_filter %}&lieu_travail={{ lieu_travail_filter }}{% endif %}{% if date_embauche_filter %}&date_embauche={{ date_embauche_filter }}{% endif %}{% if has_email_filter %}&has_email={{ has_email_filter }}{% endif %}{% if orphelin_filter %}&orphelin={{ orphelin_filter }}{% endif %}" class="bg-green-500 text-white font-medium px-4 py-2 rounded">Première</a>
+                <a href="?page={{ sortants.previous_page_number }}&search={{ search_query }}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if placement_filter %}&placement={{ placement_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if statut_matrimonial_filter %}&statut_matrimonial={{ statut_matrimonial_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if ville_filter %}&ville={{ ville_filter }}{% endif %}{% if poste_filter %}&poste={{ poste_filter }}{% endif %}{% if entreprise_filter %}&entreprise={{ entreprise_filter }}{% endif %}{% if lieu_travail_filter %}&lieu_travail={{ lieu_travail_filter }}{% endif %}{% if date_embauche_filter %}&date_embauche={{ date_embauche_filter }}{% endif %}{% if has_email_filter %}&has_email={{ has_email_filter }}{% endif %}{% if orphelin_filter %}&orphelin={{ orphelin_filter }}{% endif %}" class="bg-green-500 text-white font-medium px-4 py-2 rounded">Précédente</a>
+            {% endif %}
+            <span>Page {{ sortants.number }} sur {{ sortants.paginator.num_pages }}</span>
+            {% if sortants.has_next %}
+                <a href="?page={{ sortants.next_page_number }}&search={{ search_query }}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if placement_filter %}&placement={{ placement_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if statut_matrimonial_filter %}&statut_matrimonial={{ statut_matrimonial_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if ville_filter %}&ville={{ ville_filter }}{% endif %}{% if poste_filter %}&poste={{ poste_filter }}{% endif %}{% if entreprise_filter %}&entreprise={{ entreprise_filter }}{% endif %}{% if lieu_travail_filter %}&lieu_travail={{ lieu_travail_filter }}{% endif %}{% if date_embauche_filter %}&date_embauche={{ date_embauche_filter }}{% endif %}{% if has_email_filter %}&has_email={{ has_email_filter }}{% endif %}{% if orphelin_filter %}&orphelin={{ orphelin_filter }}{% endif %}" class="bg-green-500 text-white font-medium px-4 py-2 rounded">Suivante</a>
+                <a href="?page={{ sortants.paginator.num_pages }}&search={{ search_query }}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if placement_filter %}&placement={{ placement_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if statut_matrimonial_filter %}&statut_matrimonial={{ statut_matrimonial_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if ville_filter %}&ville={{ ville_filter }}{% endif %}{% if poste_filter %}&poste={{ poste_filter }}{% endif %}{% if entreprise_filter %}&entreprise={{ entreprise_filter }}{% endif %}{% if lieu_travail_filter %}&lieu_travail={{ lieu_travail_filter }}{% endif %}{% if date_embauche_filter %}&date_embauche={{ date_embauche_filter }}{% endif %}{% if has_email_filter %}&has_email={{ has_email_filter }}{% endif %}{% if orphelin_filter %}&orphelin={{ orphelin_filter }}{% endif %}" class="bg-green-500 text-white font-medium px-4 py-2 rounded">Dernière</a>
+            {% endif %}
+        </div>
+    </div>
+
+<div id="imageModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-lg p-4 relative">
+        <span id="closeModal" class="absolute top-2 right-2 cursor-pointer text-gray-600">&times;</span>
+        <img id="modalImage" src="" alt="Profile" class="max-w-full max-h-[80vh] object-contain" />
+    </div>
+</div>
+
+ <div id="sortantModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+    <div class="relative top-20  p-5   border w-11/12 md:w-3/4 lg:w-3/4 shadow-lg rounded-md bg-white">
+        <div class="mt-3 text-center">
+             <span id="closeModalInfo" class="absolute top-2 right-2 cursor-pointer text-gray-600">&times;</span>
+             
+             
+            <img id="sortantImage" src="" width="300"  height="300" alt="Photo de Profil" class="  rounded-full object-cover mx-auto mb-4">
+            <h2 id="sortantName" class="text-2xl font-bold text-gray-900 mb-4"></h2>
+            
+            <div id="sortantInfo" class="mt-2 text-left grid grid-cols-1 md:grid-cols-2 gap-4  md:w-2/3 lg:w-2/3">
+                <!-- Sortant information will be dynamically inserted here -->
+            
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal Script -->
+<script>
+    function openModal(imageUrl) {
+        document.getElementById('modalImage').src = imageUrl;
+        document.getElementById('imageModal').classList.remove('hidden');
+    }
+
+    document.getElementById('closeModal').onclick = function() {
+        document.getElementById('imageModal').classList.add('hidden');
+    }
+
+    // Close modal when clicking outside of the image
+    window.onclick = function(event) {
+        if (event.target == document.getElementById('imageModal')) {
+            document.getElementById('imageModal').classList.add('hidden');
+        }
+    }
+
+     document.getElementById('closeModalInfo').onclick = function() {
+        document.getElementById('sortantModal').classList.add('hidden');
+        console.log("clicked")
+    }
+
+    // Close modal when clicking outside of the image
+    window.onclick = function(event) {
+        if (event.target == document.getElementById('sortantModal')) {
+            document.getElementById('sortantModal').classList.add('hidden');
+        }
+    }
+</script>
+{% endblock content %}
