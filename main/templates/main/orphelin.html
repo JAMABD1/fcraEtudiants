@@ -3,136 +3,201 @@
 {% block title%} Orphelin {% endblock %}
 {% block content %}
 
-<div class="mx-auto mt-8">
-    <h1 class="text-2xl font-bold mb-4">Liste des Orphelins de Zainabia</h1>
-    
-    <!-- Filter Toolbar (single-line with labels in French) -->
-    <form method="GET" action="{% url 'orphelin' %}" class="mb-4">
-        <div class="flex items-end flex-nowrap gap-4 overflow-x-auto whitespace-nowrap bg-white border rounded-lg shadow p-3">
-            <div class="flex flex-col w-56 flex-shrink-0">
-                <label for="search" class="text-xs font-semibold text-gray-600 mb-1">Filtrer par nom</label>
-                <input id="search" type="text" name="search" value="{{ search_query }}" placeholder="Ex: Fatima, Ali..." class="border rounded-lg p-2 h-[42px] focus:outline-none focus:ring-2 focus:ring-green-500" />
-            </div>
-
-            <div class="flex flex-col w-56 flex-shrink-0">
-                <label for="centre" class="text-xs font-semibold text-gray-600 mb-1">Filtrer par centre</label>
-                <select id="centre" name="centre" class="border rounded-lg p-2 h-[42px] focus:outline-none focus:ring-2 focus:ring-green-500">
-                    <option value="">Tous les centres</option>
-                    {% for centre in centres %}
-                        <option value="{{ centre }}" {% if centre == centre_filter %}selected{% endif %}>{{ centre }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div class="flex flex-col w-56 flex-shrink-0">
-                <label for="class" class="text-xs font-semibold text-gray-600 mb-1">Filtrer par classe</label>
-                <select id="class" name="class" class="border rounded-lg p-2 h-[42px] focus:outline-none focus:ring-2 focus:ring-green-500">
-                    <option value="">Toutes les classes</option>
-                    {% for class in classes %}
-                        <option value="{{ class }}" {% if class == class_filter %}selected{% endif %}>{{ class }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div class="flex flex-col w-44 flex-shrink-0">
-                <label for="genre" class="text-xs font-semibold text-gray-600 mb-1">Filtrer par genre</label>
-                <select id="genre" name="genre" class="border rounded-lg p-2 h-[42px] focus:outline-none focus:ring-2 focus:ring-green-500">
-                    <option value="">Tous</option>
-                    <option value="M" {% if genre_filter == 'M' %}selected{% endif %}>Masculin</option>
-                    <option value="F" {% if genre_filter == 'F' %}selected{% endif %}>Féminin</option>
-                </select>
-            </div>
-
-            <div class="flex flex-col w-56 flex-shrink-0">
-                <label for="institution" class="text-xs font-semibold text-gray-600 mb-1">Filtrer par institution</label>
-                <select id="institution" name="institution" class="border rounded-lg p-2 h-[42px] focus:outline-none focus:ring-2 focus:ring-green-500">
-                    <option value="">Toutes les institutions</option>
-                    {% for institution in institutions %}
-                        <option value="{{ institution }}" {% if institution == institution_filter %}selected{% endif %}>{{ institution }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div class="flex flex-col w-56 flex-shrink-0">
-                <label for="decede" class="text-xs font-semibold text-gray-600 mb-1">Filtrer par statut</label>
-                <select id="decede" name="decede" class="border rounded-lg p-2 h-[42px] focus:outline-none focus:ring-2 focus:ring-green-500">
-                    <option value="">Tous les statuts</option>
-                    {% for decede in decedes %}
-                        <option value="{{ decede }}" {% if decede == decede_filter %}selected{% endif %}>{{ decede }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div class="flex flex-col w-48 flex-shrink-0">
-                <label for="age" class="text-xs font-semibold text-gray-600 mb-1">Filtrer par âge</label>
-                <select id="age" name="age" class="border rounded-lg p-2 h-[42px] focus:outline-none focus:ring-2 focus:ring-green-500">
-                    <option value="">Toutes les tranches</option>
-                    <option value="3-10" {% if age_filter == '3-10' %}selected{% endif %}>3-10 ans</option>
-                    <option value="11-14" {% if age_filter == '11-14' %}selected{% endif %}>11-14 ans</option>
-                    <option value="15-18" {% if age_filter == '15-18' %}selected{% endif %}>15-18 ans</option>
-                    <option value="19-21" {% if age_filter == '19-21' %}selected{% endif %}>19-21 ans</option>
-                    <option value="22-25" {% if age_filter == '22-25' %}selected{% endif %}>22-25 ans</option>
-                    <option value="26+" {% if age_filter == '26+' %}selected{% endif %}>26+ ans</option>
-                </select>
-            </div>
-
-            <div class="flex flex-col w-56 flex-shrink-0">
-                <label for="acte_de_dece" class="text-xs font-semibold text-gray-600 mb-1">Complétude des documents</label>
-                <select id="acte_de_dece" name="acte_de_dece" class="border rounded-lg p-2 h-[42px] focus:outline-none focus:ring-2 focus:ring-green-500">
-                    <option value="">Tous</option>
-                    <option value="complete" {% if acte_de_dece == 'complete' %}selected{% endif %}>Complets</option>
-                    <option value="incomplete" {% if acte_de_dece == 'incomplete' %}selected{% endif %}>Incomplets</option>
-                </select>
-            </div>
-
-            <div class="flex flex-col w-56 flex-shrink-0">
-                <label for="fillier" class="text-xs font-semibold text-gray-600 mb-1">Filtrer par filière</label>
-                <select id="fillier" name="fillier" class="border rounded-lg p-2 h-[42px] focus:outline-none focus:ring-2 focus:ring-green-500">
-                    <option value="">Toutes les filières</option>
-                    {% for fillier in filliers %}
-                        <option value="{{ fillier }}" {% if fillier == fillier_filter %}selected{% endif %}>{{ fillier }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div class="flex items-center gap-2 flex-shrink-0">
-                <button type="submit" class="bg-primary   hover:bg-green-700 text-white p-2  rounded-lg font-medium">Filtrer</button>
-                <a href="{% url 'orphelin' %}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 h-[42px] rounded-lg font-medium inline-flex items-center">Réinitialiser</a>
-            </div>
+<div class="p-6">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+        <div>
+            <h1 class="text-3xl font-bold text-slate-900 flex items-center gap-3">
+                <i class="fas fa-heart text-green-600"></i>
+                Liste des Orphelins de Zainabia
+            </h1>
+            <p class="text-slate-500 mt-1">Total trouvé: <span class="font-bold text-slate-700">{{ lenght_doc }}</span> orphelin{{ lenght_doc|pluralize }}</p>
         </div>
-    </form>
+        <div class="flex gap-3">
+            <a href="{% url 'orphelin_dashboard' %}" class="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold text-sm hover:bg-slate-50 transition-all flex items-center gap-2 shadow-sm">
+                <i class="fas fa-chart-bar text-slate-400"></i> Dashboard
+            </a>
+            <button onclick="window.print()" class="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold text-sm hover:bg-slate-50 transition-all flex items-center gap-2 shadow-sm">
+                <i class="fas fa-print text-slate-400"></i> Imprimer
+            </button>
+        </div>
+    </div>
 
-    <div class="mb-4">
-        <span class="text-sm text-gray-600">Total trouvé: {{ lenght_doc }} orphelin{{ lenght_doc|pluralize }}</span>
+    <!-- Filter Panel -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-8">
+        <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+            <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                <i class="fas fa-filter text-green-600"></i> 
+                Filtres de Recherche
+            </h3>
+            <a href="{% url 'orphelin' %}" class="text-sm font-semibold text-green-600 hover:text-green-800 transition-colors flex items-center gap-1">
+                <i class="fas fa-times"></i> Réinitialiser
+            </a>
+        </div>
+        
+        <form id="filterForm" method="GET" action="{% url 'orphelin' %}" class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+                <!-- Search -->
+                <div class="space-y-2">
+                    <label for="search" class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                        <i class="fas fa-search text-slate-400"></i> Rechercher
+                    </label>
+                    <input id="search" type="text" name="search" value="{{ search_query }}" placeholder="Nom..." 
+                           class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all outline-none text-slate-700" />
+                </div>
+
+                <!-- Centre -->
+                <div class="space-y-2">
+                    <label for="centre" class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                        <i class="fas fa-map-marker-alt text-slate-400"></i> Centre
+                    </label>
+                    <select id="centre" name="centre" onchange="this.form.submit()" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all outline-none text-slate-700 appearance-none">
+                        <option value="">Tous les centres</option>
+                        {% for centre in centres %}
+                            <option value="{{ centre }}" {% if centre == centre_filter %}selected{% endif %}>{{ centre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Classe -->
+                <div class="space-y-2">
+                    <label for="class" class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                        <i class="fas fa-graduation-cap text-slate-400"></i> Classe
+                    </label>
+                    <select id="class" name="class" onchange="this.form.submit()" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all outline-none text-slate-700 appearance-none">
+                        <option value="">Toutes les classes</option>
+                        {% for cls in classes %}
+                            <option value="{{ cls }}" {% if cls == class_filter %}selected{% endif %}>{{ cls }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Genre -->
+                <div class="space-y-2">
+                    <label for="genre" class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                        <i class="fas fa-venus-mars text-slate-400"></i> Genre
+                    </label>
+                    <select id="genre" name="genre" onchange="this.form.submit()" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all outline-none text-slate-700 appearance-none">
+                        <option value="">Tous</option>
+                        <option value="M" {% if genre_filter == 'M' %}selected{% endif %}>Masculin</option>
+                        <option value="F" {% if genre_filter == 'F' %}selected{% endif %}>Féminin</option>
+                    </select>
+                </div>
+
+                <!-- Institution -->
+                <div class="space-y-2">
+                    <label for="institution" class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                        <i class="fas fa-university text-slate-400"></i> Institution
+                    </label>
+                    <select id="institution" name="institution" onchange="this.form.submit()" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all outline-none text-slate-700 appearance-none">
+                        <option value="">Toutes les institutions</option>
+                        {% for institution in institutions %}
+                            <option value="{{ institution }}" {% if institution == institution_filter %}selected{% endif %}>{{ institution }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Statut Orphelin -->
+                <div class="space-y-2">
+                    <label for="decede" class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                        <i class="fas fa-heart-broken text-slate-400"></i> Statut Orphelin
+                    </label>
+                    <select id="decede" name="decede" onchange="this.form.submit()" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all outline-none text-slate-700 appearance-none">
+                        <option value="">Tous les statuts</option>
+                        {% for decede in decedes %}
+                            <option value="{{ decede }}" {% if decede == decede_filter %}selected{% endif %}>{{ decede }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Age -->
+                <div class="space-y-2">
+                    <label for="age" class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                        <i class="fas fa-birthday-cake text-slate-400"></i> Tranche d'âge
+                    </label>
+                    <select id="age" name="age" onchange="this.form.submit()" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all outline-none text-slate-700 appearance-none">
+                        <option value="">Toutes les tranches</option>
+                        <option value="3-10" {% if age_filter == '3-10' %}selected{% endif %}>3-10 ans</option>
+                        <option value="11-14" {% if age_filter == '11-14' %}selected{% endif %}>11-14 ans</option>
+                        <option value="15-18" {% if age_filter == '15-18' %}selected{% endif %}>15-18 ans</option>
+                        <option value="19-21" {% if age_filter == '19-21' %}selected{% endif %}>19-21 ans</option>
+                        <option value="22-25" {% if age_filter == '22-25' %}selected{% endif %}>22-25 ans</option>
+                        <option value="26+" {% if age_filter == '26+' %}selected{% endif %}>26+ ans</option>
+                    </select>
+                </div>
+
+                <!-- Complétude des documents -->
+                <div class="space-y-2">
+                    <label for="acte_de_dece" class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                        <i class="fas fa-file-alt text-slate-400"></i> Documents
+                    </label>
+                    <select id="acte_de_dece" name="acte_de_dece" onchange="this.form.submit()" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all outline-none text-slate-700 appearance-none">
+                        <option value="">Tous</option>
+                        <option value="complete" {% if acte_de_dece == 'complete' %}selected{% endif %}>Complets</option>
+                        <option value="incomplete" {% if acte_de_dece == 'incomplete' %}selected{% endif %}>Incomplets</option>
+                    </select>
+                </div>
+
+                <!-- Filière -->
+                <div class="space-y-2">
+                    <label for="fillier" class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                        <i class="fas fa-book text-slate-400"></i> Filière
+                    </label>
+                    <select id="fillier" name="fillier" onchange="this.form.submit()" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all outline-none text-slate-700 appearance-none">
+                        <option value="">Toutes les filières</option>
+                        {% for fillier in filliers %}
+                            <option value="{{ fillier }}" {% if fillier == fillier_filter %}selected{% endif %}>{{ fillier }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Submit -->
+                <div class="flex items-end">
+                    <button type="submit" class="w-full px-6 py-2.5 bg-green-600 text-white rounded-xl font-bold hover:bg-green-700 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+                        <i class="fas fa-filter"></i> Filtrer
+                    </button>
+                </div>
+            </div>
+        </form>
     </div>
 
     {% include 'main/components/TableOrphelin.html' with datas=orphelins %}
 </div>
 
 <!-- Pagination -->
-<div class="flex justify-between mt-4">
-    <div>
+<div class="flex justify-center mt-6 px-6 pb-10">
+    <div class="flex items-center gap-2">
         {% if orphelins.has_previous %}
-            <a href="?page=1&search={{ search_query }}&centre={{ centre_filter }}&class={{ class_filter }}&genre={{ genre_filter }}&decede={{ decede_filter }}&age={{ age_filter }}&acte_de_dece={{ acte_de_dece }}&institution={{ institution_filter }}&fillier={{ fillier_filter }}" class="bg-green-500 text-white font-medium px-4 py-2 rounded">Première</a>
-            <a href="?page={{ orphelins.previous_page_number }}&search={{ search_query }}&centre={{ centre_filter }}&class={{ class_filter }}&genre={{ genre_filter }}&decede={{ decede_filter }}&age={{ age_filter }}&acte_de_dece={{ acte_de_dece }}&institution={{ institution_filter }}&fillier={{ fillier_filter }}" class="bg-green-500 text-white font-medium px-4 py-2 rounded">Précédente</a>
+            <a href="?page=1&search={{ search_query }}&centre={{ centre_filter }}&class={{ class_filter }}&genre={{ genre_filter }}&decede={{ decede_filter }}&age={{ age_filter }}&acte_de_dece={{ acte_de_dece }}&institution={{ institution_filter }}&fillier={{ fillier_filter }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-green-600 hover:border-green-100 transition-all shadow-sm">
+                <i class="fas fa-angle-double-left"></i>
+            </a>
+            <a href="?page={{ orphelins.previous_page_number }}&search={{ search_query }}&centre={{ centre_filter }}&class={{ class_filter }}&genre={{ genre_filter }}&decede={{ decede_filter }}&age={{ age_filter }}&acte_de_dece={{ acte_de_dece }}&institution={{ institution_filter }}&fillier={{ fillier_filter }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-green-600 hover:border-green-100 transition-all shadow-sm">
+                <i class="fas fa-angle-left"></i>
+            </a>
         {% endif %}
-        <span>Page {{ orphelins.number }} sur {{ orphelins.paginator.num_pages }}</span>
+
+        <div class="px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-600 shadow-sm">
+            Page {{ orphelins.number }} <span class="text-slate-300 mx-1">/</span> {{ orphelins.paginator.num_pages }}
+        </div>
+
         {% if orphelins.has_next %}
-            <a href="?page={{ orphelins.next_page_number }}&search={{ search_query }}&centre={{ centre_filter }}&class={{ class_filter }}&genre={{ genre_filter }}&decede={{ decede_filter }}&age={{ age_filter }}&acte_de_dece={{ acte_de_dece }}&institution={{ institution_filter }}&fillier={{ fillier_filter }}" class="bg-green-500 text-white font-medium px-4 py-2 rounded">Suivante</a>
-            <a href="?page={{ orphelins.paginator.num_pages }}&search={{ search_query }}&centre={{ centre_filter }}&class={{ class_filter }}&genre={{ genre_filter }}&decede={{ decede_filter }}&age={{ age_filter }}&acte_de_dece={{ acte_de_dece }}&institution={{ institution_filter }}&fillier={{ fillier_filter }}" class="bg-green-500 text-white font-medium px-4 py-2 rounded">Dernière</a>
+            <a href="?page={{ orphelins.next_page_number }}&search={{ search_query }}&centre={{ centre_filter }}&class={{ class_filter }}&genre={{ genre_filter }}&decede={{ decede_filter }}&age={{ age_filter }}&acte_de_dece={{ acte_de_dece }}&institution={{ institution_filter }}&fillier={{ fillier_filter }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-green-600 hover:border-green-100 transition-all shadow-sm">
+                <i class="fas fa-angle-right"></i>
+            </a>
+            <a href="?page={{ orphelins.paginator.num_pages }}&search={{ search_query }}&centre={{ centre_filter }}&class={{ class_filter }}&genre={{ genre_filter }}&decede={{ decede_filter }}&age={{ age_filter }}&acte_de_dece={{ acte_de_dece }}&institution={{ institution_filter }}&fillier={{ fillier_filter }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-green-600 hover:border-green-100 transition-all shadow-sm">
+                <i class="fas fa-angle-double-right"></i>
+            </a>
         {% endif %}
-    </div>  
+    </div>
 </div>
-    
+
 <!-- Image Modal -->
-<div id="imageModal" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden">
+<div id="imageModal" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden z-50">
     <div class="bg-white rounded-lg p-4 relative">
-        <span id="closeModal" class="absolute top-2 right-2 cursor-pointer text-gray-600">&times;</span>
+        <span id="closeModal" class="absolute top-2 right-2 cursor-pointer text-gray-600 text-xl">&times;</span>
         <img id="modalImage" src="" alt="Profile" class="max-w-full max-h-[80vh] object-contain" />
     </div>
 </div>
 
-<!-- Modal Script -->
 <script>
     function openModal(imageUrl) {
         document.getElementById('modalImage').src = imageUrl;
@@ -143,7 +208,6 @@
         document.getElementById('imageModal').classList.add('hidden');
     }
 
-    // Close modal when clicking outside of the image
     window.onclick = function(event) {
         if (event.target == document.getElementById('imageModal')) {
             document.getElementById('imageModal').classList.add('hidden');
@@ -155,17 +219,14 @@
 
 {% block extra_css %}
 <style>
-  /* Prevent unexpected white strip at the bottom/footer by ensuring full-height and background */
   html, body {
     height: 100%;
-    background-color: #f3f4f6; /* tailwind gray-100 */
+    background-color: #f3f4f6;
   }
-  /* Ensure page container doesn't leave a gap at bottom */
   #app, .min-h-screen {
     min-height: 100vh;
     background-color: #f3f4f6;
   }
-  /* Remove extra margin/padding causing white footer if any */
   footer { background-color: #f3f4f6; }
 </style>
 {% endblock %}

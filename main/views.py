@@ -112,7 +112,11 @@ def orphelin_dashboard(response):
     
     # Apply filters to orphans
     if centre_filter:
-        orphelins_queryset = orphelins_queryset.filter(identifiant__centre=centre_filter)
+        centre_values = get_center_filter_values(centre_filter)
+        if centre_values:
+            orphelins_queryset = orphelins_queryset.filter(identifiant__centre__in=centre_values)
+        else:
+            orphelins_queryset = orphelins_queryset.filter(identifiant__centre=centre_filter)
     if status_filter:
         orphelins_queryset = orphelins_queryset.filter(décedé=status_filter)
     if institution_filter:
@@ -202,7 +206,11 @@ def orphelin_dashboard(response):
     
     # Apply same filters to notes
     if centre_filter:
-        orphan_notes = orphan_notes.filter(identifiant__centre=centre_filter)
+        centre_values = get_center_filter_values(centre_filter)
+        if centre_values:
+            orphan_notes = orphan_notes.filter(identifiant__centre__in=centre_values)
+        else:
+            orphan_notes = orphan_notes.filter(identifiant__centre=centre_filter)
     if institution_filter:
         orphan_notes = orphan_notes.filter(identifiant__institution=institution_filter)
     if year_filter:
@@ -2475,7 +2483,11 @@ def sortant(request):
     if search_query:
         sortants = sortants.filter(sortant__nom__icontains=search_query)
     if center_filter:
-        sortants = sortants.filter(sortant__centre=center_filter)
+        centre_values = get_center_filter_values(center_filter)
+        if centre_values:
+            sortants = sortants.filter(sortant__centre__in=centre_values)
+        else:
+            sortants = sortants.filter(sortant__centre=center_filter)
     if placement_filter:
         sortants = sortants.filter(placement_type=placement_filter)
     if genre_filter:
@@ -2498,7 +2510,9 @@ def sortant(request):
         if has_email_filter == 'yes':
             sortants = sortants.exclude(sortant__telephone__isnull=True).exclude(sortant__telephone='')
         elif has_email_filter == 'no':
-            sortants = sortants.filter(Q(sortant__telephone__isnull=True) | Q(sortant__telephone=''))
+            sortants = sortants.filter(
+                Q(sortant__telephone__isnull=True) | Q(sortant__telephone='')
+            )
     if orphelin_filter:
         if orphelin_filter == 'yes':
             sortants = sortants.filter(sortant__orphelin__isnull=False)
@@ -2771,14 +2785,18 @@ def orphelinGroupby(response):
         center=response.GET['centre']
         batch=response.GET['batch']
         u={"sex":sex,"centre":center,"batch":batch}
-        c1=Q(Class__contains=u["batch"])
-        c2=Q(genre_contains=u["sex"])
-        c3=Q(centre__contains=u["centre"])
-        #print(c2)
-        ls=list(Orphelin.objects.filter(c1&c2&c3).values())
-
-        #print(ls)
-        
+        c1=Q(identifiant__Class__contains=u["batch"])
+        c2=Q(identifiant__genre__contains=u["sex"])
+        centre_values = get_center_filter_values(u["centre"])
+        if centre_values:
+            c3=Q(identifiant__centre__in=centre_values)
+        else:
+            c3=Q(identifiant__centre__contains=u["centre"])
+        ls=list(Orphelin.objects.filter(c1&c2&c3).values(
+            'id', 'décedé', 'identifiant__nom', 'identifiant__genre',
+            'identifiant__centre', 'identifiant__Class', 'identifiant__institution',
+            'identifiant__date_naissance', 'identifiant__ville'
+        ))
 
         return JsonResponse({"status":"Saved","data":ls})
 
@@ -3297,6 +3315,9 @@ def notes(request):
         min_note, max_note = map(float, note_range_filter.split('-'))
         notes = notes.filter(moyen__gte=min_note, moyen__lte=max_note)
 
+    if annee_filter:
+        notes = notes.filter(annee=annee_filter)
+
     # Calculate statistics
     filtered_count = notes.count()
     
@@ -3441,7 +3462,11 @@ def noteorphelin(request):
 
     # Filter by center
     if centre_filter:
-        notes = notes.filter(identifiant__centre=centre_filter)
+        centre_values = get_center_filter_values(centre_filter)
+        if centre_values:
+            notes = notes.filter(identifiant__centre__in=centre_values)
+        else:
+            notes = notes.filter(identifiant__centre=centre_filter)
 
     # Filter by gender
     if genre_filter:
@@ -4400,7 +4425,11 @@ def orphelin(request):
         orphelins = orphelins.filter(identifiant__nom__icontains=search_query)
     
     if centre_filter:
-        orphelins = orphelins.filter(identifiant__centre=centre_filter)
+        centre_values = get_center_filter_values(centre_filter)
+        if centre_values:
+            orphelins = orphelins.filter(identifiant__centre__in=centre_values)
+        else:
+            orphelins = orphelins.filter(identifiant__centre=centre_filter)
     
     if fillier_filter:
         orphelins = orphelins.filter(identifiant__fillier=fillier_filter)
@@ -4630,18 +4659,34 @@ def orphelinfilter(response):
     if response.GET:
         if response.GET['category']=='sex':
             val=response.GET['sex']
-            c1=Q(sex__contains=val)
-            ls=list(Orphelin.objects.filter(c1).values())
+            c1=Q(identifiant__genre__contains=val)
+            ls=list(Orphelin.objects.filter(c1).values(
+                'id', 'décedé', 'identifiant__nom', 'identifiant__genre',
+                'identifiant__centre', 'identifiant__Class', 'identifiant__institution',
+                'identifiant__date_naissance', 'identifiant__ville'
+            ))
             return JsonResponse({"status":"Saved","data":ls})
         if response.GET['category']=='centre':
             val=response.GET['centre']
-            c1=Q(centre__contains=val)
-            ls=list(Orphelin.objects.filter(c1).values())
+            centre_values = get_center_filter_values(val)
+            if centre_values:
+                c1=Q(identifiant__centre__in=centre_values)
+            else:
+                c1=Q(identifiant__centre__contains=val)
+            ls=list(Orphelin.objects.filter(c1).values(
+                'id', 'décedé', 'identifiant__nom', 'identifiant__genre',
+                'identifiant__centre', 'identifiant__Class', 'identifiant__institution',
+                'identifiant__date_naissance', 'identifiant__ville'
+            ))
             return JsonResponse({"status":"Saved","data":ls})
         if response.GET['category']=='batch':
             val=response.GET['batch']
-            c1=Q(Class__contains=val)
-            ls=list(Orphelin.objects.filter(c1).values())
+            c1=Q(identifiant__Class__contains=val)
+            ls=list(Orphelin.objects.filter(c1).values(
+                'id', 'décedé', 'identifiant__nom', 'identifiant__genre',
+                'identifiant__centre', 'identifiant__Class', 'identifiant__institution',
+                'identifiant__date_naissance', 'identifiant__ville'
+            ))
             return JsonResponse({"status":"Saved","data":ls})
  
 

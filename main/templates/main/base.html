@@ -145,13 +145,17 @@
             </div>
           </div>
           
-          <div class="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-2 border border-gray-200">
+          <a href="{% url 'profile' %}" class="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-2 border border-gray-200 hover:bg-gray-100 transition-colors duration-200">
             <div class="text-right">
-              <div class="text-sm font-semibold text-gray-800">Jaolaza Abdallah</div>
-              <div class="text-xs text-gray-500">Admin</div>
+              <div class="text-sm font-semibold text-gray-800">{{ username.username|default:"Utilisateur" }}</div>
+              <div class="text-xs text-gray-500">{{ role|title }}</div>
             </div>
-            <img src="{% static 'image/avatar.png' %}" alt="" width="40" height="40" class="rounded-full border-2 border-white shadow-sm" />
-          </div>
+            {% if profile.0.avatar %}
+              <img src="/media/{{ profile.0.avatar }}" alt="" width="40" height="40" class="rounded-full border-2 border-white shadow-sm object-cover" />
+            {% else %}
+              <img src="{% static 'image/avatar.png' %}" alt="" width="40" height="40" class="rounded-full border-2 border-white shadow-sm" />
+            {% endif %}
+          </a>
         </div>
       </div>
       {% endif %}

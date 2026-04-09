@@ -93,6 +93,7 @@ path('viewdocument/<int:id>',views.viewdocument,name="viewdocument"),
 
 
 path('viewuser/',views.viewUser,name="viewuser"),
+    path('profile/',views.viewUser,name="profile"),
 
 
 

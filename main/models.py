@@ -936,20 +936,20 @@ class Sortant(models.Model):
     
     def est_orphelin(self):
         """Check if the person is an orphan by checking the Orphelin table"""
-        if self.etudiant:
-            # If they have a student record, check if they're in the Orphelin table
-            return hasattr(self.etudiant, 'orphelin')
+        if self.sortant:
+            return Orphelin.objects.filter(identifiant=self.sortant).exists()
         return False
     
     def est_etudiant_enregistre(self):
         """Check if this person was a registered student"""
-        return self.etudiant is not None
+        return self.sortant is not None
 
     
     def get_job_info(self):
         """Get formatted job information"""
         if self.poste_actuel and self.entreprise and self.lieu_travail:
             return f"{self.poste_actuel} chez {self.entreprise} à {self.lieu_travail}"
+        elif self.poste_actuel and self.entreprise:
             return f"{self.poste_actuel} chez {self.entreprise}"
         elif self.poste_actuel:
             return self.poste_actuel
