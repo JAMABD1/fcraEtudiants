@@ -4,16 +4,14 @@
 {% block content %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Attach event listeners to search and filter inputs
     const filters = document.querySelectorAll('input[name="search"], select[name="genre"], select[name="place"], select[name="family"], select[name="age"], select[name="year"]');
 
     filters.forEach(filter => {
         filter.addEventListener('change', () => {
-            fetchCimitiere(1); // Reset to page 1 when filters are applied
+            fetchCimitiere(1);
         });
     });
 
-    // Function to fetch filtered results and update the table
     async function fetchCimitiere(page = 1) {
         const searchQuery = document.querySelector('input[name="search"]').value;
         const genreFilter = document.querySelector('select[name="genre"]').value;
@@ -43,16 +41,12 @@ document.addEventListener('DOMContentLoaded', function() {
         updateTable(html);
     }
 
-    // Function to replace table content with fetched data
     function updateTable(html) {
         const tableWrapper = document.querySelector('#tableWrapper');
         tableWrapper.innerHTML = html;
-
-        // Reattach pagination listeners to the newly rendered page links
         attachPaginationListeners();
     }
 
-    // Attach click event listeners for pagination buttons
     function attachPaginationListeners() {
         const paginationLinks = document.querySelectorAll('.pagination-link');
         paginationLinks.forEach(link => {
@@ -64,322 +58,168 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Initialize fetch on page load
     fetchCimitiere();
 
-    // Modal functionality to view full-size image
-    function openModal(imageUrl) {
+    window.openModal = function(imageUrl) {
         document.getElementById('modalImage').src = imageUrl;
-        document.getElementById('imageModal').style.display = 'flex';
-    }
+        const modal = document.getElementById('imageModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    };
 
-    function closeModal() {
-        document.getElementById('imageModal').style.display = 'none';
-    }
-
-    // Attach the modal open and close functions to global scope for the image click events
-    window.openModal = openModal;
-    window.closeModal = closeModal;
+    window.closeModal = function() {
+        const modal = document.getElementById('imageModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    };
 });
 </script>
 
-<div class="mx-auto mt-8">
-    <h1 class="text-2xl font-bold mb-4">Registre du Cimetière</h1>
-    
-    <form method="get">
-        <div class="flex flex-wrap gap-2 mb-4">
-            <input type="text" name="search" value="{{ search_query }}" 
-                   placeholder="Rechercher par nom" 
-                   class="border border-gray-300 rounded p-2 mr-2">
-            
-            <select name="genre" class="border border-gray-300 rounded p-2 mr-2">
-                <option value="">Tous les genres</option>
-                <option value="M" {% if genre_filter == 'M' %}selected{% endif %}>Masculin</option>
-                <option value="F" {% if genre_filter == 'F' %}selected{% endif %}>Féminin</option>
-            </select>
-            
-            <select name="place" class="border border-gray-300 rounded p-2 mr-2">
-                <option value="">Tous les lieux</option>
-                {% for place in places %}
-                    <option value="{{ place }}" {% if place == place_filter %}selected{% endif %}>{{ place }}</option>
-                {% endfor %}
-            </select>
-            
-            <select name="family" class="border border-gray-300 rounded p-2 mr-2">
-                <option value="">Toutes les familles</option>
-                {% for family in families %}
-                    <option value="{{ family }}" {% if family == family_filter %}selected{% endif %}>{{ family }}</option>
-                {% endfor %}
-            </select>
-            
-            <select name="age" class="border border-gray-300 rounded p-2 mr-2">
-                <option value="">Tous les âges</option>
-                <option value="0-10" {% if age_filter == '0-10' %}selected{% endif %}>0-10 ans</option>
-                <option value="11-20" {% if age_filter == '11-20' %}selected{% endif %}>11-20 ans</option>
-                <option value="21-40" {% if age_filter == '21-40' %}selected{% endif %}>21-40 ans</option>
-                <option value="41-60" {% if age_filter == '41-60' %}selected{% endif %}>41-60 ans</option>
-                <option value="61-80" {% if age_filter == '61-80' %}selected{% endif %}>61-80 ans</option>
-                <option value="81+" {% if age_filter == '81+' %}selected{% endif %}>81+ ans</option>
-            </select>
-            
-            <select name="year" class="border border-gray-300 rounded p-2 mr-2">
-                <option value="">Toutes les années</option>
-                {% for year in years %}
-                    <option value="{{ year }}" {% if year == year_filter %}selected{% endif %}>{{ year }}</option>
-                {% endfor %}
-            </select>
-            
-            <button type="submit" class="bg-blue-500 text-white font-medium px-4 py-2 rounded hover:bg-blue-600">
-                Rechercher
-            </button>
-            
-            <a href="{% url 'cimitiere' %}" class="bg-gray-500 text-white font-medium px-4 py-2 rounded hover:bg-gray-600">
-                Réinitialiser
-            </a>
-        </div>
-    </form>
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-slate-700 via-slate-800 to-slate-900 text-white p-6 rounded-2xl shadow-2xl">
+        <h1 class="text-3xl font-bold mb-2">Registre du Cimetière</h1>
+        <p class="text-slate-300">Gestion et suivi des registres du cimetière</p>
+    </div>
 
+    <!-- Filter Panel -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="bg-slate-50 px-6 py-4 border-b border-slate-200">
+            <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+                Filtres
+            </h3>
+        </div>
+        <div class="p-6">
+            <form method="get" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-700">Recherche</label>
+                    <input type="text" name="search" value="{{ search_query }}" placeholder="Rechercher par nom"
+                           class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-700">Genre</label>
+                    <select name="genre" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none">
+                        <option value="">Tous les genres</option>
+                        <option value="M" {% if genre_filter == 'M' %}selected{% endif %}>Masculin</option>
+                        <option value="F" {% if genre_filter == 'F' %}selected{% endif %}>Féminin</option>
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-700">Lieu</label>
+                    <select name="place" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none">
+                        <option value="">Tous les lieux</option>
+                        {% for place in places %}
+                            <option value="{{ place }}" {% if place == place_filter %}selected{% endif %}>{{ place }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-700">Famille</label>
+                    <select name="family" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none">
+                        <option value="">Toutes les familles</option>
+                        {% for family in families %}
+                            <option value="{{ family }}" {% if family == family_filter %}selected{% endif %}>{{ family }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-700">Âge</label>
+                    <select name="age" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none">
+                        <option value="">Tous les âges</option>
+                        <option value="0-10" {% if age_filter == '0-10' %}selected{% endif %}>0-10 ans</option>
+                        <option value="11-20" {% if age_filter == '11-20' %}selected{% endif %}>11-20 ans</option>
+                        <option value="21-40" {% if age_filter == '21-40' %}selected{% endif %}>21-40 ans</option>
+                        <option value="41-60" {% if age_filter == '41-60' %}selected{% endif %}>41-60 ans</option>
+                        <option value="61-80" {% if age_filter == '61-80' %}selected{% endif %}>61-80 ans</option>
+                        <option value="81+" {% if age_filter == '81+' %}selected{% endif %}>81+ ans</option>
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-700">Année</label>
+                    <select name="year" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none">
+                        <option value="">Toutes les années</option>
+                        {% for year in years %}
+                            <option value="{{ year }}" {% if year == year_filter %}selected{% endif %}>{{ year }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-span-full flex flex-wrap gap-3 mt-2">
+                    <button type="submit" class="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-slate-700 to-slate-800 text-white rounded-xl font-medium hover:from-slate-800 hover:to-slate-900 transition-all shadow-md">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                        Rechercher
+                    </button>
+                    <a href="{% url 'cimitiere' %}" class="inline-flex items-center gap-2 px-6 py-2.5 bg-white border-2 border-slate-300 text-slate-700 rounded-xl font-medium hover:bg-slate-50 transition-all">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                        Réinitialiser
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Table -->
     <div id="tableWrapper">
         {% include "main/components/TableCimitiere.html" %}
     </div>
 
     <!-- Pagination -->
-    <div class="flex justify-between mt-4">
-        <div>
-            {% if cimitiere.has_previous %}
-                <a href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if place_filter %}&place={{ place_filter }}{% endif %}{% if family_filter %}&family={{ family_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if year_filter %}&year={{ year_filter }}{% endif %}" 
-                   class="bg-green-500 text-white font-medium px-4 py-2 rounded">Première</a>
-                <a href="?page={{ cimitiere.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if place_filter %}&place={{ place_filter }}{% endif %}{% if family_filter %}&family={{ family_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if year_filter %}&year={{ year_filter }}{% endif %}" 
-                   class="bg-green-500 text-white font-medium px-4 py-2 rounded">Précédente</a>
-            {% endif %}
-            
-            <span>Page {{ cimitiere.number }} sur {{ cimitiere.paginator.num_pages }}</span>
-            
-            {% if cimitiere.has_next %}
-                <a href="?page={{ cimitiere.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if place_filter %}&place={{ place_filter }}{% endif %}{% if family_filter %}&family={{ family_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if year_filter %}&year={{ year_filter }}{% endif %}" 
-                   class="bg-green-500 text-white font-medium px-4 py-2 rounded">Suivante</a>
-                <a href="?page={{ cimitiere.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if place_filter %}&place={{ place_filter }}{% endif %}{% if family_filter %}&family={{ family_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if year_filter %}&year={{ year_filter }}{% endif %}" 
-                   class="bg-green-500 text-white font-medium px-4 py-2 rounded">Dernière</a>
-            {% endif %}
-        </div>  
+    {% if cimitiere.has_other_pages %}
+    <div class="flex justify-center items-center gap-2 py-4">
+        {% if cimitiere.has_previous %}
+            <a href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if place_filter %}&place={{ place_filter }}{% endif %}{% if family_filter %}&family={{ family_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if year_filter %}&year={{ year_filter }}{% endif %}"
+               class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-all">
+                <i class="fas fa-angle-double-left"></i>
+            </a>
+            <a href="?page={{ cimitiere.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if place_filter %}&place={{ place_filter }}{% endif %}{% if family_filter %}&family={{ family_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if year_filter %}&year={{ year_filter }}{% endif %}"
+               class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-all">
+                <i class="fas fa-angle-left"></i>
+            </a>
+        {% endif %}
+
+        <span class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-medium">Page {{ cimitiere.number }} sur {{ cimitiere.paginator.num_pages }}</span>
+
+        {% if cimitiere.has_next %}
+            <a href="?page={{ cimitiere.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if place_filter %}&place={{ place_filter }}{% endif %}{% if family_filter %}&family={{ family_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if year_filter %}&year={{ year_filter }}{% endif %}"
+               class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-all">
+                <i class="fas fa-angle-right"></i>
+            </a>
+            <a href="?page={{ cimitiere.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if place_filter %}&place={{ place_filter }}{% endif %}{% if family_filter %}&family={{ family_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if year_filter %}&year={{ year_filter }}{% endif %}"
+               class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-all">
+                <i class="fas fa-angle-double-right"></i>
+            </a>
+        {% endif %}
     </div>
-    
+    {% endif %}
+
     <!-- Image Modal -->
-    <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
-        <div class="bg-white rounded-lg p-4 relative">
-            <span id="closeModal" class="absolute top-2 right-2 cursor-pointer text-gray-600">&times;</span>
-            <img id="modalImage" src="" alt="Photo" class="max-w-full max-h-[80vh] object-contain" />
+    <div id="imageModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm" onclick="if(event.target===this)closeModal()">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full mx-4 overflow-hidden">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200">
+                <h3 class="text-lg font-bold text-slate-800">Photo</h3>
+                <button onclick="closeModal()" class="p-2 hover:bg-slate-100 rounded-lg transition-all">
+                    <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="p-6 flex justify-center">
+                <img id="modalImage" src="" alt="Photo" class="max-w-full max-h-[70vh] rounded-xl object-contain">
+            </div>
         </div>
     </div>
 </div>
 
-<style>
-/* Custom styles for cemetery page */
-.cemetery-header {
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-    color: white;
-    padding: 2rem;
-    border-radius: 15px;
-    margin-bottom: 2rem;
-}
-
-.cemetery-header h1 {
-    margin: 0;
-    font-size: 2.5rem;
-    font-weight: bold;
-}
-
-.cemetery-header p {
-    margin: 0.5rem 0 0 0;
-    opacity: 0.9;
-    font-size: 1.1rem;
-}
-
-.filter-section {
-    background: white;
-    padding: 2rem;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    margin-bottom: 2rem;
-}
-
-.filter-section h3 {
-    margin-bottom: 1rem;
-    color: #2c3e50;
-    font-weight: 600;
-}
-
-.form-group {
-    margin-bottom: 1rem;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: #495057;
-    font-weight: 500;
-}
-
-.form-control {
-    width: 100%;
-    padding: 0.75rem;
-    border: 2px solid #e9ecef;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-}
-
-.form-control:focus {
-    outline: none;
-    border-color: #6c757d;
-    box-shadow: 0 0 0 0.2rem rgba(108,117,125,0.25);
-}
-
-.btn-group {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-}
-
-.btn {
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 8px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.btn-primary {
-    background: linear-gradient(45deg, #6c757d, #495057);
-    color: white;
-}
-
-.btn-primary:hover {
-    background: linear-gradient(45deg, #495057, #343a40);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(108,117,125,0.3);
-}
-
-.btn-secondary {
-    background: #f8f9fa;
-    color: #6c757d;
-    border: 2px solid #e9ecef;
-}
-
-.btn-secondary:hover {
-    background: #e9ecef;
-    color: #495057;
-    transform: translateY(-2px);
-}
-
-.pagination-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 2rem;
-    gap: 1rem;
-}
-
-.pagination-info {
-    background: white;
-    padding: 1rem 1.5rem;
-    border-radius: 10px;
-    border: 2px solid #e9ecef;
-    font-weight: 500;
-    color: #495057;
-}
-
-.pagination-btn {
-    padding: 0.75rem 1rem;
-    background: linear-gradient(45deg, #28a745, #20c997);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.pagination-btn:hover {
-    background: linear-gradient(45deg, #20c997, #17a2b8);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(40,167,69,0.3);
-}
-
-.pagination-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-@media (max-width: 768px) {
-    .cemetery-header {
-        padding: 1.5rem;
-        text-align: center;
-    }
-    
-    .cemetery-header h1 {
-        font-size: 2rem;
-    }
-    
-    .filter-section {
-        padding: 1.5rem;
-    }
-    
-    .btn-group {
-        flex-direction: column;
-    }
-    
-    .btn {
-        width: 100%;
-        justify-content: center;
-    }
-    
-    .pagination-wrapper {
-        flex-direction: column;
-    }
-}
-</style>
-
-<!-- Modal Script -->
 <script>
-// Modal functionality
 document.addEventListener('DOMContentLoaded', function() {
     const modal = document.getElementById('imageModal');
-    const closeModal = document.getElementById('closeModal');
-    
-    // Close modal when clicking the X button
-    closeModal.addEventListener('click', function() {
-        modal.classList.add('hidden');
-    });
-    
-    // Close modal when clicking outside the modal content
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            modal.classList.add('hidden');
-        }
-    });
-    
-    // Close modal with Escape key
+
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
-            modal.classList.add('hidden');
+            closeModal();
         }
     });
 });
-
-// Function to open modal (called from table component)
-function openModal(imageUrl) {
-    const modal = document.getElementById('imageModal');
-    const modalImage = document.getElementById('modalImage');
-    
-    modalImage.src = imageUrl;
-    modal.classList.remove('hidden');
-}
 </script>
 
-{% endblock %} 
+{% endblock %}

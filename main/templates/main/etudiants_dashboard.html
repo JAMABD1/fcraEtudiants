@@ -3,42 +3,48 @@
 {% block content %}
 
 <!-- Header -->
-<div class="dashboard-header mb-8">
-    <div class="d-flex justify-content-between align-items-center">
+<div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-purple-700 text-white p-6 rounded-2xl mb-8 shadow-2xl">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">
-                <i class="fas fa-user-graduate text-warning mr-3"></i>
+            <h1 class="text-3xl font-bold mb-2 flex items-center gap-3">
+                <i class="fas fa-user-graduate text-amber-300"></i>
                 Tableau de Bord - Étudiants
             </h1>
-            <p class="text-gray-200">Statistiques complètes et analyses des étudiants actifs</p>
+            <p class="text-indigo-100">Statistiques complètes et analyses des étudiants actifs</p>
         </div>
-        <div class="d-flex gap-2">
-            <a href="{% url 'student' %}" class="btn btn-outline-light btn-sm"><i class="fas fa-list me-2"></i>Liste Étudiants</a>
-            <a href="{% url 'archived_students' %}" class="btn btn-outline-light btn-sm"><i class="fas fa-archive me-2"></i>Archivés</a>
-            <a href="{% url 'notes' %}" class="btn btn-outline-light btn-sm"><i class="fas fa-chart-line me-2"></i>Notes</a>
+        <div class="flex flex-wrap gap-2">
+            <a href="{% url 'student' %}" class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-all backdrop-blur-sm border border-white/30">
+                <i class="fas fa-list"></i> Liste Étudiants
+            </a>
+            <a href="{% url 'archived_students' %}" class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-all backdrop-blur-sm border border-white/30">
+                <i class="fas fa-archive"></i> Archivés
+            </a>
+            <a href="{% url 'notes' %}" class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-all backdrop-blur-sm border border-white/30">
+                <i class="fas fa-chart-line"></i> Notes
+            </a>
         </div>
     </div>
     
     <!-- Advanced Filter Panel -->
-    <div class="filter-panel mt-4">
-        <div class="card border-0 shadow-sm">
-            <div class="card-header bg-gradient-primary text-white">
-                <h5 class="mb-0">
-                    <i class="fas fa-filter mr-2"></i>
+    <div class="mt-6">
+        <div class="bg-white backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden">
+            <div class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-4 flex justify-between items-center cursor-pointer" onclick="document.getElementById('filtersCollapse').classList.toggle('hidden')">
+                <h5 class="text-lg font-semibold flex items-center gap-2">
+                    <i class="fas fa-filter"></i>
                     Filtres Avancés
-                    <button class="btn btn-sm btn-outline-light float-right" type="button" data-bs-toggle="collapse" data-bs-target="#filtersCollapse">
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
                 </h5>
+                <button type="button" class="text-white hover:text-indigo-100 transition-colors">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
             </div>
-            <div class="collapse show" id="filtersCollapse">
-                <div class="card-body">
-                    <form method="GET" class="row g-3">
-                        <div class="col-md-3">
-                            <label for="centre" class="form-label">
-                                <i class="fas fa-map-marker-alt text-primary"></i> Centre
+            <div id="filtersCollapse" class="">
+                <div class="p-6">
+                    <form method="GET" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+                        <div>
+                            <label for="centre" class="block text-sm font-medium text-slate-700 mb-2 flex items-center gap-2">
+                                <i class="fas fa-map-marker-alt text-indigo-600"></i> Centre
                             </label>
-                            <select name="centre" id="centre" class="form-select">
+                            <select name="centre" id="centre" class="block w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-slate-900">
                                 <option value="">Tous les centres</option>
                                 {% for centre in centres %}
                                     <option value="{{ centre }}" {% if centre == centre_filter %}selected{% endif %}>
@@ -47,11 +53,11 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="col-md-3">
-                            <label for="age" class="form-label">
-                                <i class="fas fa-birthday-cake text-success"></i> Tranche d'âge
+                        <div>
+                            <label for="age" class="block text-sm font-medium text-slate-700 mb-2 flex items-center gap-2">
+                                <i class="fas fa-birthday-cake text-emerald-600"></i> Tranche d'âge
                             </label>
-                            <select name="age" id="age" class="form-select">
+                            <select name="age" id="age" class="block w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-slate-900">
                                 <option value="">Tous les âges</option>
                                 <option value="3-10" {% if age_filter == '3-10' %}selected{% endif %}>3-10 ans</option>
                                 <option value="11-14" {% if age_filter == '11-14' %}selected{% endif %}>11-14 ans</option>
@@ -61,45 +67,45 @@
                                 <option value="26+" {% if age_filter == '26+' %}selected{% endif %}>26+ ans</option>
                             </select>
                         </div>
-                        <div class="col-md-3">
-                            <label for="designation" class="form-label">
-                                <i class="fas fa-tags text-danger"></i> Désignation
+                        <div>
+                            <label for="designation" class="block text-sm font-medium text-slate-700 mb-2 flex items-center gap-2">
+                                <i class="fas fa-tags text-red-600"></i> Désignation
                             </label>
-                            <select name="designation" id="designation" class="form-select">
+                            <select name="designation" id="designation" class="block w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-slate-900">
                                 <option value="">Toutes</option>
                                 {% for d in designations %}
                                     <option value="{{ d }}" {% if d == designation_filter %}selected{% endif %}>{{ d }}</option>
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="col-md-2">
-                            <label for="institution" class="form-label">
-                                <i class="fas fa-university text-info"></i> Institution
+                        <div>
+                            <label for="institution" class="block text-sm font-medium text-slate-700 mb-2 flex items-center gap-2">
+                                <i class="fas fa-university text-cyan-600"></i> Institution
                             </label>
-                            <select name="institution" id="institution" class="form-select">
+                            <select name="institution" id="institution" class="block w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-slate-900">
                                 <option value="">Toutes</option>
                                 {% for institution in institutions %}
                                     <option value="{{ institution }}" {% if institution == institution_filter %}selected{% endif %}>{{ institution }}</option>
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="col-md-1">
-                            <label for="year" class="form-label">
-                                <i class="fas fa-calendar-alt text-warning"></i> Année
+                        <div>
+                            <label for="year" class="block text-sm font-medium text-slate-700 mb-2 flex items-center gap-2">
+                                <i class="fas fa-calendar-alt text-amber-600"></i> Année
                             </label>
-                            <select name="year" id="year" class="form-select">
+                            <select name="year" id="year" class="block w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-slate-900">
                                 <option value="">Toutes</option>
                                 {% for year in years %}
                                     <option value="{{ year }}" {% if year == year_filter %}selected{% endif %}>{{ year }}</option>
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="col-12">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-search mr-2"></i>Appliquer les filtres
+                        <div class="col-span-full flex flex-wrap gap-3 mt-2">
+                            <button type="submit" class="inline-flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-medium hover:from-indigo-700 hover:to-purple-700 transition-all shadow-md hover:shadow-lg">
+                                <i class="fas fa-search"></i> Appliquer les filtres
                             </button>
-                            <a href="{% url 'etudiants_dashboard' %}" class="btn btn-outline-secondary ml-2">
-                                <i class="fas fa-times mr-2"></i>Réinitialiser
+                            <a href="{% url 'etudiants_dashboard' %}" class="inline-flex items-center gap-2 px-6 py-2 bg-white border-2 border-slate-300 text-slate-700 rounded-lg font-medium hover:bg-slate-50 transition-all">
+                                <i class="fas fa-times"></i> Réinitialiser
                             </a>
                         </div>
                     </form>
@@ -110,300 +116,275 @@
 </div>
 
 <!-- Key Metrics Cards -->
-<div class="row mb-6">
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class=" metric-card">
-            <div class="metric-icon">
-                <i class="fas fa-users"></i>
-            </div>
-            <div class="metric-content">
-                <h3>{{ total_students }}</h3>
-                <p>Étudiants Actifs</p>
-            </div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-4 text-white">
+        <div class="text-4xl opacity-80">
+            <i class="fas fa-users"></i>
+        </div>
+        <div>
+            <h3 class="text-3xl font-bold">{{ total_students }}</h3>
+            <p class="text-indigo-100 text-sm font-medium uppercase tracking-wider">Étudiants Actifs</p>
         </div>
     </div>
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="metric-card">
-            <div class="metric-icon">
-                <i class="fas fa-graduation-cap"></i>
-            </div>
-            <div class="metric-content">
-                <h3>{{ total_student_notes }}</h3>
-                <p>Notes</p>
-                <div class="metric-change">
-                    <span class="text-success">Moyenne: {{ student_avg_score }}</span>
-                </div>
-            </div>
+    <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-4 text-white">
+        <div class="text-4xl opacity-80">
+            <i class="fas fa-graduation-cap"></i>
+        </div>
+        <div>
+            <h3 class="text-3xl font-bold">{{ total_student_notes }}</h3>
+            <p class="text-emerald-100 text-sm font-medium uppercase tracking-wider">Notes</p>
+            <div class="text-xs font-semibold mt-1">Moyenne: {{ student_avg_score }}</div>
         </div>
     </div>
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="metric-card">
-            <div class="metric-icon">
-                <i class="fas fa-check-circle"></i>
-            </div>
-            <div class="metric-content">
-                <h3>{{ student_pass_rate }}%</h3>
-                <p>Taux de Réussite</p>
-                <div class="metric-change">
-                    <span class="text-success">Excellence: {{ student_excellence_rate }}%</span>
-                </div>
-            </div>
+    <div class="bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-4 text-white">
+        <div class="text-4xl opacity-80">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div>
+            <h3 class="text-3xl font-bold">{{ student_pass_rate }}%</h3>
+            <p class="text-cyan-100 text-sm font-medium uppercase tracking-wider">Taux de Réussite</p>
+            <div class="text-xs font-semibold mt-1">Excellence: {{ student_excellence_rate }}%</div>
         </div>
     </div>
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="metric-card">
-            <div class="metric-icon">
-                <i class="fas fa-file-alt"></i>
-            </div>
-            <div class="metric-content">
-                <h3>{{ student_avg_score }}</h3>
-                <p>Moyenne</p>
-                <div class="metric-change">
-                    <span class="text-success">Notes analysées: {{ total_student_notes }}</span>
-                </div>
-            </div>
+    <div class="bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-4 text-white">
+        <div class="text-4xl opacity-80">
+            <i class="fas fa-file-alt"></i>
+        </div>
+        <div>
+            <h3 class="text-3xl font-bold">{{ student_avg_score }}</h3>
+            <p class="text-amber-100 text-sm font-medium uppercase tracking-wider">Moyenne Générale</p>
+            <div class="text-xs font-semibold mt-1">Notes: {{ total_student_notes }}</div>
         </div>
     </div>
 </div>
 
 <!-- Statistics Grid -->
-<div class="row mb-6">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
     <!-- Age Distribution Chart -->
-    <div class="col-lg-6 mb-4">
-        <div class="chart-card">
-            <div class="chart-header">
-                <h5><i class="fas fa-chart-pie text-primary"></i> Répartition par Âge</h5>
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div class="bg-gradient-to-r from-indigo-500 to-purple-500 p-6">
+            <h5 class="text-lg font-semibold text-white flex items-center gap-2">
+                <i class="fas fa-chart-pie text-white"></i> Répartition par Âge
+            </h5>
+        </div>
+        <div class="p-6">
+            <div class="relative h-72 w-full">
+                <canvas id="ageChart"></canvas>
             </div>
-            <div class="chart-body">
-                <div class="chart-container" style="position: relative; height: 300px;">
-                    <canvas id="ageChart"></canvas>
+            <div class="flex flex-wrap gap-4 justify-center mt-6">
+                {% for age_group, count in student_age_groups.items %}
+                <div class="flex items-center gap-2 text-sm">
+                    <span class="w-4 h-4 rounded-full" style="background-color: var(--age-color-{{ forloop.counter }})"></span>
+                    <span class="text-slate-700">{{ age_group }} ans: {{ count }}</span>
                 </div>
-                <div class="chart-legend mt-3">
-                    {% for age_group, count in student_age_groups.items %}
-                    <div class="legend-item">
-                        <span class="legend-color" style="background-color: var(--age-color-{{ forloop.counter }})"></span>
-                        <span>{{ age_group }} ans: {{ count }}</span>
-                    </div>
-                    {% endfor %}
-                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
     
     <!-- Gender Distribution -->
-    <div class="col-lg-6 mb-4">
-        <div class="chart-card">
-            <div class="chart-header">
-                <h5><i class="fas fa-venus-mars text-info"></i> Répartition par Genre</h5>
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div class="bg-gradient-to-r from-cyan-500 to-blue-500 p-6">
+            <h5 class="text-lg font-semibold text-white flex items-center gap-2">
+                <i class="fas fa-venus-mars text-white"></i> Répartition par Genre
+            </h5>
+        </div>
+        <div class="p-6">
+            <div class="relative h-72 w-full">
+                <canvas id="genderChart"></canvas>
             </div>
-            <div class="chart-body">
-                <div class="chart-container" style="position: relative; height: 300px;">
-                    <canvas id="genderChart"></canvas>
+            <div class="flex flex-wrap gap-6 justify-center mt-6">
+                {% for stat in student_gender_stats %}
+                <div class="flex items-center gap-2 text-sm">
+                    <i class="fas {% if stat.genre == 'M' %}fa-mars text-blue-600{% else %}fa-venus text-pink-600{% endif %}"></i>
+                    <span class="text-slate-700">{% if stat.genre == 'M' %}Garçons{% else %}Filles{% endif %}: {{ stat.count }}</span>
                 </div>
-                <div class="gender-stats mt-3">
-                    {% for stat in student_gender_stats %}
-                    <div class="stat-item">
-                        <i class="fas {% if stat.genre == 'M' %}fa-mars text-primary{% else %}fa-venus text-pink{% endif %}"></i>
-                        <span>{% if stat.genre == 'M' %}Garçons{% else %}Filles{% endif %}: {{ stat.count }}</span>
-                    </div>
-                    {% endfor %}
-                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
 </div>
 
 <!-- Status and Centers Row -->
-<div class="row mb-6">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
     <!-- Designation Distribution -->
-    <div class="col-lg-6 mb-4">
-        <div class="chart-card">
-            <div class="chart-header">
-                <h5><i class="fas fa-tags text-danger"></i> Désignations</h5>
-            </div>
-            <div class="chart-body">
-                <div class="status-bars">
-                    {% for stat in student_designation_stats %}
-                    <div class="status-bar-item">
-                        <div class="status-info">
-                            <span class="status-label">{{ stat.designation|default:"Non spécifié" }}</span>
-                            <span class="status-count">{{ stat.count }}</span>
-                        </div>
-                        <div class="progress status-progress">
-                            <div class="progress-bar bg-secondary" style="width: {{ stat.count|floatformat:0 }}%"></div>
-                        </div>
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div class="bg-gradient-to-r from-rose-500 to-pink-500 p-6">
+            <h5 class="text-lg font-semibold text-white flex items-center gap-2">
+                <i class="fas fa-tags text-white"></i> Désignations
+            </h5>
+        </div>
+        <div class="p-6">
+            <div class="space-y-4">
+                {% for stat in student_designation_stats %}
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-sm font-medium text-slate-700">{{ stat.designation|default:"Non spécifié" }}</span>
+                        <span class="text-sm font-bold text-slate-900">{{ stat.count }}</span>
                     </div>
-                    {% endfor %}
+                    <div class="w-full bg-slate-200 rounded-full h-2">
+                        <div class="bg-gradient-to-r from-indigo-500 to-purple-600 h-2 rounded-full transition-all" style="width: {{ stat.count|floatformat:0 }}%"></div>
+                    </div>
                 </div>
+                {% endfor %}
             </div>
         </div>
     </div>
     
     <!-- Centers Distribution -->
-    <div class="col-lg-6 mb-4">
-        <div class="chart-card">
-            <div class="chart-header">
-                <h5><i class="fas fa-map-marker-alt text-success"></i> Répartition par Centre</h5>
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div class="bg-gradient-to-r from-emerald-500 to-teal-500 p-6">
+            <h5 class="text-lg font-semibold text-white flex items-center gap-2">
+                <i class="fas fa-map-marker-alt text-white"></i> Répartition par Centre
+            </h5>
+        </div>
+        <div class="p-6">
+            <div class="relative h-72 w-full">
+                <canvas id="centersChart"></canvas>
             </div>
-            <div class="chart-body">
-                <div class="chart-container" style="position: relative; height: 300px;">
-                    <canvas id="centersChart"></canvas>
+            <div class="flex flex-wrap gap-3 justify-center mt-6">
+                {% for center in student_center_stats|slice:":5" %}
+                <div class="flex items-center gap-2">
+                    <span class="text-sm font-medium text-slate-700">{{ center.centre|default:"Non spécifié" }}</span>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">{{ center.count }}</span>
                 </div>
-                <div class="centers-list mt-3">
-                    {% for center in student_center_stats|slice:":5" %}
-                    <div class="center-item">
-                        <span class="center-name">{{ center.centre|default:"Non spécifié" }}</span>
-                        <span class="center-count badge bg-primary">{{ center.count }}</span>
-                    </div>
-                    {% endfor %}
-                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
 </div>
 
 <!-- Academic Performance Row -->
-<div class="row mb-6">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
     <!-- Grade Distribution -->
-    <div class="col-lg-8 mb-4">
-        <div class="chart-card">
-            <div class="chart-header">
-                <h5><i class="fas fa-chart-bar text-success"></i> Distribution des Notes</h5>
+    <div class="lg:col-span-2 bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div class="bg-gradient-to-r from-blue-500 to-indigo-500 p-6">
+            <h5 class="text-lg font-semibold text-white flex items-center gap-2">
+                <i class="fas fa-chart-bar text-white"></i> Distribution des Notes
+            </h5>
+        </div>
+        <div class="p-6">
+            <div class="relative h-72 w-full">
+                <canvas id="gradesChart"></canvas>
             </div>
-            <div class="chart-body">
-                <div class="chart-container" style="position: relative; height: 300px;">
-                    <canvas id="gradesChart"></canvas>
+            <div class="grid grid-cols-3 md:grid-cols-7 gap-4 mt-6 text-center">
+                {% for range, count in student_grade_ranges.items %}
+                <div class="bg-slate-50 rounded-xl p-3">
+                    <h4 class="text-2xl font-bold text-slate-900">{{ count }}</h4>
+                    <p class="text-xs text-slate-600 mt-1">{{ range }}</p>
                 </div>
-                <div class="grade-summary mt-3">
-                    <div class="row text-center">
-                        {% for range, count in student_grade_ranges.items %}
-                        <div class="col">
-                            <div class="grade-stat">
-                                <h4 class="grade-count">{{ count }}</h4>
-                                <p class="grade-range">{{ range }}</p>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
     
     <!-- Decision Stats -->
-    <div class="col-lg-4 mb-4">
-        <div class="chart-card">
-            <div class="chart-header">
-                <h5><i class="fas fa-gavel text-warning"></i> Décisions</h5>
-            </div>
-            <div class="chart-body">
-                <div class="decision-stats">
-                    {% for decision in student_decision_stats %}
-                    <div class="decision-item">
-                        <div class="decision-top d-flex justify-content-between align-items-center mb-2">
-                            <span class="decision-label badge rounded-pill bg-light text-dark">
-                                {% if decision.decision == 'Admis' %}
-                                    <i class="fas fa-check-circle text-success me-1"></i>
-                                {% elif decision.decision == 'Redouble' %}
-                                    <i class="fas fa-sync-alt text-warning me-1"></i>
-                                {% else %}
-                                    <i class="fas fa-times-circle text-danger me-1"></i>
-                                {% endif %}
-                                {{ decision.decision }}
-                            </span>
-                            <span class="decision-count badge bg-secondary">{{ decision.count }}</span>
-                        </div>
-                        <div class="decision-bar">
-                            <div class="decision-progress {% if decision.decision == 'Admis' %}bg-success{% elif decision.decision == 'Redouble' %}bg-warning{% else %}bg-danger{% endif %}" style="width: {{ decision.count|floatformat:0 }}%"></div>
-                        </div>
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div class="bg-gradient-to-r from-amber-500 to-orange-500 p-6">
+            <h5 class="text-lg font-semibold text-white flex items-center gap-2">
+                <i class="fas fa-gavel text-white"></i> Décisions
+            </h5>
+        </div>
+        <div class="p-6">
+            <div class="space-y-4">
+                {% for decision in student_decision_stats %}
+                <div class="bg-gradient-to-r from-slate-50 to-slate-100 border border-slate-200 rounded-xl p-4 shadow-sm">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white text-slate-800 text-sm font-semibold">
+                            {% if decision.decision == 'Admis' %}
+                                <i class="fas fa-check-circle text-emerald-600"></i>
+                            {% elif decision.decision == 'Redouble' %}
+                                <i class="fas fa-sync-alt text-amber-600"></i>
+                            {% else %}
+                                <i class="fas fa-times-circle text-red-600"></i>
+                            {% endif %}
+                            {{ decision.decision }}
+                        </span>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-700 text-white">{{ decision.count }}</span>
                     </div>
-                    {% endfor %}
+                    <div class="w-full bg-slate-200 rounded-full h-2.5">
+                        <div class="h-2.5 rounded-full transition-all {% if decision.decision == 'Admis' %}bg-gradient-to-r from-emerald-500 to-emerald-600{% elif decision.decision == 'Redouble' %}bg-gradient-to-r from-amber-500 to-amber-600{% else %}bg-gradient-to-r from-red-500 to-red-600{% endif %}" style="width: {{ decision.count|floatformat:0 }}%"></div>
+                    </div>
                 </div>
+                {% endfor %}
             </div>
         </div>
     </div>
 </div>
 
 <!-- Top Performers Section -->
-<div class="row mb-6">
-    <div class="col-12">
-        <div class="chart-card">
-            <div class="chart-header">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h5><i class="fas fa-trophy text-warning"></i> Meilleurs Étudiants</h5>
-                    <div class="performers-info">
-                        <small class="text-muted ms-2">{{ total_student_notes }} note{{ total_student_notes|pluralize }}</small>
-                    </div>
-                </div>
-            </div>
-            <div class="chart-body">
-                {% if top_student_performers %}
-                    <div class="performers-grid">
-                        {% for performer in top_student_performers|slice:":10" %}
-                        <div class="performer-card">
-                            <div class="performer-rank">{{ forloop.counter }}</div>
-                            <div class="performer-avatar">
-                                {% if performer.identifiant.imageprofile %}
-                                    <img src="{{ performer.identifiant.imageprofile.url }}" alt="Photo">
-                                {% else %}
-                                    <div class="avatar-placeholder">
-                                        <i class="fas fa-user"></i>
-                                    </div>
-                                {% endif %}
-                            </div>
-                            <div class="performer-info">
-                                <h6 class="performer-name">{{ performer.identifiant.nom }}</h6>
-                                <p class="performer-id">{{ performer.identifiant.identifiant }}</p>
-                                <div class="performer-score">{{ performer.moyen|floatformat:2 }}/20</div>
-                                <small class="performer-class">{{ performer.identifiant.Class }}</small>
-                                {% if performer.annee %}
-                                    <small class="performer-year text-muted d-block">{{ performer.annee }}</small>
-                                {% endif %}
-                                <small class="performer-center text-primary d-block">{{ performer.identifiant.centre }}</small>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <div class="no-data-message text-center py-5">
-                        <i class="fas fa-trophy fa-3x text-muted mb-3"></i>
-                        <h5 class="text-muted">Aucun performer trouvé</h5>
-                    </div>
-                {% endif %}
+<div class="mb-8">
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div class="bg-gradient-to-r from-amber-400 to-amber-500 p-6 flex justify-between items-center">
+            <h5 class="text-lg font-semibold text-white flex items-center gap-2">
+                <i class="fas fa-trophy text-white"></i> Meilleurs Étudiants
+            </h5>
+            <div class="text-sm text-white/70">
+                {{ total_student_notes }} note{{ total_student_notes|pluralize }}
             </div>
         </div>
+        <div class="p-6">
+            {% if top_student_performers %}
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                    {% for performer in top_student_performers|slice:":10" %}
+                    <div class="bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl p-6 text-center relative hover:shadow-lg transition-all transform hover:-translate-y-1">
+                        <div class="absolute -top-3 -right-3 w-8 h-8 bg-gradient-to-br from-amber-400 to-amber-500 text-slate-900 rounded-full flex items-center justify-center font-bold text-sm shadow-md">
+                            {{ forloop.counter }}
+                        </div>
+                        <div class="mb-4">
+                            {% if performer.identifiant.imageprofile %}
+                                <img src="{{ performer.identifiant.imageprofile.url }}" alt="Photo" class="w-16 h-16 rounded-full object-cover mx-auto border-4 border-white shadow-md">
+                            {% else %}
+                                <div class="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center mx-auto text-white text-2xl border-4 border-white shadow-md">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <h6 class="font-semibold text-slate-900 text-sm mb-1">{{ performer.identifiant.nom }}</h6>
+                        <p class="text-xs text-slate-500 mb-3">{{ performer.identifiant.identifiant }}</p>
+                        <div class="inline-flex items-center px-3 py-1.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold text-sm mb-2">
+                            {{ performer.moyen|floatformat:2 }}/20
+                        </div>
+                        <p class="text-xs text-slate-600 font-medium">{{ performer.identifiant.Class }}</p>
+                        {% if performer.annee %}
+                            <p class="text-xs text-slate-500 mt-1">{{ performer.annee }}</p>
+                        {% endif %}
+                        <p class="text-xs text-indigo-600 font-medium mt-1">{{ performer.identifiant.centre }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-12 text-slate-500">
+                    <i class="fas fa-trophy text-5xl text-slate-300 mb-4"></i>
+                    <h5 class="text-lg font-semibold">Aucun performer trouvé</h5>
+                </div>
+            {% endif %}
+        </div>
     </div>
-    
 </div>
 
 <!-- Quick Actions Panel -->
-<div class="row mb-6">
-    <div class="col-12">
-        <div class="actions-card">
-            <div class="actions-header">
-                <h5><i class="fas fa-bolt text-primary"></i> Actions Rapides</h5>
-            </div>
-            <div class="actions-body">
-                <div class="row">
-                    <div class="col-md-3 mb-3">
-                        <a href="{% url 'student' %}" class="action-btn bg-primary">
-                            <i class="fas fa-users"></i>
-                            <span>Liste Étudiants</span>
-                        </a>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <a href="{% url 'notes' %}" class="action-btn bg-success">
-                            <i class="fas fa-chart-line"></i>
-                            <span>Toutes Notes</span>
-                        </a>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <a href="{% url 'archived_students' %}" class="action-btn bg-secondary">
-                            <i class="fas fa-archive"></i>
-                            <span>Archivés</span>
-                        </a>
-                    </div>
-                </div>
+<div class="mb-8">
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div class="bg-gradient-to-r from-indigo-500 to-purple-600 p-6">
+            <h5 class="text-lg font-semibold text-white flex items-center gap-2">
+                <i class="fas fa-bolt text-white"></i> Actions Rapides
+            </h5>
+        </div>
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <a href="{% url 'student' %}" class="flex flex-col items-center justify-center p-8 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700 transition-all transform hover:-translate-y-1 hover:shadow-xl">
+                    <i class="fas fa-users text-4xl mb-3"></i>
+                    <span class="font-semibold">Liste Étudiants</span>
+                </a>
+                <a href="{% url 'notes' %}" class="flex flex-col items-center justify-center p-8 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-600 text-white hover:from-emerald-700 hover:to-teal-700 transition-all transform hover:-translate-y-1 hover:shadow-xl">
+                    <i class="fas fa-chart-line text-4xl mb-3"></i>
+                    <span class="font-semibold">Toutes Notes</span>
+                </a>
+                <a href="{% url 'archived_students' %}" class="flex flex-col items-center justify-center p-8 rounded-2xl bg-gradient-to-br from-slate-600 to-slate-700 text-white hover:from-slate-700 hover:to-slate-800 transition-all transform hover:-translate-y-1 hover:shadow-xl">
+                    <i class="fas fa-archive text-4xl mb-3"></i>
+                    <span class="font-semibold">Archivés</span>
+                </a>
             </div>
         </div>
     </div>
@@ -417,89 +398,6 @@
     --age-color-4: #4BC0C0;
     --age-color-5: #9966FF;
     --age-color-6: #FF9F40;
-}
-
-.dashboard-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 2rem;
-    border-radius: 15px;
-    margin-bottom: 2rem;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-}
-
-.bg-gradient-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-.bg-gradient-warning { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-.bg-gradient-info { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-.bg-gradient-success { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
-
-.metric-card {
-    background: white;
-    border-radius: 20px;
-    padding: 2rem;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    color: #2d3748; /* dark text on white */
-}
-.metric-card:hover { transform: translateY(-8px); box-shadow: 0 15px 40px rgba(0,0,0,0.2); }
-.metric-icon { font-size: 3rem; margin-right: 1.5rem; opacity: 0.8; }
-.metric-content h3 { font-size: 2.5rem; font-weight: bold; margin: 0; line-height: 1; }
-.metric-content p { margin: 0.5rem 0 0 0; opacity: 0.9; font-size: 1rem; }
-.metric-change { font-size: 0.8rem; opacity: 0.8; margin-top: 0.25rem; }
-
-.chart-card, .actions-card {
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-    overflow: hidden;
-    height: 100%;
-}
-.chart-header, .actions-header { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 1.5rem; border-bottom: 1px solid #dee2e6; }
-.chart-header h5, .actions-header h5 { margin: 0; font-weight: 600; color: #495057; }
-.chart-body, .actions-body { padding: 1.5rem; }
-.chart-container { position: relative !important; height: 300px !important; width: 100% !important; }
-.chart-container canvas { max-height: 300px !important; }
-.chart-legend { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
-.legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; }
-.legend-color { width: 16px; height: 16px; border-radius: 50%; display: inline-block; }
-.gender-stats, .centers-list { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
-.stat-item, .center-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; }
-.center-name { font-weight: 500; }
-.status-bar-item { margin-bottom: 1rem; }
-.status-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
-.status-progress { height: 8px; border-radius: 4px; }
-
-.decision-stats { display: flex; flex-direction: column; gap: 1rem; }
-.decision-item { background: linear-gradient(135deg, #f8f9fa 0%, #eef1f5 100%); border: 1px solid #e3e6ea; border-radius: 12px; padding: 0.75rem 1rem; box-shadow: 0 6px 14px rgba(0,0,0,0.04); }
-.decision-label { font-weight: 600; display: inline-flex; align-items: center; gap: 0.35rem; }
-.decision-bar { background: #f1f3f5; border-radius: 999px; height: 10px; overflow: hidden; }
-.decision-progress { height: 10px; transition: width 0.6s ease; box-shadow: inset 0 -1px 0 rgba(255,255,255,0.2); }
-
-.performers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
-.performer-card { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 15px; padding: 1.5rem; text-align: center; position: relative; transition: all 0.3s ease; }
-.performer-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-.performer-rank { position: absolute; top: -10px; right: -10px; background: linear-gradient(135deg, #ffd700, #ffed4e); color: #333; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem; }
-.performer-avatar img, .avatar-placeholder { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; margin-bottom: 1rem; }
-.avatar-placeholder { background: linear-gradient(135deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; margin: 0 auto 1rem; }
-.performer-score { background: linear-gradient(135deg, #43e97b, #38f9d7); color: white; padding: 0.5rem 1rem; border-radius: 20px; font-weight: bold; display: inline-block; margin: 0.5rem 0; }
-.performer-year, .performer-center { font-size: 0.75rem; margin-top: 0.25rem; }
-.performance-summary { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 10px; padding: 1rem; }
-.summary-stat h4 { font-size: 1.5rem; font-weight: bold; margin-bottom: 0.25rem; }
-.performers-info { display: flex; align-items: center; gap: 0.5rem; }
-.action-btn { display: flex; flex-direction: column; align-items: center; padding: 2rem 1rem; border-radius: 15px; color: white; text-decoration: none; transition: all 0.3s ease; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-.action-btn:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.2); color: white; text-decoration: none; }
-.action-btn i { font-size: 2rem; margin-bottom: 0.5rem; }
-.text-pink { color: #e91e63 !important; }
-
-@media (max-width: 768px) {
-    .dashboard-header { padding: 1rem; text-align: center; }
-    .metric-card { flex-direction: column; text-align: center; padding: 1.5rem; }
-    .metric-icon { margin-right: 0; margin-bottom: 1rem; }
-    .performers-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
 }
 </style>
 

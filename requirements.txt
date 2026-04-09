@@ -1,14 +1,28 @@
-Django>=4.2.0,<5.0.0
-Pillow>=9.0.0
+# Core (matches craStudentManagement/settings.py — Django 5.x project)
+Django>=5.0,<6.0
+
+# API (fixes: ModuleNotFoundError: No module named 'rest_framework')
+djangorestframework>=3.15.0
+django-filter>=24.0
+
+# Admin date filters (INSTALLED_APPS: rangefilter)
+django-admin-rangefilter>=0.12.0
+
+# Gemini chat in api/views.py
+google-generativeai>=0.8.0
+
+# Web / UI
+Pillow>=10.0.0
 django-crispy-forms>=2.0
-crispy-bootstrap5>=0.7
+crispy-bootstrap5>=2024.2
 python-decouple>=3.8
 whitenoise>=6.5.0
-psycopg2-binary>=2.9.0
-gunicorn>=21.2
+gunicorn>=22.0.0
 django-jazzmin>=3.0.0
 django-browser-reload>=1.0.0
-django-tailwind
-requests
+django-tailwind>=3.8.0
+requests>=2.31.0
 
-
+# Databases (install the one you use)
+psycopg2-binary>=2.9.9
+# mysqlclient>=2.2.0  # uncomment if you use MySQL (Clever Cloud, etc.)

@@ -121,7 +121,7 @@ class Etudiant(models.Model):
     ('4eme annee','4eme annee'),('5eme annee','5eme annee'),('6eme annee','6eme annee')
     )
     Class=models.CharField(max_length=100,choices=batchchoice,default='1ere annee')
-    centre=models.CharField(max_length=100,choices=get_centre_choices,default='Antaniavo')
+    centre=models.CharField(max_length=100,choices=get_centre_choices(),default='Antaniavo')
     status=models.CharField(max_length=100,choices=statuschoice,default='Actif')
     
     date_entre=models.DateField(null=True, blank=True)
@@ -250,7 +250,7 @@ class NoteEtudiant(models.Model):
     S3=models.DecimalField(  max_digits = 5, decimal_places = 2,null=True, blank=True)
     annee=models.CharField(max_length=10,null=True,blank=True)
     moyen=models.DecimalField(  max_digits = 5, decimal_places = 2,null=True, blank=True)
-    rang=models.IntegerField(max_length=10,null=True,blank=True)
+    rang=models.IntegerField(null=True,blank=True)
     decisionchoix=(('Admis','Admis'),('Repechage','Repechage'),('Redouble','Redouble'),('Passable','Passable'),('Assez-bien','Assez-bien'),('Bien','Bien'),('Tres bien','Tres bien'))
     decision=models.CharField(max_length=11,choices=decisionchoix,default='Admis',null=True, blank=True)
     examreussite=models.CharField(max_length=10,choices=(("CEPE","CEPE"),("BEPC","BEPC"),("BAC","BAC")),null=True,blank=True)
@@ -370,7 +370,7 @@ class Personnel(models.Model):
     )
     section=models.CharField(max_length=50,choices=sectionchoice,default='multimedia', verbose_name="Section")
     
-    centre=models.CharField(max_length=100,choices=get_centre_choices,default='Antaniavo', verbose_name="Centre")
+    centre=models.CharField(max_length=100,choices=get_centre_choices(),default='Antaniavo', verbose_name="Centre")
     
     imageprofile=models.ImageField(default='images/avatar.jpg',null=True,blank=True,upload_to='images/', verbose_name="Photo de profil")
     

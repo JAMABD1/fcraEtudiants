@@ -5,17 +5,17 @@
 {% block content %}
 <div class="min-h-screen bg-gray-50 py-8">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    
+
     <!-- Header Section -->
     <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
       <div class="flex flex-col lg:flex-row items-center lg:items-start gap-6">
         <!-- Profile Image -->
         <div class="flex-shrink-0">
           {% if person.imageprofile %}
-            <img src="{{ person.imageprofile.url }}" 
+            <img src="{{ person.imageprofile.url }}"
                  width="500"
                  height="200"
-                 class="w-32 h-32 lg:w-40 lg:h-40 rounded-full object-cover border-4 border-gray-300 shadow-lg" 
+                 class="w-32 h-32 lg:w-40 lg:h-40 rounded-full object-cover border-4 border-gray-300 shadow-lg"
                  alt="Photo de {{ person.nom }}" />
           {% else %}
             <div class="w-32 h-32 lg:w-40 lg:h-40 rounded-full bg-gray-300 flex items-center justify-center border-4 border-gray-400 shadow-lg">
@@ -23,7 +23,7 @@
             </div>
           {% endif %}
         </div>
-        
+
         <!-- Person Info -->
         <div class="flex-1 text-center lg:text-left">
           <div class="flex items-center justify-center lg:justify-start gap-3 mb-3">
@@ -37,7 +37,7 @@
               {% endif %}
             </span>
           </div>
-          
+
           <!-- Key Information -->
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
             {% if person.date_naissance %}
@@ -51,7 +51,7 @@
               </div>
             </div>
             {% endif %}
-            
+
             {% if person.date_deces %}
             <div class="bg-red-50 p-4 rounded-lg border border-red-200">
               <div class="flex items-center">
@@ -63,7 +63,7 @@
               </div>
             </div>
             {% endif %}
-            
+
             {% if age_at_death %}
             <div class="bg-purple-50 p-4 rounded-lg border border-purple-200">
               <div class="flex items-center">
@@ -77,17 +77,17 @@
             {% endif %}
           </div>
         </div>
-        
+
         <!-- Action Buttons -->
         <div class="flex flex-col gap-2">
-          <a href="{% url 'cimitiere' %}" 
-             class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg font-medium flex items-center">
+          <a href="{% url 'cimitiere' %}"
+             class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg font-medium flex items-center transition-colors">
             <i class="fas fa-arrow-left mr-2"></i>
             Retour à la liste
           </a>
-          
-          <button onclick="window.print()" 
-                  class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium flex items-center">
+
+          <button onclick="window.print()"
+                  class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium flex items-center transition-colors">
             <i class="fas fa-print mr-2"></i>
             Imprimer
           </button>
@@ -97,31 +97,31 @@
 
     <!-- Main Content Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      
+
       <!-- Personal Information -->
       <div class="lg:col-span-2 space-y-8">
-        
+
         <!-- Basic Information -->
         <div class="bg-white rounded-lg shadow-lg p-6">
           <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
             <i class="fas fa-info-circle text-blue-600 mr-3"></i>
             Informations personnelles
           </h2>
-          
+
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="space-y-4">
               <div>
                 <label class="block text-sm font-medium text-gray-600 mb-1">Nom complet</label>
                 <p class="text-lg font-semibold text-gray-900">{{ person.nom }}</p>
               </div>
-              
+
               <div>
                 <label class="block text-sm font-medium text-gray-600 mb-1">Genre</label>
                 <p class="text-lg text-gray-900">
                   {% if person.genre == 'M' %}Masculin{% else %}Féminin{% endif %}
                 </p>
               </div>
-              
+
               {% if person.lieu_deces %}
               <div>
                 <label class="block text-sm font-medium text-gray-600 mb-1">Lieu de décès</label>
@@ -132,7 +132,7 @@
               </div>
               {% endif %}
             </div>
-            
+
             <div class="space-y-4">
               {% if burial_duration %}
               <div>
@@ -140,7 +140,7 @@
                 <p class="text-lg font-semibold text-gray-900">{{ burial_duration }} ans</p>
               </div>
               {% endif %}
-              
+
               {% if person.famille %}
               <div>
                 <label class="block text-sm font-medium text-gray-600 mb-1">Famille</label>
@@ -153,7 +153,7 @@
             </div>
           </div>
         </div>
-        
+
         <!-- Family Information -->
         {% if person.famille or person.adress or person.telephone %}
         <div class="bg-white rounded-lg shadow-lg p-6">
@@ -161,7 +161,7 @@
             <i class="fas fa-home text-green-600 mr-3"></i>
             Informations de la famille
           </h2>
-          
+
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             {% if person.adress %}
             <div>
@@ -172,7 +172,7 @@
               </p>
             </div>
             {% endif %}
-            
+
             {% if person.telephone %}
             <div>
               <label class="block text-sm font-medium text-gray-600 mb-1">Téléphone</label>
@@ -185,7 +185,7 @@
           </div>
         </div>
         {% endif %}
-        
+
         <!-- Family Members -->
         {% if family_members %}
         <div class="bg-white rounded-lg shadow-lg p-6">
@@ -193,20 +193,20 @@
             <i class="fas fa-users text-purple-600 mr-3"></i>
             Autres membres de la famille ({{ family_count }})
           </h2>
-          
+
           <div class="space-y-4">
             {% for member in family_members %}
             <div class="flex items-center p-4 bg-gray-50 rounded-lg">
               {% if member.imageprofile %}
-                <img src="{{ member.imageprofile.url }}" 
-                     class="w-12 h-12 rounded-full object-cover mr-4" 
+                <img src="{{ member.imageprofile.url }}"
+                     class="w-12 h-12 rounded-full object-cover mr-4"
                      alt="Photo de {{ member.nom }}">
               {% else %}
                 <div class="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center mr-4">
                   <i class="fas fa-user text-gray-600"></i>
                 </div>
               {% endif %}
-              
+
               <div class="flex-1">
                 <h3 class="font-semibold text-gray-900">{{ member.nom }}</h3>
                 <p class="text-sm text-gray-600">
@@ -218,9 +218,9 @@
                   {% endif %}
                 </p>
               </div>
-              
-              <a href="{% url 'viewCimitiere' member.id %}" 
-                 class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
+
+              <a href="{% url 'viewCimitiere' member.id %}"
+                 class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition-colors">
                 Voir
               </a>
             </div>
@@ -228,7 +228,7 @@
           </div>
         </div>
         {% endif %}
-        
+
         <!-- Documents -->
         {% if dossiers %}
         <div class="bg-white rounded-lg shadow-lg p-6">
@@ -236,7 +236,7 @@
             <i class="fas fa-folder-open text-yellow-600 mr-3"></i>
             Documents associés ({{ dossiers.count }})
           </h2>
-          
+
           <div class="space-y-4">
             {% for dossier in dossiers %}
             <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow duration-200">
@@ -253,7 +253,7 @@
                   {% else %}
                     <i class="fas fa-file-alt text-gray-500 mr-3 text-2xl"></i>
                   {% endif %}
-                  
+
                   <div class="flex-1">
                     <h3 class="font-semibold text-gray-900 text-lg">{{ dossier.namefile }}</h3>
                     <p class="text-sm text-gray-600">
@@ -269,19 +269,17 @@
                     </p>
                   </div>
                 </div>
-                
+
                 <div class="flex gap-2 ml-4">
-                  <!-- View Button -->
                   <button onclick="viewDocument('{{ dossier.file.url }}', '{{ dossier.namefile }}', '{{ dossier.file.name|slice:"-4:" }}')"
-                          class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg text-sm font-medium flex items-center transition-colors duration-200">
+                          class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg text-sm font-medium flex items-center transition-colors">
                     <i class="fas fa-eye mr-1"></i>
                     Voir
                   </button>
-                  
-                  <!-- Download Button -->
-                  <a href="{{ dossier.file.url }}" 
+
+                  <a href="{{ dossier.file.url }}"
                      download="{{ dossier.namefile }}"
-                     class="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-lg text-sm font-medium flex items-center transition-colors duration-200">
+                     class="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-lg text-sm font-medium flex items-center transition-colors">
                     <i class="fas fa-download mr-1"></i>
                     Télécharger
                   </a>
@@ -305,17 +303,17 @@
         </div>
         {% endif %}
       </div>
-      
+
       <!-- Statistics Sidebar -->
       <div class="space-y-6">
-        
+
         <!-- Quick Stats -->
         <div class="bg-white rounded-lg shadow-lg p-6">
           <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
             <i class="fas fa-chart-bar text-indigo-600 mr-2"></i>
             Statistiques rapides
           </h3>
-          
+
           <div class="space-y-4">
             {% if same_place_count > 0 %}
             <div class="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-100">
@@ -326,7 +324,7 @@
               <span class="font-bold text-red-700 bg-red-100 px-2 py-1 rounded-full text-sm">{{ same_place_count }}</span>
             </div>
             {% endif %}
-            
+
             {% if same_year_count > 0 %}
             <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-100">
               <div class="flex items-center">
@@ -336,7 +334,7 @@
               <span class="font-bold text-blue-700 bg-blue-100 px-2 py-1 rounded-full text-sm">{{ same_year_count }}</span>
             </div>
             {% endif %}
-            
+
             {% if family_count > 0 %}
             <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-100">
               <div class="flex items-center">
@@ -346,7 +344,7 @@
               <span class="font-bold text-green-700 bg-green-100 px-2 py-1 rounded-full text-sm">{{ family_count }}</span>
             </div>
             {% endif %}
-            
+
             {% if dossiers.count > 0 %}
             <div class="flex items-center justify-between p-3 bg-yellow-50 rounded-lg border border-yellow-100">
               <div class="flex items-center">
@@ -358,12 +356,12 @@
             {% endif %}
           </div>
         </div>
-        
+
         <!-- Timeline -->
         {% if person.date_naissance and person.date_deces %}
         <div class="bg-white rounded-lg shadow-lg p-6">
           <h3 class="text-lg font-bold text-gray-900 mb-4">Chronologie</h3>
-          
+
           <div class="space-y-4">
             <div class="flex items-start">
               <div class="bg-green-500 rounded-full p-2 mr-4">
@@ -374,7 +372,7 @@
                 <p class="text-sm text-gray-600">{{ person.date_naissance|date:"d F Y" }}</p>
               </div>
             </div>
-            
+
             <div class="flex items-start">
               <div class="bg-red-500 rounded-full p-2 mr-4">
                 <i class="fas fa-cross text-white text-xs"></i>
@@ -387,7 +385,7 @@
                 {% endif %}
               </div>
             </div>
-            
+
             {% if burial_duration %}
             <div class="flex items-start">
               <div class="bg-gray-500 rounded-full p-2 mr-4">
@@ -402,47 +400,42 @@
           </div>
         </div>
         {% endif %}
-        
-        <!-- Actions -->
-   
-      
+
       </div>
     </div>
   </div>
 </div>
 
 <!-- Document Viewer Modal -->
-<div id="documentModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+<div id="documentModal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4 print:hidden">
   <div class="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] flex flex-col">
     <!-- Modal Header -->
     <div class="flex items-center justify-between p-6 border-b border-gray-200">
       <h3 id="documentTitle" class="text-xl font-bold text-gray-900">Visualisation du document</h3>
-      <button onclick="closeDocumentModal()" class="text-gray-400 hover:text-gray-600 text-2xl">
+      <button onclick="closeDocumentModal()" class="text-gray-400 hover:text-gray-600 text-2xl transition-colors">
         <i class="fas fa-times"></i>
       </button>
     </div>
-    
+
     <!-- Modal Body -->
     <div class="flex-1 p-6 overflow-auto">
       <div id="documentContent" class="text-center">
-        <!-- Document content will be loaded here -->
       </div>
     </div>
-    
+
     <!-- Modal Footer -->
     <div class="p-6 border-t border-gray-200 flex justify-between items-center">
       <div id="documentInfo" class="text-sm text-gray-600">
-        <!-- Document info will be displayed here -->
       </div>
       <div class="flex gap-3">
-        <button onclick="closeDocumentModal()" 
-                class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg">
+        <button onclick="closeDocumentModal()"
+                class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors">
           Fermer
         </button>
-        <a id="downloadDocumentBtn" 
-           href="#" 
+        <a id="downloadDocumentBtn"
+           href="#"
            download
-           class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center">
+           class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center transition-colors">
           <i class="fas fa-download mr-2"></i>
           Télécharger
         </a>
@@ -451,118 +444,20 @@
   </div>
 </div>
 
-<!-- Print Styles -->
-<style>
-@media print {
-  .no-print, .no-print * {
-    display: none !important;
-  }
-  
-  body {
-    background: white !important;
-  }
-  
-  .shadow-lg {
-    box-shadow: none !important;
-    border: 1px solid #e5e7eb !important;
-  }
-}
-
-/* Custom scrollbar for better aesthetics */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
-}
-
-/* Smooth transitions */
-.transition-all {
-  transition: all 0.3s ease;
-}
-
-/* Hover effects */
-.hover-scale:hover {
-  transform: scale(1.02);
-}
-
-/* Loading state */
-.loading {
-  opacity: 0.6;
-  pointer-events: none;
-}
-
-/* Status indicators */
-.status-active {
-  position: relative;
-}
-
-.status-active::before {
-  content: '';
-  position: absolute;
-  top: -2px;
-  right: -2px;
-  width: 12px;
-  height: 12px;
-  background: #10b981;
-  border: 2px solid white;
-  border-radius: 50%;
-}
-
-/* Enhanced mobile responsiveness */
-@media (max-width: 768px) {
-  .grid-cols-1.md\\:grid-cols-2 {
-    grid-template-columns: 1fr;
-  }
-  
-  .lg\\:col-span-2 {
-    grid-column: span 1;
-  }
-  
-  .text-3xl.lg\\:text-4xl {
-    font-size: 1.875rem;
-  }
-  
-  .w-32.lg\\:w-40 {
-    width: 7rem;
-  }
-  
-  .h-32.lg\\:h-40 {
-    height: 7rem;
-  }
-}
-</style>
-
 <script>
-// Action functions
 function editCimitiere(id) {
-    // Show loading state
     showLoadingState('Redirection vers l\'édition...');
-    // Redirect to edit page
     window.location.href = `/cimitiere/edit/${id}/`;
 }
 
 function deleteCimitiere(id) {
-    // Enhanced confirmation dialog
     if (confirm('⚠️ ATTENTION ⚠️\n\nÊtes-vous absolument sûr de vouloir supprimer cet enregistrement ?\n\nCette action est IRRÉVERSIBLE et supprimera définitivement:\n• Toutes les informations personnelles\n• Tous les documents associés\n• Toutes les données liées\n\nTapez "SUPPRIMER" pour confirmer:')) {
-        
+
         const userInput = prompt('Pour confirmer la suppression, tapez exactement: SUPPRIMER');
-        
+
         if (userInput === 'SUPPRIMER') {
             showLoadingState('Suppression en cours...');
-            
-            // Send delete request
+
             fetch(`/cimitiere/${id}`, {
                 method: 'DELETE',
                 headers: {
@@ -592,36 +487,31 @@ function deleteCimitiere(id) {
     }
 }
 
-// Document viewing functionality
 function viewDocument(fileUrl, fileName, fileExtension) {
     const modal = document.getElementById('documentModal');
     const title = document.getElementById('documentTitle');
     const content = document.getElementById('documentContent');
     const info = document.getElementById('documentInfo');
     const downloadBtn = document.getElementById('downloadDocumentBtn');
-    
-    // Set title and download link
+
     title.textContent = fileName;
     downloadBtn.href = fileUrl;
     downloadBtn.download = fileName;
-    
-    // Clear previous content
+
     content.innerHTML = '<div class="flex items-center justify-center p-8"><i class="fas fa-spinner fa-spin text-3xl text-gray-400"></i><span class="ml-3 text-gray-600">Chargement du document...</span></div>';
-    
-    // Show modal
+
     modal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
-    
-    // Load content based on file type
+
     setTimeout(() => {
         if (fileExtension === '.pdf') {
             content.innerHTML = `
                 <div class="w-full h-96 border border-gray-300 rounded-lg overflow-hidden">
-                    <iframe src="${fileUrl}" 
-                            class="w-full h-full" 
+                    <iframe src="${fileUrl}"
+                            class="w-full h-full"
                             frameborder="0">
                         <p class="p-4 text-center text-gray-600">
-                            Votre navigateur ne peut pas afficher ce PDF. 
+                            Votre navigateur ne peut pas afficher ce PDF.
                             <a href="${fileUrl}" target="_blank" class="text-blue-600 underline">Cliquez ici pour l'ouvrir</a>
                         </p>
                     </iframe>
@@ -631,10 +521,9 @@ function viewDocument(fileUrl, fileName, fileExtension) {
         } else if (['.jpg', '.jpeg', '.png', '.gif', '.bmp'].includes(fileExtension)) {
             content.innerHTML = `
                 <div class="flex justify-center">
-                    <img src="${fileUrl}" 
+                    <img src="${fileUrl}"
                          alt="${fileName}"
                          class="max-w-full max-h-96 object-contain border border-gray-300 rounded-lg shadow-lg"
-                         onload="this.parentElement.classList.add('loaded')"
                          onerror="this.parentElement.innerHTML='<div class=&quot;p-8 text-center text-red-600&quot;><i class=&quot;fas fa-exclamation-triangle text-3xl mb-2&quot;></i><br>Impossible de charger l&quot;image</div>'">
                 </div>
             `;
@@ -645,9 +534,9 @@ function viewDocument(fileUrl, fileName, fileExtension) {
                     <i class="fas fa-file-alt text-4xl text-gray-400 mb-4"></i>
                     <h3 class="text-lg font-semibold text-gray-700 mb-2">${fileName}</h3>
                     <p class="text-gray-600 mb-4">Aperçu non disponible pour ce type de fichier</p>
-                    <a href="${fileUrl}" 
+                    <a href="${fileUrl}"
                        target="_blank"
-                       class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg inline-flex items-center">
+                       class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg inline-flex items-center transition-colors">
                         <i class="fas fa-external-link-alt mr-2"></i>
                         Ouvrir dans un nouvel onglet
                     </a>
@@ -664,31 +553,26 @@ function closeDocumentModal() {
     document.body.style.overflow = 'auto';
 }
 
-// Enhanced print functionality
 function printCemeteryRecord() {
     showLoadingState('Préparation de l\'impression...');
-    
-    // Hide elements that shouldn't print
-    const noprint = document.querySelectorAll('.no-print, .action-buttons, button');
+    const noprint = document.querySelectorAll('button, .print\\:hidden');
     noprint.forEach(el => el.style.display = 'none');
-    
+
     setTimeout(() => {
         hideLoadingState();
         window.print();
-        
-        // Restore hidden elements after print
         setTimeout(() => {
             noprint.forEach(el => el.style.display = '');
         }, 1000);
     }, 500);
 }
 
-// Utility functions for user feedback
-function showLoadingState(message = 'Chargement...') {
+function showLoadingState(message) {
+    message = message || 'Chargement...';
     if (!document.getElementById('loadingOverlay')) {
         const overlay = document.createElement('div');
         overlay.id = 'loadingOverlay';
-        overlay.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center';
+        overlay.className = 'fixed inset-0 bg-black/50 z-50 flex items-center justify-center';
         overlay.innerHTML = `
             <div class="bg-white rounded-lg p-6 flex items-center space-x-3">
                 <i class="fas fa-spinner fa-spin text-blue-500 text-xl"></i>
@@ -701,56 +585,30 @@ function showLoadingState(message = 'Chargement...') {
 
 function hideLoadingState() {
     const overlay = document.getElementById('loadingOverlay');
-    if (overlay) {
-        overlay.remove();
-    }
+    if (overlay) overlay.remove();
 }
 
-function showSuccessMessage(message) {
-    showMessage(message, 'success');
-}
+function showSuccessMessage(message) { showMessage(message, 'success'); }
+function showErrorMessage(message) { showMessage(message, 'error'); }
+function showInfoMessage(message) { showMessage(message, 'info'); }
 
-function showErrorMessage(message) {
-    showMessage(message, 'error');
-}
+function showMessage(message, type) {
+    type = type || 'info';
+    const colors = { success: 'bg-green-500', error: 'bg-red-500', info: 'bg-blue-500' };
+    const icons = { success: 'fa-check-circle', error: 'fa-exclamation-triangle', info: 'fa-info-circle' };
 
-function showInfoMessage(message) {
-    showMessage(message, 'info');
-}
-
-function showMessage(message, type = 'info') {
-    const colors = {
-        success: 'bg-green-500',
-        error: 'bg-red-500',
-        info: 'bg-blue-500'
-    };
-    
-    const icons = {
-        success: 'fa-check-circle',
-        error: 'fa-exclamation-triangle',
-        info: 'fa-info-circle'
-    };
-    
     const messageDiv = document.createElement('div');
     messageDiv.className = `fixed top-4 right-4 ${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center space-x-2 transform translate-x-full transition-transform duration-300`;
-    messageDiv.innerHTML = `
-        <i class="fas ${icons[type]}"></i>
-        <span>${message}</span>
-    `;
-    
+    messageDiv.innerHTML = `<i class="fas ${icons[type]}"></i><span>${message}</span>`;
+
     document.body.appendChild(messageDiv);
-    
-    // Animate in
     setTimeout(() => messageDiv.classList.remove('translate-x-full'), 100);
-    
-    // Remove after 3 seconds
     setTimeout(() => {
         messageDiv.classList.add('translate-x-full');
         setTimeout(() => messageDiv.remove(), 300);
     }, 3000);
 }
 
-// Get CSRF token
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -766,48 +624,28 @@ function getCookie(name) {
     return cookieValue;
 }
 
-// Enhanced print functionality
 window.addEventListener('beforeprint', function() {
-    document.body.classList.add('print-mode');
-    // Hide modal if open
     const modal = document.getElementById('documentModal');
     if (modal && !modal.classList.contains('hidden')) {
-        modal.style.display = 'none';
+        modal.classList.add('hidden');
     }
 });
 
-window.addEventListener('afterprint', function() {
-    document.body.classList.remove('print-mode');
-    // Restore modal if it was hidden
-    const modal = document.getElementById('documentModal');
-    if (modal && modal.style.display === 'none') {
-        modal.style.display = 'flex';
-    }
-});
-
-// Keyboard shortcuts
 document.addEventListener('keydown', function(e) {
-    // Escape to close modal
     if (e.key === 'Escape') {
         const modal = document.getElementById('documentModal');
         if (modal && !modal.classList.contains('hidden')) {
             closeDocumentModal();
         }
     }
-    
-    // Ctrl+P for print
     if (e.ctrlKey && e.key === 'p') {
         e.preventDefault();
         printCemeteryRecord();
     }
 });
 
-// Initialize page
 document.addEventListener('DOMContentLoaded', function() {
-    // Add smooth scroll behavior
     document.documentElement.style.scrollBehavior = 'smooth';
-    
-    // Animate elements on load
     const cards = document.querySelectorAll('.bg-white');
     cards.forEach((card, index) => {
         card.style.opacity = '0';
@@ -820,4 +658,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-{% endblock %} 
+{% endblock %}

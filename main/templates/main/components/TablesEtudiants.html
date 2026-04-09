@@ -1,23 +1,22 @@
 <!-- Students Table Component -->
-<div class=" ">
+<div class="space-y-6">
     <!-- Search and Filters Section -->
-    <div class="table-controls mb-4">
-        <div class="row">
-            <div class="col-md-3">
-                <div class="search-box">
-                    <div class="input-group">
-                        <span class="input-group-text bg-primary text-white">
-                            <i class="fas fa-search"></i>
-                        </span>
-                        <input type="text" class="form-control" id="searchInput" 
-                               placeholder="Rechercher par nom..." value="{{ search_query }}">
-                    </div>
+    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div class="lg:col-span-3">
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-search text-slate-400"></i>
+                    </span>
+                    <input type="text" class="block w-full pl-10 pr-3 py-2 border border-slate-200 rounded-xl leading-5 bg-slate-50 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all" 
+                           id="searchInput" 
+                           placeholder="Rechercher par nom..." value="{{ search_query }}">
                 </div>
             </div>
-            <div class="col-md-8">
-                <div class="filter-controls d-flex flex-wrap gap-2">
+            <div class="lg:col-span-9">
+                <div class="flex flex-wrap gap-3">
                     <!-- Center Filter -->
-                    <select class="form-select form-select-sm" id="centerFilter" style="width: auto;">
+                    <select class="block w-full sm:w-auto pl-3 pr-10 py-2 text-sm border-slate-200 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-xl bg-slate-50" id="centerFilter">
                         <option value="">Tous les centres</option>
                         {% for center in centers %}
                             <option value="{{ center }}" {% if center == centre_filter %}selected{% endif %}>
@@ -27,7 +26,7 @@
                     </select>
 
                     <!-- Class Filter -->
-                    <select class="form-select form-select-sm" id="classFilter" style="width: auto;">
+                    <select class="block w-full sm:w-auto pl-3 pr-10 py-2 text-sm border-slate-200 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-xl bg-slate-50" id="classFilter">
                         <option value="">Toutes les classes</option>
                         {% for class in classes %}
                             <option value="{{ class }}" {% if class == class_filter %}selected{% endif %}>
@@ -37,14 +36,14 @@
                     </select>
 
                     <!-- Gender Filter -->
-                    <select class="form-select form-select-sm" id="genderFilter" style="width: auto;">
+                    <select class="block w-full sm:w-auto pl-3 pr-10 py-2 text-sm border-slate-200 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-xl bg-slate-50" id="genderFilter">
                         <option value="">Tous les genres</option>
                         <option value="M" {% if genre_filter == 'M' %}selected{% endif %}>Masculin</option>
                         <option value="F" {% if genre_filter == 'F' %}selected{% endif %}>Féminin</option>
                     </select>
 
                     <!-- Designation Filter -->
-                    <select class="form-select form-select-sm" id="designationFilter" style="width: auto;">
+                    <select class="block w-full sm:w-auto pl-3 pr-10 py-2 text-sm border-slate-200 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-xl bg-slate-50" id="designationFilter">
                         <option value="">Toutes les désignations</option>
                         {% for designation in designations %}
                             <option value="{{ designation }}" {% if designation == designation_filter %}selected{% endif %}>
@@ -54,7 +53,7 @@
                     </select>
 
                     <!-- Age Filter -->
-                    <select class="form-select form-select-sm" id="ageFilter" style="width: auto;">
+                    <select class="block w-full sm:w-auto pl-3 pr-10 py-2 text-sm border-slate-200 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-xl bg-slate-50" id="ageFilter">
                         <option value="">Tous les âges</option>
                         <option value="3-10" {% if age_filter == '3-10' %}selected{% endif %}>3-10 ans</option>
                         <option value="11-14" {% if age_filter == '11-14' %}selected{% endif %}>11-14 ans</option>
@@ -65,7 +64,7 @@
                     </select>
 
                     <!-- Institution Filter -->
-                    <select class="form-select form-select-sm" id="institutionFilter" style="width: auto;">
+                    <select class="block w-full sm:w-auto pl-3 pr-10 py-2 text-sm border-slate-200 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-xl bg-slate-50" id="institutionFilter">
                         <option value="">Toutes les institutions</option>
                         {% for institution in institutions %}
                             <option value="{{ institution }}" {% if institution == institution_filter %}selected{% endif %}>
@@ -75,7 +74,7 @@
                     </select>
 
                     <!-- Fillier Filter -->
-                    <select class="form-select form-select-sm" id="fillierFilter" style="width: auto;">
+                    <select class="block w-full sm:w-auto pl-3 pr-10 py-2 text-sm border-slate-200 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-xl bg-slate-50" id="fillierFilter">
                         <option value="">Toutes les filières</option>
                         {% for fillier in filliers %}
                             <option value="{{ fillier }}" {% if fillier == fillier_filter %}selected{% endif %}>
@@ -85,7 +84,7 @@
                     </select>
 
                     <!-- Status Filter -->
-                    <select class="form-select form-select-sm" id="statusFilter" style="width: auto;">
+                    <select class="block w-full sm:w-auto pl-3 pr-10 py-2 text-sm border-slate-200 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-xl bg-slate-50" id="statusFilter">
                         <option value="">Tous les statuts</option>
                         {% for status in statuses %}
                             <option value="{{ status }}" {% if status == status_filter %}selected{% endif %}>
@@ -95,8 +94,8 @@
                     </select>
 
                     <!-- Clear Filters Button -->
-                    <button class="btn btn-outline-secondary btn-sm" id="clearFilters">
-                        <i class="fas fa-times"></i> Effacer
+                    <button class="inline-flex items-center px-4 py-2 border border-slate-300 shadow-sm text-sm font-medium rounded-xl text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all" id="clearFilters">
+                        <i class="fas fa-times mr-2"></i> Effacer
                     </button>
                 </div>
             </div>
@@ -104,149 +103,146 @@
     </div>
 
     <!-- Statistics Cards -->
-    <div class="row mb-4">
-        <div class="col-md-3">
-            <div class="stats-card bg-primary text-white">
-                <div class="stats-icon">
-                    <i class="fas fa-users"></i>
-                </div>
-                <div class="stats-content">
-                    <h3>{{ total_students }}</h3>
-                    <p>Total Étudiants</p>
-                </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-indigo-600 rounded-2xl p-6 shadow-sm text-white flex items-center">
+            <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center text-2xl mr-4">
+                <i class="fas fa-users"></i>
+            </div>
+            <div>
+                <h3 class="text-2xl font-bold">{{ total_students }}</h3>
+                <p class="text-sm opacity-80">Total Étudiants</p>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="stats-card bg-success text-white">
-                <div class="stats-icon">
-                    <i class="fas fa-male"></i>
-                </div>
-                <div class="stats-content">
-                    <h3>{{ male_count }}</h3>
-                    <p>Hommes ({{ male_percentage }}%)</p>
-                </div>
+        <div class="bg-emerald-500 rounded-2xl p-6 shadow-sm text-white flex items-center">
+            <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center text-2xl mr-4">
+                <i class="fas fa-male"></i>
+            </div>
+            <div>
+                <h3 class="text-2xl font-bold">{{ male_count }}</h3>
+                <p class="text-sm opacity-80">Hommes ({{ male_percentage }}%)</p>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="stats-card bg-info text-white">
-                <div class="stats-icon">
-                    <i class="fas fa-female"></i>
-                </div>
-                <div class="stats-content">
-                    <h3>{{ female_count }}</h3>
-                    <p>Femmes ({{ female_percentage }}%)</p>
-                </div>
+        <div class="bg-pink-500 rounded-2xl p-6 shadow-sm text-white flex items-center">
+            <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center text-2xl mr-4">
+                <i class="fas fa-female"></i>
+            </div>
+            <div>
+                <h3 class="text-2xl font-bold">{{ female_count }}</h3>
+                <p class="text-sm opacity-80">Femmes ({{ female_percentage }}%)</p>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="stats-card bg-warning text-white">
-                <div class="stats-icon">
-                    <i class="fas fa-filter"></i>
-                </div>
-                <div class="stats-content">
-                    <h3>{{ filtered_count }}</h3>
-                    <p>Résultats filtrés</p>
-                </div>
+        <div class="bg-amber-400 rounded-2xl p-6 shadow-sm text-white flex items-center">
+            <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center text-2xl mr-4">
+                <i class="fas fa-filter"></i>
+            </div>
+            <div>
+                <h3 class="text-2xl font-bold">{{ filtered_count }}</h3>
+                <p class="text-sm opacity-80">Résultats filtrés</p>
             </div>
         </div>
     </div>
 
     <!-- Main Table -->
-    <div class="table-wrapper">
-        <div class="table-responsive">
-            <table class="table table-hover students-table" id="studentsTable">
-                <thead class="table-dark">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-slate-200" id="studentsTable">
+                <thead class="bg-slate-50">
                     <tr>
-                        <th width="60">Photo</th>
-                        <th>Identifiant</th>
-                        <th>Nom</th>
-                        <th>Âge</th>
-                        <th>Genre</th>
-                        <th>Classe</th>
-                        <th>Centre</th>
-                        <th>Institution</th>
-                        <th>Désignation</th>
-                        <th>Contact</th>
-                        <th width="120">Actions</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Photo</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Identifiant</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Nom</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Âge</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Genre</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Classe</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Centre</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Institution</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Désignation</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Contact</th>
+                        <th scope="col" class="px-6 py-3 text-center text-xs font-bold text-slate-500 uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
-                <tbody id="studentsTableBody">
+                <tbody class="bg-white divide-y divide-slate-200" id="studentsTableBody">
                     {% for student in students %}
-                    <tr class="student-row" data-student-id="{{ student.id }}">
-                        <td>
-                            <div class="student-avatar">
+                    <tr class="hover:bg-slate-50 transition-colors group" data-student-id="{{ student.id }}">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex-shrink-0 h-12 w-12">
                                 {% if student.imageprofile %}
                                     <img src="{{ student.imageprofile.url }}" alt="{{ student.nom }}" 
-                                         class="avatar-img" loading="lazy">
+                                         class="h-12 w-12 rounded-full object-cover border-2 border-white shadow-sm" loading="lazy">
                                 {% else %}
-                                    <div class="avatar-placeholder">
+                                    <div class="h-12 w-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white shadow-sm">
                                         <i class="fas fa-user"></i>
                                     </div>
                                 {% endif %}
                             </div>
                         </td>
-                        <td>
-                            <span class="badge bg-secondary">{{ student.identifiant }}</span>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800 border border-slate-200">
+                                {{ student.identifiant }}
+                            </span>
                         </td>
-                        <td>
-                            <div class="student-name">
-                                <strong>{{ student.nom }}</strong>
-                                {% if student.email %}
-                                    <small class="text-muted d-block">{{ student.email }}</small>
-                                {% endif %}
-                            </div>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-bold text-slate-900">{{ student.nom }}</div>
+                            {% if student.email %}
+                                <div class="text-xs text-slate-500">{{ student.email }}</div>
+                            {% endif %}
                         </td>
-                        <td>
-                            <span w class="age-badge ">{{ student.Age }} ans</span>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-100 text-rose-700 border border-rose-200">
+                                {{ student.Age }} ans
+                            </span>
                         </td>
-                        <td>
-                            <span class="badge {% if student.genre == 'M' %}bg-primary{% else %}bg-pink{% endif %}">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {% if student.genre == 'M' %}bg-blue-100 text-blue-700 border-blue-200{% else %}bg-pink-100 text-pink-700 border-pink-200{% endif %}">
                                 {% if student.genre == 'M' %}
-                                    <i class="fas fa-mars"></i> Masculin
+                                    <i class="fas fa-mars mr-1"></i> Masculin
                                 {% else %}
-                                    <i class="fas fa-venus"></i> Féminin
+                                    <i class="fas fa-venus mr-1"></i> Féminin
                                 {% endif %}
                             </span>
                         </td>
-                        <td>
-                            <span class="class-badge">{{ student.Class }}</span>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700 border border-emerald-200">
+                                {{ student.Class }}
+                            </span>
                         </td>
-                        <td>
-                            <span class="center-badge">{{ student.centre }}</span>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700 border border-amber-200">
+                                {{ student.centre }}
+                            </span>
                         </td>
-                        <td>
-                            <span class="institution-name">{{ student.institution }}</span>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600 font-medium">
+                            {{ student.institution }}
                         </td>
-                        <td>
-                            <span class="badge bg-info">{{ student.designation }}</span>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-700 border border-indigo-200">
+                                {{ student.designation }}
+                            </span>
                         </td>
-                        <td>
+                        <td class="px-6 py-4 whitespace-nowrap text-xs text-slate-500">
                             {% if student.telephone %}
-                                <small class="text-muted">
-                                    <i class="fas fa-phone"></i> {{ student.telephone }}
-                                </small>
+                                <div class="flex items-center">
+                                    <i class="fas fa-phone mr-1 opacity-50"></i> {{ student.telephone }}
+                                </div>
                             {% else %}
-                                <small class="text-muted">N/A</small>
+                                <span class="italic opacity-50">N/A</span>
                             {% endif %}
                         </td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-lg btn-primary view-student-btn" 
-                                        onclick="viewStudent('{{ student.identifiant }}')" 
-                                        title="Voir Étudiant">
-                                    <i class="fas fa-eye me-2"></i>
-                                    Voir Étudiant
-                                </button>
-                            </div>
+                        <td class="px-6 py-4 whitespace-nowrap text-center">
+                            <button class="inline-flex items-center px-4 py-2 border border-transparent text-xs font-bold rounded-xl shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all transform hover:scale-105" 
+                                    onclick="viewStudent('{{ student.identifiant }}')">
+                                <i class="fas fa-eye mr-2"></i>
+                                VOIR
+                            </button>
                         </td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="11" class="text-center py-5">
-                            <div class="no-data">
-                                <i class="fas fa-users fa-3x text-muted mb-3"></i>
-                                <h5 class="text-muted">Aucun étudiant trouvé</h5>
-                                <p class="text-muted">Essayez de modifier vos critères de recherche</p>
+                        <td colspan="11" class="px-6 py-12 text-center">
+                            <div class="flex flex-col items-center">
+                                <i class="fas fa-users text-5xl text-slate-200 mb-4"></i>
+                                <h5 class="text-lg font-bold text-slate-400">Aucun étudiant trouvé</h5>
+                                <p class="text-sm text-slate-400">Essayez de modifier vos critères de recherche</p>
                             </div>
                         </td>
                     </tr>
@@ -258,16 +254,18 @@
 
     <!-- Pagination -->
     {% if students.has_other_pages %}
-    <nav aria-label="Navigation des pages">
-        <ul class="pagination justify-content-center">
+    <nav class="flex justify-center mt-8">
+        <ul class="inline-flex items-center -space-x-px">
             {% if students.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if class_filter %}&class={{ class_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if designation_filter %}&designation={{ designation_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if fillier_filter %}&fillier={{ fillier_filter }}{% endif %}{% if institution_filter %}&institution={{ institution_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">
+                <li>
+                    <a href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if class_filter %}&class={{ class_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if designation_filter %}&designation={{ designation_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if fillier_filter %}&fillier={{ fillier_filter }}{% endif %}{% if institution_filter %}&institution={{ institution_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}" 
+                       class="block px-3 py-2 ml-0 leading-tight text-slate-500 bg-white border border-slate-300 rounded-l-xl hover:bg-slate-100 hover:text-slate-700 transition-colors">
                         <i class="fas fa-angle-double-left"></i>
                     </a>
                 </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ students.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if class_filter %}&class={{ class_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if designation_filter %}&designation={{ designation_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if fillier_filter %}&fillier={{ fillier_filter }}{% endif %}{% if institution_filter %}&institution={{ institution_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">
+                <li>
+                    <a href="?page={{ students.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if class_filter %}&class={{ class_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if designation_filter %}&designation={{ designation_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if fillier_filter %}&fillier={{ fillier_filter }}{% endif %}{% if institution_filter %}&institution={{ institution_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}" 
+                       class="block px-3 py-2 leading-tight text-slate-500 bg-white border border-slate-300 hover:bg-slate-100 hover:text-slate-700 transition-colors">
                         <i class="fas fa-angle-left"></i>
                     </a>
                 </li>
@@ -275,24 +273,27 @@
 
             {% for num in students.paginator.page_range %}
                 {% if students.number == num %}
-                    <li class="page-item active">
-                        <span class="page-link">{{ num }}</span>
+                    <li>
+                        <span class="z-10 px-4 py-2 leading-tight text-white bg-indigo-600 border border-indigo-600 hover:bg-indigo-700 transition-colors font-bold">{{ num }}</span>
                     </li>
                 {% elif num > students.number|add:'-3' and num < students.number|add:'3' %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if class_filter %}&class={{ class_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if designation_filter %}&designation={{ designation_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if fillier_filter %}&fillier={{ fillier_filter }}{% endif %}{% if institution_filter %}&institution={{ institution_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">{{ num }}</a>
+                    <li>
+                        <a href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if class_filter %}&class={{ class_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if designation_filter %}&designation={{ designation_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if fillier_filter %}&fillier={{ fillier_filter }}{% endif %}{% if institution_filter %}&institution={{ institution_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}" 
+                           class="px-4 py-2 leading-tight text-slate-500 bg-white border border-slate-300 hover:bg-slate-100 hover:text-slate-700 transition-colors">{{ num }}</a>
                     </li>
                 {% endif %}
             {% endfor %}
 
             {% if students.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ students.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if class_filter %}&class={{ class_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if designation_filter %}&designation={{ designation_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if fillier_filter %}&fillier={{ fillier_filter }}{% endif %}{% if institution_filter %}&institution={{ institution_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">
+                <li>
+                    <a href="?page={{ students.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if class_filter %}&class={{ class_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if designation_filter %}&designation={{ designation_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if fillier_filter %}&fillier={{ fillier_filter }}{% endif %}{% if institution_filter %}&institution={{ institution_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}" 
+                       class="block px-3 py-2 leading-tight text-slate-500 bg-white border border-slate-300 hover:bg-slate-100 hover:text-slate-700 transition-colors">
                         <i class="fas fa-angle-right"></i>
                     </a>
                 </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ students.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if class_filter %}&class={{ class_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if designation_filter %}&designation={{ designation_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if fillier_filter %}&fillier={{ fillier_filter }}{% endif %}{% if institution_filter %}&institution={{ institution_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">
+                <li>
+                    <a href="?page={{ students.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if class_filter %}&class={{ class_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if designation_filter %}&designation={{ designation_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if fillier_filter %}&fillier={{ fillier_filter }}{% endif %}{% if institution_filter %}&institution={{ institution_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}" 
+                       class="block px-3 py-2 leading-tight text-slate-500 bg-white border border-slate-300 rounded-r-xl hover:bg-slate-100 hover:text-slate-700 transition-colors">
                         <i class="fas fa-angle-double-right"></i>
                     </a>
                 </li>
@@ -302,272 +303,81 @@
     {% endif %}
 </div>
 
-<!-- Styles -->
-<style>
-.students-table-container {
-    background: #fff;
-    border-radius: 15px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.1);
-    padding: 2rem;
-    margin: 1rem 0;
-}
+<!-- JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Search functionality
+    const searchInput = document.getElementById('searchInput');
+    const centerFilter = document.getElementById('centerFilter');
+    const classFilter = document.getElementById('classFilter');
+    const genderFilter = document.getElementById('genderFilter');
+    const designationFilter = document.getElementById('designationFilter');
+    const ageFilter = document.getElementById('ageFilter');
+    const institutionFilter = document.getElementById('institutionFilter');
+    const fillierFilter = document.getElementById('fillierFilter');
+    const statusFilter = document.getElementById('statusFilter');
+    const clearFiltersBtn = document.getElementById('clearFilters');
 
-.table-controls {
-    background: #f8f9fa;
-  /*  padding: 1.5rem;*/
-    border-radius: 10px;
-    margin-bottom: 2rem;
-}
-
-.search-box .input-group-text {
-    border: none;
-    background: linear-gradient(45deg, #007bff, #0056b3);
-}
-
-.search-box .form-control {
-    border-left: none;
-    padding-left: 0;
-}
-
-.search-box .form-control:focus {
-    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
-    border-color: #007bff;
-}
-
-.filter-controls .form-select {
-    min-width: 150px;
-    border: 2px solid #e9ecef;
-    border-radius: 8px;
-}
-
-.filter-controls .form-select:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
-}
-
-.stats-card {
-    border-radius: 15px;
-    padding: 1.5rem;
-    display: flex;
-    align-items: center;
-    margin-bottom: 1rem;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease;
-}
-
-.stats-card:hover {
-    transform: translateY(-5px);
-}
-
-.stats-icon {
-    font-size: 2.5rem;
-    margin-right: 1rem;
-    opacity: 0.8;
-}
-
-.stats-content h3 {
-    margin: 0;
-    font-size: 2rem;
-    font-weight: bold;
-}
-
-.stats-content p {
-    margin: 0;
-    opacity: 0.9;
-}
-
-.bg-pink {
-    background-color: #e91e63 !important;
-}
-
-.table-wrapper {
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-.students-table {
-    margin: 0;
-}
-
-.students-table thead th {
-    background: linear-gradient(45deg, #343a40, #495057);
-    border: none;
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 0.85rem;
-    letter-spacing: 0.5px;
-}
-
-.student-row {
-    transition: all 0.3s ease;
-    border-left: 4px solid transparent;
-}
-
-.student-row:hover {
-    background-color: #f8f9fa;
-    border-left-color: #007bff;
-    transform: translateX(5px);
-}
-
-.student-avatar {
-    position: relative;
-}
-
-.avatar-img {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #fff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-}
-
-.avatar-placeholder {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.2rem;
-}
-
-.student-name strong {
-    color: #2c3e50;
-    font-size: 1rem;
-}
-
-.age-badge {
-    background: linear-gradient(45deg, #ff6b6b, #ee5a52);
-    color: white;
-   padding: 0.25rem 0.5rem;
-    border-radius: 15px;
-    font-size: 0.8rem;
-    font-weight: 500;
-     
-}
-
-.class-badge {
-    background: linear-gradient(45deg, #4ecdc4, #44a08d);
-    color: white;
-    padding: 0.25rem 0.5rem;
-    border-radius: 15px;
-    font-size: 0.8rem;
-    font-weight: 500;
-}
-
-.center-badge {
-    background: linear-gradient(45deg, #f093fb, #f5576c);
-    color: white;
-    padding: 0.25rem 0.5rem;
-    border-radius: 15px;
-    font-size: 0.8rem;
-    font-weight: 500;
-}
-
-.institution-name {
-    color: #495057;
-    font-weight: 500;
-    font-size: 0.9rem;
-}
-
-.action-buttons {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.view-student-btn {
-    border-radius: 12px;
-    padding: 0.75rem 1.5rem;
-    transition: all 0.3s ease;
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
-    border: none;
-    min-width: 140px;
-}
-
-.view-student-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4);
-    background: linear-gradient(135deg, #0056b3, #007bff);
-}
-
-.view-student-btn:active {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
-}
-
-.no-data {
-    padding: 3rem;
-}
-
-.pagination {
-    margin: 2rem 0 0 0;
-}
-
-.page-link {
-    border-radius: 8px;
-    margin: 0 2px;
-    border: 1px solid #dee2e6;
-    color: #007bff;
-    transition: all 0.3s ease;
-}
-
-.page-link:hover {
-    background-color: #007bff;
-    border-color: #007bff;
-    color: white;
-    transform: translateY(-2px);
-}
-
-.page-item.active .page-link {
-    background: linear-gradient(45deg, #007bff, #0056b3);
-    border-color: #007bff;
-    box-shadow: 0 4px 8px rgba(0,123,255,0.3);
-}
-
-@media (max-width: 768px) {
-    .students-table-container {
-        padding: 1rem;
+    // Debounce function for search
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
     }
-    
-    .table-controls {
-       padding: 1rem;
+
+    // Apply filters function
+    function applyFilters() {
+        // Show loading indicator
+        const tableBody = document.getElementById('studentsTableBody');
+        if (tableBody) {
+            tableBody.innerHTML = '<tr><td colspan="11" class="text-center py-12"><div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-indigo-500 border-t-transparent" role="status"></div></td></tr>';
+        }
+        
+        const params = new URLSearchParams();
+        
+        if (searchInput.value) params.set('search', searchInput.value);
+        if (centerFilter.value) params.set('centre', centerFilter.value);
+        if (classFilter.value) params.set('class', classFilter.value);
+        if (genderFilter.value) params.set('genre', genderFilter.value);
+        if (designationFilter.value) params.set('designation', designationFilter.value);
+        if (ageFilter.value) params.set('age', ageFilter.value);
+        if (institutionFilter.value) params.set('institution', institutionFilter.value);
+        if (fillierFilter.value) params.set('fillier', fillierFilter.value);
+        if (statusFilter.value) params.set('status', statusFilter.value);
+        
+        window.location.href = '?' + params.toString();
     }
-    
-    .filter-controls {
-        flex-direction: column;
+
+    // Event listeners
+    if (searchInput) searchInput.addEventListener('input', debounce(applyFilters, 500));
+    if (centerFilter) centerFilter.addEventListener('change', applyFilters);
+    if (classFilter) classFilter.addEventListener('change', applyFilters);
+    if (genderFilter) genderFilter.addEventListener('change', applyFilters);
+    if (designationFilter) designationFilter.addEventListener('change', applyFilters);
+    if (ageFilter) ageFilter.addEventListener('change', applyFilters);
+    if (institutionFilter) institutionFilter.addEventListener('change', applyFilters);
+    if (fillierFilter) fillierFilter.addEventListener('change', applyFilters);
+    if (statusFilter) statusFilter.addEventListener('change', applyFilters);
+
+    // Clear filters
+    if (clearFiltersBtn) {
+        clearFiltersBtn.addEventListener('click', function() {
+            window.location.href = window.location.pathname;
+        });
     }
-    
-    .filter-controls .form-select {
-        margin-bottom: 0.5rem;
-        min-width: 100%;
-    }
-    
-    .stats-card {
-        text-align: center;
-        flex-direction: column;
-    }
-    
-    .stats-icon {
-        margin-right: 0;
-        margin-bottom: 0.5rem;
-    }
-    
-    .view-student-btn {
-        font-size: 0.8rem;
-        padding: 0.5rem 1rem;
-        min-width: 120px;
-    }
+});
+
+// Action functions
+function viewStudent(identifiant) {
+    window.location.href = `/student/view/${identifiant}`;
 }
-</style>
+</script>
 
 <!-- JavaScript -->
 <script>

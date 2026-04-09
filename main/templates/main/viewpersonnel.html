@@ -14,10 +14,9 @@
         </a>
     </div>
 
-    <div class="container-fluid">
-      <div class="row">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Sidebar Column -->
-        <div class="col-lg-4">
+        <div>
           <!-- Profile Card -->
           <div class="bg-white rounded-2xl shadow-xl overflow-hidden mb-6">
             <div class="bg-gradient-to-r from-blue-600 to-blue-700 p-8 text-center relative">
@@ -83,46 +82,46 @@
         </div>
 
         <!-- Main Content Column -->
-        <div class="col-lg-8">
+        <div class="lg:col-span-2">
           <!-- General Info Card -->
           <div class="bg-white rounded-2xl shadow-xl overflow-hidden mb-6">
             <div class="p-5 border-b">
               <h4 class="m-0 font-bold text-gray-800"><i class="fas fa-info-circle mr-2 text-primary"></i>Informations Générales</h4>
             </div>
             <div class="p-6">
-              <div class="row g-4">
-                <div class="col-md-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
                     <div class="bg-gray-50 p-4 rounded-xl">
-                        <table class="table table-borderless m-0">
+                        <table class="w-full">
                             <tr class="align-middle">
-                                <td class="text-gray-400 text-xs uppercase font-bold pl-0" width="40%">Genre</td>
-                                <td class="font-bold text-gray-800 text-sm">: {{p.get_genre_display}}</td>
+                                <td class="text-gray-400 text-xs uppercase font-bold pl-0 py-2" width="40%">Genre</td>
+                                <td class="font-bold text-gray-800 text-sm py-2">: {{p.get_genre_display}}</td>
                             </tr>
                             <tr class="align-middle">
-                                <td class="text-gray-400 text-xs uppercase font-bold pl-0">Situation</td>
-                                <td class="font-bold text-gray-800 text-sm">: {{p.get_situation_display}}</td>
+                                <td class="text-gray-400 text-xs uppercase font-bold pl-0 py-2">Situation</td>
+                                <td class="font-bold text-gray-800 text-sm py-2">: {{p.get_situation_display}}</td>
                             </tr>
                             <tr class="align-middle">
-                                <td class="text-gray-400 text-xs uppercase font-bold pl-0">Email</td>
-                                <td class="font-bold text-gray-800 text-sm">: <span class="text-primary hover:underline">{{p.email|default:"-"}}</span></td>
+                                <td class="text-gray-400 text-xs uppercase font-bold pl-0 py-2">Email</td>
+                                <td class="font-bold text-gray-800 text-sm py-2">: <span class="text-primary hover:underline">{{p.email|default:"-"}}</span></td>
                             </tr>
                         </table>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div>
                     <div class="bg-gray-50 p-4 rounded-xl">
-                        <table class="table table-borderless m-0">
+                        <table class="w-full">
                             <tr class="align-middle">
-                                <td class="text-gray-400 text-xs uppercase font-bold pl-0" width="40%">Téléphone</td>
-                                <td class="font-bold text-gray-800 text-sm">: {{p.telephone|default:"-"}}</td>
+                                <td class="text-gray-400 text-xs uppercase font-bold pl-0 py-2" width="40%">Téléphone</td>
+                                <td class="font-bold text-gray-800 text-sm py-2">: {{p.telephone|default:"-"}}</td>
                             </tr>
                             <tr class="align-middle">
-                                <td class="text-gray-400 text-xs uppercase font-bold pl-0">Adresse</td>
-                                <td class="font-bold text-gray-800 text-sm">: {{p.adress|default:"-"}}</td>
+                                <td class="text-gray-400 text-xs uppercase font-bold pl-0 py-2">Adresse</td>
+                                <td class="font-bold text-gray-800 text-sm py-2">: {{p.adress|default:"-"}}</td>
                             </tr>
                             <tr class="align-middle">
-                                <td class="text-gray-400 text-xs uppercase font-bold pl-0">Matrimonial</td>
-                                <td class="font-bold text-gray-800 text-sm">: {{p.get_situation_display}}</td>
+                                <td class="text-gray-400 text-xs uppercase font-bold pl-0 py-2">Matrimonial</td>
+                                <td class="font-bold text-gray-800 text-sm py-2">: {{p.get_situation_display}}</td>
                             </tr>
                         </table>
                     </div>
@@ -144,17 +143,17 @@
               </div>
               {% endif %}
             </div>
-            <div class="table-responsive">
-                <table class="table table-hover mb-0">
+            <div class="overflow-x-auto">
+                <table class="w-full">
                   <thead class="bg-gray-50 text-gray-400 text-xs uppercase font-bold">
                     <tr>
-                      <th class="px-4 py-3 border-0">Période</th>
-                      <th class="py-3 border-0">Type</th>
-                      <th class="py-3 border-0">Raison</th>
-                      <th class="text-right px-4 py-3 border-0">Durée</th>
+                      <th class="px-4 py-3 text-left">Période</th>
+                      <th class="py-3 text-left">Type</th>
+                      <th class="py-3 text-left">Raison</th>
+                      <th class="text-right px-4 py-3">Durée</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody class="divide-y divide-gray-100">
                     {% for conge in conges %}
                     <tr class="transition hover:bg-gray-50">
                       <td class="px-4 py-4">
@@ -169,13 +168,13 @@
                         </div>
                       </td>
                       <td class="py-4">
-                        <span class="px-3 py-1 rounded-full text-xs font-bold 
+                        <span class="px-3 py-1 rounded-full text-xs font-bold
                             {% if conge.statut == 'Congé' %}bg-blue-100 text-blue-700{% elif conge.statut == 'Maladie' %}bg-red-100 text-red-700{% elif conge.statut == 'Famille' %}bg-yellow-100 text-yellow-700{% else %}bg-gray-100 text-gray-700{% endif %}">
                             {{ conge.statut }}
                         </span>
                       </td>
                       <td class="py-4">
-                        <div class="text-sm text-gray-600" style="max-width: 250px;">
+                        <div class="text-sm text-gray-600 max-w-[250px]">
                             {{ conge.raison|default:"-" }}
                         </div>
                       </td>
@@ -196,7 +195,6 @@
             </div>
           </div>
         </div>
-      </div>
     </div>
-  </div>
+</div>
 {% endblock %}

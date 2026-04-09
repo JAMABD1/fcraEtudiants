@@ -3,352 +3,308 @@
 {% block content %}
 
 <!-- General Dashboard Header -->
-<div class="dashboard-header mb-8">
-    <div class="d-flex justify-content-between align-items-center">
+<div class="mb-8 p-8 rounded-2xl shadow-lg bg-gradient-to-br from-indigo-600 to-purple-700 text-white">
+    <div class="flex justify-between items-center">
         <div>
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">
-                <i class="fas fa-chart-line text-primary mr-3"></i>
+            <h1 class="text-3xl font-bold mb-2 flex items-center">
+                <i class="fas fa-chart-line mr-3"></i>
                 Tableau de Bord Général
             </h1>
-            <p class="text-gray-600">Vue d'ensemble des statistiques et analyses du système</p>
+            <p class="opacity-90">Vue d'ensemble des statistiques et analyses du système</p>
         </div>
     </div>
 </div>
 
-
-
 <!-- Key Metrics Cards -->
-<div class="row mb-6">
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="metric-card bg-gradient-primary">
-            <div class="metric-icon">
-                <i class="fas fa-users"></i>
-            </div>
-            <div class="metric-content">
-                <h3 class="text-black">{{ total_students }}</h3>
-                <p class="text-black">Total Étudiants</p>
-                <div class="metric-change">
-                    <i class="fas fa-graduation-cap"></i>
-                    <span class="ms-1 text-black"">Tous les étudiants</span>
-                </div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl p-6 shadow-lg transform transition-all hover:-translate-y-2 hover:shadow-xl flex items-center text-white">
+        <div class="text-4xl mr-6 opacity-80">
+            <i class="fas fa-users"></i>
+        </div>
+        <div>
+            <h3 class="text-3xl font-bold leading-none">{{ total_students }}</h3>
+            <p class="mt-2 opacity-90">Total Étudiants</p>
+            <div class="mt-2 text-xs opacity-80 flex items-center">
+                <i class="fas fa-graduation-cap mr-1"></i>
+                <span>Tous les étudiants</span>
             </div>
         </div>
     </div>
     
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="metric-card bg-gradient-info">
-            <div class="metric-icon">
-                <i class="fas fa-user-tie"></i>
-            </div>
-            <div class="metric-content">
-                <h3>{{ total_personnel }}</h3>
-                <p>Total Personnel</p>
-                <div class="metric-change">
-                    <i class="fas fa-briefcase"></i>
-                    <span class="ms-1">Employés</span>
-                </div>
+    <div class="bg-gradient-to-br from-blue-400 to-cyan-500 rounded-2xl p-6 shadow-lg transform transition-all hover:-translate-y-2 hover:shadow-xl flex items-center text-white">
+        <div class="text-4xl mr-6 opacity-80">
+            <i class="fas fa-user-tie"></i>
+        </div>
+        <div>
+            <h3 class="text-3xl font-bold leading-none">{{ total_personnel }}</h3>
+            <p class="mt-2 opacity-90">Total Personnel</p>
+            <div class="mt-2 text-xs opacity-80 flex items-center">
+                <i class="fas fa-briefcase mr-1"></i>
+                <span>Employés</span>
             </div>
         </div>
     </div>
     
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="metric-card bg-gradient-success">
-            <div class="metric-icon">
-                <i class="fas fa-chart-line"></i>
-            </div>
-            <div class="metric-content">
-                <h3>{{ total_notes }}</h3>
-                <p>Total Notes</p>
-                <div class="metric-change">
-                    <span class="text-success">Moyenne: {{ avg_grade }}</span>
-                </div>
+    <div class="bg-gradient-to-br from-emerald-400 to-teal-500 rounded-2xl p-6 shadow-lg transform transition-all hover:-translate-y-2 hover:shadow-xl flex items-center text-white">
+        <div class="text-4xl mr-6 opacity-80">
+            <i class="fas fa-chart-line"></i>
+        </div>
+        <div>
+            <h3 class="text-3xl font-bold leading-none">{{ total_notes }}</h3>
+            <p class="mt-2 opacity-90">Total Notes</p>
+            <div class="mt-2 text-xs font-semibold">
+                Moyenne: {{ avg_grade }}
             </div>
         </div>
     </div>
     
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="metric-card bg-gradient-warning">
-            <div class="metric-icon">
-                <i class="fas fa-user-graduate"></i>
-            </div>
-            <div class="metric-content">
-                <h3>{{ total_sortants_dash }}</h3>
-                <p>Total Sortants</p>
-                <div class="metric-change">
-                    <i class="fas fa-briefcase"></i>
-                    <span class="ms-1">Emploi</span>
-                </div>
+    <div class="bg-gradient-to-br from-pink-400 to-rose-500 rounded-2xl p-6 shadow-lg transform transition-all hover:-translate-y-2 hover:shadow-xl flex items-center text-white">
+        <div class="text-4xl mr-6 opacity-80">
+            <i class="fas fa-user-graduate"></i>
+        </div>
+        <div>
+            <h3 class="text-3xl font-bold leading-none">{{ total_sortants_dash }}</h3>
+            <p class="mt-2 opacity-90">Total Sortants</p>
+            <div class="mt-2 text-xs opacity-80 flex items-center">
+                <i class="fas fa-briefcase mr-1"></i>
+                <span>Emploi</span>
             </div>
         </div>
     </div>
 </div>
 
 <!-- General Statistics Overview -->
-<div class="row mb-6">
-    <div class="col-12">
-        <div class="chart-card">
-            <div class="chart-header">
-                <h5><i class="fas fa-chart-pie text-primary"></i> Vue d'ensemble du Système</h5>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white rounded-2xl p-6 border-l-4 border-indigo-500 shadow-md hover:shadow-lg transition-all group">
+        <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-indigo-500 text-white flex items-center justify-center text-2xl shadow-lg shadow-indigo-500/30">
+                <i class="fas fa-users"></i>
             </div>
-            <div class="chart-body">
-                <div class="row">
-                    <div class="col-md-3 mb-3">
-                        <div class="stat-card">
-                            <div class="stat-icon bg-primary">
-                                <i class="fas fa-users"></i>
-                            </div>
-                            <div class="stat-content">
-                                <h4>{{ total_students }}</h4>
-                                <p>Étudiants</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="stat-card">
-                            <div class="stat-icon bg-info">
-                                <i class="fas fa-user-tie"></i>
-                            </div>
-                            <div class="stat-content">
-                                <h4>{{ total_personnel }}</h4>
-                                <p>Personnel</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="stat-card">
-                            <div class="stat-icon bg-success">
-                                <i class="fas fa-graduation-cap"></i>
-                            </div>
-                            <div class="stat-content">
-                                <h4>{{ total_sortants_dash }}</h4>
-                                <p>Sortants</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="stat-card">
-                            <div class="stat-icon bg-warning">
-                                <i class="fas fa-university"></i>
-                            </div>
-                            <div class="stat-content">
-                                <h4>{{ total_universites_dash }}</h4>
-                                <p>Université</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div>
+                <h4 class="text-3xl font-black text-slate-900 leading-none">{{ total_students }}</h4>
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mt-1">Étudiants</p>
             </div>
         </div>
     </div>
-</div>
-
-
-
-<!-- Sortants & Universités Section -->
-<div class="row mb-6">
-    <div class="col-12">
-        <div class="chart-card">
-            <div class="chart-header">
-                <h5><i class="fas fa-layer-group text-primary"></i> Sortants & Universités</h5>
-                <p class="text-muted mb-0">Bilan des études et de l'emploi</p>
+    <div class="bg-white rounded-2xl p-6 border-l-4 border-blue-500 shadow-md hover:shadow-lg transition-all group">
+        <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-blue-500 text-white flex items-center justify-center text-2xl shadow-lg shadow-blue-500/30">
+                <i class="fas fa-user-tie"></i>
+            </div>
+            <div>
+                <h4 class="text-3xl font-black text-slate-900 leading-none">{{ total_personnel }}</h4>
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mt-1">Personnel</p>
             </div>
         </div>
     </div>
-</div>
-
-<!-- Sortants + Universités Overview -->
-<div class="row mb-6">
-    <div class="col-lg-4 col-md-12 mb-4">
-        <div class="metric-card">
-            <div class="metric-icon">
-                <i class="fas fa-user-graduate "></i>
+    <div class="bg-white rounded-2xl p-6 border-l-4 border-emerald-500 shadow-md hover:shadow-lg transition-all group">
+        <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-emerald-500 text-white flex items-center justify-center text-2xl shadow-lg shadow-emerald-500/30">
+                <i class="fas fa-graduation-cap"></i>
             </div>
-            <div class="metric-content">
-                <h3 class="text-info">{{ total_sortants_dash }}</h3>
-                <p class="text-info">Total Sortants</p>
-                <div class="metric-change">
-                    <i class="fas fa-briefcase"></i>
-                    <span class="ms-1 text-info">Placements clés: 
-                        {% with top=sortant_placement_stats_dash|first %}
-                            {% if top %}{{ top.placement_type }} ({{ top.count }}){% else %}N/A{% endif %}
-                        {% endwith %}
-                    </span>
-                </div>
+            <div>
+                <h4 class="text-3xl font-black text-slate-900 leading-none">{{ total_sortants_dash }}</h4>
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mt-1">Sortants</p>
             </div>
         </div>
     </div>
-    <div class="col-lg-4 col-md-12 mb-4">
-        <div class="metric-card">
-            <div class="metric-icon">
+    <div class="bg-white rounded-2xl p-6 border-l-4 border-amber-500 shadow-md hover:shadow-lg transition-all group">
+        <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-2xl shadow-lg shadow-amber-500/30">
                 <i class="fas fa-university"></i>
             </div>
-            <div class="metric-content">
-                <h3 class="text-success">{{ total_universites_dash }}</h3>
-                <p class="text-success">Total Université</p>
-                <div class="metric-change">
-                    <i class="fas fa-book text-success"></i>
-                    <span class="ms-1 text-success">Top filière: 
-                        {% with top=universite_filiere_stats_dash|first %}
-                            {% if top %}{{ top.universite__fillier }} ({{ top.count }}){% else %}N/A{% endif %}
-                        {% endwith %}
-                    </span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-4 col-md-12 mb-4">
-        <div class="metric-card">
-            <div class="metric-icon">
-                <i class="fas fa-layer-group"></i>
-            </div>
-            <div class="metric-content">
-                <h3 class="text-primary">{{ total_combined_su }}</h3>
-                <p class="text-primary">Total Sortants + Université</p>
-                <div class="metric-change">
-                    <i class="fas fa-equals text-primary"></i>
-                    <span class="ms-1 text-primary">{{ total_sortants_dash }} + {{ total_universites_dash }}</span>
-                </div>
+            <div>
+                <h4 class="text-3xl font-black text-slate-900 leading-none">{{ total_universites_dash }}</h4>
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mt-1">Université</p>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Detailed Breakdown: Sortants & Universités -->
-<div class="row mb-6">
-    <div class="col-12 mb-4">
-        <div class="chart-card">
-            <div class="chart-header">
-                <h5><i class="fas fa-layer-group text-primary"></i> Bilan Sortants & Université</h5>
+<!-- Sortants & Universités Section -->
+<div class="mb-8">
+    <div class="flex items-center gap-3 mb-6">
+        <div class="w-10 h-10 rounded-xl bg-indigo-500 text-white flex items-center justify-center">
+            <i class="fas fa-layer-group"></i>
+        </div>
+        <div>
+            <h5 class="font-bold text-slate-800 text-lg">Sortants & Universités</h5>
+            <p class="text-xs text-slate-500">Bilan des études et de l'emploi</p>
+        </div>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-8 shadow-lg shadow-blue-500/20 text-white relative overflow-hidden hover:shadow-xl transition-all group">
+            <div class="absolute top-4 right-4 text-6xl opacity-10 group-hover:opacity-20 transition-opacity">
+                <i class="fas fa-user-graduate"></i>
             </div>
-            <div class="chart-body">
-                <div class="row">
-                    <div class="col-lg-6 mb-4">
-                        <div class="card border-0 shadow-sm h-100">
-                            <div class="card-header bg-light">
-                                <h6 class="mb-0"><i class="fas fa-briefcase text-primary me-2"></i> Sortants - Emploi</h6>
+            <h3 class="text-4xl font-bold leading-none">{{ total_sortants_dash }}</h3>
+            <p class="text-blue-100 font-medium mt-2">Total Sortants</p>
+            <div class="mt-4 text-xs text-blue-200 flex items-center">
+                <i class="fas fa-briefcase mr-2"></i>
+                <span>Placements clés: 
+                    {% with top=sortant_placement_stats_dash|first %}
+                        {% if top %}{{ top.placement_type }} ({{ top.count }}){% else %}N/A{% endif %}
+                    {% endwith %}
+                </span>
+            </div>
+        </div>
+        <div class="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl p-8 shadow-lg shadow-emerald-500/20 text-white relative overflow-hidden hover:shadow-xl transition-all group">
+            <div class="absolute top-4 right-4 text-6xl opacity-10 group-hover:opacity-20 transition-opacity">
+                <i class="fas fa-university"></i>
+            </div>
+            <h3 class="text-4xl font-bold leading-none">{{ total_universites_dash }}</h3>
+            <p class="text-emerald-100 font-medium mt-2">Total Université</p>
+            <div class="mt-4 text-xs text-emerald-200 flex items-center">
+                <i class="fas fa-book mr-2"></i>
+                <span>Top filière: 
+                    {% with top=universite_filiere_stats_dash|first %}
+                        {% if top %}{{ top.universite__fillier }} ({{ top.count }}){% else %}N/A{% endif %}
+                    {% endwith %}
+                </span>
+            </div>
+        </div>
+        <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl p-8 shadow-lg shadow-indigo-500/20 text-white relative overflow-hidden hover:shadow-xl transition-all group">
+            <div class="absolute top-4 right-4 text-6xl opacity-10 group-hover:opacity-20 transition-opacity">
+                <i class="fas fa-layer-group"></i>
+            </div>
+            <h3 class="text-4xl font-bold leading-none">{{ total_combined_su }}</h3>
+            <p class="text-indigo-100 font-medium mt-2">Total Sortants + Université</p>
+            <div class="mt-4 text-xs text-indigo-200 flex items-center">
+                <i class="fas fa-equals mr-2"></i>
+                <span>{{ total_sortants_dash }} + {{ total_universites_dash }}</span>
+            </div>
+        </div>
+    </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden">
+                <div class="bg-gradient-to-r from-indigo-500 to-indigo-600 px-4 py-3">
+                    <h6 class="font-semibold text-white flex items-center text-sm">
+                        <i class="fas fa-briefcase mr-2"></i> 
+                        Sortants - Emploi
+                    </h6>
+                </div>
+                <div class="p-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <h6 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Statut</h6>
+                            <div class="space-y-2">
+                                {% for s in sortant_status_stats_dash %}
+                                    <div class="flex justify-between items-center p-2 rounded-lg bg-slate-50 border border-slate-100 text-sm">
+                                        <span class="text-slate-600">{{ s.status|default:'N/A' }}</span>
+                                        <span class="px-2 py-0.5 rounded-full bg-indigo-500 text-white text-xs font-bold">{{ s.count }}</span>
+                                    </div>
+                                {% empty %}
+                                    <p class="text-xs text-slate-400 italic">Aucune donnée</p>
+                                {% endfor %}
                             </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <h6 class="text-muted">Statut</h6>
-                                        <ul class="list-group list-group-flush">
-                                            {% for s in sortant_status_stats_dash %}
-                                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                    {{ s.status|default:'N/A' }}
-                                                    <span class="badge bg-primary rounded-pill">{{ s.count }}</span>
-                                                </li>
-                                            {% empty %}
-                                                <li class="list-group-item">Aucune donnée</li>
-                                            {% endfor %}
-                                        </ul>
+                        </div>
+                        <div>
+                            <h6 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Placement</h6>
+                            <div class="space-y-2">
+                                {% for p in sortant_placement_stats_dash %}
+                                    <div class="flex justify-between items-center p-2 rounded-lg bg-slate-50 border border-slate-100 text-sm">
+                                        <span class="text-slate-600">{{ p.placement_type|default:'N/A' }}</span>
+                                        <span class="px-2 py-0.5 rounded-full bg-slate-400 text-white text-xs font-bold">{{ p.count }}</span>
                                     </div>
-                                    <div class="col-md-6">
-                                        <h6 class="text-muted">Placement</h6>
-                                        <ul class="list-group list-group-flush">
-                                            {% for p in sortant_placement_stats_dash %}
-                                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                    {{ p.placement_type|default:'N/A' }}
-                                                    <span class="badge bg-secondary rounded-pill">{{ p.count }}</span>
-                                                </li>
-                                            {% empty %}
-                                                <li class="list-group-item">Aucune donnée</li>
-                                            {% endfor %}
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="row mt-3">
-                                    <div class="col-md-6">
-                                        <h6 class="text-muted">Top Postes</h6>
-                                        <ul class="list-group list-group-flush">
-                                            {% for it in sortant_poste_stats_dash %}
-                                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                    {{ it.poste_actuel|default:'N/A' }}
-                                                    <span class="badge bg-success rounded-pill">{{ it.count }}</span>
-                                                </li>
-                                            {% empty %}
-                                                <li class="list-group-item">Aucune donnée</li>
-                                            {% endfor %}
-                                        </ul>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <h6 class="text-muted">Top Entreprises</h6>
-                                        <ul class="list-group list-group-flush">
-                                            {% for it in sortant_entreprise_stats_dash %}
-                                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                    {{ it.entreprise|default:'N/A' }}
-                                                    <span class="badge bg-info rounded-pill">{{ it.count }}</span>
-                                                </li>
-                                            {% empty %}
-                                                <li class="list-group-item">Aucune donnée</li>
-                                            {% endfor %}
-                                        </ul>
-                                    </div>
-                                </div>
+                                {% empty %}
+                                    <p class="text-xs text-slate-400 italic">Aucune donnée</p>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6 mb-4">
-                        <div class="card border-0 shadow-sm h-100">
-                            <div class="card-header bg-light">
-                                <h6 class="mb-0"><i class="fas fa-university text-info me-2"></i> Université - Études</h6>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+                        <div>
+                            <h6 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Top Postes</h6>
+                            <div class="space-y-2">
+                                {% for it in sortant_poste_stats_dash %}
+                                    <div class="flex justify-between items-center p-2 rounded-lg bg-slate-50 border border-slate-100 text-sm">
+                                        <span class="text-slate-600">{{ it.poste_actuel|default:'N/A' }}</span>
+                                        <span class="px-2 py-0.5 rounded-full bg-emerald-500 text-white text-xs font-bold">{{ it.count }}</span>
+                                    </div>
+                                {% empty %}
+                                    <p class="text-xs text-slate-400 italic">Aucune donnée</p>
+                                {% endfor %}
                             </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <h6 class="text-muted">Institutions</h6>
-                                        <ul class="list-group list-group-flush">
-                                            {% for it in universite_institution_stats_dash %}
-                                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                    {{ it.universite__institution|default:'N/A' }}
-                                                    <span class="badge bg-primary rounded-pill">{{ it.count }}</span>
-                                                </li>
-                                            {% empty %}
-                                                <li class="list-group-item">Aucune donnée</li>
-                                            {% endfor %}
-                                        </ul>
+                        </div>
+                        <div>
+                            <h6 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Top Entreprises</h6>
+                            <div class="space-y-2">
+                                {% for it in sortant_entreprise_stats_dash %}
+                                    <div class="flex justify-between items-center p-2 rounded-lg bg-slate-50 border border-slate-100 text-sm">
+                                        <span class="text-slate-600">{{ it.entreprise|default:'N/A' }}</span>
+                                        <span class="px-2 py-0.5 rounded-full bg-blue-400 text-white text-xs font-bold">{{ it.count }}</span>
                                     </div>
-                                    <div class="col-md-6">
-                                        <h6 class="text-muted">Filières</h6>
-                                        <ul class="list-group list-group-flush">
-                                            {% for it in universite_filiere_stats_dash %}
-                                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                    {{ it.universite__fillier|default:'N/A' }}
-                                                    <span class="badge bg-secondary rounded-pill">{{ it.count }}</span>
-                                                </li>
-                                            {% empty %}
-                                                <li class="list-group-item">Aucune donnée</li>
-                                            {% endfor %}
-                                        </ul>
+                                {% empty %}
+                                    <p class="text-xs text-slate-400 italic">Aucune donnée</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden">
+                <div class="bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-3">
+                    <h6 class="font-semibold text-white flex items-center text-sm">
+                        <i class="fas fa-university mr-2"></i> 
+                        Université - Études
+                    </h6>
+                </div>
+                <div class="p-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <h6 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Institutions</h6>
+                            <div class="space-y-2">
+                                {% for it in universite_institution_stats_dash %}
+                                    <div class="flex justify-between items-center p-2 rounded-lg bg-slate-50 border border-slate-100 text-sm">
+                                        <span class="text-slate-600">{{ it.universite__institution|default:'N/A' }}</span>
+                                        <span class="px-2 py-0.5 rounded-full bg-indigo-500 text-white text-xs font-bold">{{ it.count }}</span>
                                     </div>
-                                </div>
-                                <div class="row mt-3">
-                                    <div class="col-md-6">
-                                        <h6 class="text-muted">Classes</h6>
-                                        <ul class="list-group list-group-flush">
-                                            {% for it in universite_class_stats_dash %}
-                                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                    {{ it.universite__Class|default:'N/A' }}
-                                                    <span class="badge bg-success rounded-pill">{{ it.count }}</span>
-                                                </li>
-                                            {% empty %}
-                                                <li class="list-group-item">Aucune donnée</li>
-                                            {% endfor %}
-                                        </ul>
+                                {% empty %}
+                                    <p class="text-xs text-slate-400 italic">Aucune donnée</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div>
+                            <h6 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Filières</h6>
+                            <div class="space-y-2">
+                                {% for it in universite_filiere_stats_dash %}
+                                    <div class="flex justify-between items-center p-2 rounded-lg bg-slate-50 border border-slate-100 text-sm">
+                                        <span class="text-slate-600">{{ it.universite__fillier|default:'N/A' }}</span>
+                                        <span class="px-2 py-0.5 rounded-full bg-slate-400 text-white text-xs font-bold">{{ it.count }}</span>
                                     </div>
-                                    <div class="col-md-6">
-                                        <h6 class="text-muted">Centres</h6>
-                                        <ul class="list-group list-group-flush">
-                                            {% for it in universite_centre_stats_dash %}
-                                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                    {{ it.universite__centre|default:'N/A' }}
-                                                    <span class="badge bg-info rounded-pill">{{ it.count }}</span>
-                                                </li>
-                                            {% empty %}
-                                                <li class="list-group-item">Aucune donnée</li>
-                                            {% endfor %}
-                                        </ul>
+                                {% empty %}
+                                    <p class="text-xs text-slate-400 italic">Aucune donnée</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+                        <div>
+                            <h6 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Classes</h6>
+                            <div class="space-y-2">
+                                {% for it in universite_class_stats_dash %}
+                                    <div class="flex justify-between items-center p-2 rounded-lg bg-slate-50 border border-slate-100 text-sm">
+                                        <span class="text-slate-600">{{ it.universite__Class|default:'N/A' }}</span>
+                                        <span class="px-2 py-0.5 rounded-full bg-emerald-500 text-white text-xs font-bold">{{ it.count }}</span>
                                     </div>
-                                </div>
+                                {% empty %}
+                                    <p class="text-xs text-slate-400 italic">Aucune donnée</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div>
+                            <h6 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Centres</h6>
+                            <div class="space-y-2">
+                                {% for it in universite_centre_stats_dash %}
+                                    <div class="flex justify-between items-center p-2 rounded-lg bg-slate-50 border border-slate-100 text-sm">
+                                        <span class="text-slate-600">{{ it.universite__centre|default:'N/A' }}</span>
+                                        <span class="px-2 py-0.5 rounded-full bg-blue-400 text-white text-xs font-bold">{{ it.count }}</span>
+                                    </div>
+                                {% empty %}
+                                    <p class="text-xs text-slate-400 italic">Aucune donnée</p>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
@@ -359,448 +315,45 @@
 </div>
 
 <!-- Quick Actions Panel -->
-<div class="row mb-6">
-    <div class="col-12">
-        <div class="actions-card">
-            <div class="actions-header">
-                <h5><i class="fas fa-bolt text-primary"></i> Actions Rapides</h5>
-            </div>
-            <div class="actions-body">
-                <div class="row">
-                    <div class="col-md-3 mb-3">
-                        <a href="{% url 'orphelin' %}" class="action-btn bg-warning">
-                            <i class="fas fa-heart-broken"></i>
-                            <span>Voir Orphelins</span>
-                        </a>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <a href="{% url 'noteorphelin' %}" class="action-btn bg-info">
-                            <i class="fas fa-graduation-cap"></i>
-                            <span>Notes Orphelins</span>
-                        </a>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <a href="{% url 'student' %}" class="action-btn bg-primary">
-                            <i class="fas fa-users"></i>
-                            <span>Tous Étudiants</span>
-                        </a>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <a href="{% url 'notes' %}" class="action-btn bg-success">
-                            <i class="fas fa-chart-line"></i>
-                            <span>Toutes Notes</span>
-                        </a>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <a href="{% url 'sortant' %}" class="action-btn bg-dark">
-                            <i class="fas fa-user-graduate"></i>
-                            <span>Voir Sortants</span>
-                        </a>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <a href="{% url 'universite' %}" class="action-btn bg-secondary">
-                            <i class="fas fa-university"></i>
-                            <span>Voir Université</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
+<div class="mb-8">
+    <div class="flex items-center gap-3 mb-6">
+        <div class="w-10 h-10 rounded-xl bg-indigo-500 text-white flex items-center justify-center">
+            <i class="fas fa-bolt"></i>
+        </div>
+        <h5 class="font-bold text-slate-800 text-lg">Actions Rapides</h5>
+    </div>
+    <div>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <a href="{% url 'orphelin' %}" class="flex flex-col items-center justify-center p-6 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 text-white shadow-lg shadow-amber-400/20 hover:shadow-xl hover:-translate-y-1 transition-all">
+                <i class="fas fa-heart-broken text-3xl mb-3"></i>
+                <span class="text-sm font-bold text-center">Voir Orphelins</span>
+            </a>
+            <a href="{% url 'noteorphelin' %}" class="flex flex-col items-center justify-center p-6 rounded-2xl bg-gradient-to-br from-blue-400 to-blue-600 text-white shadow-lg shadow-blue-400/20 hover:shadow-xl hover:-translate-y-1 transition-all">
+                <i class="fas fa-graduation-cap text-3xl mb-3"></i>
+                <span class="text-sm font-bold text-center">Notes Orphelins</span>
+            </a>
+            <a href="{% url 'student' %}" class="flex flex-col items-center justify-center p-6 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/20 hover:shadow-xl hover:-translate-y-1 transition-all">
+                <i class="fas fa-users text-3xl mb-3"></i>
+                <span class="text-sm font-bold text-center">Tous Étudiants</span>
+            </a>
+            <a href="{% url 'notes' %}" class="flex flex-col items-center justify-center p-6 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/20 hover:shadow-xl hover:-translate-y-1 transition-all">
+                <i class="fas fa-chart-line text-3xl mb-3"></i>
+                <span class="text-sm font-bold text-center">Toutes Notes</span>
+            </a>
+            <a href="{% url 'sortant' %}" class="flex flex-col items-center justify-center p-6 rounded-2xl bg-gradient-to-br from-slate-700 to-slate-900 text-white shadow-lg shadow-slate-700/20 hover:shadow-xl hover:-translate-y-1 transition-all">
+                <i class="fas fa-user-graduate text-3xl mb-3"></i>
+                <span class="text-sm font-bold text-center">Voir Sortants</span>
+            </a>
+            <a href="{% url 'universite' %}" class="flex flex-col items-center justify-center p-6 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:-translate-y-1 transition-all">
+                <i class="fas fa-university text-3xl mb-3"></i>
+                <span class="text-sm font-bold text-center">Voir Université</span>
+            </a>
         </div>
     </div>
 </div>
 
-<style>
-:root {
-    --age-color-1: #FF6384;
-    --age-color-2: #36A2EB;
-    --age-color-3: #FFCE56;
-    --age-color-4: #4BC0C0;
-    --age-color-5: #9966FF;
-    --age-color-6: #FF9F40;
-}
-
-.stat-card {
-    display: flex;
-    align-items: center;
-    padding: 1.5rem;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-}
-
-.stat-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-}
-
-.stat-icon {
-    width: 60px;
-    height: 60px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 1rem;
-    color: white;
-    font-size: 1.5rem;
-}
-
-.stat-content h4 {
-    font-size: 2rem;
-    font-weight: bold;
-    margin: 0;
-    color: #2d3748;
-}
-
-.stat-content p {
-    margin: 0;
-    color: #718096;
-    font-size: 0.9rem;
-}
-
-.dashboard-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 2rem;
-    border-radius: 15px;
-    margin-bottom: 2rem;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-}
-
-.filter-panel .card {
-    border-radius: 15px;
-    overflow: hidden;
-}
-
-.bg-gradient-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.metric-card {
-    background: white;
-    border-radius: 20px;
-    padding: 2rem;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    color: white;
-}
-
-.metric-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-}
-
-.bg-gradient-warning {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-}
-
-.bg-gradient-info {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-}
-
-.bg-gradient-success {
-    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-}
-
-.metric-icon {
-    font-size: 3rem;
-    margin-right: 1.5rem;
-    opacity: 0.8;
-}
-
-.metric-content h3 {
-    font-size: 2.5rem;
-    font-weight: bold;
-    margin: 0;
-    line-height: 1;
-}
-
-.metric-content p {
-    margin: 0.5rem 0 0 0;
-    opacity: 0.9;
-    font-size: 1rem;
-}
-
-.metric-change {
-    font-size: 0.8rem;
-    opacity: 0.8;
-    margin-top: 0.25rem;
-}
-
-.chart-card, .actions-card {
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-    overflow: hidden;
-    height: 100%;
-}
-
-.chart-header, .actions-header {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    padding: 1.5rem;
-    border-bottom: 1px solid #dee2e6;
-}
-
-.chart-header h5, .actions-header h5 {
-    margin: 0;
-    font-weight: 600;
-    color: #495057;
-}
-
-.chart-body, .actions-body {
-    padding: 1.5rem;
-}
-
-.chart-container {
-    position: relative !important;
-    height: 300px !important;
-    width: 100% !important;
-}
-
-.chart-container canvas {
-    max-height: 300px !important;
-}
-
-.chart-legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    justify-content: center;
-}
-
-.legend-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-}
-
-.legend-color {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    display: inline-block;
-}
-
-.gender-stats, .centers-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    justify-content: center;
-}
-
-.stat-item, .center-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-}
-
-.center-name {
-    font-weight: 500;
-}
-
-.status-bar-item {
-    margin-bottom: 1rem;
-}
-
-.status-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.5rem;
-}
-
-.status-progress {
-    height: 8px;
-    border-radius: 4px;
-}
-
-/* Decisions styling */
-.decision-stats {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.decision-item {
-    background: linear-gradient(135deg, #f8f9fa 0%, #eef1f5 100%);
-    border: 1px solid #e3e6ea;
-    border-radius: 12px;
-    padding: 0.75rem 1rem;
-    box-shadow: 0 6px 14px rgba(0,0,0,0.04);
-}
-
-.decision-label {
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-}
-
-.decision-bar {
-    background: #f1f3f5;
-    border-radius: 999px;
-    height: 10px;
-    overflow: hidden;
-}
-
-.decision-progress {
-    height: 10px;
-    transition: width 0.6s ease;
-    box-shadow: inset 0 -1px 0 rgba(255,255,255,0.2);
-}
-
-.bg-orange { background-color: #fd7e14 !important; }
-.bg-purple { background-color: #6f42c1 !important; }
-
-.performers-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1rem;
-}
-
-.performer-card {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    border-radius: 15px;
-    padding: 1.5rem;
-    text-align: center;
-    position: relative;
-    transition: all 0.3s ease;
-}
-
-.performer-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-}
-
-.performer-rank {
-    position: absolute;
-    top: -10px;
-    right: -10px;
-    background: linear-gradient(135deg, #ffd700, #ffed4e);
-    color: #333;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 0.8rem;
-}
-
-.performer-avatar img, .avatar-placeholder {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 1rem;
-}
-
-.avatar-placeholder {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.5rem;
-    margin: 0 auto 1rem;
-}
-
-.performer-score {
-    background: linear-gradient(135deg, #43e97b, #38f9d7);
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-weight: bold;
-    display: inline-block;
-    margin: 0.5rem 0;
-}
-
-.performer-year, .performer-center {
-    font-size: 0.75rem;
-    margin-top: 0.25rem;
-}
-
-.performance-summary {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    border-radius: 10px;
-    padding: 1rem;
-}
-
-.summary-stat h4 {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 0.25rem;
-}
-
-.performers-info {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.action-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem 1rem;
-    border-radius: 15px;
-    color: white;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-.action-btn:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    color: white;
-    text-decoration: none;
-}
-
-.action-btn i {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-}
-
-.text-pink {
-    color: #e91e63 !important;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .dashboard-header {
-        padding: 1rem;
-        text-align: center;
-    }
-    
-    .metric-card {
-        flex-direction: column;
-        text-align: center;
-        padding: 1.5rem;
-    }
-    
-    .metric-icon {
-        margin-right: 0;
-        margin-bottom: 1rem;
-    }
-    
-    .performers-grid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    }
-}
-</style>
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // General dashboard initialization
     console.log('General dashboard loaded');
 });
 </script>

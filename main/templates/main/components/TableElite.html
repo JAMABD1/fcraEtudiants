@@ -1,277 +1,235 @@
-
-
 <!-- Enhanced Elite Table Component -->
-<div class="elites-table-container">
+<div>
     <!-- Search and Filters Section -->
-    <div class="table-controls mb-4">
-        <div class="row">
-            <div class="col-md-3">
-                <div class="search-box">
-                    <div class="input-group">
-                        <span class="input-group-text bg-primary text-white">
-                            <i class="fas fa-search"></i>
-                        </span>
-                        <input type="text" class="form-control" id="searchInput" 
-                               placeholder="Rechercher par nom..." value="{{ search_query }}">
-                    </div>
+    <div class="mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+            <div class="relative xl:col-span-2">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="fas fa-search text-slate-400"></i>
                 </div>
+                <input type="text" class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700" id="searchInput"
+                       placeholder="Rechercher par nom..." value="{{ search_query }}">
             </div>
-            <div class="col-md-9">
-                <div class="filter-controls d-flex flex-wrap gap-2">
-                    <!-- Center Filter -->
-                    <select class="form-select form-select-sm" id="centerFilter" style="width: auto;">
-                        <option value="">Tous les centres</option>
-                        {% for center in centres %}
-                            <option value="{{ center }}" {% if center == centre_filter %}selected{% endif %}>
-                                {{ center }}
-                            </option>
-                        {% endfor %}
-                    </select>
 
-                    <!-- Class Filter -->
-                    <select class="form-select form-select-sm" id="classFilter" style="width: auto;">
-                        <option value="">Toutes les classes</option>
-                        {% for class in classes %}
-                            <option value="{{ class }}" {% if class == class_filter %}selected{% endif %}>
-                                {{ class }}
-                            </option>
-                        {% endfor %}
-                    </select>
+            <select class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none text-sm" id="centerFilter">
+                <option value="">Tous les centres</option>
+                {% for center in centres %}
+                    <option value="{{ center }}" {% if center == centre_filter %}selected{% endif %}>
+                        {{ center }}
+                    </option>
+                {% endfor %}
+            </select>
 
-                    <!-- Gender Filter -->
-                    <select class="form-select form-select-sm" id="genderFilter" style="width: auto;">
-                        <option value="">Tous les genres</option>
-                        <option value="M" {% if genre_filter == 'M' %}selected{% endif %}>Masculin</option>
-                        <option value="F" {% if genre_filter == 'F' %}selected{% endif %}>Féminin</option>
-                    </select>
+            <select class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none text-sm" id="classFilter">
+                <option value="">Toutes les classes</option>
+                {% for class in classes %}
+                    <option value="{{ class }}" {% if class == class_filter %}selected{% endif %}>
+                        {{ class }}
+                    </option>
+                {% endfor %}
+            </select>
 
-                    <!-- Institution Filter -->
-                    <select class="form-select form-select-sm" id="institutionFilter" style="width: auto;">
-                        <option value="">Toutes les institutions</option>
-                        {% for institution in institutions %}
-                            <option value="{{ institution }}" {% if institution == institution_filter %}selected{% endif %}>
-                                {{ institution }}
-                            </option>
-                        {% endfor %}
-                    </select>
+            <select class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none text-sm" id="genderFilter">
+                <option value="">Tous les genres</option>
+                <option value="M" {% if genre_filter == 'M' %}selected{% endif %}>Masculin</option>
+                <option value="F" {% if genre_filter == 'F' %}selected{% endif %}>Féminin</option>
+            </select>
 
-                    <!-- Age Filter -->
-                    <select class="form-select form-select-sm" id="ageFilter" style="width: auto;">
-                        <option value="">Tous les âges</option>
-                        <option value="3-10" {% if age_filter == '3-10' %}selected{% endif %}>3-10 ans</option>
-                        <option value="11-14" {% if age_filter == '11-14' %}selected{% endif %}>11-14 ans</option>
-                        <option value="15-18" {% if age_filter == '15-18' %}selected{% endif %}>15-18 ans</option>
-                        <option value="19-21" {% if age_filter == '19-21' %}selected{% endif %}>19-21 ans</option>
-                        <option value="22-25" {% if age_filter == '22-25' %}selected{% endif %}>22-25 ans</option>
-                        <option value="26+" {% if age_filter == '26+' %}selected{% endif %}>26+ ans</option>
-                    </select>
+            <select class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none text-sm" id="institutionFilter">
+                <option value="">Toutes les institutions</option>
+                {% for institution in institutions %}
+                    <option value="{{ institution }}" {% if institution == institution_filter %}selected{% endif %}>
+                        {{ institution }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="flex flex-wrap gap-4 mt-4">
+            <select class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none text-sm" id="ageFilter">
+                <option value="">Tous les âges</option>
+                <option value="3-10" {% if age_filter == '3-10' %}selected{% endif %}>3-10 ans</option>
+                <option value="11-14" {% if age_filter == '11-14' %}selected{% endif %}>11-14 ans</option>
+                <option value="15-18" {% if age_filter == '15-18' %}selected{% endif %}>15-18 ans</option>
+                <option value="19-21" {% if age_filter == '19-21' %}selected{% endif %}>19-21 ans</option>
+                <option value="22-25" {% if age_filter == '22-25' %}selected{% endif %}>22-25 ans</option>
+                <option value="26+" {% if age_filter == '26+' %}selected{% endif %}>26+ ans</option>
+            </select>
 
-                    <!-- Fillier Filter -->
-                    <select class="form-select form-select-sm" id="fillierFilter" style="width: auto;">
-                        <option value="">Toutes les filières</option>
-                        {% for fillier in filliers %}
-                            <option value="{{ fillier }}" {% if fillier == fillier_filter %}selected{% endif %}>
-                                {{ fillier }}
-                            </option>
-                        {% endfor %}
-                    </select>
+            <select class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none text-sm" id="fillierFilter">
+                <option value="">Toutes les filières</option>
+                {% for fillier in filliers %}
+                    <option value="{{ fillier }}" {% if fillier == fillier_filter %}selected{% endif %}>
+                        {{ fillier }}
+                    </option>
+                {% endfor %}
+            </select>
 
-                    <!-- Clear Filters Button -->
-                    <button class="btn btn-outline-secondary btn-sm" id="clearFilters">
-                        <i class="fas fa-times"></i> Effacer
-                        <span class="filter-count-badge" id="filterCountBadge" style="display: none;">0</span>
-                    </button>
-                </div>
-            </div>
+            <button class="px-4 py-2.5 text-sm font-medium text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-all" id="clearFilters">
+                <i class="fas fa-times"></i> Effacer
+                <span class="hidden ml-1 px-1.5 py-0.5 bg-rose-500 text-white text-xs rounded-full" id="filterCountBadge">0</span>
+            </button>
         </div>
     </div>
 
     <!-- Enhanced Statistics Cards -->
-    <div class="row mb-4">
-        <div class="col-md-3">
-            <div class="stats-card bg-primary text-white">
-                <div class="stats-icon">
-                    <i class="fas fa-user-graduate"></i>
-                </div>
-                <div class="stats-content">
-                     <h3>{{ total_orphelins }}</h3>
-                    <p>Total Elites</p>
-                </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl p-6 shadow-lg flex items-center gap-4 text-white">
+            <i class="fas fa-user-graduate text-4xl opacity-80"></i>
+            <div>
+                <div class="text-3xl font-bold">{{ total_orphelins }}</div>
+                <div class="text-sm font-medium uppercase tracking-wider opacity-90">Total Elites</div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="stats-card bg-success text-white">
-                <div class="stats-icon">
-                    <i class="fas fa-mars"></i>
-                </div>
-                <div class="stats-content">
-                    <h3>{{ male_count }}</h3>
-                    <p>Garçons ({{ male_percentage }}%)</p>
-                </div>
+        <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-6 shadow-lg flex items-center gap-4 text-white">
+            <i class="fas fa-mars text-4xl opacity-80"></i>
+            <div>
+                <div class="text-3xl font-bold">{{ male_count }}</div>
+                <div class="text-sm font-medium uppercase tracking-wider opacity-90">Garçons ({{ male_percentage }}%)</div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="stats-card bg-info text-white">
-                <div class="stats-icon">
-                    <i class="fas fa-venus"></i>
-                </div>
-                <div class="stats-content">
-                    <h3>{{ female_count }}</h3>
-                    <p>Filles ({{ female_percentage }}%)</p>
-                </div>
+        <div class="bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl p-6 shadow-lg flex items-center gap-4 text-white">
+            <i class="fas fa-venus text-4xl opacity-80"></i>
+            <div>
+                <div class="text-3xl font-bold">{{ female_count }}</div>
+                <div class="text-sm font-medium uppercase tracking-wider opacity-90">Filles ({{ female_percentage }}%)</div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="stats-card bg-warning text-white">
-                <div class="stats-icon">
-                    <i class="fas fa-filter"></i>
-                </div>
-                <div class="stats-content">
-                    <h3>{{ filtered_count }}</h3>
-                    <p>Résultats filtrés</p>
-                </div>
+        <div class="bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-6 shadow-lg flex items-center gap-4 text-white">
+            <i class="fas fa-filter text-4xl opacity-80"></i>
+            <div>
+                <div class="text-3xl font-bold">{{ filtered_count }}</div>
+                <div class="text-sm font-medium uppercase tracking-wider opacity-90">Résultats filtrés</div>
             </div>
         </div>
     </div>
 
     <!-- Detailed Statistics -->
-    <div class="row mb-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <!-- Age Distribution -->
-        <div class="col-md-3">
-            <div class="detail-card">
-                <h5 class="card-title">
-                    <i class="fas fa-chart-bar text-primary"></i>
-                    Distribution par Âge
-                </h5>
-                <div class="stats-list">
-                    {% for age_range, count in orphan_age_groups.items %}
-                    <div class="stat-item">
-                        <span class="stat-label">{{ age_range }} ans</span>
-                        <div class="stat-bar">
-                            <div class="stat-progress progress-bar" 
-                                 data-count="{{ count }}" 
-                                 data-total="{{ total_orphelins }}"></div>
-                        </div>
-                        <span class="stat-value">{{ count }}</span>
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+            <h5 class="text-lg font-bold text-slate-800 flex items-center gap-2 mb-4">
+                <i class="fas fa-chart-bar text-indigo-500"></i>
+                Distribution par Âge
+            </h5>
+            <div class="flex flex-col gap-1">
+                {% for age_range, count in orphan_age_groups.items %}
+                <div class="flex items-center justify-between py-2">
+                    <span class="text-sm text-slate-600">{{ age_range }} ans</span>
+                    <div class="flex-1 h-1.5 bg-slate-100 rounded-full mx-3 overflow-hidden">
+                        <div class="h-full bg-indigo-500 rounded-full stat-progress transition-all duration-700"
+                             data-count="{{ count }}"
+                             data-total="{{ total_orphelins }}"></div>
                     </div>
-                    {% endfor %}
+                    <span class="text-sm font-semibold text-slate-700">{{ count }}</span>
                 </div>
+                {% endfor %}
             </div>
         </div>
-        
+
         <!-- Center Distribution -->
-        <div class="col-md-3">
-            <div class="detail-card">
-                <h5 class="card-title">
-                    <i class="fas fa-building text-info"></i>
-                    Centres
-                </h5>
-                <div class="stats-list">
-                    {% for center in center_stats|slice:":5" %}
-                    <div class="stat-item">
-                        <span class="stat-label">{{ center.centre|default:"Non spécifié" }}</span>
-                        <span class="stat-badge badge-blue">{{ center.count }}</span>
-                    </div>
-                    {% endfor %}
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+            <h5 class="text-lg font-bold text-slate-800 flex items-center gap-2 mb-4">
+                <i class="fas fa-building text-cyan-500"></i>
+                Centres
+            </h5>
+            <div class="flex flex-col gap-1">
+                {% for center in center_stats|slice:":5" %}
+                <div class="flex items-center justify-between py-2">
+                    <span class="text-sm text-slate-600">{{ center.centre|default:"Non spécifié" }}</span>
+                    <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-indigo-100 text-indigo-700">{{ center.count }}</span>
                 </div>
+                {% endfor %}
             </div>
         </div>
-        
+
         <!-- Institution Distribution -->
-        <div class="col-md-3">
-            <div class="detail-card">
-                <h5 class="card-title">
-                    <i class="fas fa-university text-success"></i>
-                    Institutions
-                </h5>
-                <div class="stats-list">
-                    {% for institution in institution_stats|slice:":5" %}
-                    <div class="stat-item">
-                        <span class="stat-label">{{ institution.institution|default:"Non spécifié" }}</span>
-                        <span class="stat-badge badge-green">{{ institution.count }}</span>
-                    </div>
-                    {% endfor %}
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+            <h5 class="text-lg font-bold text-slate-800 flex items-center gap-2 mb-4">
+                <i class="fas fa-university text-emerald-500"></i>
+                Institutions
+            </h5>
+            <div class="flex flex-col gap-1">
+                {% for institution in institution_stats|slice:":5" %}
+                <div class="flex items-center justify-between py-2">
+                    <span class="text-sm text-slate-600">{{ institution.institution|default:"Non spécifié" }}</span>
+                    <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700">{{ institution.count }}</span>
                 </div>
+                {% endfor %}
             </div>
         </div>
-        
+
         <!-- Class Distribution -->
-        <div class="col-md-3">
-            <div class="detail-card">
-                <h5 class="card-title">
-                    <i class="fas fa-graduation-cap text-warning"></i>
-                    Classes
-                </h5>
-                <div class="stats-list">
-                    {% for class in class_stats|slice:":5" %}
-                    <div class="stat-item">
-                        <span class="stat-label">{{ class.Class|default:"Non spécifié" }}</span>
-                        <span class="stat-badge badge-yellow">{{ class.count }}</span>
-                    </div>
-                    {% endfor %}
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+            <h5 class="text-lg font-bold text-slate-800 flex items-center gap-2 mb-4">
+                <i class="fas fa-graduation-cap text-amber-500"></i>
+                Classes
+            </h5>
+            <div class="flex flex-col gap-1">
+                {% for class in class_stats|slice:":5" %}
+                <div class="flex items-center justify-between py-2">
+                    <span class="text-sm text-slate-600">{{ class.Class|default:"Non spécifié" }}</span>
+                    <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-700">{{ class.count }}</span>
                 </div>
+                {% endfor %}
             </div>
         </div>
     </div>
 
     <!-- Main Table -->
-    <div class="table-responsive">
-        <table class="table table-hover">
-            <thead class="bg-light">
+    <div class="overflow-x-auto rounded-2xl shadow-sm border border-slate-200">
+        <table class="w-full">
+            <thead class="bg-slate-800">
                 <tr>
-                    <th>Photo</th>
-                    <th>Nom</th>
-                    <th>Centre</th>
-                    <th>Institution</th>
-                    <th>Classe</th>
-                    <th>Genre</th>
-                    <th>Âge</th>
-                    <th>Actions</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Photo</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Nom</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Centre</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Institution</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Classe</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Genre</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Âge</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Actions</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="divide-y divide-slate-100 bg-white">
                 {% for data in datas %}
-                <tr>
-                    <td>
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4 text-sm text-slate-600">
                         {% if data.imageprofile %}
-                            <img src="{{ data.imageprofile.url }}" alt="Profile" 
-                                 class="rounded-circle cursor-pointer" 
-                                 style="width: 40px; height: 40px; object-fit: cover;"
-                                  onclick="openModal('{{ data.imageprofile.url }}')"
-                            >
+                            <img src="{{ data.imageprofile.url }}" alt="Profile"
+                                 class="rounded-full cursor-pointer w-10 h-10 object-cover"
+                                  onclick="openModal('{{ data.imageprofile.url }}')">
                         {% else %}
-                            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center"
-                                 style="width: 40px; height: 40px;">
+                            <div class="rounded-full bg-slate-400 flex items-center justify-center w-10 h-10">
                                 <i class="fas fa-user text-white"></i>
                             </div>
                         {% endif %}
                     </td>
-                    <td>{{ data.nom }}</td>
-                    <td>{{ data.centre }}</td>
-                    <td>{{ data.institution }}</td>
-                    <td>{{ data.Class }}</td>
-                    <td>
+                    <td class="px-6 py-4 text-sm text-slate-700 font-medium">{{ data.nom }}</td>
+                    <td class="px-6 py-4 text-sm text-slate-600">{{ data.centre }}</td>
+                    <td class="px-6 py-4 text-sm text-slate-600">{{ data.institution }}</td>
+                    <td class="px-6 py-4 text-sm text-slate-600">{{ data.Class }}</td>
+                    <td class="px-6 py-4 text-sm text-slate-600">
                         {% if data.genre == 'M' %}
-                            <span class="badge bg-primary">Masculin</span>
+                            <span class="px-2.5 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-bold">Masculin</span>
                         {% else %}
-                            <span class="badge bg-pink">Féminin</span>
+                            <span class="px-2.5 py-1 bg-pink-100 text-pink-700 rounded-full text-xs font-bold">Féminin</span>
                         {% endif %}
                     </td>
-                    <td>{{ data.Age }} ans</td>
-                    <td>
-                        <div class="btn-group">
-                            <button class="btn btn-sm btn-info" 
-                                    onclick="viewStudent('{{ data.identifiant }}')" 
+                    <td class="px-6 py-4 text-sm text-slate-600">{{ data.Age }} ans</td>
+                    <td class="px-6 py-4 text-sm text-slate-600">
+                        <div class="flex gap-1">
+                            <button class="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all"
+                                    onclick="viewStudent('{{ data.identifiant }}')"
                                     title="Voir Étudiant">
                                 <i class="fas fa-eye"></i>
                             </button>
-                            <button class="btn btn-sm btn-warning" 
-                                    onclick="editStudent('{{ data.identifiant }}')" 
+                            <button class="p-2 text-amber-600 hover:bg-amber-50 rounded-lg transition-all"
+                                    onclick="editStudent('{{ data.identifiant }}')"
                                     title="Modifier Étudiant">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button class="btn btn-sm btn-danger" 
-                                    onclick="deleteStudent({{ data.id }})" 
+                            <button class="p-2 text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
+                                    onclick="deleteStudent({{ data.id }})"
                                     title="Supprimer Étudiant">
                                 <i class="fas fa-trash"></i>
                             </button>
@@ -283,116 +241,6 @@
         </table>
     </div>
 </div>
-
-<!-- Custom Styles -->
-<style>
-.stats-card {
-    padding: 1.5rem;
-    border-radius: 0.5rem;
-    display: flex;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-.stats-icon {
-    font-size: 2rem;
-    margin-right: 1rem;
-    opacity: 0.8;
-}
-
-.stats-content h3 {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: bold;
-}
-
-.stats-content p {
-    margin: 0;
-    opacity: 0.8;
-}
-
-.detail-card {
-    background: white;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.card-title {
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.stats-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.stat-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.stat-label {
-    font-size: 0.875rem;
-    color: #666;
-}
-
-.stat-badge {
-    padding: 0.25rem 0.5rem;
-    border-radius: 9999px;
-    font-size: 0.75rem;
-    font-weight: 500;
-}
-
-.badge-blue { background: #e3f2fd; color: #1976d2; }
-.badge-green { background: #e8f5e9; color: #2e7d32; }
-.badge-yellow { background: #fff8e1; color: #f57f17; }
-.badge-purple { background: #f3e5f5; color: #7b1fa2; }
-.badge-orange { background: #fff3e0; color: #e65100; }
-.badge-red { background: #ffebee; color: #c62828; }
-.badge-gray { background: #f5f5f5; color: #616161; }
-
-.stat-bar {
-    flex: 1;
-    height: 4px;
-    background: #e0e0e0;
-    border-radius: 2px;
-    margin: 0 0.5rem;
-    overflow: hidden;
-}
-
-.stat-progress {
-    height: 100%;
-    background: #2196f3;
-    width: 0;
-    transition: width 0.3s ease;
-}
-
-.filter-count-badge {
-    background: #e91e63;
-    color: white;
-    padding: 0.125rem 0.375rem;
-    border-radius: 9999px;
-    font-size: 0.75rem;
-    margin-left: 0.5rem;
-}
-
-@media (max-width: 768px) {
-    .filter-controls {
-        flex-direction: column;
-    }
-    
-    .form-select {
-        width: 100% !important;
-        margin-bottom: 0.5rem;
-    }
-}
-</style>
 
 <!-- Initialize Progress Bars -->
 <script>
@@ -406,13 +254,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Action functions for Elite students
 function viewStudent(identifiant) {
     window.location.href = `/student/view/${identifiant}`;
 }
 
 function editStudent(identifiant) {
-    // Navigate to edit page - you may need to adjust this URL based on your routing
     window.location.href = `/student/edit?identifiant=${identifiant}`;
 }
 
@@ -421,4 +267,4 @@ function deleteStudent(studentId) {
         window.location.href = `/student/${studentId}`;
     }
 }
-</script> 
+</script>

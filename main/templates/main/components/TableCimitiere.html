@@ -1,294 +1,249 @@
 <!-- Statistics Cards for Cemetery -->
-<div class="flex flex-row justify-center gap-2 mb-6">
-
-    <div class="bg-gradient-to-r from-gray-600 to-gray-700 m-2 text-white p-4 rounded-lg shadow-lg">
-        <div class="flex items-center justify-between">
-            <div class="bg-white text-black">
-                <p class="text-black text-sm">Total Décès</p>
-                <p class="text-2xl font-bold">{{ total_cimitiere }}</p>
-            </div>
-            <div class="text-3xl opacity-80">🪦</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-gradient-to-br from-slate-600 to-slate-800 rounded-2xl p-6 shadow-lg flex items-center gap-4 text-white">
+        <div class="text-4xl opacity-80">🪦</div>
+        <div>
+            <div class="text-3xl font-bold">{{ total_cimitiere }}</div>
+            <div class="text-sm font-medium uppercase tracking-wider opacity-90">Total Décès</div>
         </div>
     </div>
-    
-    <div class="bg-gradient-to-r from-blue-500 to-blue-600 m-2 text-white p-4 rounded-lg shadow-lg">
-        <div class="flex items-center justify-between">
-            <div class="bg-white text-black">
-                <p class="text-black text-sm">Hommes</p>
-                <p class="text-2xl font-bold">{{ male_count }} <span class="text-sm">({{ male_percentage }}%)</span></p>
-            </div>
-            <div class="text-3xl opacity-80">👨</div>
+    <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl p-6 shadow-lg flex items-center gap-4 text-white">
+        <div class="text-4xl opacity-80">👨</div>
+        <div>
+            <div class="text-3xl font-bold">{{ male_count }} <span class="text-sm">({{ male_percentage }}%)</span></div>
+            <div class="text-sm font-medium uppercase tracking-wider opacity-90">Hommes</div>
         </div>
     </div>
-    
-    <div class="bg-gradient-to-r from-pink-500 to-pink-600 m-2 text-white p-4 rounded-lg shadow-lg">
-        <div class="flex items-center justify-between">
-            <div class="bg-white text-black">
-                <p class="text-black text-sm">Femmes</p>
-                <p class="text-2xl font-bold">{{ female_count }} <span class="text-sm">({{ female_percentage }}%)</span></p>
-            </div>
-            <div class="text-3xl opacity-80">👩</div>
+    <div class="bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-6 shadow-lg flex items-center gap-4 text-white">
+        <div class="text-4xl opacity-80">👩</div>
+        <div>
+            <div class="text-3xl font-bold">{{ female_count }} <span class="text-sm">({{ female_percentage }}%)</span></div>
+            <div class="text-sm font-medium uppercase tracking-wider opacity-90">Femmes</div>
         </div>
     </div>
 </div>
 
 <!-- Enhanced Cemetery Table Component -->
-<div class="cimitiere-table-container">
+<div>
     <!-- Search and Filters Section -->
-    <div class="table-controls mb-4">
-        <div class="row">
-            <div class="col-md-3">
-                <div class="search-box">
-                    <div class="input-group">
-                        <span class="input-group-text bg-primary text-white">
-                            <i class="fas fa-search"></i>
-                        </span>
-                        <input type="text" class="form-control" id="searchInput" 
-                               placeholder="Rechercher par nom..." value="{{ search_query }}">
-                    </div>
+    <div class="mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+            <div class="relative xl:col-span-2">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="fas fa-search text-slate-400"></i>
                 </div>
+                <input type="text" class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700" id="searchInput"
+                       placeholder="Rechercher par nom..." value="{{ search_query }}">
             </div>
-            <div class="col-md-9">
-                <div class="filter-controls d-flex flex-wrap gap-2">
-                    <!-- Gender Filter -->
-                    <select class="form-select form-select-sm" id="genderFilter" style="width: auto;">
-                        <option value="">Tous les genres</option>
-                        <option value="M" {% if genre_filter == 'M' %}selected{% endif %}>Masculin</option>
-                        <option value="F" {% if genre_filter == 'F' %}selected{% endif %}>Féminin</option>
-                    </select>
 
-                    <!-- Place of Death Filter -->
-                    <select class="form-select form-select-sm" id="placeFilter" style="width: auto;">
-                        <option value="">Tous les lieux</option>
-                        {% for place in places %}
-                            <option value="{{ place }}" {% if place == place_filter %}selected{% endif %}>
-                                {{ place }}
-                            </option>
-                        {% endfor %}
-                    </select>
+            <select class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none text-sm" id="genderFilter">
+                <option value="">Tous les genres</option>
+                <option value="M" {% if genre_filter == 'M' %}selected{% endif %}>Masculin</option>
+                <option value="F" {% if genre_filter == 'F' %}selected{% endif %}>Féminin</option>
+            </select>
 
-                    <!-- Family Filter -->
-                    <select class="form-select form-select-sm" id="familyFilter" style="width: auto;">
-                        <option value="">Toutes les familles</option>
-                        {% for family in families %}
-                            <option value="{{ family }}" {% if family == family_filter %}selected{% endif %}>
-                                {{ family }}
-                            </option>
-                        {% endfor %}
-                    </select>
+            <select class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none text-sm" id="placeFilter">
+                <option value="">Tous les lieux</option>
+                {% for place in places %}
+                    <option value="{{ place }}" {% if place == place_filter %}selected{% endif %}>
+                        {{ place }}
+                    </option>
+                {% endfor %}
+            </select>
 
-                    <!-- Age at Death Filter -->
-                    <select class="form-select form-select-sm" id="ageFilter" style="width: auto;">
-                        <option value="">Tous les âges</option>
-                        <option value="0-10" {% if age_filter == '0-10' %}selected{% endif %}>0-10 ans</option>
-                        <option value="11-20" {% if age_filter == '11-20' %}selected{% endif %}>11-20 ans</option>
-                        <option value="21-40" {% if age_filter == '21-40' %}selected{% endif %}>21-40 ans</option>
-                        <option value="41-60" {% if age_filter == '41-60' %}selected{% endif %}>41-60 ans</option>
-                        <option value="61-80" {% if age_filter == '61-80' %}selected{% endif %}>61-80 ans</option>
-                        <option value="81+" {% if age_filter == '81+' %}selected{% endif %}>81+ ans</option>
-                    </select>
+            <select class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none text-sm" id="familyFilter">
+                <option value="">Toutes les familles</option>
+                {% for family in families %}
+                    <option value="{{ family }}" {% if family == family_filter %}selected{% endif %}>
+                        {{ family }}
+                    </option>
+                {% endfor %}
+            </select>
 
-                    <!-- Year of Death Filter -->
-                    <select class="form-select form-select-sm" id="yearFilter" style="width: auto;">
-                        <option value="">Toutes les années</option>
-                        {% for year in years %}
-                            <option value="{{ year }}" {% if year == year_filter %}selected{% endif %}>
-                                {{ year }}
-                            </option>
-                        {% endfor %}
-                    </select>
+            <select class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none text-sm" id="ageFilter">
+                <option value="">Tous les âges</option>
+                <option value="0-10" {% if age_filter == '0-10' %}selected{% endif %}>0-10 ans</option>
+                <option value="11-20" {% if age_filter == '11-20' %}selected{% endif %}>11-20 ans</option>
+                <option value="21-40" {% if age_filter == '21-40' %}selected{% endif %}>21-40 ans</option>
+                <option value="41-60" {% if age_filter == '41-60' %}selected{% endif %}>41-60 ans</option>
+                <option value="61-80" {% if age_filter == '61-80' %}selected{% endif %}>61-80 ans</option>
+                <option value="81+" {% if age_filter == '81+' %}selected{% endif %}>81+ ans</option>
+            </select>
+        </div>
+        <div class="flex flex-wrap gap-4 mt-4">
+            <select class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none text-sm" id="yearFilter">
+                <option value="">Toutes les années</option>
+                {% for year in years %}
+                    <option value="{{ year }}" {% if year == year_filter %}selected{% endif %}>
+                        {{ year }}
+                    </option>
+                {% endfor %}
+            </select>
 
-                    <!-- Clear Filters Button -->
-                    <button class="btn btn-outline-secondary btn-sm" id="clearFilters">
-                        <i class="fas fa-times"></i> Effacer
-                        <span class="filter-count-badge" id="filterCountBadge" style="display: none;">0</span>
-                    </button>
-                </div>
-            </div>
+            <button class="px-4 py-2.5 text-sm font-medium text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-all" id="clearFilters">
+                <i class="fas fa-times"></i> Effacer
+                <span class="hidden ml-1 px-1.5 py-0.5 bg-rose-500 text-white text-xs rounded-full" id="filterCountBadge">0</span>
+            </button>
         </div>
     </div>
 
     <!-- Enhanced Statistics Cards -->
-    <div class="row mb-4">
-        <div class="col-md-3">
-            <div class="stats-card bg-dark text-white">
-                <div class="stats-icon">
-                    <i class="fas fa-cross"></i>
-                </div>
-                <div class="stats-content">
-                    <h3>{{ total_cimitiere }}</h3>
-                    <p>Total Décès</p>
-                </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-gradient-to-br from-slate-700 to-slate-900 rounded-2xl p-6 shadow-lg flex items-center gap-4 text-white">
+            <i class="fas fa-cross text-4xl opacity-80"></i>
+            <div>
+                <div class="text-3xl font-bold">{{ total_cimitiere }}</div>
+                <div class="text-sm font-medium uppercase tracking-wider opacity-90">Total Décès</div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="stats-card bg-primary text-white">
-                <div class="stats-icon">
-                    <i class="fas fa-male"></i>
-                </div>
-                <div class="stats-content">
-                    <h3>{{ male_count }}</h3>
-                    <p>Hommes ({{ male_percentage }}%)</p>
-                </div>
+        <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl p-6 shadow-lg flex items-center gap-4 text-white">
+            <i class="fas fa-male text-4xl opacity-80"></i>
+            <div>
+                <div class="text-3xl font-bold">{{ male_count }}</div>
+                <div class="text-sm font-medium uppercase tracking-wider opacity-90">Hommes ({{ male_percentage }}%)</div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="stats-card bg-info text-white">
-                <div class="stats-icon">
-                    <i class="fas fa-female"></i>
-                </div>
-                <div class="stats-content">
-                    <h3>{{ female_count }}</h3>
-                    <p>Femmes ({{ female_percentage }}%)</p>
-                </div>
+        <div class="bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl p-6 shadow-lg flex items-center gap-4 text-white">
+            <i class="fas fa-female text-4xl opacity-80"></i>
+            <div>
+                <div class="text-3xl font-bold">{{ female_count }}</div>
+                <div class="text-sm font-medium uppercase tracking-wider opacity-90">Femmes ({{ female_percentage }}%)</div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="stats-card bg-warning text-white">
-                <div class="stats-icon">
-                    <i class="fas fa-filter"></i>
-                </div>
-                <div class="stats-content">
-                    <h3>{{ filtered_count }}</h3>
-                    <p>Résultats filtrés</p>
-                </div>
+        <div class="bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-6 shadow-lg flex items-center gap-4 text-white">
+            <i class="fas fa-filter text-4xl opacity-80"></i>
+            <div>
+                <div class="text-3xl font-bold">{{ filtered_count }}</div>
+                <div class="text-sm font-medium uppercase tracking-wider opacity-90">Résultats filtrés</div>
             </div>
         </div>
     </div>
 
     <!-- Detailed Statistics -->
-    <div class="row mb-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <!-- Age Distribution -->
-        <div class="col-md-3">
-            <div class="detail-card">
-                <h5 class="card-title">
-                    <i class="fas fa-chart-bar text-primary"></i>
-                    Distribution par Âge
-                </h5>
-                <div class="stats-list">
-                    {% for age_range, count in age_groups.items %}
-                    <div class="stat-item">
-                        <span class="stat-label">{{ age_range }} ans</span>
-                        <div class="stat-bar">
-                            <div class="stat-progress progress-bar" 
-                                 data-count="{{ count }}" 
-                                 data-total="{{ total_cimitiere }}"></div>
-                        </div>
-                        <span class="stat-value">{{ count }}</span>
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+            <h5 class="text-lg font-bold text-slate-800 flex items-center gap-2 mb-4">
+                <i class="fas fa-chart-bar text-indigo-500"></i>
+                Distribution par Âge
+            </h5>
+            <div class="flex flex-col gap-1">
+                {% for age_range, count in age_groups.items %}
+                <div class="flex items-center justify-between py-2">
+                    <span class="text-sm text-slate-600">{{ age_range }} ans</span>
+                    <div class="flex-1 h-1.5 bg-slate-100 rounded-full mx-3 overflow-hidden">
+                        <div class="h-full bg-indigo-500 rounded-full stat-progress transition-all duration-700"
+                             data-count="{{ count }}"
+                             data-total="{{ total_cimitiere }}"></div>
                     </div>
-                    {% endfor %}
+                    <span class="text-sm font-semibold text-slate-700">{{ count }}</span>
                 </div>
+                {% endfor %}
             </div>
         </div>
-        
+
         <!-- Place of Death Distribution -->
-        <div class="col-md-3">
-            <div class="detail-card">
-                <h5 class="card-title">
-                    <i class="fas fa-map-marker-alt text-danger"></i>
-                    Lieux de Décès
-                </h5>
-                <div class="stats-list">
-                    {% for place in place_stats %}
-                    <div class="stat-item">
-                        <span class="stat-label">{{ place.lieu_deces|default:"Non spécifié" }}</span>
-                        <span class="stat-badge badge-red">{{ place.count }}</span>
-                    </div>
-                    {% endfor %}
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+            <h5 class="text-lg font-bold text-slate-800 flex items-center gap-2 mb-4">
+                <i class="fas fa-map-marker-alt text-rose-500"></i>
+                Lieux de Décès
+            </h5>
+            <div class="flex flex-col gap-1">
+                {% for place in place_stats %}
+                <div class="flex items-center justify-between py-2">
+                    <span class="text-sm text-slate-600">{{ place.lieu_deces|default:"Non spécifié" }}</span>
+                    <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-700">{{ place.count }}</span>
                 </div>
+                {% endfor %}
             </div>
         </div>
-        
+
         <!-- Family Distribution -->
-        <div class="col-md-3">
-            <div class="detail-card">
-                <h5 class="card-title">
-                    <i class="fas fa-users text-info"></i>
-                    Familles
-                </h5>
-                <div class="stats-list">
-                    {% for family in family_stats %}
-                    <div class="stat-item">
-                        <span class="stat-label">{{ family.famille|default:"Non spécifié" }}</span>
-                        <span class="stat-badge badge-blue">{{ family.count }}</span>
-                    </div>
-                    {% endfor %}
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+            <h5 class="text-lg font-bold text-slate-800 flex items-center gap-2 mb-4">
+                <i class="fas fa-users text-cyan-500"></i>
+                Familles
+            </h5>
+            <div class="flex flex-col gap-1">
+                {% for family in family_stats %}
+                <div class="flex items-center justify-between py-2">
+                    <span class="text-sm text-slate-600">{{ family.famille|default:"Non spécifié" }}</span>
+                    <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-indigo-100 text-indigo-700">{{ family.count }}</span>
                 </div>
+                {% endfor %}
             </div>
         </div>
-        
+
         <!-- Year Distribution -->
-        <div class="col-md-3">
-            <div class="detail-card">
-                <h5 class="card-title">
-                    <i class="fas fa-calendar text-success"></i>
-                    Années de Décès
-                </h5>
-                <div class="stats-list">
-                    {% for year in year_stats %}
-                    <div class="stat-item">
-                        <span class="stat-label">{{ year.year|default:"Non spécifié" }}</span>
-                        <span class="stat-badge badge-green">{{ year.count }}</span>
-                    </div>
-                    {% endfor %}
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+            <h5 class="text-lg font-bold text-slate-800 flex items-center gap-2 mb-4">
+                <i class="fas fa-calendar text-emerald-500"></i>
+                Années de Décès
+            </h5>
+            <div class="flex flex-col gap-1">
+                {% for year in year_stats %}
+                <div class="flex items-center justify-between py-2">
+                    <span class="text-sm text-slate-600">{{ year.year|default:"Non spécifié" }}</span>
+                    <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700">{{ year.count }}</span>
                 </div>
+                {% endfor %}
             </div>
         </div>
     </div>
 
     <!-- Enhanced Cemetery Table -->
-    <div class="table-wrapper">
-        <div class="table-header">
-            <h2 class="table-title">
-                <i class="fas fa-cross"></i>
-                Registre du Cimetière
-                <span class="result-count">{{ filtered_count|default:total_cimitiere }} résultat{{ filtered_count|default:total_cimitiere|pluralize }}</span>
+    <div class="rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="bg-slate-800 px-6 py-4">
+            <h2 class="text-lg font-bold text-white flex items-center justify-between">
+                <span class="flex items-center gap-2">
+                    <i class="fas fa-cross"></i>
+                    Registre du Cimetière
+                </span>
+                <span class="result-count text-sm font-normal text-slate-300">{{ filtered_count|default:total_cimitiere }} résultat{{ filtered_count|default:total_cimitiere|pluralize }}</span>
             </h2>
         </div>
-        
-        <div class="table-responsive">
-            <table class="table table-hover cimitiere-table" id="cimitiereTable">
-                <thead class="table-dark">
+
+        <div class="overflow-x-auto">
+            <table class="w-full" id="cimitiereTable">
+                <thead class="bg-slate-800">
                     <tr>
-                        <th width="80">Photo</th>
-                        <th>Nom</th>
-                        <th>Genre</th>
-                        <th>Âge au décès</th>
-                        <th>Date de naissance</th>
-                        <th>Date de décès</th>
-                        <th>Lieu de décès</th>
-                        <th>Famille</th>
-                        <th>Adresse</th>
-                        <th>Téléphone</th>
-                        <th>Années d'inhumation</th>
-                        <th width="150">Actions</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white" width="80">Photo</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Nom</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Genre</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Âge au décès</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Date de naissance</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Date de décès</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Lieu de décès</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Famille</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Adresse</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Téléphone</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Années d'inhumation</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white" width="150">Actions</th>
                     </tr>
                 </thead>
-                <tbody id="cimitiereTableBody">
+                <tbody id="cimitiereTableBody" class="divide-y divide-slate-100 bg-white">
                     {% for d in datas %}
-                    <tr class="cimitiere-row" data-cimitiere-id="{{ d.id }}">
-                        <td>
-                            <div class="cimitiere-avatar">
+                    <tr class="cimitiere-row hover:bg-slate-50 transition-colors" data-cimitiere-id="{{ d.id }}">
+                        <td class="px-6 py-4 text-sm text-slate-600">
+                            <div class="w-12 h-12 relative">
                                 {% if d.imageprofile %}
-                                    <img src="{{ d.imageprofile.url }}" 
-                                         alt="Photo de {{ d.nom }}" 
-                                         class="avatar-img" 
+                                    <img src="{{ d.imageprofile.url }}"
+                                         alt="Photo de {{ d.nom }}"
+                                         class="w-full h-full object-cover rounded-full border-2 border-slate-200 cursor-pointer hover:border-indigo-400 transition-all"
                                          loading="lazy"
                                          onclick="openImageModal('{{ d.imageprofile.url }}', '{{ d.nom }}')">
                                 {% else %}
-                                    <div class="avatar-placeholder">
+                                    <div class="w-full h-full rounded-full bg-slate-200 flex items-center justify-center text-slate-400">
                                         <i class="fas fa-user"></i>
                                     </div>
                                 {% endif %}
                             </div>
                         </td>
-                        <td>
-                            <div class="cimitiere-info">
-                                <strong class="cimitiere-name">{{ d.nom }}</strong>
-                            </div>
+                        <td class="px-6 py-4 text-sm text-slate-600">
+                            <strong class="cimitiere-name text-slate-800 font-semibold">{{ d.nom }}</strong>
                         </td>
-                        <td>
-                            <span class="badge {% if d.genre == 'M' %}bg-primary{% else %}bg-pink{% endif %}">
+                        <td class="px-6 py-4 text-sm text-slate-600">
+                            <span class="badge {% if d.genre == 'M' %}px-2.5 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-bold{% else %}px-2.5 py-1 bg-pink-100 text-pink-700 rounded-full text-xs font-bold{% endif %}">
                                 {% if d.genre == 'M' %}
                                     <i class="fas fa-male"></i> Homme
                                 {% else %}
@@ -296,70 +251,63 @@
                                 {% endif %}
                             </span>
                         </td>
-                        <td>
+                        <td class="px-6 py-4 text-sm text-slate-600">
                             {% if d.age %}
-                                <span class="age-badge">{{ d.age }} ans</span>
+                                <span class="age-badge px-2.5 py-1 bg-slate-100 text-slate-700 rounded-full text-xs font-bold">{{ d.age }} ans</span>
                             {% else %}
-                                <span class="text-muted">N/A</span>
+                                <span class="text-slate-400">N/A</span>
                             {% endif %}
                         </td>
-                        <td>
+                        <td class="px-6 py-4 text-sm text-slate-600">
                             {% if d.date_naissance %}
-                                <span class="date-badge">{{ d.date_naissance|date:"d/m/Y" }}</span>
+                                <span class="px-2.5 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-bold">{{ d.date_naissance|date:"d/m/Y" }}</span>
                             {% else %}
-                                <span class="text-muted">N/A</span>
+                                <span class="text-slate-400">N/A</span>
                             {% endif %}
                         </td>
-                        <td>
+                        <td class="px-6 py-4 text-sm text-slate-600">
                             {% if d.date_deces %}
-                                <span class="date-badge death-date">{{ d.date_deces|date:"d/m/Y" }}</span>
+                                <span class="death-date px-2.5 py-1 bg-rose-100 text-rose-700 rounded-full text-xs font-bold">{{ d.date_deces|date:"d/m/Y" }}</span>
                             {% else %}
-                                <span class="text-muted">N/A</span>
+                                <span class="text-slate-400">N/A</span>
                             {% endif %}
                         </td>
-                        <td>
-                            <span class="place-badge">{{ d.lieu_deces|default:"N/A" }}</span>
+                        <td class="px-6 py-4 text-sm text-slate-600">
+                            <span class="place-badge px-2.5 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-bold">{{ d.lieu_deces|default:"N/A" }}</span>
                         </td>
-                        <td>
-                            <span class="family-badge">{{ d.famille|default:"N/A" }}</span>
+                        <td class="px-6 py-4 text-sm text-slate-600">
+                            <span class="family-badge px-2.5 py-1 bg-cyan-100 text-cyan-700 rounded-full text-xs font-bold">{{ d.famille|default:"N/A" }}</span>
                         </td>
-                        <td>
-                            <span class="address-info">{{ d.adress|default:"N/A" }}</span>
-                        </td>
-                        <td>
+                        <td class="px-6 py-4 text-sm text-slate-500">{{ d.adress|default:"N/A" }}</td>
+                        <td class="px-6 py-4 text-sm text-slate-600">
                             {% if d.telephone %}
-                                <small class="contact-info">
-                                    <i class="fas fa-phone"></i> {{ d.telephone }}
+                                <small class="flex items-center gap-1 text-slate-500">
+                                    <i class="fas fa-phone text-slate-400"></i> {{ d.telephone }}
                                 </small>
                             {% else %}
-                                <small class="text-muted">N/A</small>
+                                <small class="text-slate-400">N/A</small>
                             {% endif %}
                         </td>
-                        <td>
+                        <td class="px-6 py-4 text-sm text-slate-600">
                             {% if d.duree_enterement %}
-                                <span class="duration-badge">{{ d.duree_enterement }} ans</span>
+                                <span class="px-2.5 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-bold">{{ d.duree_enterement }} ans</span>
                             {% else %}
-                                <span class="text-muted">N/A</span>
+                                <span class="text-slate-400">N/A</span>
                             {% endif %}
                         </td>
-                        <td>
-                            
-                                
-                                     <a href="{% url 'viewCimitiere' d.id %}" class="btn btn-sm btn-outline-primary">
-                                        <i class="fas fa-eye"></i> Voir
-                                     </a>
-                                
-                           
-                             
+                        <td class="px-6 py-4 text-sm text-slate-600">
+                            <a href="{% url 'viewCimitiere' d.id %}" class="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all inline-flex items-center gap-1">
+                                <i class="fas fa-eye"></i> Voir
+                            </a>
                         </td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="12" class="text-center py-5">
-                            <div class="no-data">
-                                <i class="fas fa-cross fa-3x text-muted mb-3"></i>
-                                <h5 class="text-muted">Aucun enregistrement trouvé</h5>
-                                <p class="text-muted">Essayez de modifier vos critères de recherche</p>
+                        <td colspan="12" class="text-center py-12">
+                            <div>
+                                <i class="fas fa-cross fa-3x text-slate-300 mb-3"></i>
+                                <h5 class="text-slate-500 font-medium">Aucun enregistrement trouvé</h5>
+                                <p class="text-slate-400 text-sm">Essayez de modifier vos critères de recherche</p>
                             </div>
                         </td>
                     </tr>
@@ -371,595 +319,65 @@
 
     <!-- Pagination -->
     {% if cimitiere.has_other_pages %}
-    <nav aria-label="Navigation des pages" class="mt-4">
-        <ul class="pagination justify-content-center">
+    <nav aria-label="Navigation des pages" class="mt-6">
+        <div class="flex justify-center items-center gap-1">
             {% if cimitiere.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if place_filter %}&place={{ place_filter }}{% endif %}{% if family_filter %}&family={{ family_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if year_filter %}&year={{ year_filter }}{% endif %}">
-                        <i class="fas fa-angle-double-left"></i>
-                    </a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ cimitiere.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if place_filter %}&place={{ place_filter }}{% endif %}{% if family_filter %}&family={{ family_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if year_filter %}&year={{ year_filter }}{% endif %}">
-                        <i class="fas fa-angle-left"></i>
-                    </a>
-                </li>
+                <a class="px-3 py-2 text-sm rounded-lg border border-slate-200 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-all" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if place_filter %}&place={{ place_filter }}{% endif %}{% if family_filter %}&family={{ family_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if year_filter %}&year={{ year_filter }}{% endif %}">
+                    <i class="fas fa-angle-double-left"></i>
+                </a>
+                <a class="px-3 py-2 text-sm rounded-lg border border-slate-200 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-all" href="?page={{ cimitiere.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if place_filter %}&place={{ place_filter }}{% endif %}{% if family_filter %}&family={{ family_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if year_filter %}&year={{ year_filter }}{% endif %}">
+                    <i class="fas fa-angle-left"></i>
+                </a>
             {% endif %}
 
             {% for num in cimitiere.paginator.page_range %}
                 {% if cimitiere.number == num %}
-                    <li class="page-item active">
-                        <span class="page-link">{{ num }}</span>
-                    </li>
+                    <span class="px-3 py-2 text-sm rounded-lg bg-indigo-600 text-white font-medium shadow-sm">{{ num }}</span>
                 {% elif num > cimitiere.number|add:'-3' and num < cimitiere.number|add:'3' %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if place_filter %}&place={{ place_filter }}{% endif %}{% if family_filter %}&family={{ family_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if year_filter %}&year={{ year_filter }}{% endif %}">{{ num }}</a>
-                    </li>
+                    <a class="px-3 py-2 text-sm rounded-lg border border-slate-200 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-all" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if place_filter %}&place={{ place_filter }}{% endif %}{% if family_filter %}&family={{ family_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if year_filter %}&year={{ year_filter }}{% endif %}">{{ num }}</a>
                 {% endif %}
             {% endfor %}
 
             {% if cimitiere.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ cimitiere.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if place_filter %}&place={{ place_filter }}{% endif %}{% if family_filter %}&family={{ family_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if year_filter %}&year={{ year_filter }}{% endif %}">
-                        <i class="fas fa-angle-right"></i>
-                    </a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ cimitiere.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if place_filter %}&place={{ place_filter }}{% endif %}{% if family_filter %}&family={{ family_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if year_filter %}&year={{ year_filter }}{% endif %}">
-                        <i class="fas fa-angle-double-right"></i>
-                    </a>
-                </li>
+                <a class="px-3 py-2 text-sm rounded-lg border border-slate-200 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-all" href="?page={{ cimitiere.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if place_filter %}&place={{ place_filter }}{% endif %}{% if family_filter %}&family={{ family_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if year_filter %}&year={{ year_filter }}{% endif %}">
+                    <i class="fas fa-angle-right"></i>
+                </a>
+                <a class="px-3 py-2 text-sm rounded-lg border border-slate-200 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-all" href="?page={{ cimitiere.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if place_filter %}&place={{ place_filter }}{% endif %}{% if family_filter %}&family={{ family_filter }}{% endif %}{% if age_filter %}&age={{ age_filter }}{% endif %}{% if year_filter %}&year={{ year_filter }}{% endif %}">
+                    <i class="fas fa-angle-double-right"></i>
+                </a>
             {% endif %}
-        </ul>
+        </div>
     </nav>
     {% endif %}
 </div>
 
 <!-- Image Modal -->
-<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="imageModalLabel">Photo</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body text-center">
-                <img id="modalImage" src="" alt="" class="img-fluid rounded">
-            </div>
+<div id="imageModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm" onclick="if(event.target===this)closeImageModal()">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full mx-4 overflow-hidden">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200">
+            <h3 id="imageModalLabel" class="text-lg font-bold text-slate-800"></h3>
+            <button onclick="closeImageModal()" class="p-2 hover:bg-slate-100 rounded-lg transition-all">
+                <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <div class="p-6 flex justify-center">
+            <img id="modalImage" src="" alt="" class="max-w-full max-h-[70vh] rounded-xl object-contain">
         </div>
     </div>
 </div>
 
-<!-- Enhanced Styles -->
-<style>
-.cimitiere-table-container {
-    background: #fff;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    padding: 2rem;
-    margin: 1rem 0;
-}
-
-.table-controls {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    padding: 1.5rem;
-    border-radius: 15px;
-    margin-bottom: 2rem;
-    border: 1px solid #dee2e6;
-}
-
-.search-box .input-group-text {
-    border: none;
-    background: linear-gradient(45deg, #6c757d, #495057);
-    border-radius: 10px 0 0 10px;
-}
-
-.search-box .form-control {
-    border-left: none;
-    border-radius: 0 10px 10px 0;
-    padding-left: 0;
-}
-
-.search-box .form-control:focus {
-    box-shadow: 0 0 0 0.2rem rgba(108,117,125,.25);
-    border-color: #6c757d;
-}
-
-.filter-controls .form-select {
-    min-width: 160px;
-    border: 2px solid #e9ecef;
-    border-radius: 10px;
-    background: white;
-}
-
-.filter-controls .form-select:focus {
-    border-color: #6c757d;
-    box-shadow: 0 0 0 0.2rem rgba(108,117,125,.25);
-}
-
-.stats-card {
-    border-radius: 20px;
-    padding: 1.5rem;
-    display: flex;
-    align-items: center;
-    margin-bottom: 1rem;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.stats-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
-    transform: translateX(-100%);
-    transition: transform 0.6s;
-}
-
-.stats-card:hover::before {
-    transform: translateX(100%);
-}
-
-.stats-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-}
-
-.stats-icon {
-    font-size: 2.5rem;
-    margin-right: 1rem;
-    opacity: 0.9;
-}
-
-.stats-content h3 {
-    margin: 0;
-    font-size: 2.2rem;
-    font-weight: bold;
-}
-
-.stats-content p {
-    margin: 0;
-    opacity: 0.9;
-    font-size: 0.9rem;
-}
-
-.detail-card {
-    background: white;
-    border-radius: 15px;
-    padding: 1.5rem;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-    border: 1px solid #f1f3f4;
-    height: 100%;
-}
-
-.card-title {
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    color: #2c3e50;
-}
-
-.stats-list {
-    space-y: 0.5rem;
-}
-
-.stat-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid #f8f9fa;
-}
-
-.stat-item:last-child {
-    border-bottom: none;
-}
-
-.stat-label {
-    font-size: 0.85rem;
-    color: #6c757d;
-    flex: 1;
-}
-
-.stat-bar {
-    width: 60px;
-    height: 6px;
-    background: #e9ecef;
-    border-radius: 3px;
-    margin: 0 10px;
-    overflow: hidden;
-}
-
-.stat-progress {
-    height: 100%;
-    background: linear-gradient(90deg, #6c757d, #495057);
-    border-radius: 3px;
-    transition: width 0.3s ease;
-}
-
-.stat-value {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: #495057;
-    min-width: 30px;
-    text-align: right;
-}
-
-.stat-badge {
-    padding: 0.25rem 0.5rem;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    font-weight: 500;
-}
-
-.badge-red { background: #dc3545; color: white; }
-.badge-blue { background: #007bff; color: white; }
-.badge-green { background: #28a745; color: white; }
-.badge-gray { background: #6c757d; color: white; }
-
-.table-wrapper {
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    background: white;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
-.table-header {
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-    padding: 1.5rem;
-    color: white;
-}
-
-.table-title {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.table-title i {
-    margin-right: 0.5rem;
-}
-
-.result-count {
-    font-size: 0.9rem;
-    background: rgba(255,255,255,0.2);
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-}
-
-.cimitiere-table {
-    margin: 0;
-    min-width: 1400px;
-    white-space: nowrap;
-}
-
-.cimitiere-table thead th {
-    background: linear-gradient(135deg, #343a40 0%, #495057 100%);
-    border: none;
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 0.8rem;
-    letter-spacing: 0.5px;
-    padding: 1rem 0.75rem;
-}
-
-.cimitiere-row {
-    transition: all 0.3s ease;
-    border-left: 4px solid transparent;
-}
-
-.cimitiere-row:hover {
-    background-color: #f8f9fa;
-    border-left-color: #6c757d;
-    transform: translateX(3px);
-}
-
-.cimitiere-avatar {
-    position: relative;
-}
-
-.avatar-img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #fff;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.avatar-img:hover {
-    transform: scale(1.1);
-    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-}
-
-.avatar-placeholder {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.3rem;
-}
-
-.cimitiere-info {
-    min-width: 0;
-}
-
-.cimitiere-name {
-    color: #2c3e50;
-    font-size: 1rem;
-    font-weight: 600;
-}
-
-.age-badge {
-    background: linear-gradient(45deg, #6c757d, #495057);
-    color: white;
-    padding: 0.3rem 0.6rem;
-    border-radius: 15px;
-    font-size: 0.8rem;
-    font-weight: 500;
-}
-
-.date-badge {
-    background: linear-gradient(45deg, #28a745, #20c997);
-    color: white;
-    padding: 0.25rem 0.5rem;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    font-weight: 500;
-}
-
-.death-date {
-    background: linear-gradient(45deg, #dc3545, #bd2130);
-}
-
-.place-badge {
-    background: linear-gradient(45deg, #ffc107, #e0a800);
-    color: #212529;
-    padding: 0.25rem 0.5rem;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    font-weight: 500;
-}
-
-.family-badge {
-    background: linear-gradient(45deg, #17a2b8, #138496);
-    color: white;
-    padding: 0.25rem 0.5rem;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    font-weight: 500;
-}
-
-.duration-badge {
-    background: linear-gradient(45deg, #6f42c1, #59359a);
-    color: white;
-    padding: 0.25rem 0.5rem;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    font-weight: 500;
-}
-
-.address-info {
-    color: #495057;
-    font-weight: 500;
-    font-size: 0.9rem;
-}
-
-.contact-info {
-    color: #6c757d;
-    font-size: 0.85rem;
-}
-
-.bg-pink {
-    background-color: #e91e63 !important;
-}
-
-.action-buttons {
-    display: flex;
-    gap: 0.25rem;
-    flex-wrap: wrap;
-}
-
-.action-buttons .btn {
-    border-radius: 8px;
-    padding: 0.3rem 0.5rem;
-    transition: all 0.3s ease;
-    font-size: 0.8rem;
-}
-
-.action-buttons .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}
-
-.no-data {
-    padding: 4rem 2rem;
-}
-
-.pagination {
-    margin: 2rem 0 0 0;
-}
-
-.page-link {
-    border-radius: 10px;
-    margin: 0 3px;
-    border: 1px solid #dee2e6;
-    color: #6c757d;
-    transition: all 0.3s ease;
-    padding: 0.5rem 0.75rem;
-}
-
-.page-link:hover {
-    background-color: #6c757d;
-    border-color: #6c757d;
-    color: white;
-    transform: translateY(-2px);
-}
-
-.page-item.active .page-link {
-    background: linear-gradient(45deg, #6c757d, #495057);
-    border-color: #6c757d;
-    box-shadow: 0 4px 8px rgba(108,117,125,0.3);
-}
-
-.table-responsive {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    margin-bottom: 0;
-}
-
-.filter-count-badge {
-    background: #dc3545;
-    color: white;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    font-size: 0.75rem;
-    font-weight: bold;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: 0.5rem;
-    position: relative;
-    top: -2px;
-}
-
-@media (max-width: 768px) {
-    .cimitiere-table-container {
-        padding: 1rem;
-        overflow-x: auto;
-    }
-    
-    .table-controls {
-        padding: 1rem;
-    }
-    
-    .filter-controls {
-        flex-direction: column;
-    }
-    
-    .filter-controls .form-select {
-        margin-bottom: 0.5rem;
-        min-width: 100%;
-    }
-    
-    .stats-card {
-        text-align: center;
-        flex-direction: column;
-    }
-    
-    .stats-icon {
-        margin-right: 0;
-        margin-bottom: 0.5rem;
-    }
-    
-    .action-buttons {
-        flex-direction: column;
-        gap: 0.1rem;
-    }
-    
-    .action-buttons .btn {
-        font-size: 0.7rem;
-        padding: 0.2rem 0.4rem;
-    }
-    
-    .table-title {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .result-count {
-        margin-top: 0.5rem;
-    }
-    
-    .table-wrapper {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-    
-    .table-responsive {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        border-radius: 10px;
-    }
-    
-    .cimitiere-table {
-        min-width: 1600px;
-    }
-}
-
-@media (max-width: 576px) {
-    .cimitiere-table thead th {
-        font-size: 0.7rem;
-        padding: 0.5rem 0.25rem;
-    }
-    
-    .cimitiere-table tbody td {
-        padding: 0.5rem 0.25rem;
-        font-size: 0.8rem;
-    }
-    
-    .avatar-img {
-        width: 35px;
-        height: 35px;
-    }
-    
-    .avatar-placeholder {
-        width: 35px;
-        height: 35px;
-        font-size: 1rem;
-    }
-    
-    .cimitiere-table {
-        min-width: 1800px;
-    }
-    
-    .table-wrapper {
-        margin: 0 -1rem;
-        border-radius: 10px;
-    }
-}
-
-/* Progress bar animation */
-@keyframes progressAnimation {
-    from { width: 0%; }
-    to { width: var(--progress-width); }
-}
-
-.progress-bar {
-    animation: progressAnimation 1s ease-out;
-}
-</style>
-
 <!-- Enhanced JavaScript for Smooth Filtering -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize progress bars
     initializeProgressBars();
-    
-    // Search functionality with real-time filtering
+
     const searchInput = document.getElementById('searchInput');
     if (searchInput) {
         searchInput.addEventListener('input', debounce(filterTable, 200));
     }
-    
-    // Filter functionality with real-time filtering
+
     const filters = ['genderFilter', 'placeFilter', 'familyFilter', 'ageFilter', 'yearFilter'];
     filters.forEach(filterId => {
         const filter = document.getElementById(filterId);
@@ -967,39 +385,25 @@ document.addEventListener('DOMContentLoaded', function() {
             filter.addEventListener('change', filterTable);
         }
     });
-    
-    // Clear filters
+
     const clearButton = document.getElementById('clearFilters');
     if (clearButton) {
         clearButton.addEventListener('click', clearAllFilters);
     }
-
-    // Animate statistics on page load
-    animateStats();
-    
-    // Calculate and set progress bar widths
-    calculateProgressBars();
 });
 
 function initializeProgressBars() {
-    const progressBars = document.querySelectorAll('.progress-bar[data-count]');
+    const progressBars = document.querySelectorAll('.stat-progress[data-count]');
     progressBars.forEach(bar => {
         const count = parseInt(bar.dataset.count);
         const total = parseInt(bar.dataset.total);
         const percentage = total > 0 ? (count / total) * 100 : 0;
-        
-        // Set CSS custom property for animation
-        bar.style.setProperty('--progress-width', percentage + '%');
-        
-        // Trigger animation
         setTimeout(() => {
             bar.style.width = percentage + '%';
         }, 100);
     });
 }
-function viewCimitiere(id) {
-    window.location.href = `/cimitiere/view/${id}`;
-}
+
 function filterTable() {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
     const genderFilter = document.getElementById('genderFilter').value.toLowerCase();
@@ -1007,14 +411,13 @@ function filterTable() {
     const familyFilter = document.getElementById('familyFilter').value.toLowerCase();
     const ageFilter = document.getElementById('ageFilter').value;
     const yearFilter = document.getElementById('yearFilter').value;
-    
-    // Update active filter indicators
+
     updateActiveFilterIndicators();
-    
+
     const tableBody = document.getElementById('cimitiereTableBody');
     const rows = tableBody.querySelectorAll('.cimitiere-row');
     let visibleCount = 0;
-    
+
     rows.forEach(row => {
         const name = row.querySelector('.cimitiere-name').textContent.toLowerCase();
         const gender = row.querySelector('.badge').textContent.toLowerCase();
@@ -1022,14 +425,12 @@ function filterTable() {
         const family = row.querySelector('.family-badge').textContent.toLowerCase();
         const deathDate = row.querySelector('.death-date') ? row.querySelector('.death-date').textContent : '';
         const age = row.querySelector('.age-badge') ? row.querySelector('.age-badge').textContent : '';
-        
-        // Check if row matches all filters
+
         const matchesSearch = !searchTerm || name.includes(searchTerm);
         const matchesGender = !genderFilter || gender.includes(genderFilter === 'm' ? 'homme' : 'femme');
         const matchesPlace = !placeFilter || place.includes(placeFilter);
         const matchesFamily = !familyFilter || family.includes(familyFilter);
-        
-        // Age filter logic
+
         let matchesAge = true;
         if (ageFilter && age) {
             const ageNumber = parseInt(age.match(/\d+/));
@@ -1044,8 +445,7 @@ function filterTable() {
                 }
             }
         }
-        
-        // Year filter logic
+
         let matchesYear = true;
         if (yearFilter && deathDate) {
             const year = deathDate.match(/\d{4}/);
@@ -1053,176 +453,81 @@ function filterTable() {
                 matchesYear = year[0] === yearFilter;
             }
         }
-        
+
         const shouldShow = matchesSearch && matchesGender && matchesPlace && matchesFamily && matchesAge && matchesYear;
-        
+
         if (shouldShow) {
-            showRowWithAnimation(row);
+            row.style.display = '';
             visibleCount++;
         } else {
-            hideRowWithAnimation(row);
+            row.style.display = 'none';
         }
     });
-    
-    // Update result count
+
     updateResultCount(visibleCount);
-    
-    // Show no results message if needed
     toggleNoResultsMessage(visibleCount === 0);
-}
-
-function showRowWithAnimation(row) {
-    if (row.style.display === 'none') {
-        row.style.display = '';
-        row.style.opacity = '0';
-        row.style.transform = 'translateY(-10px)';
-        
-        // Force reflow
-        row.offsetHeight;
-        
-        row.style.transition = 'all 0.3s ease';
-        row.style.opacity = '1';
-        row.style.transform = 'translateY(0)';
-    }
-}
-
-function hideRowWithAnimation(row) {
-    if (row.style.display !== 'none') {
-        row.style.transition = 'all 0.2s ease';
-        row.style.opacity = '0';
-        row.style.transform = 'translateY(-5px)';
-        
-        setTimeout(() => {
-            row.style.display = 'none';
-        }, 200);
-    }
 }
 
 function updateResultCount(count) {
     const resultCountElement = document.querySelector('.result-count');
     if (resultCountElement) {
-        const text = count === 0 ? 'Aucun résultat' : 
-                     count === 1 ? '1 résultat' : 
+        const text = count === 0 ? 'Aucun résultat' :
+                     count === 1 ? '1 résultat' :
                      `${count} résultats`;
-        
-        // Animate count change
-        resultCountElement.style.transition = 'all 0.2s ease';
-        resultCountElement.style.opacity = '0.5';
-        
-        setTimeout(() => {
-            resultCountElement.textContent = text;
-            resultCountElement.style.opacity = '1';
-        }, 100);
+        resultCountElement.textContent = text;
     }
 }
 
 function toggleNoResultsMessage(show) {
     let noResultsRow = document.getElementById('noResultsRow');
-    
     if (show && !noResultsRow) {
-        // Create no results message
         const tableBody = document.getElementById('cimitiereTableBody');
         const colCount = document.querySelectorAll('#cimitiereTable thead th').length;
-        
         noResultsRow = document.createElement('tr');
         noResultsRow.id = 'noResultsRow';
         noResultsRow.innerHTML = `
-            <td colspan="${colCount}" class="text-center py-5">
-                <div class="no-data">
-                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
-                    <h5 class="text-muted">Aucun enregistrement trouvé</h5>
-                    <p class="text-muted">Essayez de modifier vos critères de recherche</p>
-                    <button class="btn btn-outline-primary btn-sm" onclick="clearAllFilters()">
+            <td colspan="${colCount}" class="text-center py-12">
+                <div>
+                    <i class="fas fa-search fa-3x text-slate-300 mb-3"></i>
+                    <h5 class="text-slate-500 font-medium">Aucun enregistrement trouvé</h5>
+                    <p class="text-slate-400 text-sm">Essayez de modifier vos critères de recherche</p>
+                    <button class="mt-3 px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-xl hover:bg-indigo-100 transition-all" onclick="clearAllFilters()">
                         <i class="fas fa-refresh"></i> Réinitialiser les filtres
                     </button>
                 </div>
             </td>
         `;
-        
         tableBody.appendChild(noResultsRow);
-        
-        // Animate in
-        noResultsRow.style.opacity = '0';
-        setTimeout(() => {
-            noResultsRow.style.transition = 'opacity 0.3s ease';
-            noResultsRow.style.opacity = '1';
-        }, 10);
-        
     } else if (!show && noResultsRow) {
-        // Remove no results message
-        noResultsRow.style.transition = 'opacity 0.2s ease';
-        noResultsRow.style.opacity = '0';
-        setTimeout(() => {
-            if (noResultsRow.parentNode) {
-                noResultsRow.parentNode.removeChild(noResultsRow);
-            }
-        }, 200);
+        noResultsRow.remove();
     }
 }
 
 function clearAllFilters() {
-    // Clear all inputs with animation
     const searchInput = document.getElementById('searchInput');
-    const filterSelects = document.querySelectorAll('.filter-controls select');
-    
-    // Animate clearing
-    [searchInput, ...filterSelects].forEach(element => {
-        if (element) {
-            element.style.transition = 'all 0.2s ease';
-            element.style.backgroundColor = '#e3f2fd';
-            
-            setTimeout(() => {
-                element.value = '';
-                element.style.backgroundColor = '';
-                
-                // Trigger change event for selects
-                if (element.tagName === 'SELECT') {
-                    element.dispatchEvent(new Event('change'));
-                }
-            }, 100);
-        }
-    });
-    
-    // Filter table
-    setTimeout(() => {
-        filterTable();
-    }, 200);
+    const filterSelects = document.querySelectorAll('select');
+    if (searchInput) searchInput.value = '';
+    filterSelects.forEach(el => { el.value = ''; });
+    setTimeout(() => { filterTable(); }, 100);
 }
 
 function updateActiveFilterIndicators() {
     const filters = [
-        { id: 'searchInput', type: 'input' },
-        { id: 'genderFilter', type: 'select' },
-        { id: 'placeFilter', type: 'select' },
-        { id: 'familyFilter', type: 'select' },
-        { id: 'ageFilter', type: 'select' },
-        { id: 'yearFilter', type: 'select' }
+        { id: 'searchInput' }, { id: 'genderFilter' }, { id: 'placeFilter' },
+        { id: 'familyFilter' }, { id: 'ageFilter' }, { id: 'yearFilter' }
     ];
-    
     let activeCount = 0;
-    
     filters.forEach(filter => {
         const element = document.getElementById(filter.id);
-        if (element) {
-            const hasValue = element.value.trim() !== '';
-            
-            if (hasValue) {
-                element.classList.add('filter-active');
-                activeCount++;
-            } else {
-                element.classList.remove('filter-active');
-            }
-        }
+        if (element && element.value.trim() !== '') activeCount++;
     });
-    
-    // Update filter count badge
     const filterCountBadge = document.getElementById('filterCountBadge');
     if (filterCountBadge) {
         if (activeCount > 0) {
             filterCountBadge.textContent = activeCount;
-            filterCountBadge.style.display = 'inline-block';
+            filterCountBadge.classList.remove('hidden');
         } else {
-            filterCountBadge.style.display = 'none';
+            filterCountBadge.classList.add('hidden');
         }
     }
 }
@@ -1230,84 +535,31 @@ function updateActiveFilterIndicators() {
 function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
+        const later = () => { clearTimeout(timeout); func(...args); };
         clearTimeout(timeout);
         timeout = setTimeout(later, wait);
     };
 }
 
-// Calculate progress bar widths
-function calculateProgressBars() {
-    const progressBars = document.querySelectorAll('.progress-bar');
-    progressBars.forEach(bar => {
-        const count = parseInt(bar.getAttribute('data-count')) || 0;
-        const total = parseInt(bar.getAttribute('data-total')) || 1;
-        const percentage = total > 0 ? Math.round((count / total) * 100) : 0;
-        bar.style.width = percentage + '%';
-    });
-}
-
-// Animation for statistics
-function animateStats() {
-    const statValues = document.querySelectorAll('.stats-content h3');
-    statValues.forEach(stat => {
-        const finalValue = parseInt(stat.textContent);
-        if (!isNaN(finalValue)) {
-            let currentValue = 0;
-            const increment = finalValue / 50;
-            const timer = setInterval(() => {
-                currentValue += increment;
-                if (currentValue >= finalValue) {
-                    stat.textContent = finalValue;
-                    clearInterval(timer);
-                } else {
-                    stat.textContent = Math.floor(currentValue);
-                }
-            }, 20);
-        }
-    });
-}
-
-// Image modal functionality
 function openImageModal(imageUrl, name) {
-    const modal = new bootstrap.Modal(document.getElementById('imageModal'));
-    const modalImage = document.getElementById('modalImage');
-    const modalTitle = document.getElementById('imageModalLabel');
-    
-    modalImage.src = imageUrl;
-    modalImage.alt = 'Photo de ' + name;
-    modalTitle.textContent = 'Photo de ' + name;
-    
-    modal.show();
+    const modal = document.getElementById('imageModal');
+    document.getElementById('modalImage').src = imageUrl;
+    document.getElementById('modalImage').alt = 'Photo de ' + name;
+    document.getElementById('imageModalLabel').textContent = 'Photo de ' + name;
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
 }
 
-// Action functions
-
-
-
-
-// Function to open detailed view modal (optional)
-async function openCimitiereModal(cimitiereId) {
-    try {
-        const response = await fetch(`/get_cimitiere_data/${cimitiereId}/`);
-        if (!response.ok) throw new Error('Failed to fetch cemetery data');
-        
-        const person = await response.json();
-        
-        // You can implement a modal here if needed
-        // For now, just redirect to detailed view
-        viewCimitiere(cimitiereId);
-        
-    } catch (error) {
-        console.error('Error:', error);
-        alert('Erreur lors du chargement des données');
-    }
+function closeImageModal() {
+    const modal = document.getElementById('imageModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
 }
 
-// Get CSRF token
+function viewCimitiere(id) {
+    window.location.href = `/cimitiere/view/${id}`;
+}
+
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -1322,15 +574,4 @@ function getCookie(name) {
     }
     return cookieValue;
 }
-
-// Active filter styles
-.filter-active {
-    border-color: #28a745 !important;
-    background: linear-gradient(135deg, #f8fff9 0%, #f0f9f0 100%) !important;
-    box-shadow: 0 0 0 0.1rem rgba(40, 167, 69, 0.2) !important;
-}
-
-.search-box .filter-active {
-    background: linear-gradient(135deg, #f8fff9 0%, #f0f9f0 100%) !important;
-}
-</script> 
+</script>

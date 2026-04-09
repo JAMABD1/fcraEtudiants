@@ -6,8 +6,6 @@
 {% block content %}
 <!-- Font Awesome pour les icônes -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<!-- Tailwind CDN pour s'assurer que toutes les classes fonctionnent -->
-<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
 <!-- Marked.js pour le parsing Markdown -->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <!-- Chart.js pour les graphiques -->
@@ -120,7 +118,7 @@
             <div class="max-w-4xl mx-auto">
                 <div class="relative group">
                     <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-[2.2rem] blur opacity-10 group-focus-within:opacity-20 transition duration-500"></div>
-                    <div class="relative flex items-center gap-2 bg-white border border-gray-200 rounded-[2rem] p-3 shadow-xl shadow-gray-200/50 focus-within:border-blue-400 transition-all">
+                    <div class="relative flex items-center gap-2 bg-white border border-gray-200 rounded-[2rem] p-3 shadow-xl focus-within:border-blue-400 transition-all">
                         <!-- Sélecteur de catégorie -->
                         <div class="pl-2">
                             <select id="category-select" class="bg-gray-50 border border-gray-200 text-gray-700 text-xs rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 outline-none transition-all cursor-pointer hover:bg-gray-100">
@@ -144,7 +142,7 @@
                             <button class="p-3 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-2xl transition-all" title="Joindre un fichier">
                                 <i class="fas fa-paperclip text-lg"></i>
                             </button>
-                            <button id="send-btn" class="bg-blue-600 hover:bg-blue-700 text-white w-12 h-12 rounded-2xl shadow-lg shadow-blue-500/30 transition-all transform active:scale-95 flex items-center justify-center">
+                            <button id="send-btn" class="bg-blue-600 hover:bg-blue-700 text-white w-12 h-12 rounded-2xl shadow-lg transition-all transform active:scale-95 flex items-center justify-center">
                                 <i class="fas fa-paper-plane"></i>
                             </button>
                         </div>

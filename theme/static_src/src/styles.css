@@ -1,3 +1,277 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .nav-collapsed {
+        width: 70px !important;
+        min-width: 70px !important;
+        max-width: 70px !important;
+    }
+    
+    .nav-expanded {
+        width: 280px !important;
+        min-width: 280px !important;
+        max-width: 280px !important;
+    }
+    
+    .nav-transition {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .nav-item {
+        @apply relative mb-1;
+    }
+    
+    .nav-tooltip {
+        position: fixed;
+        left: 80px;
+        top: 50%;
+        transform: translateY(-50%);
+        background-image: linear-gradient(to bottom right, #1e40af, #3b82f6);
+        color: white;
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        white-space: nowrap;
+        opacity: 0;
+        visibility: hidden;
+        z-index: 9999;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        pointer-events: none;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .nav-tooltip::before {
+        content: '';
+        position: absolute;
+        right: 100%;
+        top: 50%;
+        transform: translateY(-50%);
+        border: 6px solid transparent;
+        border-right-color: #1e40af;
+    }
+    
+    .nav-collapsed .nav-item:hover .nav-tooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(-50%) translateX(5px);
+    }
+    
+    .nav-expanded .nav-tooltip {
+        @apply hidden;
+    }
+    
+    .nav-logo-text, .nav-item-text, .nav-section-title {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .nav-item a {
+        @apply relative overflow-hidden;
+    }
+
+    .nav-item a::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background-image: linear-gradient(to right, transparent, rgba(59, 130, 246, 0.1), transparent);
+        transition: left 0.5s ease-in-out;
+    }
+
+    .nav-item a:hover::before {
+        @apply left-full;
+    }
+
+    .nav-item a:hover {
+        @apply border-l-4 border-blue-500 translate-x-1 shadow-md;
+        background-image: linear-gradient(to bottom right, #f0f7ff, #e0f2fe);
+    }
+
+    .nav-item a.active {
+        @apply text-white shadow-lg border-l-4 border-blue-900;
+        background-image: linear-gradient(to bottom right, #3b82f6, #1d4ed8);
+    }
+
+    .nav-item a.active img {
+        @apply brightness-0 invert;
+    }
+
+    .sidebar-gradient {
+        background-image: linear-gradient(to bottom, #ffffff, #f8fafc);
+    }
+
+    .logo-container {
+        background-image: linear-gradient(to bottom right, #f0f7ff, #e0f2fe);
+        border: 2px solid #e0f2fe;
+        @apply rounded-2xl p-3 mb-6;
+        transition: all 0.3s ease;
+    }
+
+    .nav-collapsed .logo-container {
+        @apply p-2 mb-4 rounded-xl;
+    }
+
+    .nav-collapsed .nav-item a {
+        @apply py-3 px-2 justify-center rounded-xl mb-2 !important;
+    }
+
+    .nav-collapsed .nav-section-title {
+        @apply hidden !important;
+    }
+
+    .nav-collapsed .section-divider {
+        @apply my-2;
+    }
+
+    .nav-collapsed .toggle-btn {
+        @apply p-2 mx-auto mb-4 !important;
+    }
+
+    .section-divider {
+        @apply h-px my-4;
+        background-image: linear-gradient(to right, transparent, #e2e8f0, transparent);
+    }
+
+    .toggle-btn {
+        background-image: linear-gradient(to bottom right, #f1f5f9, #e2e8f0);
+        border: 1px solid #cbd5e1;
+        @apply transition-all duration-300;
+    }
+
+    .toggle-btn:hover {
+        background-image: linear-gradient(to bottom right, #3b82f6, #1d4ed8);
+        border-color: #1d4ed8;
+        @apply scale-105;
+    }
+
+    .toggle-btn:hover svg {
+        @apply text-white;
+    }
+
+    .nav-section {
+        @apply mb-6;
+    }
+
+    .nav-section:last-child {
+        border-top: 1px solid #f1f5f9;
+        padding-top: 1rem;
+        margin-top: auto;
+    }
+
+    .submenu {
+        @apply max-h-0 overflow-hidden rounded-lg my-1;
+        transition: max-height 0.3s ease-in-out;
+        background-image: linear-gradient(to bottom right, #f8fafc, #f1f5f9);
+    }
+
+    .submenu.open {
+        max-height: 300px;
+    }
+
+    .submenu-item {
+        @apply py-2 pr-4 pl-12 mx-2 my-0.5 rounded-md transition-all duration-200;
+    }
+
+    .submenu-item:hover {
+        @apply translate-x-1;
+        background-image: linear-gradient(to bottom right, #e0f2fe, #bae6fd);
+    }
+
+    .submenu-item a {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: #64748b;
+        text-decoration: none;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    .submenu-item a:hover {
+        color: #1e40af;
+    }
+
+    .submenu-item a.active {
+        color: #1e40af;
+        font-weight: 600;
+    }
+
+    .submenu-icon {
+        width: 1rem;
+        height: 1rem;
+        opacity: 0.7;
+    }
+
+    .chevron-icon {
+        transition: transform 0.3s ease;
+        width: 1rem;
+        height: 1rem;
+    }
+
+    .chevron-icon.rotated {
+        transform: rotate(90deg);
+    }
+
+    .nav-collapsed .submenu, .nav-collapsed .chevron-icon {
+        display: none;
+    }
+
+    .main-container {
+        overflow-x: hidden;
+        width: 100vw;
+        max-width: 100%;
+    }
+    
+    #mainContent {
+        overflow-x: hidden;
+        min-width: 0;
+        flex: 1 1 0%;
+        width: calc(100vw - 280px) !important;
+    }
+
+    .nav-collapsed + #mainContent {
+        width: calc(100vw - 70px) !important;
+    }
+
+    @media (max-width: 768px) {
+        .nav-expanded {
+            width: 240px !important;
+            min-width: 240px !important;
+            max-width: 240px !important;
+        }
+        
+        .nav-collapsed {
+            width: 60px !important;
+            min-width: 60px !important;
+            max-width: 60px !important;
+        }
+        
+        .nav-tooltip {
+            left: 70px;
+        }
+
+        #mainContent {
+            width: calc(100vw - 240px) !important;
+        }
+
+        .nav-collapsed + #mainContent {
+            width: calc(100vw - 60px) !important;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .nav-expanded {
+            width: 200px !important;
+            min-width: 200px !important;
+            max-width: 200px !important;
+        }
+
+        #mainContent {
+            width: calc(100vw - 200px) !important;
+        }
+    }
+}

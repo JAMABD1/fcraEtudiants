@@ -2,134 +2,128 @@
 {% load static %}
 {% block title%} Avertissement {%endblock%}
 {% block content %}
-<div class="card">
-  <button type="button" style="width:20%; margin:auto;margin-top:50px;" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-    Ajouter Avertissement
-   </button>
 
-   
-    
- 
-      
-   <!-- Modal -->
-   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-     <div class="modal-dialog">
-       <div class="modal-content">
-         <div class="modal-header">
+<div class="mb-8">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-800">Avertissements</h1>
+            <p class="text-slate-500 text-sm mt-1">Gestion des avertissements étudiants</p>
+        </div>
+        <button type="button" class="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 transition-all shadow-md" onclick="document.getElementById('exampleModal').classList.remove('hidden'); document.getElementById('exampleModal').classList.add('flex');">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+            Ajouter Avertissement
+        </button>
+    </div>
 
-           <h5 class="modal-title" id="exampleModalLabel"> Ajouter Avertissement</h5>
-           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-         </div>
-         <div class="modal-body">
-           <form method="POST" enctype="multipart/form-data">
-            {%csrf_token%}
-             {{form.as_p}}
-         </div>
-         <div class="modal-footer">
-           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-           <input type="submit" value="Save" class="form-control btn-primary" style="width:20%;height:40px" name="submit"/>
-         </div>
-       </form>
+    <!-- Modal -->
+    <div id="exampleModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full mx-4 overflow-hidden">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200">
+                <h5 class="text-lg font-bold text-slate-800">Ajouter Avertissement</h5>
+                <button type="button" onclick="document.getElementById('exampleModal').classList.add('hidden'); document.getElementById('exampleModal').classList.remove('flex');" class="p-2 hover:bg-slate-100 rounded-lg transition-all">
+                    <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <form method="POST" enctype="multipart/form-data">
+                <div class="p-6">
+                    {%csrf_token%}
+                    {{form.as_p}}
+                </div>
+                <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-200">
+                    <button type="button" class="px-4 py-2 text-sm font-medium text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors" onclick="document.getElementById('exampleModal').classList.add('hidden'); document.getElementById('exampleModal').classList.remove('flex');">Fermer</button>
+                    <input type="submit" value="Enregistrer" class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors cursor-pointer" name="submit"/>
+                </div>
+            </form>
+        </div>
+    </div>
 
-       </div>
-     </div>
-   </div>
-    
-				<div class="form-group" style="width:20%; margin:auto;margin-top:50px;"> 	<!--		Show Numbers Of Rows 		-->
-			 		<select class  ="form-control" name="state" id="maxRows" >
-						 <option value="5000">Afficher toutes les lignes</option>
-						 <option value="5">5</option>
-						 <option value="10">10</option>
-						 <option value="15">15</option>
-						 <option value="20">20</option>
-						 <option value="50">50</option>
-						 <option value="70">70</option>
-						 <option value="100">100</option>
-						</select>
-			 		
-			  	</div> 
-    <div class="card-body">
-      <h4 class="card-title">Etudiants</h4>
-      <p class="card-description">
-  
-      </p>
-      <div class="table-responsive">
-        <table class="table table-striped" id="table-id">
-          <thead>
-            <tr>
- 
-              <th scope="col">Etudiant ID</th>
-            <th scope="col">Nom</th>
-            <th scope="col">Date</th>
-            <th scope="col">Raison</th>
-            <th scope="col">Action</th>
-            
-            
-            </tr>
-          </thead>
-    
-    
-          <tbody id="tbody">
-            {% for item in ls %}
-        
-            <tr>
-                               
-                                 
-                
-                <td>
-                  {{item.etudiantid}}
-                </td>
-              
-              <td > {{item.name}}</td>
-              <td> {{item.date}}</td>
-              <td> {{item.raison}}</td>
-               
-                                
-              
-          
-          
-         
-              
-              <td>
-                <a href="#"  data-target="#exampleModalCenterUpdate" data-sid={{item.id}} class="editclass" id="edit"><i class="fas fa-pen" style="color: #0d6efd;"></i></a> 
-        
-                <a href="#"><i class="fas fa-eye" style="color:  #198754"></i></a> 
-               
-                <a href="{% url "avertissementdelete" id=item.id%}"><i class="fas fa-trash" style="color: #dc3545;"></i></a> 
-        
-              
-              </td>
-              </tr>
-              
-        
-        
-        
-        
-           
-        {% endfor %}
-          
-          </tbody>
-        </table>
+    <!-- Rows per page selector -->
+    <div class="flex items-center gap-3 mb-6">
+        <label for="maxRows" class="text-sm font-semibold text-slate-700">Afficher</label>
+        <select id="maxRows" name="state" class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none">
+            <option value="5000">Toutes les lignes</option>
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="70">70</option>
+            <option value="100">100</option>
+        </select>
+    </div>
 
-        <div class='pagination-container' >
-            <nav>
-              <ul class="pagination listpage" >
-        
-        <li data-page="prev"  >
-                                 <span> Previous <span class="sr-only">(current)</span></span>
-                                </li>
-               <!--	Here the JS Function Will Add the Rows -->
-    <li data-page="next" id="prev">
-                                   <span> Next<span class="sr-only">(current)</span></span>
-                                </li>
-              </ul>
-            </nav>
+    <!-- Table -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="bg-slate-50 px-6 py-4 border-b border-slate-200">
+            <h3 class="text-lg font-bold text-slate-800">Étudiants</h3>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full" id="table-id">
+                <thead class="bg-slate-800">
+                    <tr>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Etudiant ID</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Nom</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Date</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Raison</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody" class="divide-y divide-slate-100">
+                    {% for item in ls %}
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-6 py-4 text-sm text-slate-600">
+                            <span class="px-2.5 py-1 bg-slate-100 text-slate-700 rounded-full text-xs font-bold">{{item.etudiantid}}</span>
+                        </td>
+                        <td class="px-6 py-4 text-sm font-medium text-slate-800">{{item.name}}</td>
+                        <td class="px-6 py-4 text-sm text-slate-600">{{item.date}}</td>
+                        <td class="px-6 py-4 text-sm text-slate-600">{{item.raison}}</td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-2">
+                                <a href="#" data-target="#exampleModalCenterUpdate" data-sid={{item.id}} class="editclass p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all" title="Modifier">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                </a>
+                                <a href="#" class="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-all" title="Voir">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                </a>
+                                <a href="{% url 'avertissementdelete' id=item.id%}" class="p-2 text-rose-600 hover:bg-rose-50 rounded-lg transition-all" title="Supprimer">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
 
-        
-      </div>
+        <div class="flex justify-center items-center gap-2 py-4 border-t border-slate-200">
+            <nav>
+                <ul class="flex items-center gap-1 listpage">
+                    <li data-page="prev">
+                        <span class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-all cursor-pointer text-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                        </span>
+                    </li>
+                    <li data-page="next" id="prev">
+                        <span class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-all cursor-pointer text-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </span>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </div>
-  </div>
- 
- 
+</div>
+
+<script>
+document.getElementById('exampleModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        this.classList.add('hidden');
+        this.classList.remove('flex');
+    }
+});
+</script>
+
 {% endblock content %}

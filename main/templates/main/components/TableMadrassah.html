@@ -1,146 +1,130 @@
-<!-- Madrassah students table — aligned with TablesEtudiants.html -->
-<div class="madrassah-table-root">
-    <div class="table-controls mb-4">
-        <div class="row">
-            <div class="col-md-3">
-                <div class="search-box">
-                    <div class="input-group">
-                        <span class="input-group-text bg-primary text-white">
-                            <i class="fas fa-search"></i>
-                        </span>
-                        <input type="text" class="form-control" id="madrassahSearchInput"
-                               placeholder="Rechercher par nom..." value="{{ search|default:'' }}">
-                    </div>
+<!-- Madrassah students table -->
+<div>
+    <div class="mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+            <div class="relative xl:col-span-2">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="fas fa-search text-slate-400"></i>
                 </div>
+                <input type="text" class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700" id="madrassahSearchInput"
+                       placeholder="Rechercher par nom..." value="{{ search|default:'' }}">
             </div>
-            <div class="col-md-9">
-                <div class="filter-controls d-flex flex-wrap gap-2">
-                    <select class="form-select form-select-sm" id="madrassahCenterFilter" style="width: auto;">
-                        <option value="">Tous les centres</option>
-                        {% for centre in centres %}
-                            <option value="{{ centre }}" {% if centre == centre_filter %}selected{% endif %}>{{ centre }}</option>
-                        {% endfor %}
-                    </select>
 
-                    <select class="form-select form-select-sm" id="madrassahClassFilter" style="width: auto;">
-                        <option value="">Toutes les classes madrassah</option>
-                        {% for class_name in classes_madressah %}
-                            <option value="{{ class_name }}" {% if class_name == class_filter %}selected{% endif %}>{{ class_name }}</option>
-                        {% endfor %}
-                    </select>
+            <select class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none text-sm" id="madrassahCenterFilter">
+                <option value="">Tous les centres</option>
+                {% for centre in centres %}
+                    <option value="{{ centre }}" {% if centre == centre_filter %}selected{% endif %}>{{ centre }}</option>
+                {% endfor %}
+            </select>
 
-                    <select class="form-select form-select-sm" id="madrassahGenderFilter" style="width: auto;">
-                        <option value="">Tous les genres</option>
-                        <option value="M" {% if genre_filter == 'M' %}selected{% endif %}>Masculin</option>
-                        <option value="F" {% if genre_filter == 'F' %}selected{% endif %}>Féminin</option>
-                    </select>
+            <select class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none text-sm" id="madrassahClassFilter">
+                <option value="">Toutes les classes madrassah</option>
+                {% for class_name in classes_madressah %}
+                    <option value="{{ class_name }}" {% if class_name == class_filter %}selected{% endif %}>{{ class_name }}</option>
+                {% endfor %}
+            </select>
 
-                    <select class="form-select form-select-sm" id="madrassahAgeFilter" style="width: auto;">
-                        <option value="">Tous les âges</option>
-                        <option value="-12" {% if age_filter == '-12' %}selected{% endif %}>-12 ans</option>
-                        <option value="12-16" {% if age_filter == '12-16' %}selected{% endif %}>12-16 ans</option>
-                        <option value="17-20" {% if age_filter == '17-20' %}selected{% endif %}>17-20 ans</option>
-                        <option value="21+" {% if age_filter == '21+' %}selected{% endif %}>21+ ans</option>
-                    </select>
+            <select class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none text-sm" id="madrassahGenderFilter">
+                <option value="">Tous les genres</option>
+                <option value="M" {% if genre_filter == 'M' %}selected{% endif %}>Masculin</option>
+                <option value="F" {% if genre_filter == 'F' %}selected{% endif %}>Féminin</option>
+            </select>
 
-                    <button type="button" class="btn btn-outline-secondary btn-sm" id="madrassahClearFilters">
-                        <i class="fas fa-times"></i> Effacer
-                    </button>
-                </div>
+            <select class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none text-sm" id="madrassahAgeFilter">
+                <option value="">Tous les âges</option>
+                <option value="-12" {% if age_filter == '-12' %}selected{% endif %}>-12 ans</option>
+                <option value="12-16" {% if age_filter == '12-16' %}selected{% endif %}>12-16 ans</option>
+                <option value="17-20" {% if age_filter == '17-20' %}selected{% endif %}>17-20 ans</option>
+                <option value="21+" {% if age_filter == '21+' %}selected{% endif %}>21+ ans</option>
+            </select>
+        </div>
+        <div class="flex flex-wrap gap-4 mt-4">
+            <button type="button" class="px-4 py-2.5 text-sm font-medium text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-all" id="madrassahClearFilters">
+                <i class="fas fa-times"></i> Effacer
+            </button>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl p-6 shadow-lg flex items-center gap-4 text-white">
+            <i class="fas fa-users text-4xl opacity-80"></i>
+            <div>
+                <div class="text-3xl font-bold">{{ total_madrassah }}</div>
+                <div class="text-sm font-medium uppercase tracking-wider opacity-90">Total Madrassah</div>
+            </div>
+        </div>
+        <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-6 shadow-lg flex items-center gap-4 text-white">
+            <i class="fas fa-male text-4xl opacity-80"></i>
+            <div>
+                <div class="text-3xl font-bold">{{ male_count }}</div>
+                <div class="text-sm font-medium uppercase tracking-wider opacity-90">Hommes ({{ male_percentage }}%)</div>
+            </div>
+        </div>
+        <div class="bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl p-6 shadow-lg flex items-center gap-4 text-white">
+            <i class="fas fa-female text-4xl opacity-80"></i>
+            <div>
+                <div class="text-3xl font-bold">{{ female_count }}</div>
+                <div class="text-sm font-medium uppercase tracking-wider opacity-90">Femmes ({{ female_percentage }}%)</div>
+            </div>
+        </div>
+        <div class="bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-6 shadow-lg flex items-center gap-4 text-white">
+            <i class="fas fa-filter text-4xl opacity-80"></i>
+            <div>
+                <div class="text-3xl font-bold">{{ filtered_count }}</div>
+                <div class="text-sm font-medium uppercase tracking-wider opacity-90">Résultats filtrés</div>
             </div>
         </div>
     </div>
 
-    <div class="row mb-4">
-        <div class="col-md-3">
-            <div class="stats-card bg-primary text-white">
-                <div class="stats-icon"><i class="fas fa-users"></i></div>
-                <div class="stats-content">
-                    <h3>{{ total_madrassah }}</h3>
-                    <p>Total Madrassah</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stats-card bg-success text-white">
-                <div class="stats-icon"><i class="fas fa-male"></i></div>
-                <div class="stats-content">
-                    <h3>{{ male_count }}</h3>
-                    <p>Hommes ({{ male_percentage }}%)</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stats-card bg-info text-white">
-                <div class="stats-icon"><i class="fas fa-female"></i></div>
-                <div class="stats-content">
-                    <h3>{{ female_count }}</h3>
-                    <p>Femmes ({{ female_percentage }}%)</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stats-card bg-warning text-white">
-                <div class="stats-icon"><i class="fas fa-filter"></i></div>
-                <div class="stats-content">
-                    <h3>{{ filtered_count }}</h3>
-                    <p>Résultats filtrés</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="table-wrapper">
-        <div class="table-responsive">
-            <table class="table table-hover students-table" id="madrassahTable">
-                <thead class="table-dark">
+    <div class="rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full" id="madrassahTable">
+                <thead class="bg-slate-800">
                     <tr>
-                        <th width="60">Photo</th>
-                        <th>Identifiant</th>
-                        <th>Nom</th>
-                        <th>Âge</th>
-                        <th>Genre</th>
-                        <th>Classe</th>
-                        <th>Centre</th>
-                        <th>Cl. académique</th>
-                        <th>Parent</th>
-                        <th>Adresse</th>
-                        <th width="140">Actions</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white" width="60">Photo</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Identifiant</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Nom</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Âge</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Genre</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Classe</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Centre</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Cl. académique</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Parent</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Adresse</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white" width="140">Actions</th>
                     </tr>
                 </thead>
-                <tbody id="madrassahTableBody">
+                <tbody id="madrassahTableBody" class="divide-y divide-slate-100 bg-white">
                     {% for madrassah in datas %}
-                    <tr class="student-row">
-                        <td>
-                            <div class="student-avatar">
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-6 py-4 text-sm text-slate-600">
+                            <div class="w-11 h-11 relative">
                                 {% if madrassah.imageprofile %}
                                     <img src="{{ madrassah.imageprofile.url }}" alt="{{ madrassah.nom }}"
-                                         class="avatar-img cursor-pointer" loading="lazy"
+                                         class="w-full h-full object-cover rounded-full border-2 border-slate-200 cursor-pointer hover:border-indigo-400 transition-all" loading="lazy"
                                          onclick="openModal('{{ madrassah.imageprofile.url|escapejs }}')" role="button">
                                 {% else %}
-                                    <div class="avatar-placeholder">
+                                    <div class="w-full h-full rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white">
                                         <i class="fas fa-user"></i>
                                     </div>
                                 {% endif %}
                             </div>
                         </td>
-                        <td>
-                            <span class="badge bg-secondary">{{ madrassah.madrassahid }}</span>
+                        <td class="px-6 py-4 text-sm text-slate-600">
+                            <span class="px-2.5 py-1 bg-slate-100 text-slate-700 rounded-full text-xs font-bold">{{ madrassah.madrassahid }}</span>
                         </td>
-                        <td>
-                            <div class="student-name">
-                                <strong>{{ madrassah.nom }}</strong>
-                            </div>
+                        <td class="px-6 py-4 text-sm text-slate-600">
+                            <strong class="text-slate-800 font-semibold">{{ madrassah.nom }}</strong>
                         </td>
-                        <td>
+                        <td class="px-6 py-4 text-sm text-slate-600">
                             {% if madrassah.age %}
-                                <span class="age-badge">{{ madrassah.age }} ans</span>
+                                <span class="px-2.5 py-1 bg-rose-100 text-rose-700 rounded-full text-xs font-bold">{{ madrassah.age }} ans</span>
                             {% else %}
-                                <span class="text-muted small">N/A</span>
+                                <span class="text-slate-400 text-xs">N/A</span>
                             {% endif %}
                         </td>
-                        <td>
-                            <span class="badge {% if madrassah.genre == 'M' %}bg-primary{% else %}bg-pink{% endif %}">
+                        <td class="px-6 py-4 text-sm text-slate-600">
+                            <span class="{% if madrassah.genre == 'M' %}px-2.5 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-bold{% else %}px-2.5 py-1 bg-pink-100 text-pink-700 rounded-full text-xs font-bold{% endif %}">
                                 {% if madrassah.genre == 'M' %}
                                     <i class="fas fa-mars"></i> Masculin
                                 {% else %}
@@ -148,33 +132,29 @@
                                 {% endif %}
                             </span>
                         </td>
-                        <td>
+                        <td class="px-6 py-4 text-sm text-slate-600">
                             {% if madrassah.class_madressah %}
-                                <span class="class-badge">{{ madrassah.class_madressah }}</span>
+                                <span class="px-2.5 py-1 bg-teal-100 text-teal-700 rounded-full text-xs font-bold">{{ madrassah.class_madressah }}</span>
                             {% else %}
-                                <span class="text-muted small">N/A</span>
+                                <span class="text-slate-400 text-xs">N/A</span>
                             {% endif %}
                         </td>
-                        <td>
-                            <span class="center-badge">{{ madrassah.centre|default:"N/A" }}</span>
+                        <td class="px-6 py-4 text-sm text-slate-600">
+                            <span class="px-2.5 py-1 bg-pink-100 text-pink-700 rounded-full text-xs font-bold">{{ madrassah.centre|default:"N/A" }}</span>
                         </td>
-                        <td>
+                        <td class="px-6 py-4 text-sm text-slate-600">
                             {% if madrassah.class_academic %}
-                                <span class="badge bg-info">{{ madrassah.class_academic }}</span>
+                                <span class="px-2.5 py-1 bg-cyan-100 text-cyan-700 rounded-full text-xs font-bold">{{ madrassah.class_academic }}</span>
                             {% else %}
-                                <span class="text-muted small">N/A</span>
+                                <span class="text-slate-400 text-xs">N/A</span>
                             {% endif %}
                         </td>
-                        <td>
-                            <span class="institution-name">{{ madrassah.parent|default:"N/A" }}</span>
-                        </td>
-                        <td>
-                            <small class="text-muted">{{ madrassah.adress|default:"N/A" }}</small>
-                        </td>
-                        <td>
-                            <div class="action-buttons">
-                                <a href="{% url 'viewMadrassah' madrassah.madrassahid %}" class="btn btn-lg btn-primary view-student-btn text-white text-decoration-none">
-                                    <i class="fas fa-eye me-2"></i>
+                        <td class="px-6 py-4 text-sm text-slate-500 font-medium">{{ madrassah.parent|default:"N/A" }}</td>
+                        <td class="px-6 py-4 text-sm text-slate-400">{{ madrassah.adress|default:"N/A" }}</td>
+                        <td class="px-6 py-4 text-sm text-slate-600">
+                            <div class="flex justify-center">
+                                <a href="{% url 'viewMadrassah' madrassah.madrassahid %}" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold text-xs uppercase tracking-wide shadow-md hover:shadow-lg transition-all inline-flex items-center gap-2 no-underline">
+                                    <i class="fas fa-eye"></i>
                                     Voir étudiant
                                 </a>
                             </div>
@@ -182,11 +162,11 @@
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="11" class="text-center py-5">
-                            <div class="no-data">
-                                <i class="fas fa-users fa-3x text-muted mb-3"></i>
-                                <h5 class="text-muted">Aucun étudiant trouvé</h5>
-                                <p class="text-muted">Essayez de modifier vos critères de recherche</p>
+                        <td colspan="11" class="text-center py-12">
+                            <div>
+                                <i class="fas fa-users fa-3x text-slate-300 mb-3"></i>
+                                <h5 class="text-slate-500 font-medium">Aucun étudiant trouvé</h5>
+                                <p class="text-slate-400 text-sm">Essayez de modifier vos critères de recherche</p>
                             </div>
                         </td>
                     </tr>
@@ -197,277 +177,37 @@
     </div>
 
     {% if datas.has_other_pages %}
-    <nav aria-label="Navigation des pages madrassah">
-        <ul class="pagination justify-content-center">
+    <nav aria-label="Navigation des pages madrassah" class="mt-6">
+        <div class="flex justify-center items-center gap-1">
             {% if datas.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page=1{% if search %}&search={{ search|urlencode }}{% endif %}{% if centre_filter %}&centre={{ centre_filter|urlencode }}{% endif %}{% if genre_filter %}&genre={{ genre_filter|urlencode }}{% endif %}{% if age_filter %}&age={{ age_filter|urlencode }}{% endif %}{% if class_filter %}&class_madressah={{ class_filter|urlencode }}{% endif %}">
-                        <i class="fas fa-angle-double-left"></i>
-                    </a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ datas.previous_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if centre_filter %}&centre={{ centre_filter|urlencode }}{% endif %}{% if genre_filter %}&genre={{ genre_filter|urlencode }}{% endif %}{% if age_filter %}&age={{ age_filter|urlencode }}{% endif %}{% if class_filter %}&class_madressah={{ class_filter|urlencode }}{% endif %}">
-                        <i class="fas fa-angle-left"></i>
-                    </a>
-                </li>
+                <a class="px-3 py-2 text-sm rounded-lg border border-slate-200 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-all" href="?page=1{% if search %}&search={{ search|urlencode }}{% endif %}{% if centre_filter %}&centre={{ centre_filter|urlencode }}{% endif %}{% if genre_filter %}&genre={{ genre_filter|urlencode }}{% endif %}{% if age_filter %}&age={{ age_filter|urlencode }}{% endif %}{% if class_filter %}&class_madressah={{ class_filter|urlencode }}{% endif %}">
+                    <i class="fas fa-angle-double-left"></i>
+                </a>
+                <a class="px-3 py-2 text-sm rounded-lg border border-slate-200 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-all" href="?page={{ datas.previous_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if centre_filter %}&centre={{ centre_filter|urlencode }}{% endif %}{% if genre_filter %}&genre={{ genre_filter|urlencode }}{% endif %}{% if age_filter %}&age={{ age_filter|urlencode }}{% endif %}{% if class_filter %}&class_madressah={{ class_filter|urlencode }}{% endif %}">
+                    <i class="fas fa-angle-left"></i>
+                </a>
             {% endif %}
 
             {% for num in datas.paginator.page_range %}
                 {% if datas.number == num %}
-                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                    <span class="px-3 py-2 text-sm rounded-lg bg-indigo-600 text-white font-medium shadow-sm">{{ num }}</span>
                 {% elif num > datas.number|add:'-3' and num < datas.number|add:'3' %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ num }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if centre_filter %}&centre={{ centre_filter|urlencode }}{% endif %}{% if genre_filter %}&genre={{ genre_filter|urlencode }}{% endif %}{% if age_filter %}&age={{ age_filter|urlencode }}{% endif %}{% if class_filter %}&class_madressah={{ class_filter|urlencode }}{% endif %}">{{ num }}</a>
-                    </li>
+                    <a class="px-3 py-2 text-sm rounded-lg border border-slate-200 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-all" href="?page={{ num }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if centre_filter %}&centre={{ centre_filter|urlencode }}{% endif %}{% if genre_filter %}&genre={{ genre_filter|urlencode }}{% endif %}{% if age_filter %}&age={{ age_filter|urlencode }}{% endif %}{% if class_filter %}&class_madressah={{ class_filter|urlencode }}{% endif %}">{{ num }}</a>
                 {% endif %}
             {% endfor %}
 
             {% if datas.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ datas.next_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if centre_filter %}&centre={{ centre_filter|urlencode }}{% endif %}{% if genre_filter %}&genre={{ genre_filter|urlencode }}{% endif %}{% if age_filter %}&age={{ age_filter|urlencode }}{% endif %}{% if class_filter %}&class_madressah={{ class_filter|urlencode }}{% endif %}">
-                        <i class="fas fa-angle-right"></i>
-                    </a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ datas.paginator.num_pages }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if centre_filter %}&centre={{ centre_filter|urlencode }}{% endif %}{% if genre_filter %}&genre={{ genre_filter|urlencode }}{% endif %}{% if age_filter %}&age={{ age_filter|urlencode }}{% endif %}{% if class_filter %}&class_madressah={{ class_filter|urlencode }}{% endif %}">
-                        <i class="fas fa-angle-double-right"></i>
-                    </a>
-                </li>
+                <a class="px-3 py-2 text-sm rounded-lg border border-slate-200 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-all" href="?page={{ datas.next_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if centre_filter %}&centre={{ centre_filter|urlencode }}{% endif %}{% if genre_filter %}&genre={{ genre_filter|urlencode }}{% endif %}{% if age_filter %}&age={{ age_filter|urlencode }}{% endif %}{% if class_filter %}&class_madressah={{ class_filter|urlencode }}{% endif %}">
+                    <i class="fas fa-angle-right"></i>
+                </a>
+                <a class="px-3 py-2 text-sm rounded-lg border border-slate-200 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-all" href="?page={{ datas.paginator.num_pages }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if centre_filter %}&centre={{ centre_filter|urlencode }}{% endif %}{% if genre_filter %}&genre={{ genre_filter|urlencode }}{% endif %}{% if age_filter %}&age={{ age_filter|urlencode }}{% endif %}{% if class_filter %}&class_madressah={{ class_filter|urlencode }}{% endif %}">
+                    <i class="fas fa-angle-double-right"></i>
+                </a>
             {% endif %}
-        </ul>
+        </div>
     </nav>
     {% endif %}
 </div>
-
-<style>
-.madrassah-table-root .table-controls {
-    background: #f8f9fa;
-    border-radius: 10px;
-    margin-bottom: 2rem;
-    padding: 1rem 1rem 0;
-}
-
-.madrassah-table-root .search-box .input-group-text {
-    border: none;
-    background: linear-gradient(45deg, #007bff, #0056b3);
-}
-
-.madrassah-table-root .search-box .form-control {
-    border-left: none;
-    padding-left: 0;
-}
-
-.madrassah-table-root .search-box .form-control:focus {
-    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
-    border-color: #007bff;
-}
-
-.madrassah-table-root .filter-controls .form-select {
-    min-width: 150px;
-    border: 2px solid #e9ecef;
-    border-radius: 8px;
-}
-
-.madrassah-table-root .filter-controls .form-select:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
-}
-
-.madrassah-table-root .stats-card {
-    border-radius: 15px;
-    padding: 1.5rem;
-    display: flex;
-    align-items: center;
-    margin-bottom: 1rem;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease;
-}
-
-.madrassah-table-root .stats-card:hover {
-    transform: translateY(-5px);
-}
-
-.madrassah-table-root .stats-icon {
-    font-size: 2.5rem;
-    margin-right: 1rem;
-    opacity: 0.8;
-}
-
-.madrassah-table-root .stats-content h3 {
-    margin: 0;
-    font-size: 2rem;
-    font-weight: bold;
-}
-
-.madrassah-table-root .stats-content p {
-    margin: 0;
-    opacity: 0.9;
-}
-
-.madrassah-table-root .bg-pink {
-    background-color: #e91e63 !important;
-}
-
-.madrassah-table-root .table-wrapper {
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-.madrassah-table-root .students-table {
-    margin: 0;
-}
-
-.madrassah-table-root .students-table thead th {
-    background: linear-gradient(45deg, #343a40, #495057);
-    border: none;
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 0.85rem;
-    letter-spacing: 0.5px;
-}
-
-.madrassah-table-root .student-row {
-    transition: all 0.3s ease;
-    border-left: 4px solid transparent;
-}
-
-.madrassah-table-root .student-row:hover {
-    background-color: #f8f9fa;
-    border-left-color: #007bff;
-    transform: translateX(5px);
-}
-
-.madrassah-table-root .student-avatar { position: relative; }
-
-.madrassah-table-root .avatar-img {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #fff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-}
-
-.madrassah-table-root .avatar-placeholder {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.2rem;
-}
-
-.madrassah-table-root .student-name strong {
-    color: #2c3e50;
-    font-size: 1rem;
-}
-
-.madrassah-table-root .age-badge {
-    background: linear-gradient(45deg, #ff6b6b, #ee5a52);
-    color: white;
-    padding: 0.25rem 0.5rem;
-    border-radius: 15px;
-    font-size: 0.8rem;
-    font-weight: 500;
-}
-
-.madrassah-table-root .class-badge {
-    background: linear-gradient(45deg, #4ecdc4, #44a08d);
-    color: white;
-    padding: 0.25rem 0.5rem;
-    border-radius: 15px;
-    font-size: 0.8rem;
-    font-weight: 500;
-}
-
-.madrassah-table-root .center-badge {
-    background: linear-gradient(45deg, #f093fb, #f5576c);
-    color: white;
-    padding: 0.25rem 0.5rem;
-    border-radius: 15px;
-    font-size: 0.8rem;
-    font-weight: 500;
-}
-
-.madrassah-table-root .institution-name {
-    color: #495057;
-    font-weight: 500;
-    font-size: 0.9rem;
-}
-
-.madrassah-table-root .action-buttons {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.madrassah-table-root .view-student-btn {
-    border-radius: 12px;
-    padding: 0.75rem 1rem;
-    transition: all 0.3s ease;
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
-    border: none;
-    min-width: 100px;
-}
-
-.madrassah-table-root .view-student-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4);
-    color: #fff !important;
-}
-
-.madrassah-table-root .no-data { padding: 3rem; }
-
-.madrassah-table-root .pagination {
-    margin: 2rem 0 0 0;
-}
-
-.madrassah-table-root .page-link {
-    border-radius: 8px;
-    margin: 0 2px;
-    border: 1px solid #dee2e6;
-    color: #007bff;
-    transition: all 0.3s ease;
-}
-
-.madrassah-table-root .page-link:hover {
-    background-color: #007bff;
-    border-color: #007bff;
-    color: white;
-    transform: translateY(-2px);
-}
-
-.madrassah-table-root .page-item.active .page-link {
-    background: linear-gradient(45deg, #007bff, #0056b3);
-    border-color: #007bff;
-    box-shadow: 0 4px 8px rgba(0,123,255,0.3);
-}
-
-.madrassah-table-root .cursor-pointer { cursor: pointer; }
-
-@media (max-width: 768px) {
-    .madrassah-table-root .filter-controls .form-select {
-        margin-bottom: 0.5rem;
-        min-width: 100%;
-    }
-    .madrassah-table-root .stats-card {
-        text-align: center;
-        flex-direction: column;
-    }
-    .madrassah-table-root .stats-icon {
-        margin-right: 0;
-        margin-bottom: 0.5rem;
-    }
-}
-</style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -481,10 +221,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function debounce(func, wait) {
         let timeout;
         return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
-            };
+            const later = () => { clearTimeout(timeout); func(...args); };
             clearTimeout(timeout);
             timeout = setTimeout(later, wait);
         };

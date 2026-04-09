@@ -2,414 +2,379 @@
 {% block title%} Tableau de Bord - Jamats de Zainabia {% endblock%}
 {% block content %}
 
-<!-- Enhanced Jamat Dashboard Header -->
-<div class="dashboard-header mb-8">
-    <div class="d-flex justify-content-between align-items-center">
+<!-- Header -->
+<div class="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white p-6 rounded-2xl mb-8 shadow-2xl">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">
-                <i class="fas fa-users text-warning mr-3"></i>
+            <h1 class="text-3xl font-bold mb-2 flex items-center gap-3">
+                <i class="fas fa-users text-amber-200"></i>
                 Tableau de Bord - Jamats de Zainabia
             </h1>
-            <p class="text-gray-600">Statistiques complètes et analyses avancées des jamats</p>
+            <p class="text-amber-100">Statistiques complètes et analyses avancées des jamats</p>
         </div>
     </div>
 </div>
 
 <!-- Advanced Filter Panel -->
-<div class="filter-panel mb-6">
-    <div class="card border-0 shadow-sm">
-        <div class="card-header bg-gradient-primary text-white">
-            <h5 class="mb-0">
-                <i class="fas fa-filter mr-2"></i>
-                Filtres Avancés
-                <button class="btn btn-sm btn-outline-light float-right" type="button" data-bs-toggle="collapse" data-bs-target="#filtersCollapse">
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-            </h5>
-        </div>
-        <div class="collapse show" id="filtersCollapse">
-            <div class="card-body">
-                <form method="GET" class="row g-3">
-                    <div class="col-md-3">
-                        <label for="centre" class="form-label">
-                            <i class="fas fa-map-marker-alt text-primary"></i> Centre
-                        </label>
-                        <select name="centre" id="centre" class="form-select">
-                            <option value="">Tous les centres</option>
-                            {% for centre in centres %}
-                                <option value="{{ centre }}" {% if centre == centre_filter %}selected{% endif %}>
-                                    {{ centre }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="age" class="form-label">
-                            <i class="fas fa-birthday-cake text-success"></i> Tranche d'âge
-                        </label>
-                        <select name="age" id="age" class="form-select">
-                            <option value="">Tous les âges</option>
-                            <option value="-25" {% if age_filter == '-25' %}selected{% endif %}>-25 ans</option>
-                            <option value="25-35" {% if age_filter == '25-35' %}selected{% endif %}>25-35 ans</option>
-                            <option value="36-50" {% if age_filter == '36-50' %}selected{% endif %}>36-50 ans</option>
-                            <option value="51+" {% if age_filter == '51+' %}selected{% endif %}>51+ ans</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="genre" class="form-label">
-                            <i class="fas fa-venus-mars text-info"></i> Genre
-                        </label>
-                        <select name="genre" id="genre" class="form-select">
-                            <option value="">Tous les genres</option>
-                            <option value="M" {% if genre_filter == 'M' %}selected{% endif %}>Homme</option>
-                            <option value="F" {% if genre_filter == 'F' %}selected{% endif %}>Femme</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="travail" class="form-label">
-                            <i class="fas fa-briefcase text-warning"></i> Travail
-                        </label>
-                        <select name="travail" id="travail" class="form-select">
-                            <option value="">Tous les travaux</option>
-                            {% for travail in travails %}
-                                <option value="{{ travail }}" {% if travail == travail_filter %}selected{% endif %}>
-                                    {{ travail }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="adress" class="form-label">
-                            <i class="fas fa-map-marker-alt text-danger"></i> Adresse
-                        </label>
-                        <select name="adress" id="adress" class="form-select">
-                            <option value="">Toutes les adresses</option>
-                            {% for adress in adresses %}
-                                <option value="{{ adress }}" {% if adress == adress_filter %}selected{% endif %}>
-                                    {{ adress }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="conversion_year" class="form-label">
-                            <i class="fas fa-calendar-alt text-primary"></i> Année de conversion
-                        </label>
-                        <select name="conversion_year" id="conversion_year" class="form-select">
-                            <option value="">Toutes les années</option>
-                            {% for year in conversion_years %}
-                                <option value="{{ year }}" {% if year|stringformat:"s" == conversion_year_filter|stringformat:"s" %}selected{% endif %}>
-                                    {{ year }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="col-12">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-search mr-2"></i>Appliquer les filtres
-                        </button>
-                        <a href="{% url 'jamat_dashboard' %}" class="btn btn-outline-secondary ml-2">
-                            <i class="fas fa-times mr-2"></i>Réinitialiser
-                        </a>
-                    </div>
-                </form>
-
-                {% if centre_filter or age_filter or genre_filter or travail_filter or adress_filter or conversion_year_filter %}
-                <div class="active-filters mt-3 pt-3 border-top">
-                    <small class="text-muted">Filtres actifs:</small>
-                    {% if centre_filter %}
-                        <span class="badge bg-primary ms-1">Centre: {{ centre_filter }}</span>
-                    {% endif %}
-                    {% if age_filter %}
-                        <span class="badge bg-success ms-1">Âge: {{ age_filter }}</span>
-                    {% endif %}
-                    {% if genre_filter %}
-                        <span class="badge bg-info ms-1">Genre: {{ genre_filter }}</span>
-                    {% endif %}
-                    {% if travail_filter %}
-                        <span class="badge bg-warning ms-1">Travail: {{ travail_filter }}</span>
-                    {% endif %}
-                    {% if adress_filter %}
-                        <span class="badge bg-danger ms-1">Adresse: {{ adress_filter }}</span>
-                    {% endif %}
-                    {% if conversion_year_filter %}
-                        <span class="badge bg-primary ms-1">Conversion: {{ conversion_year_filter }}</span>
-                    {% endif %}
-                </div>
-                {% endif %}
+<div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-8">
+    <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+        <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+            <i class="fas fa-filter text-amber-500"></i>
+            Filtres Avancés
+        </h3>
+        <button onclick="document.getElementById('filtersCollapse').classList.toggle('hidden')" class="inline-flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 transition-all">
+            <i class="fas fa-chevron-down"></i>
+        </button>
+    </div>
+    <div id="filtersCollapse" class="p-6">
+        <form method="GET" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div class="space-y-2">
+                <label for="centre" class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                    <i class="fas fa-map-marker-alt text-slate-400"></i> Centre
+                </label>
+                <select name="centre" id="centre" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all outline-none text-slate-700 appearance-none">
+                    <option value="">Tous les centres</option>
+                    {% for centre in centres %}
+                        <option value="{{ centre }}" {% if centre == centre_filter %}selected{% endif %}>
+                            {{ centre }}
+                        </option>
+                    {% endfor %}
+                </select>
             </div>
+            <div class="space-y-2">
+                <label for="age" class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                    <i class="fas fa-birthday-cake text-slate-400"></i> Tranche d'âge
+                </label>
+                <select name="age" id="age" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all outline-none text-slate-700 appearance-none">
+                    <option value="">Tous les âges</option>
+                    <option value="-25" {% if age_filter == '-25' %}selected{% endif %}>-25 ans</option>
+                    <option value="25-35" {% if age_filter == '25-35' %}selected{% endif %}>25-35 ans</option>
+                    <option value="36-50" {% if age_filter == '36-50' %}selected{% endif %}>36-50 ans</option>
+                    <option value="51+" {% if age_filter == '51+' %}selected{% endif %}>51+ ans</option>
+                </select>
+            </div>
+            <div class="space-y-2">
+                <label for="genre" class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                    <i class="fas fa-venus-mars text-slate-400"></i> Genre
+                </label>
+                <select name="genre" id="genre" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all outline-none text-slate-700 appearance-none">
+                    <option value="">Tous les genres</option>
+                    <option value="M" {% if genre_filter == 'M' %}selected{% endif %}>Homme</option>
+                    <option value="F" {% if genre_filter == 'F' %}selected{% endif %}>Femme</option>
+                </select>
+            </div>
+            <div class="space-y-2">
+                <label for="travail" class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                    <i class="fas fa-briefcase text-slate-400"></i> Travail
+                </label>
+                <select name="travail" id="travail" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all outline-none text-slate-700 appearance-none">
+                    <option value="">Tous les travaux</option>
+                    {% for travail in travails %}
+                        <option value="{{ travail }}" {% if travail == travail_filter %}selected{% endif %}>
+                            {{ travail }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="space-y-2">
+                <label for="adress" class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                    <i class="fas fa-map-marker-alt text-slate-400"></i> Adresse
+                </label>
+                <select name="adress" id="adress" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all outline-none text-slate-700 appearance-none">
+                    <option value="">Toutes les adresses</option>
+                    {% for adress in adresses %}
+                        <option value="{{ adress }}" {% if adress == adress_filter %}selected{% endif %}>
+                            {{ adress }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="space-y-2">
+                <label for="conversion_year" class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                    <i class="fas fa-calendar-alt text-slate-400"></i> Année de conversion
+                </label>
+                <select name="conversion_year" id="conversion_year" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all outline-none text-slate-700 appearance-none">
+                    <option value="">Toutes les années</option>
+                    {% for year in conversion_years %}
+                        <option value="{{ year }}" {% if year|stringformat:"s" == conversion_year_filter|stringformat:"s" %}selected{% endif %}>
+                            {{ year }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-span-full flex flex-wrap gap-3 mt-2">
+                <button type="submit" class="inline-flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-lg font-medium hover:from-amber-600 hover:to-orange-600 transition-all shadow-md hover:shadow-lg">
+                    <i class="fas fa-search"></i> Appliquer les filtres
+                </button>
+                <a href="{% url 'jamat_dashboard' %}" class="inline-flex items-center gap-2 px-6 py-2 bg-white border-2 border-slate-300 text-slate-700 rounded-lg font-medium hover:bg-slate-50 transition-all">
+                    <i class="fas fa-times"></i> Réinitialiser
+                </a>
+            </div>
+        </form>
+
+        {% if centre_filter or age_filter or genre_filter or travail_filter or adress_filter or conversion_year_filter %}
+        <div class="flex flex-wrap items-center gap-2 mt-4 pt-4 border-t border-slate-200">
+            <small class="text-slate-500">Filtres actifs:</small>
+            {% if centre_filter %}
+                <span class="px-2.5 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-bold">Centre: {{ centre_filter }}</span>
+            {% endif %}
+            {% if age_filter %}
+                <span class="px-2.5 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-bold">Âge: {{ age_filter }}</span>
+            {% endif %}
+            {% if genre_filter %}
+                <span class="px-2.5 py-1 bg-cyan-100 text-cyan-700 rounded-full text-xs font-bold">Genre: {{ genre_filter }}</span>
+            {% endif %}
+            {% if travail_filter %}
+                <span class="px-2.5 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-bold">Travail: {{ travail_filter }}</span>
+            {% endif %}
+            {% if adress_filter %}
+                <span class="px-2.5 py-1 bg-rose-100 text-rose-700 rounded-full text-xs font-bold">Adresse: {{ adress_filter }}</span>
+            {% endif %}
+            {% if conversion_year_filter %}
+                <span class="px-2.5 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-bold">Conversion: {{ conversion_year_filter }}</span>
+            {% endif %}
         </div>
+        {% endif %}
     </div>
 </div>
 
 <!-- Key Metrics Cards -->
-<div class="row mb-6">
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="metric-card bg-gradient-warning">
-            <div class="metric-icon">
-                <i class="fas fa-users"></i>
-            </div>
-            <div class="metric-content">
-                <h3>{{ total_jamats }}</h3>
-                <p>Jamats Total</p>
-                <div class="metric-change">
-                    <i class="fas fa-filter"></i>
-                    {% if centre_filter or age_filter or genre_filter or travail_filter or adress_filter or conversion_year_filter %}Filtré{% else %}Global{% endif %}
-                </div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="bg-gradient-to-br from-rose-500 to-pink-600 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-4 text-white">
+        <div class="text-4xl opacity-80"><i class="fas fa-users"></i></div>
+        <div>
+            <h3 class="text-3xl font-bold">{{ total_jamats }}</h3>
+            <p class="text-rose-100 text-sm font-medium uppercase tracking-wider">Jamats Total</p>
+            <div class="text-xs font-semibold mt-1">
+                <i class="fas fa-filter"></i>
+                {% if centre_filter or age_filter or genre_filter or travail_filter or adress_filter or conversion_year_filter %}Filtré{% else %}Global{% endif %}
             </div>
         </div>
     </div>
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="metric-card bg-gradient-info">
-            <div class="metric-icon">
-                <i class="fas fa-phone"></i>
-            </div>
-            <div class="metric-content">
-                <h3>{{ with_contact }}</h3>
-                <p>Avec Contact</p>
-                <div class="metric-change">
-                    <span class="text-success">{{ contact_percentage }}%</span>
-                </div>
-            </div>
+    <div class="bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-4 text-white">
+        <div class="text-4xl opacity-80"><i class="fas fa-phone"></i></div>
+        <div>
+            <h3 class="text-3xl font-bold">{{ with_contact }}</h3>
+            <p class="text-cyan-100 text-sm font-medium uppercase tracking-wider">Avec Contact</p>
+            <div class="text-xs font-semibold mt-1">{{ contact_percentage }}%</div>
         </div>
     </div>
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="metric-card bg-gradient-success">
-            <div class="metric-icon">
-                <i class="fas fa-mars"></i>
-            </div>
-            <div class="metric-content">
-                <h3>{{ male_count }}</h3>
-                <p>Hommes</p>
-                <div class="metric-change">
-                    <span class="text-success">{{ male_percentage }}%</span>
-                </div>
-            </div>
+    <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-4 text-white">
+        <div class="text-4xl opacity-80"><i class="fas fa-mars"></i></div>
+        <div>
+            <h3 class="text-3xl font-bold">{{ male_count }}</h3>
+            <p class="text-emerald-100 text-sm font-medium uppercase tracking-wider">Hommes</p>
+            <div class="text-xs font-semibold mt-1">{{ male_percentage }}%</div>
         </div>
     </div>
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="metric-card bg-gradient-warning">
-            <div class="metric-icon">
-                <i class="fas fa-venus"></i>
-            </div>
-            <div class="metric-content">
-                <h3>{{ female_count }}</h3>
-                <p>Femmes</p>
-                <div class="metric-change">
-                    <span class="text-success">{{ female_percentage }}%</span>
-                </div>
-            </div>
+    <div class="bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-4 text-white">
+        <div class="text-4xl opacity-80"><i class="fas fa-venus"></i></div>
+        <div>
+            <h3 class="text-3xl font-bold">{{ female_count }}</h3>
+            <p class="text-amber-100 text-sm font-medium uppercase tracking-wider">Femmes</p>
+            <div class="text-xs font-semibold mt-1">{{ female_percentage }}%</div>
         </div>
     </div>
 </div>
 
 <!-- Summary Panel -->
-<div class="row mb-6">
-    <div class="col-12">
-        <div class="chart-card">
-            <div class="chart-header">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h5><i class="fas fa-chart-line text-warning"></i> Vue d'ensemble</h5>
-                    <div class="performers-info">
-                        {% if centre_filter or age_filter or genre_filter or travail_filter or adress_filter or conversion_year_filter %}
-                            <span class="badge bg-success">Filtré</span>
-                        {% else %}
-                            <span class="badge bg-info">Global</span>
-                        {% endif %}
-                        <small class="text-muted ms-2">{{ total_jamats }} jamat{{ total_jamats|pluralize }}</small>
-                    </div>
-                </div>
+<div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
+    <div class="bg-gradient-to-r from-amber-500 to-orange-500 p-6">
+        <div class="flex justify-between items-center">
+            <h5 class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="fas fa-chart-line text-white"></i> Vue d'ensemble
+            </h5>
+            <div class="flex items-center gap-2">
+                {% if centre_filter or age_filter or genre_filter or travail_filter or adress_filter or conversion_year_filter %}
+                    <span class="px-2.5 py-1 bg-white/20 text-white rounded-full text-xs font-bold backdrop-blur-sm">Filtré</span>
+                {% else %}
+                    <span class="px-2.5 py-1 bg-white/20 text-white rounded-full text-xs font-bold backdrop-blur-sm">Global</span>
+                {% endif %}
+                <small class="text-white ml-2">{{ total_jamats }} jamat{{ total_jamats|pluralize }}</small>
             </div>
-            <div class="chart-body">
-                <div class="row text-center">
-                    <div class="col-md-3">
-                        <div class="summary-stat">
-                            <h4 class="text-success">{{ total_jamats }}</h4>
-                            <small class="text-muted">Total Jamats</small>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="summary-stat">
-                            <h4 class="text-info">{{ with_contact }}</h4>
-                            <small class="text-muted">Avec Contact</small>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="summary-stat">
-                            <h4 class="text-warning">{{ jamat_center_stats|length }}</h4>
-                            <small class="text-muted">Centres</small>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="summary-stat">
-                            <h4 class="text-primary">{{ jamat_work_stats|length }}</h4>
-                            <small class="text-muted">Travaux</small>
-                        </div>
-                    </div>
-                </div>
+        </div>
+    </div>
+    <div class="p-6">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            <div class="p-4">
+                <h4 class="text-2xl font-bold text-emerald-600">{{ total_jamats }}</h4>
+                <small class="text-slate-500 text-xs">Total Jamats</small>
+            </div>
+            <div class="p-4">
+                <h4 class="text-2xl font-bold text-cyan-600">{{ with_contact }}</h4>
+                <small class="text-slate-500 text-xs">Avec Contact</small>
+            </div>
+            <div class="p-4">
+                <h4 class="text-2xl font-bold text-amber-600">{{ jamat_center_stats|length }}</h4>
+                <small class="text-slate-500 text-xs">Centres</small>
+            </div>
+            <div class="p-4">
+                <h4 class="text-2xl font-bold text-indigo-600">{{ jamat_work_stats|length }}</h4>
+                <small class="text-slate-500 text-xs">Travaux</small>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Statistics Grid -->
-<div class="row mb-6">
-    <div class="col-lg-6 mb-4">
-        <div class="chart-card">
-            <div class="chart-header">
-                <h5><i class="fas fa-chart-pie text-primary"></i> Répartition par Âge</h5>
-            </div>
-            <div class="chart-body">
-                {% if total_jamats > 0 %}
-                    <div class="chart-container" style="position: relative; height: 300px;">
-                        <canvas id="ageChart"></canvas>
-                    </div>
-                    <div class="chart-legend mt-3">
-                        {% for age_group, count in jamat_age_groups.items %}
-                        <div class="legend-item">
-                            <span class="legend-color" style="background-color: var(--age-color-{{ forloop.counter }})"></span>
-                            <span>{{ age_group }} ans: {{ count }}</span>
-                        </div>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <div class="no-data-message text-center py-5">
-                        <i class="fas fa-chart-pie fa-3x text-muted mb-3"></i>
-                        <h5 class="text-muted">Aucune donnée disponible</h5>
-                        <p class="text-muted">Ajustez vos filtres pour voir les statistiques</p>
-                    </div>
-                {% endif %}
-            </div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <!-- Age Distribution -->
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div class="bg-gradient-to-r from-orange-500 to-amber-600 p-6">
+            <h5 class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="fas fa-chart-pie text-white"></i> Répartition par Âge
+            </h5>
         </div>
-    </div>
-    <div class="col-lg-6 mb-4">
-        <div class="chart-card">
-            <div class="chart-header">
-                <h5><i class="fas fa-venus-mars text-info"></i> Répartition par Genre</h5>
-            </div>
-            <div class="chart-body">
-                <div class="chart-container" style="position: relative; height: 300px;">
-                    <canvas id="genderChart"></canvas>
+        <div class="p-6">
+            {% if total_jamats > 0 %}
+                <div class="relative h-72 w-full">
+                    <canvas id="ageChart"></canvas>
                 </div>
-                <div class="gender-stats mt-3">
-                    {% for stat in jamat_gender_stats %}
-                    <div class="stat-item">
-                        <i class="fas {% if stat.genre == 'M' %}fa-mars text-primary{% else %}fa-venus text-pink{% endif %}"></i>
-                        <span>{% if stat.genre == 'M' %}Hommes{% else %}Femmes{% endif %}: {{ stat.count }}</span>
+                <div class="flex flex-wrap gap-3 justify-center mt-4">
+                    {% for age_group, count in jamat_age_groups.items %}
+                    <div class="flex items-center gap-2 text-sm">
+                        <span class="w-4 h-4 rounded-full inline-block" style="background-color: var(--age-color-{{ forloop.counter }})"></span>
+                        <span>{{ age_group }} ans: {{ count }}</span>
                     </div>
                     {% endfor %}
                 </div>
+            {% else %}
+                <div class="text-center py-12">
+                    <i class="fas fa-chart-pie text-5xl text-slate-300 mb-4 block"></i>
+                    <h5 class="text-lg font-bold text-slate-500">Aucune donnée disponible</h5>
+                    <p class="text-slate-400">Ajustez vos filtres pour voir les statistiques</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Gender Distribution -->
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div class="bg-gradient-to-r from-amber-500 to-orange-600 p-6">
+            <h5 class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="fas fa-venus-mars text-white"></i> Répartition par Genre
+            </h5>
+        </div>
+        <div class="p-6">
+            <div class="relative h-72 w-full">
+                <canvas id="genderChart"></canvas>
+            </div>
+            <div class="flex flex-wrap gap-4 justify-center mt-4">
+                {% for stat in jamat_gender_stats %}
+                <div class="flex items-center gap-2 text-sm">
+                    <i class="fas {% if stat.genre == 'M' %}fa-mars text-blue-500{% else %}fa-venus text-pink-500{% endif %}"></i>
+                    <span>{% if stat.genre == 'M' %}Hommes{% else %}Femmes{% endif %}: {{ stat.count }}</span>
+                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
 </div>
 
 <!-- Centers and Work Row -->
-<div class="row mb-6">
-    <div class="col-lg-6 mb-4">
-        <div class="chart-card">
-            <div class="chart-header">
-                <h5><i class="fas fa-map-marker-alt text-success"></i> Répartition par Centre</h5>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <!-- Centers -->
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div class="bg-gradient-to-r from-orange-600 to-amber-500 p-6">
+            <h5 class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="fas fa-map-marker-alt text-white"></i> Répartition par Centre
+            </h5>
+        </div>
+        <div class="p-6">
+            <div class="relative h-72 w-full">
+                <canvas id="centersChart"></canvas>
             </div>
-            <div class="chart-body">
-                <div class="chart-container" style="position: relative; height: 300px;">
-                    <canvas id="centersChart"></canvas>
+            <div class="flex flex-wrap gap-3 justify-center mt-4">
+                {% for center in jamat_center_stats|slice:":5" %}
+                <div class="flex items-center gap-2 text-sm">
+                    <span class="font-medium text-slate-700">{{ center.centre|default:"Non spécifié" }}</span>
+                    <span class="px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded-full text-xs font-bold">{{ center.count }}</span>
                 </div>
-                <div class="centers-list mt-3">
-                    {% for center in jamat_center_stats|slice:":5" %}
-                    <div class="center-item">
-                        <span class="center-name">{{ center.centre|default:"Non spécifié" }}</span>
-                        <span class="center-count badge bg-primary">{{ center.count }}</span>
-                    </div>
-                    {% endfor %}
-                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
-    <div class="col-lg-6 mb-4">
-        <div class="chart-card">
-            <div class="chart-header">
-                <h5><i class="fas fa-briefcase text-warning"></i> Répartition par Travail</h5>
+
+    <!-- Work -->
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div class="bg-gradient-to-r from-amber-600 to-orange-500 p-6">
+            <h5 class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="fas fa-briefcase text-white"></i> Répartition par Travail
+            </h5>
+        </div>
+        <div class="p-6">
+            <div class="relative h-72 w-full">
+                <canvas id="workChart"></canvas>
             </div>
-            <div class="chart-body">
-                <div class="chart-container" style="position: relative; height: 300px;">
-                    <canvas id="workChart"></canvas>
+            <div class="flex flex-wrap gap-3 justify-center mt-4">
+                {% for work in jamat_work_stats|slice:":5" %}
+                <div class="flex items-center gap-2 text-sm">
+                    <span class="font-medium text-slate-700">{{ work.travail|default:"Non spécifié" }}</span>
+                    <span class="px-2 py-0.5 bg-amber-100 text-amber-700 rounded-full text-xs font-bold">{{ work.count }}</span>
                 </div>
-                <div class="centers-list mt-3">
-                    {% for work in jamat_work_stats|slice:":5" %}
-                    <div class="center-item">
-                        <span class="center-name">{{ work.travail|default:"Non spécifié" }}</span>
-                        <span class="center-count badge bg-warning">{{ work.count }}</span>
-                    </div>
-                    {% endfor %}
-                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
 </div>
 
 <!-- Conversion Year and Address Row -->
-<div class="row mb-6">
-    <div class="col-lg-6 mb-4">
-        <div class="chart-card">
-            <div class="chart-header">
-                <h5><i class="fas fa-calendar-alt text-primary"></i> Année de Conversion</h5>
-            </div>
-            <div class="chart-body">
-                <div class="chart-container" style="position: relative; height: 300px;">
-                    <canvas id="conversionChart"></canvas>
-                </div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <!-- Conversion Year -->
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div class="bg-gradient-to-r from-amber-600 to-orange-500 p-6">
+            <h5 class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="fas fa-calendar-alt text-white"></i> Année de Conversion
+            </h5>
+        </div>
+        <div class="p-6">
+            <div class="relative h-72 w-full">
+                <canvas id="conversionChart"></canvas>
             </div>
         </div>
     </div>
-    <div class="col-lg-6 mb-4">
-        <div class="chart-card">
-            <div class="chart-header">
-                <h5><i class="fas fa-map-pin text-danger"></i> Répartition par Adresse</h5>
-            </div>
-            <div class="chart-body">
-                <div class="centers-list mt-3">
-                    {% for location in jamat_location_stats|slice:":10" %}
-                    <div class="center-item">
-                        <span class="center-name">{{ location.adress|default:"Non spécifié" }}</span>
-                        <span class="center-count badge bg-danger">{{ location.count }}</span>
-                    </div>
-                    {% endfor %}
+
+    <!-- Address -->
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div class="bg-gradient-to-r from-orange-500 to-rose-500 p-6">
+            <h5 class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="fas fa-map-pin text-white"></i> Répartition par Adresse
+            </h5>
+        </div>
+        <div class="p-6">
+            <div class="flex flex-wrap gap-3 justify-center mt-4">
+                {% for location in jamat_location_stats|slice:":10" %}
+                <div class="flex items-center gap-2 text-sm">
+                    <span class="font-medium text-slate-700">{{ location.adress|default:"Non spécifié" }}</span>
+                    <span class="px-2 py-0.5 bg-rose-100 text-rose-700 rounded-full text-xs font-bold">{{ location.count }}</span>
                 </div>
+                {% endfor %}
             </div>
         </div>
     </div>
 </div>
 
 <!-- Quick Actions Panel -->
-<div class="row mb-6">
-    <div class="col-12">
-        <div class="actions-card">
-            <div class="actions-header">
-                <h5><i class="fas fa-bolt text-primary"></i> Actions Rapides</h5>
-            </div>
-            <div class="actions-body">
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <a href="{% url 'jamat' %}" class="action-btn bg-warning">
-                            <i class="fas fa-users"></i>
-                            <span>Voir Jamats</span>
-                        </a>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <a href="{% url 'archived_jamats' %}" class="action-btn bg-info">
-                            <i class="fas fa-archive"></i>
-                            <span>Archives Jamats</span>
-                        </a>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <a href="{% url 'home' %}" class="action-btn bg-success">
-                            <i class="fas fa-chart-bar"></i>
-                            <span>Dashboard Global</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
+<div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
+    <div class="bg-gradient-to-r from-amber-500 to-orange-600 p-6">
+        <h5 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fas fa-bolt text-white"></i> Actions Rapides
+        </h5>
+    </div>
+    <div class="p-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <a href="{% url 'jamat' %}" class="flex flex-col items-center justify-center p-8 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600 transition-all transform hover:-translate-y-1 hover:shadow-xl">
+                <i class="fas fa-users text-4xl mb-3"></i>
+                <span class="font-semibold">Voir Jamats</span>
+            </a>
+            <a href="{% url 'archived_jamats' %}" class="flex flex-col items-center justify-center p-8 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-500 text-white hover:from-cyan-600 hover:to-blue-600 transition-all transform hover:-translate-y-1 hover:shadow-xl">
+                <i class="fas fa-archive text-4xl mb-3"></i>
+                <span class="font-semibold">Archives Jamats</span>
+            </a>
+            <a href="{% url 'home' %}" class="flex flex-col items-center justify-center p-8 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 text-white hover:from-emerald-600 hover:to-teal-600 transition-all transform hover:-translate-y-1 hover:shadow-xl">
+                <i class="fas fa-chart-bar text-4xl mb-3"></i>
+                <span class="font-semibold">Dashboard Global</span>
+            </a>
         </div>
     </div>
 </div>
@@ -420,208 +385,6 @@
     --age-color-2: #36A2EB;
     --age-color-3: #FFCE56;
     --age-color-4: #4BC0C0;
-}
-
-.dashboard-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 2rem;
-    border-radius: 15px;
-    margin-bottom: 2rem;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-}
-
-.filter-panel .card {
-    border-radius: 15px;
-    overflow: hidden;
-}
-
-.bg-gradient-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.metric-card {
-    background: white;
-    border-radius: 20px;
-    padding: 2rem;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    color: white;
-}
-
-.metric-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-}
-
-.bg-gradient-warning {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-}
-
-.bg-gradient-info {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-}
-
-.bg-gradient-success {
-    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-}
-
-.metric-icon {
-    font-size: 3rem;
-    margin-right: 1.5rem;
-    opacity: 0.8;
-}
-
-.metric-content h3 {
-    font-size: 2.5rem;
-    font-weight: bold;
-    margin: 0;
-    line-height: 1;
-}
-
-.metric-content p {
-    margin: 0.5rem 0 0 0;
-    opacity: 0.9;
-    font-size: 1rem;
-}
-
-.metric-change {
-    font-size: 0.8rem;
-    opacity: 0.8;
-    margin-top: 0.25rem;
-}
-
-.chart-card, .actions-card {
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-    overflow: hidden;
-    height: 100%;
-}
-
-.chart-header, .actions-header {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    padding: 1.5rem;
-    border-bottom: 1px solid #dee2e6;
-}
-
-.chart-header h5, .actions-header h5 {
-    margin: 0;
-    font-weight: 600;
-    color: #495057;
-}
-
-.chart-body, .actions-body {
-    padding: 1.5rem;
-}
-
-.chart-container {
-    position: relative !important;
-    height: 300px !important;
-    width: 100% !important;
-}
-
-.chart-container canvas {
-    max-height: 300px !important;
-}
-
-.chart-legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    justify-content: center;
-}
-
-.legend-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-}
-
-.legend-color {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    display: inline-block;
-}
-
-.gender-stats, .centers-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    justify-content: center;
-}
-
-.stat-item, .center-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-}
-
-.center-name {
-    font-weight: 500;
-}
-
-.summary-stat h4 {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 0.25rem;
-}
-
-.performers-info {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.action-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem 1rem;
-    border-radius: 15px;
-    color: white;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-.action-btn:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    color: white;
-    text-decoration: none;
-}
-
-.action-btn i {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-}
-
-.text-pink {
-    color: #e91e63 !important;
-}
-
-@media (max-width: 768px) {
-    .dashboard-header {
-        padding: 1rem;
-        text-align: center;
-    }
-    .metric-card {
-        flex-direction: column;
-        text-align: center;
-        padding: 1.5rem;
-    }
-    .metric-icon {
-        margin-right: 0;
-        margin-bottom: 1rem;
-    }
 }
 </style>
 
@@ -746,4 +509,3 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 {% endblock %}
-

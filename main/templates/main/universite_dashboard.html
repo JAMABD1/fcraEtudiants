@@ -3,590 +3,475 @@
 {% block content %}
 
 <!-- Header -->
-<div class="dashboard-header mb-8">
-    <div class="d-flex justify-content-between align-items-center">
+<div class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-700 text-white p-6 rounded-2xl mb-8 shadow-2xl">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">
-                <i class="fas fa-university text-primary mr-3"></i>
+            <h1 class="text-3xl font-bold mb-2 flex items-center gap-3">
+                <i class="fas fa-university text-blue-200"></i>
                 Tableau de Bord - Université
             </h1>
-            <p class="text-gray-200">Statistiques complètes et analyses des étudiants universitaires</p>
+            <p class="text-blue-100">Statistiques complètes et analyses des étudiants universitaires</p>
         </div>
-        <div class="d-flex gap-2">
-            <a href="{% url 'universite' %}" class="btn btn-outline-light btn-sm"><i class="fas fa-list me-2"></i>Liste Universités</a>
-            <a href="{% url 'archived_universites' %}" class="btn btn-outline-light btn-sm"><i class="fas fa-archive me-2"></i>Archivés</a>
-            <a href="{% url 'notesuniversite' %}" class="btn btn-outline-light btn-sm"><i class="fas fa-chart-line me-2"></i>Notes</a>
-        </div>
-    </div>
-    
-    <!-- Advanced Filter Panel -->
-    <div class="filter-panel mt-4">
-        <div class="card border-0 shadow-sm">
-            <div class="card-header bg-gradient-primary text-white">
-                <h5 class="mb-0">
-                    <i class="fas fa-filter mr-2"></i>
-                    Filtres Avancés
-                    <button class="btn btn-sm btn-outline-light float-right" type="button" data-bs-toggle="collapse" data-bs-target="#filtersCollapse">
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                </h5>
-            </div>
-            <div class="collapse show" id="filtersCollapse">
-                <div class="card-body">
-                    <form method="GET" class="row g-3">
-                        <div class="col-md-3">
-                            <label for="centre" class="form-label">
-                                <i class="fas fa-map-marker-alt text-primary"></i> Centre
-                            </label>
-                            <select name="centre" id="centre" class="form-select">
-                                <option value="">Tous les centres</option>
-                                {% for centre in centres %}
-                                    <option value="{{ centre }}" {% if centre == centre_filter %}selected{% endif %}>
-                                        {{ centre }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="designation" class="form-label">
-                                <i class="fas fa-graduation-cap text-success"></i> Désignation
-                            </label>
-                            <select name="designation" id="designation" class="form-select">
-                                <option value="">Toutes les désignations</option>
-                                {% for designation in designations %}
-                                    <option value="{{ designation }}" {% if designation == designation_filter %}selected{% endif %}>
-                                        {{ designation }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="institution" class="form-label">
-                                <i class="fas fa-building text-info"></i> Institution
-                            </label>
-                            <select name="institution" id="institution" class="form-select">
-                                <option value="">Toutes les institutions</option>
-                                {% for institution in institutions %}
-                                    <option value="{{ institution }}" {% if institution == institution_filter %}selected{% endif %}>
-                                        {{ institution }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="age" class="form-label">
-                                <i class="fas fa-calendar-alt text-warning"></i> Tranche d'âge
-                            </label>
-                            <select name="age" id="age" class="form-select">
-                                <option value="">Toutes les tranches</option>
-                                <option value="18-21" {% if age_filter == '18-21' %}selected{% endif %}>18-21 ans</option>
-                                <option value="22-25" {% if age_filter == '22-25' %}selected{% endif %}>22-25 ans</option>
-                                <option value="26-30" {% if age_filter == '26-30' %}selected{% endif %}>26-30 ans</option>
-                                <option value="31+" {% if age_filter == '31+' %}selected{% endif %}>31+ ans</option>
-                            </select>
-                        </div>
-                        <div class="col-12">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-search me-2"></i>Appliquer les filtres
-                            </button>
-                            <a href="{% url 'universite_dashboard' %}" class="btn btn-outline-secondary ms-2">
-                                <i class="fas fa-times me-2"></i>Réinitialiser
-                            </a>
-                        </div>
-                    </form>
-                </div>
-            </div>
+        <div class="flex flex-wrap gap-2">
+            <a href="{% url 'universite' %}" class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-all backdrop-blur-sm border border-white/30"><i class="fas fa-list"></i> Liste Universités</a>
+            <a href="{% url 'archived_universites' %}" class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-all backdrop-blur-sm border border-white/30"><i class="fas fa-archive"></i> Archivés</a>
+            <a href="{% url 'notesuniversite' %}" class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-all backdrop-blur-sm border border-white/30"><i class="fas fa-chart-line"></i> Notes</a>
         </div>
     </div>
 </div>
 
+<!-- Advanced Filter Panel -->
+<div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-8">
+    <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+        <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+            <i class="fas fa-filter text-indigo-500"></i>
+            Filtres Avancés
+        </h3>
+        <button onclick="document.getElementById('filtersCollapse').classList.toggle('hidden')" class="inline-flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 transition-all">
+            <i class="fas fa-chevron-down"></i>
+        </button>
+    </div>
+    <div id="filtersCollapse" class="p-6">
+        <form method="GET" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="space-y-2">
+                <label for="centre" class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                    <i class="fas fa-map-marker-alt text-slate-400"></i> Centre
+                </label>
+                <select name="centre" id="centre" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none">
+                    <option value="">Tous les centres</option>
+                    {% for centre in centres %}
+                        <option value="{{ centre }}" {% if centre == centre_filter %}selected{% endif %}>
+                            {{ centre }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="space-y-2">
+                <label for="designation" class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                    <i class="fas fa-graduation-cap text-slate-400"></i> Désignation
+                </label>
+                <select name="designation" id="designation" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none">
+                    <option value="">Toutes les désignations</option>
+                    {% for designation in designations %}
+                        <option value="{{ designation }}" {% if designation == designation_filter %}selected{% endif %}>
+                            {{ designation }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="space-y-2">
+                <label for="institution" class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                    <i class="fas fa-building text-slate-400"></i> Institution
+                </label>
+                <select name="institution" id="institution" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none">
+                    <option value="">Toutes les institutions</option>
+                    {% for institution in institutions %}
+                        <option value="{{ institution }}" {% if institution == institution_filter %}selected{% endif %}>
+                            {{ institution }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="space-y-2">
+                <label for="age" class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                    <i class="fas fa-calendar-alt text-slate-400"></i> Tranche d'âge
+                </label>
+                <select name="age" id="age" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none">
+                    <option value="">Toutes les tranches</option>
+                    <option value="18-21" {% if age_filter == '18-21' %}selected{% endif %}>18-21 ans</option>
+                    <option value="22-25" {% if age_filter == '22-25' %}selected{% endif %}>22-25 ans</option>
+                    <option value="26-30" {% if age_filter == '26-30' %}selected{% endif %}>26-30 ans</option>
+                    <option value="31+" {% if age_filter == '31+' %}selected{% endif %}>31+ ans</option>
+                </select>
+            </div>
+            <div class="col-span-full flex flex-wrap gap-3 mt-2">
+                <button type="submit" class="inline-flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-medium hover:from-indigo-700 hover:to-purple-700 transition-all shadow-md hover:shadow-lg">
+                    <i class="fas fa-search"></i> Appliquer les filtres
+                </button>
+                <a href="{% url 'universite_dashboard' %}" class="inline-flex items-center gap-2 px-6 py-2 bg-white border-2 border-slate-300 text-slate-700 rounded-lg font-medium hover:bg-slate-50 transition-all">
+                    <i class="fas fa-times"></i> Réinitialiser
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
 <!-- Statistics Cards -->
-<div class="row mb-6">
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-primary shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                            Total Universités
-                        </div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_universites }}</div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="fas fa-university fa-2x text-gray-300"></i>
-                    </div>
-                </div>
-            </div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="bg-gradient-to-br from-indigo-500 to-blue-600 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-4 text-white">
+        <div class="text-4xl opacity-80"><i class="fas fa-university"></i></div>
+        <div>
+            <h3 class="text-3xl font-bold">{{ total_universites }}</h3>
+            <p class="text-indigo-100 text-sm font-medium uppercase tracking-wider">Total Universités</p>
         </div>
     </div>
-
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-success shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                            Masculin
-                        </div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ male_count }}</div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="fas fa-male fa-2x text-gray-300"></i>
-                    </div>
-                </div>
-            </div>
+    <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-4 text-white">
+        <div class="text-4xl opacity-80"><i class="fas fa-male"></i></div>
+        <div>
+            <h3 class="text-3xl font-bold">{{ male_count }}</h3>
+            <p class="text-emerald-100 text-sm font-medium uppercase tracking-wider">Masculin</p>
         </div>
     </div>
-
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-info shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                            Féminin
-                        </div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ female_count }}</div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="fas fa-female fa-2x text-gray-300"></i>
-                    </div>
-                </div>
-            </div>
+    <div class="bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-4 text-white">
+        <div class="text-4xl opacity-80"><i class="fas fa-female"></i></div>
+        <div>
+            <h3 class="text-3xl font-bold">{{ female_count }}</h3>
+            <p class="text-cyan-100 text-sm font-medium uppercase tracking-wider">Féminin</p>
         </div>
     </div>
-
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-warning shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                            Moyenne d'âge
-                        </div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">
-                            {% if total_universites > 0 %}
-                                {% widthratio male_count total_universites 100 %}% M / {% widthratio female_count total_universites 100 %}% F
-                            {% else %}
-                                0%
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="fas fa-chart-pie fa-2x text-gray-300"></i>
-                    </div>
-                </div>
-            </div>
+    <div class="bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-4 text-white">
+        <div class="text-4xl opacity-80"><i class="fas fa-chart-pie"></i></div>
+        <div>
+            <h3 class="text-3xl font-bold">
+                {% if total_universites > 0 %}
+                    {% widthratio male_count total_universites 100 %}% M / {% widthratio female_count total_universites 100 %}% F
+                {% else %}
+                    0%
+                {% endif %}
+            </h3>
+            <p class="text-amber-100 text-sm font-medium uppercase tracking-wider">Ratio H/F</p>
         </div>
     </div>
 </div>
 
 <!-- Charts Row -->
-<div class="row">
-    <!-- Designation Distribution Chart -->
-    <div class="col-xl-6 col-lg-7">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">
-                    <i class="fas fa-graduation-cap mr-2"></i>Distribution par Désignation
-                </h6>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    {% for stat in designation_stats %}
-                    <div class="col-md-6 mb-3">
-                        <div class="d-flex align-items-center p-3 bg-light rounded">
-                            <div class="flex-shrink-0">
-                                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                                    <i class="fas fa-graduation-cap"></i>
-                                </div>
-                            </div>
-                            <div class="flex-grow-1 ms-3">
-                                <h6 class="mb-1">{{ stat.universite__designation|default:"Non spécifié" }}</h6>
-                                <p class="mb-0 text-muted">{{ stat.count }} étudiants</p>
-                            </div>
-                            <div class="flex-shrink-0">
-                                <span class="badge bg-primary fs-6">{{ stat.count }}</span>
-                            </div>
-                        </div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <!-- Designation Distribution -->
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div class="bg-gradient-to-r from-indigo-500 to-purple-500 p-6">
+            <h5 class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="fas fa-graduation-cap text-white"></i> Distribution par Désignation
+            </h5>
+        </div>
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {% for stat in designation_stats %}
+                <div class="flex items-center p-4 bg-slate-50 rounded-xl gap-4">
+                    <div class="w-12 h-12 bg-indigo-600 text-white rounded-full flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-graduation-cap"></i>
                     </div>
-                    {% empty %}
-                    <div class="col-12 text-center text-muted py-4">
-                        <i class="fas fa-graduation-cap fa-3x mb-3"></i>
-                        <p>Aucune donnée de désignation disponible</p>
+                    <div class="flex-grow min-w-0">
+                        <h6 class="font-semibold text-slate-800 text-sm truncate">{{ stat.universite__designation|default:"Non spécifié" }}</h6>
+                        <p class="text-slate-500 text-xs">{{ stat.count }} étudiants</p>
                     </div>
-                    {% endfor %}
+                    <span class="px-2.5 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-bold flex-shrink-0">{{ stat.count }}</span>
                 </div>
+                {% empty %}
+                <div class="col-span-full text-center text-slate-500 py-12">
+                    <i class="fas fa-graduation-cap text-5xl text-slate-300 mb-4 block"></i>
+                    <p>Aucune donnée de désignation disponible</p>
+                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
 
-    <!-- Institution Distribution Chart -->
-    <div class="col-xl-6 col-lg-5">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">
-                    <i class="fas fa-building mr-2"></i>Distribution par Institution
-                </h6>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    {% for stat in institution_stats %}
-                    <div class="col-md-6 mb-3">
-                        <div class="d-flex align-items-center p-3 bg-light rounded">
-                            <div class="flex-shrink-0">
-                                <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                                    <i class="fas fa-building"></i>
-                                </div>
-                            </div>
-                            <div class="flex-grow-1 ms-3">
-                                <h6 class="mb-1">{{ stat.universite__institution|default:"Non spécifié" }}</h6>
-                                <p class="mb-0 text-muted">{{ stat.count }} étudiants</p>
-                            </div>
-                            <div class="flex-shrink-0">
-                                <span class="badge bg-success fs-6">{{ stat.count }}</span>
-                            </div>
-                        </div>
+    <!-- Institution Distribution -->
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div class="bg-gradient-to-r from-emerald-500 to-teal-500 p-6">
+            <h5 class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="fas fa-building text-white"></i> Distribution par Institution
+            </h5>
+        </div>
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {% for stat in institution_stats %}
+                <div class="flex items-center p-4 bg-slate-50 rounded-xl gap-4">
+                    <div class="w-12 h-12 bg-emerald-600 text-white rounded-full flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-building"></i>
                     </div>
-                    {% empty %}
-                    <div class="col-12 text-center text-muted py-4">
-                        <i class="fas fa-building fa-3x mb-3"></i>
-                        <p>Aucune donnée d'institution disponible</p>
+                    <div class="flex-grow min-w-0">
+                        <h6 class="font-semibold text-slate-800 text-sm truncate">{{ stat.universite__institution|default:"Non spécifié" }}</h6>
+                        <p class="text-slate-500 text-xs">{{ stat.count }} étudiants</p>
                     </div>
-                    {% endfor %}
+                    <span class="px-2.5 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-bold flex-shrink-0">{{ stat.count }}</span>
                 </div>
+                {% empty %}
+                <div class="col-span-full text-center text-slate-500 py-12">
+                    <i class="fas fa-building text-5xl text-slate-300 mb-4 block"></i>
+                    <p>Aucune donnée d'institution disponible</p>
+                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
 </div>
 
-<!-- Age Groups Chart -->
-<div class="row">
-    <div class="col-xl-12">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">
-                    <i class="fas fa-calendar-alt mr-2"></i>Distribution par Tranche d'Âge
-                </h6>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-3 mb-3">
-                        <div class="d-flex align-items-center p-3 bg-light rounded">
-                            <div class="flex-shrink-0">
-                                <div class="bg-info text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                                    <i class="fas fa-calendar-alt"></i>
-                                </div>
-                            </div>
-                            <div class="flex-grow-1 ms-3">
-                                <h6 class="mb-1">18-21 ans</h6>
-                                <p class="mb-0 text-muted">{{ age_18_21 }} étudiants</p>
-                            </div>
-                            <div class="flex-shrink-0">
-                                <span class="badge bg-info fs-6">{{ age_18_21 }}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="d-flex align-items-center p-3 bg-light rounded">
-                            <div class="flex-shrink-0">
-                                <div class="bg-warning text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                                    <i class="fas fa-calendar-alt"></i>
-                                </div>
-                            </div>
-                            <div class="flex-grow-1 ms-3">
-                                <h6 class="mb-1">22-25 ans</h6>
-                                <p class="mb-0 text-muted">{{ age_22_25 }} étudiants</p>
-                            </div>
-                            <div class="flex-shrink-0">
-                                <span class="badge bg-warning fs-6">{{ age_22_25 }}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="d-flex align-items-center p-3 bg-light rounded">
-                            <div class="flex-shrink-0">
-                                <div class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                                    <i class="fas fa-calendar-alt"></i>
-                                </div>
-                            </div>
-                            <div class="flex-grow-1 ms-3">
-                                <h6 class="mb-1">26-30 ans</h6>
-                                <p class="mb-0 text-muted">{{ age_26_30 }} étudiants</p>
-                            </div>
-                            <div class="flex-shrink-0">
-                                <span class="badge bg-danger fs-6">{{ age_26_30 }}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="d-flex align-items-center p-3 bg-light rounded">
-                            <div class="flex-shrink-0">
-                                <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                                    <i class="fas fa-calendar-alt"></i>
-                                </div>
-                            </div>
-                            <div class="flex-grow-1 ms-3">
-                                <h6 class="mb-1">31+ ans</h6>
-                                <p class="mb-0 text-muted">{{ age_31_plus }} étudiants</p>
-                            </div>
-                            <div class="flex-shrink-0">
-                                <span class="badge bg-secondary fs-6">{{ age_31_plus }}</span>
-                            </div>
-                        </div>
-                    </div>
+<!-- Age Groups -->
+<div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
+    <div class="bg-gradient-to-r from-cyan-500 to-blue-500 p-6">
+        <h5 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fas fa-calendar-alt text-white"></i> Distribution par Tranche d'Âge
+        </h5>
+    </div>
+    <div class="p-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="flex items-center p-4 bg-slate-50 rounded-xl gap-4">
+                <div class="w-12 h-12 bg-cyan-600 text-white rounded-full flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-calendar-alt"></i>
                 </div>
+                <div class="flex-grow">
+                    <h6 class="font-semibold text-slate-800 text-sm">18-21 ans</h6>
+                    <p class="text-slate-500 text-xs">{{ age_18_21 }} étudiants</p>
+                </div>
+                <span class="px-2.5 py-1 bg-cyan-100 text-cyan-700 rounded-full text-xs font-bold flex-shrink-0">{{ age_18_21 }}</span>
+            </div>
+            <div class="flex items-center p-4 bg-slate-50 rounded-xl gap-4">
+                <div class="w-12 h-12 bg-amber-500 text-white rounded-full flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="flex-grow">
+                    <h6 class="font-semibold text-slate-800 text-sm">22-25 ans</h6>
+                    <p class="text-slate-500 text-xs">{{ age_22_25 }} étudiants</p>
+                </div>
+                <span class="px-2.5 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-bold flex-shrink-0">{{ age_22_25 }}</span>
+            </div>
+            <div class="flex items-center p-4 bg-slate-50 rounded-xl gap-4">
+                <div class="w-12 h-12 bg-rose-500 text-white rounded-full flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="flex-grow">
+                    <h6 class="font-semibold text-slate-800 text-sm">26-30 ans</h6>
+                    <p class="text-slate-500 text-xs">{{ age_26_30 }} étudiants</p>
+                </div>
+                <span class="px-2.5 py-1 bg-rose-100 text-rose-700 rounded-full text-xs font-bold flex-shrink-0">{{ age_26_30 }}</span>
+            </div>
+            <div class="flex items-center p-4 bg-slate-50 rounded-xl gap-4">
+                <div class="w-12 h-12 bg-slate-500 text-white rounded-full flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="flex-grow">
+                    <h6 class="font-semibold text-slate-800 text-sm">31+ ans</h6>
+                    <p class="text-slate-500 text-xs">{{ age_31_plus }} étudiants</p>
+                </div>
+                <span class="px-2.5 py-1 bg-slate-100 text-slate-700 rounded-full text-xs font-bold flex-shrink-0">{{ age_31_plus }}</span>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Centre Statistics Table -->
-<div class="row">
-    <div class="col-xl-12">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">
-                    <i class="fas fa-map-marker-alt mr-2"></i>Statistiques par Centre
-                </h6>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered" width="100%" cellspacing="0">
-                        <thead>
-                            <tr>
-                                <th>Centre</th>
-                                <th>Nombre d'Étudiants</th>
-                                <th>Pourcentage</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for stat in centre_stats %}
-                                <tr>
-                                    <td>{{ stat.universite__centre|default:"Non spécifié" }}</td>
-                                    <td>{{ stat.count }}</td>
-                                    <td>
-                                        {% if total_universites > 0 %}
-                                            {% widthratio stat.count total_universites 100 %}%
-                                        {% else %}
-                                            0%
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+<div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
+    <div class="bg-gradient-to-r from-indigo-500 to-blue-500 p-6">
+        <h5 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fas fa-map-marker-alt text-white"></i> Statistiques par Centre
+        </h5>
+    </div>
+    <div class="p-6">
+        <div class="overflow-x-auto rounded-xl border border-slate-200">
+            <table class="w-full">
+                <thead class="bg-slate-800 text-white">
+                    <tr>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider">Centre</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider">Nombre d'Étudiants</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider">Pourcentage</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    {% for stat in centre_stats %}
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="px-6 py-4 text-sm text-slate-600">{{ stat.universite__centre|default:"Non spécifié" }}</td>
+                            <td class="px-6 py-4 text-sm text-slate-600">{{ stat.count }}</td>
+                            <td class="px-6 py-4 text-sm text-slate-600">
+                                {% if total_universites > 0 %}
+                                    {% widthratio stat.count total_universites 100 %}%
+                                {% else %}
+                                    0%
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
 
-<!-- Sortants & Universités Section -->
-<div class="row mb-6">
-    <div class="col-12">
-        <div class="chart-card">
-            <div class="chart-header">
-                <h5><i class="fas fa-layer-group text-primary"></i> Sortants & Universités</h5>
-                <p class="text-muted mb-0">Bilan des études et de l'emploi</p>
-            </div>
-        </div>
+<!-- Sortants & Universités Section Header -->
+<div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
+    <div class="bg-gradient-to-r from-indigo-500 to-purple-500 p-6">
+        <h5 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fas fa-layer-group text-white"></i> Sortants & Universités
+        </h5>
+        <p class="text-white text-sm mt-1">Bilan des études et de l'emploi</p>
     </div>
 </div>
 
 <!-- Sortants + Universités Overview -->
-<div class="row mb-6">
-    <div class="col-lg-4 col-md-12 mb-4">
-        <div class="metric-card">
-            <div class="metric-icon">
-                <i class="fas fa-user-graduate "></i>
-            </div>
-            <div class="metric-content">
-                <h3 class="text-info">{{ total_sortants_dash }}</h3>
-                <p class="text-info">Total Sortants</p>
-                <div class="metric-change">
-                    <i class="fas fa-briefcase"></i>
-                    <span class="ms-1 text-info">Placements clés: 
-                        {% with top=sortant_placement_stats_dash|first %}
-                            {% if top %}{{ top.placement_type }} ({{ top.count }}){% else %}N/A{% endif %}
-                        {% endwith %}
-                    </span>
-                </div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-4 text-white">
+        <div class="text-4xl opacity-80"><i class="fas fa-user-graduate"></i></div>
+        <div>
+            <h3 class="text-3xl font-bold">{{ total_sortants_dash }}</h3>
+            <p class="text-cyan-100 text-sm font-medium uppercase tracking-wider">Total Sortants</p>
+            <div class="text-xs font-semibold mt-1">
+                <i class="fas fa-briefcase"></i>
+                Placements clés:
+                {% with top=sortant_placement_stats_dash|first %}
+                    {% if top %}{{ top.placement_type }} ({{ top.count }}){% else %}N/A{% endif %}
+                {% endwith %}
             </div>
         </div>
     </div>
-    <div class="col-lg-4 col-md-12 mb-4">
-        <div class="metric-card">
-            <div class="metric-icon">
-                <i class="fas fa-university"></i>
-            </div>
-            <div class="metric-content">
-                <h3 class="text-success">{{ total_universites }}</h3>
-                <p class="text-success">Total Université</p>
-                <div class="metric-change">
-                    <i class="fas fa-book text-success"></i>
-                    <span class="ms-1 text-success">Top filière: 
-                        {% with top=universite_filiere_stats_dash|first %}
-                            {% if top %}{{ top.universite__fillier }} ({{ top.count }}){% else %}N/A{% endif %}
-                        {% endwith %}
-                    </span>
-                </div>
+    <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-4 text-white">
+        <div class="text-4xl opacity-80"><i class="fas fa-university"></i></div>
+        <div>
+            <h3 class="text-3xl font-bold">{{ total_universites }}</h3>
+            <p class="text-emerald-100 text-sm font-medium uppercase tracking-wider">Total Université</p>
+            <div class="text-xs font-semibold mt-1">
+                <i class="fas fa-book"></i>
+                Top filière:
+                {% with top=universite_filiere_stats_dash|first %}
+                    {% if top %}{{ top.universite__fillier }} ({{ top.count }}){% else %}N/A{% endif %}
+                {% endwith %}
             </div>
         </div>
     </div>
-    <div class="col-lg-4 col-md-12 mb-4">
-        <div class="metric-card">
-            <div class="metric-icon">
-                <i class="fas fa-layer-group"></i>
-            </div>
-            <div class="metric-content">
-                <h3 class="text-primary">{{ total_combined_su }}</h3>
-                <p class="text-primary">Total Sortants + Université</p>
-                <div class="metric-change">
-                    <i class="fas fa-equals text-primary"></i>
-                    <span class="ms-1 text-primary">{{ total_sortants_dash }} + {{ total_universites }}</span>
-                </div>
+    <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-4 text-white">
+        <div class="text-4xl opacity-80"><i class="fas fa-layer-group"></i></div>
+        <div>
+            <h3 class="text-3xl font-bold">{{ total_combined_su }}</h3>
+            <p class="text-indigo-100 text-sm font-medium uppercase tracking-wider">Total Sortants + Université</p>
+            <div class="text-xs font-semibold mt-1">
+                <i class="fas fa-equals"></i>
+                {{ total_sortants_dash }} + {{ total_universites }}
             </div>
         </div>
     </div>
 </div>
 
 <!-- Detailed Breakdown: Sortants & Universités -->
-<div class="row mb-6">
-    <div class="col-12 mb-4">
-        <div class="chart-card">
-            <div class="chart-header">
-                <h5><i class="fas fa-layer-group text-primary"></i> Bilan Sortants & Université</h5>
-            </div>
-            <div class="chart-body">
-                <div class="row">
-                    <div class="col-lg-6 mb-4">
-                        <div class="card border-0 shadow-sm h-100">
-                            <div class="card-header bg-light">
-                                <h6 class="mb-0"><i class="fas fa-briefcase text-primary me-2"></i> Sortants - Emploi</h6>
+<div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
+    <div class="bg-gradient-to-r from-slate-600 to-slate-700 p-6">
+        <h5 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fas fa-layer-group text-white"></i> Bilan Sortants & Université
+        </h5>
+    </div>
+    <div class="p-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Sortants - Emploi -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="bg-gradient-to-r from-indigo-500 to-indigo-600 px-6 py-4">
+                    <h6 class="font-bold text-white flex items-center gap-2"><i class="fas fa-briefcase text-white"></i> Sortants - Emploi</h6>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h6 class="text-sm font-semibold text-slate-500 mb-3">Statut</h6>
+                            <div class="space-y-2">
+                                {% for s in sortant_status_stats_dash %}
+                                    <div class="flex justify-between items-center px-3 py-2 bg-slate-50 rounded-lg">
+                                        <span class="text-sm text-slate-700">{{ s.status|default:'N/A' }}</span>
+                                        <span class="px-2.5 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-bold">{{ s.count }}</span>
+                                    </div>
+                                {% empty %}
+                                    <p class="text-sm text-slate-400">Aucune donnée</p>
+                                {% endfor %}
                             </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <h6 class="text-muted">Statut</h6>
-                                        <ul class="list-group list-group-flush">
-                                            {% for s in sortant_status_stats_dash %}
-                                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                    {{ s.status|default:'N/A' }}
-                                                    <span class="badge bg-primary rounded-pill">{{ s.count }}</span>
-                                                </li>
-                                            {% empty %}
-                                                <li class="list-group-item">Aucune donnée</li>
-                                            {% endfor %}
-                                        </ul>
+                        </div>
+                        <div>
+                            <h6 class="text-sm font-semibold text-slate-500 mb-3">Placement</h6>
+                            <div class="space-y-2">
+                                {% for p in sortant_placement_stats_dash %}
+                                    <div class="flex justify-between items-center px-3 py-2 bg-slate-50 rounded-lg">
+                                        <span class="text-sm text-slate-700">{{ p.placement_type|default:'N/A' }}</span>
+                                        <span class="px-2.5 py-1 bg-slate-100 text-slate-700 rounded-full text-xs font-bold">{{ p.count }}</span>
                                     </div>
-                                    <div class="col-md-6">
-                                        <h6 class="text-muted">Placement</h6>
-                                        <ul class="list-group list-group-flush">
-                                            {% for p in sortant_placement_stats_dash %}
-                                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                    {{ p.placement_type|default:'N/A' }}
-                                                    <span class="badge bg-secondary rounded-pill">{{ p.count }}</span>
-                                                </li>
-                                            {% empty %}
-                                                <li class="list-group-item">Aucune donnée</li>
-                                            {% endfor %}
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="row mt-3">
-                                    <div class="col-md-6">
-                                        <h6 class="text-muted">Top Postes</h6>
-                                        <ul class="list-group list-group-flush">
-                                            {% for it in sortant_poste_stats_dash %}
-                                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                    {{ it.poste_actuel|default:'N/A' }}
-                                                    <span class="badge bg-success rounded-pill">{{ it.count }}</span>
-                                                </li>
-                                            {% empty %}
-                                                <li class="list-group-item">Aucune donnée</li>
-                                            {% endfor %}
-                                        </ul>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <h6 class="text-muted">Top Entreprises</h6>
-                                        <ul class="list-group list-group-flush">
-                                            {% for it in sortant_entreprise_stats_dash %}
-                                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                    {{ it.entreprise|default:'N/A' }}
-                                                    <span class="badge bg-info rounded-pill">{{ it.count }}</span>
-                                                </li>
-                                            {% empty %}
-                                                <li class="list-group-item">Aucune donnée</li>
-                                            {% endfor %}
-                                        </ul>
-                                    </div>
-                                </div>
+                                {% empty %}
+                                    <p class="text-sm text-slate-400">Aucune donnée</p>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6 mb-4">
-                        <div class="card border-0 shadow-sm h-100">
-                            <div class="card-header bg-light">
-                                <h6 class="mb-0"><i class="fas fa-university text-info me-2"></i> Université - Études</h6>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                        <div>
+                            <h6 class="text-sm font-semibold text-slate-500 mb-3">Top Postes</h6>
+                            <div class="space-y-2">
+                                {% for it in sortant_poste_stats_dash %}
+                                    <div class="flex justify-between items-center px-3 py-2 bg-slate-50 rounded-lg">
+                                        <span class="text-sm text-slate-700">{{ it.poste_actuel|default:'N/A' }}</span>
+                                        <span class="px-2.5 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-bold">{{ it.count }}</span>
+                                    </div>
+                                {% empty %}
+                                    <p class="text-sm text-slate-400">Aucune donnée</p>
+                                {% endfor %}
                             </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <h6 class="text-muted">Institutions</h6>
-                                        <ul class="list-group list-group-flush">
-                                            {% for it in universite_institution_stats_dash %}
-                                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                    {{ it.universite__institution|default:'N/A' }}
-                                                    <span class="badge bg-primary rounded-pill">{{ it.count }}</span>
-                                                </li>
-                                            {% empty %}
-                                                <li class="list-group-item">Aucune donnée</li>
-                                            {% endfor %}
-                                        </ul>
+                        </div>
+                        <div>
+                            <h6 class="text-sm font-semibold text-slate-500 mb-3">Top Entreprises</h6>
+                            <div class="space-y-2">
+                                {% for it in sortant_entreprise_stats_dash %}
+                                    <div class="flex justify-between items-center px-3 py-2 bg-slate-50 rounded-lg">
+                                        <span class="text-sm text-slate-700">{{ it.entreprise|default:'N/A' }}</span>
+                                        <span class="px-2.5 py-1 bg-cyan-100 text-cyan-700 rounded-full text-xs font-bold">{{ it.count }}</span>
                                     </div>
-                                    <div class="col-md-6">
-                                        <h6 class="text-muted">Filières</h6>
-                                        <ul class="list-group list-group-flush">
-                                            {% for it in universite_filiere_stats_dash %}
-                                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                    {{ it.universite__fillier|default:'N/A' }}
-                                                    <span class="badge bg-secondary rounded-pill">{{ it.count }}</span>
-                                                </li>
-                                            {% empty %}
-                                                <li class="list-group-item">Aucune donnée</li>
-                                            {% endfor %}
-                                        </ul>
+                                {% empty %}
+                                    <p class="text-sm text-slate-400">Aucune donnée</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Université - Études -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="bg-gradient-to-r from-cyan-500 to-blue-500 px-6 py-4">
+                    <h6 class="font-bold text-white flex items-center gap-2"><i class="fas fa-university text-white"></i> Université - Études</h6>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h6 class="text-sm font-semibold text-slate-500 mb-3">Institutions</h6>
+                            <div class="space-y-2">
+                                {% for it in universite_institution_stats_dash %}
+                                    <div class="flex justify-between items-center px-3 py-2 bg-slate-50 rounded-lg">
+                                        <span class="text-sm text-slate-700">{{ it.universite__institution|default:'N/A' }}</span>
+                                        <span class="px-2.5 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-bold">{{ it.count }}</span>
                                     </div>
-                                </div>
-                                <div class="row mt-3">
-                                    <div class="col-md-6">
-                                        <h6 class="text-muted">Classes</h6>
-                                        <ul class="list-group list-group-flush">
-                                            {% for it in universite_class_stats_dash %}
-                                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                    {{ it.universite__Class|default:'N/A' }}
-                                                    <span class="badge bg-success rounded-pill">{{ it.count }}</span>
-                                                </li>
-                                            {% empty %}
-                                                <li class="list-group-item">Aucune donnée</li>
-                                            {% endfor %}
-                                        </ul>
+                                {% empty %}
+                                    <p class="text-sm text-slate-400">Aucune donnée</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div>
+                            <h6 class="text-sm font-semibold text-slate-500 mb-3">Filières</h6>
+                            <div class="space-y-2">
+                                {% for it in universite_filiere_stats_dash %}
+                                    <div class="flex justify-between items-center px-3 py-2 bg-slate-50 rounded-lg">
+                                        <span class="text-sm text-slate-700">{{ it.universite__fillier|default:'N/A' }}</span>
+                                        <span class="px-2.5 py-1 bg-slate-100 text-slate-700 rounded-full text-xs font-bold">{{ it.count }}</span>
                                     </div>
-                                    <div class="col-md-6">
-                                        <h6 class="text-muted">Centres</h6>
-                                        <ul class="list-group list-group-flush">
-                                            {% for it in universite_centre_stats_dash %}
-                                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                    {{ it.universite__centre|default:'N/A' }}
-                                                    <span class="badge bg-info rounded-pill">{{ it.count }}</span>
-                                                </li>
-                                            {% empty %}
-                                                <li class="list-group-item">Aucune donnée</li>
-                                            {% endfor %}
-                                        </ul>
+                                {% empty %}
+                                    <p class="text-sm text-slate-400">Aucune donnée</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                        <div>
+                            <h6 class="text-sm font-semibold text-slate-500 mb-3">Classes</h6>
+                            <div class="space-y-2">
+                                {% for it in universite_class_stats_dash %}
+                                    <div class="flex justify-between items-center px-3 py-2 bg-slate-50 rounded-lg">
+                                        <span class="text-sm text-slate-700">{{ it.universite__Class|default:'N/A' }}</span>
+                                        <span class="px-2.5 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-bold">{{ it.count }}</span>
                                     </div>
-                                </div>
+                                {% empty %}
+                                    <p class="text-sm text-slate-400">Aucune donnée</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div>
+                            <h6 class="text-sm font-semibold text-slate-500 mb-3">Centres</h6>
+                            <div class="space-y-2">
+                                {% for it in universite_centre_stats_dash %}
+                                    <div class="flex justify-between items-center px-3 py-2 bg-slate-50 rounded-lg">
+                                        <span class="text-sm text-slate-700">{{ it.universite__centre|default:'N/A' }}</span>
+                                        <span class="px-2.5 py-1 bg-cyan-100 text-cyan-700 rounded-full text-xs font-bold">{{ it.count }}</span>
+                                    </div>
+                                {% empty %}
+                                    <p class="text-sm text-slate-400">Aucune donnée</p>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
@@ -596,96 +481,4 @@
     </div>
 </div>
 
-<style>
-/* Additional styles for Bilan Sortants & Université section */
-.chart-card, .actions-card {
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-    overflow: hidden;
-    height: 100%;
-}
-
-.chart-header, .actions-header {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    padding: 1.5rem;
-    border-bottom: 1px solid #dee2e6;
-}
-
-.chart-header h5, .actions-header h5 {
-    margin: 0;
-    font-weight: 600;
-    color: #495057;
-}
-
-.chart-body, .actions-body {
-    padding: 1.5rem;
-}
-
-.metric-card {
-    background: white;
-    border-radius: 20px;
-    padding: 2rem;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    color: white;
-}
-
-.metric-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-}
-
-.metric-icon {
-    font-size: 3rem;
-    margin-right: 1.5rem;
-    opacity: 0.8;
-}
-
-.metric-content h3 {
-    font-size: 2.5rem;
-    font-weight: bold;
-    margin: 0;
-    line-height: 1;
-}
-
-.metric-content p {
-    margin: 0.5rem 0 0 0;
-    opacity: 0.9;
-    font-size: 1rem;
-}
-
-.metric-change {
-    font-size: 0.8rem;
-    opacity: 0.8;
-    margin-top: 0.25rem;
-}
-
-.text-info { color: #17a2b8 !important; }
-.text-success { color: #28a745 !important; }
-.text-primary { color: #007bff !important; }
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .metric-card {
-        flex-direction: column;
-        text-align: center;
-        padding: 1.5rem;
-    }
-    
-    .metric-icon {
-        margin-right: 0;
-        margin-bottom: 1rem;
-    }
-}
-</style>
-
 {% endblock content %}
-
-{% block extra_js %}
-<!-- Charts removed - using clean data displays instead -->
-{% endblock %}

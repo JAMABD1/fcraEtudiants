@@ -1,169 +1,159 @@
 <!-- Notes Table Component -->
 <div class="notes-container">
     <!-- Statistics Cards -->
-    <div class="stats-grid mb-4">
-        <div class="stat-card">
-            <div class="stat-icon">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-4 text-white">
+            <div class="text-4xl opacity-80">
                 <i class="fas fa-graduation-cap"></i>
             </div>
-            <div class="stat-content">
-                <h3>{{ total_notes }}</h3>
-                <p>Total Notes</p>
+            <div>
+                <h3 class="text-3xl font-bold">{{ total_notes }}</h3>
+                <p class="text-indigo-100 text-sm font-medium uppercase tracking-wider">Total Notes</p>
             </div>
         </div>
         
-        <div class="stat-card">
-            <div class="stat-icon">
+        <div class="bg-gradient-to-br from-pink-500 to-rose-600 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-4 text-white">
+            <div class="text-4xl opacity-80">
                 <i class="fas fa-chart-line"></i>
             </div>
-            <div class="stat-content">
-                <h3>{{ avg_score }}</h3>
-                <p>Moyenne Générale</p>
+            <div>
+                <h3 class="text-3xl font-bold">{{ avg_score }}</h3>
+                <p class="text-pink-100 text-sm font-medium uppercase tracking-wider">Moyenne Générale</p>
             </div>
         </div>
         
-        <div class="stat-card">
-            <div class="stat-icon">
+        <div class="bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-4 text-white">
+            <div class="text-4xl opacity-80">
                 <i class="fas fa-check-circle"></i>
             </div>
-            <div class="stat-content">
-                <h3>{{ pass_rate }}%</h3>
-                <p>Taux de Réussite</p>
+            <div>
+                <h3 class="text-3xl font-bold">{{ pass_rate }}%</h3>
+                <p class="text-cyan-100 text-sm font-medium uppercase tracking-wider">Taux de Réussite</p>
             </div>
         </div>
         
-        <div class="stat-card">
-            <div class="stat-icon">
+        <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-4 text-white">
+            <div class="text-4xl opacity-80">
                 <i class="fas fa-star"></i>
             </div>
-            <div class="stat-content">
-                <h3>{{ excellence_rate }}%</h3>
-                <p>Taux d'Excellence</p>
+            <div>
+                <h3 class="text-3xl font-bold">{{ excellence_rate }}%</h3>
+                <p class="text-emerald-100 text-sm font-medium uppercase tracking-wider">Taux d'Excellence</p>
             </div>
         </div>
     </div>
 
     <!-- Filters Section -->
-    <div class="filters-section">
-        <div class="filters-header">
-            <h3><i class="fas fa-filter"></i> Filtres</h3>
-            <button class="btn btn-outline-secondary btn-sm" onclick="clearFilters()">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-8">
+        <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+            <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                <i class="fas fa-filter text-indigo-600"></i> 
+                Filtres Avancés
+            </h3>
+            <button class="text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition-colors flex items-center gap-1" onclick="clearFilters()">
                 <i class="fas fa-times"></i> Effacer
             </button>
         </div>
         
-        <form method="get" class="filters-form">
-            <div class="row g-3">
+        <form method="get" class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 <!-- Search -->
-                <div class="col-md-3">
-                    <div class="form-floating">
-                        <input type="text" 
-                               class="form-control" 
-                               id="search" 
-                               name="search" 
-                               value="{{ search_query }}" 
-                               placeholder="Rechercher par nom...">
-                        <label for="search">
-                            <i class="fas fa-search"></i> Rechercher
-                        </label>
-                    </div>
+                <div class="space-y-2">
+                    <label for="search" class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                        <i class="fas fa-search text-slate-400"></i> Rechercher
+                    </label>
+                    <input type="text" 
+                           class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700" 
+                           id="search" 
+                           name="search" 
+                           value="{{ search_query }}" 
+                           placeholder="Nom de l'étudiant...">
                 </div>
                 
                 <!-- Class Filter -->
-                <div class="col-md-2">
-                    <div class="form-floating">
-                        <select class="form-select" id="class" name="class">
-                            <option value="">Toutes</option>
-                            {% for class in classes %}
-                                <option value="{{ class }}" {% if class == class_filter %}selected{% endif %}>
-                                    {{ class }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                        <label for="class">
-                            <i class="fas fa-graduation-cap"></i> Classe
-                        </label>
-                    </div>
+                <div class="space-y-2">
+                    <label for="class" class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                        <i class="fas fa-graduation-cap text-slate-400"></i> Classe
+                    </label>
+                    <select class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none" id="class" name="class">
+                        <option value="">Toutes les classes</option>
+                        {% for class in classes %}
+                            <option value="{{ class }}" {% if class == class_filter %}selected{% endif %}>
+                                {{ class }}
+                            </option>
+                        {% endfor %}
+                    </select>
                 </div>
                 
                 <!-- Designation Filter -->
-                <div class="col-md-2">
-                    <div class="form-floating">
-                        <select class="form-select" id="designation" name="designation">
-                            <option value="">Toutes</option>
-                            {% for designation in designations %}
-                                <option value="{{ designation }}" {% if designation == designation_filter %}selected{% endif %}>
-                                    {{ designation }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                        <label for="designation">
-                            <i class="fas fa-tag"></i> Désignation
-                        </label>
-                    </div>
+                <div class="space-y-2">
+                    <label for="designation" class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                        <i class="fas fa-tag text-slate-400"></i> Désignation
+                    </label>
+                    <select class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none" id="designation" name="designation">
+                        <option value="">Toutes les désignations</option>
+                        {% for designation in designations %}
+                            <option value="{{ designation }}" {% if designation == designation_filter %}selected{% endif %}>
+                                {{ designation }}
+                            </option>
+                        {% endfor %}
+                    </select>
                 </div>
                 
                 <!-- Institution Filter -->
-                <div class="col-md-2">
-                    <div class="form-floating">
-                        <select class="form-select" id="institution" name="institution">
-                            <option value="">Toutes</option>
-                            {% for institution in institutions %}
-                                <option value="{{ institution }}" {% if institution == institution_filter %}selected{% endif %}>
-                                    {{ institution }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                        <label for="institution">
-                            <i class="fas fa-university"></i> Institution
-                        </label>
-                    </div>
+                <div class="space-y-2">
+                    <label for="institution" class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                        <i class="fas fa-university text-slate-400"></i> Institution
+                    </label>
+                    <select class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none" id="institution" name="institution">
+                        <option value="">Toutes les institutions</option>
+                        {% for institution in institutions %}
+                            <option value="{{ institution }}" {% if institution == institution_filter %}selected{% endif %}>
+                                {{ institution }}
+                            </option>
+                        {% endfor %}
+                    </select>
                 </div>
                 
                 <!-- Decision Filter -->
-                <div class="col-md-2">
-                    <div class="form-floating">
-                        <select class="form-select" id="decision" name="decision">
-                            <option value="">Toutes</option>
-                            {% for decision in decisions %}
-                                <option value="{{ decision }}" {% if decision == decision_filter %}selected{% endif %}>
-                                    {{ decision }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                        <label for="decision">
-                            <i class="fas fa-gavel"></i> Décision
-                        </label>
-                    </div>
+                <div class="space-y-2">
+                    <label for="decision" class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                        <i class="fas fa-gavel text-slate-400"></i> Décision
+                    </label>
+                    <select class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none" id="decision" name="decision">
+                        <option value="">Toutes les décisions</option>
+                        {% for decision in decisions %}
+                            <option value="{{ decision }}" {% if decision == decision_filter %}selected{% endif %}>
+                                {{ decision }}
+                            </option>
+                        {% endfor %}
+                    </select>
                 </div>
                 
                 <!-- Note Range Filter -->
-                <div class="col-md-1">
-                    <div class="form-floating">
-                        <select class="form-select" id="note_range" name="note_range">
-                            <option value="">Toutes</option>
-                            <option value="0-8" {% if note_range == "0-8" %}selected{% endif %}>0-8</option>
-                            <option value="8-10" {% if note_range == "8-10" %}selected{% endif %}>8-10</option>
-                            <option value="10-12" {% if note_range == "10-12" %}selected{% endif %}>10-12</option>
-                            <option value="12-14" {% if note_range == "12-14" %}selected{% endif %}>12-14</option>
-                            <option value="14-16" {% if note_range == "14-16" %}selected{% endif %}>14-16</option>
-                            <option value="16-18" {% if note_range == "16-18" %}selected{% endif %}>16-18</option>
-                            <option value="18-20" {% if note_range == "18-20" %}selected{% endif %}>18-20</option>
-                        </select>
-                        <label for="note_range">
-                            <i class="fas fa-chart-bar"></i> Notes
-                        </label>
-                    </div>
+                <div class="space-y-2">
+                    <label for="note_range" class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                        <i class="fas fa-chart-bar text-slate-400"></i> Plage de Notes
+                    </label>
+                    <select class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none" id="note_range" name="note_range">
+                        <option value="">Toutes les notes</option>
+                        <option value="0-8" {% if note_range == "0-8" %}selected{% endif %}>0 - 8 (Insuffisant)</option>
+                        <option value="8-10" {% if note_range == "8-10" %}selected{% endif %}>8 - 10 (Passable)</option>
+                        <option value="10-12" {% if note_range == "10-12" %}selected{% endif %}>10 - 12 (Moyen)</option>
+                        <option value="12-14" {% if note_range == "12-14" %}selected{% endif %}>12 - 14 (Assez Bien)</option>
+                        <option value="14-16" {% if note_range == "14-16" %}selected{% endif %}>14 - 16 (Bien)</option>
+                        <option value="16-18" {% if note_range == "16-18" %}selected{% endif %}>16 - 18 (Très Bien)</option>
+                        <option value="18-20" {% if note_range == "18-20" %}selected{% endif %}>18 - 20 (Excellent)</option>
+                    </select>
                 </div>
-            </div>
-            
-            <div class="row mt-3">
-                <div class="col-12">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-search"></i> Filtrer
+
+                <!-- Action Buttons -->
+                <div class="lg:col-span-2 flex items-end gap-3">
+                    <button type="submit" class="px-6 py-2.5 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-md hover:shadow-lg flex items-center gap-2">
+                        <i class="fas fa-search"></i> Filtrer les résultats
                     </button>
-                    <button type="button" class="btn btn-outline-primary ms-2" onclick="exportData()">
-                        <i class="fas fa-download"></i> Exporter
+                    <button type="button" class="px-6 py-2.5 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold hover:bg-slate-50 transition-all flex items-center gap-2" onclick="exportData()">
+                        <i class="fas fa-file-export text-emerald-500"></i> Exporter
                     </button>
                 </div>
             </div>
@@ -171,177 +161,122 @@
     </div>
 
     <!-- Results Info -->
-    <div class="results-info">
-        <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <span class="badge bg-primary fs-6">
-                    {{ filtered_count }} résultat{{ filtered_count|pluralize }} trouvé{{ filtered_count|pluralize }}
-                    {% if total_notes != filtered_count %}
-                        sur {{ total_notes }}
-                    {% endif %}
-                </span>
-            </div>
-            <div class="view-options">
-                <button class="btn btn-sm btn-outline-secondary active" onclick="toggleView('table')">
-                    <i class="fas fa-table"></i>
-                </button>
-                <button class="btn btn-sm btn-outline-secondary" onclick="toggleView('cards')">
-                    <i class="fas fa-th-large"></i>
-                </button>
-            </div>
+    <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+        <div class="flex items-center gap-3">
+            <span class="px-4 py-1.5 bg-indigo-50 text-indigo-700 rounded-full text-sm font-bold border border-indigo-100">
+                {{ filtered_count }} résultat{{ filtered_count|pluralize }} trouvé{{ filtered_count|pluralize }}
+                {% if total_notes != filtered_count %}
+                    sur {{ total_notes }}
+                {% endif %}
+            </span>
+        </div>
+        <div class="flex bg-white p-1 rounded-xl shadow-sm border border-slate-200">
+            <button class="p-2 rounded-lg transition-all view-btn active" id="view-table-btn" onclick="toggleView('table')">
+                <i class="fas fa-list-ul"></i>
+            </button>
+            <button class="p-2 rounded-lg transition-all view-btn" id="view-cards-btn" onclick="toggleView('cards')">
+                <i class="fas fa-th-large"></i>
+            </button>
         </div>
     </div>
 
     <!-- Table View -->
-    <div id="table-view" class="table-container">
-        <div class="table-responsive">
-            <table class="table table-hover table-striped modern-table">
-                <thead class="table-dark sticky-top">
-                    <tr>
-                        <th scope="col">
-                            <input type="checkbox" class="form-check-input" id="selectAll">
+    <div id="table-view" class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-800 text-white">
+                        <th class="px-6 py-4 font-bold text-xs uppercase tracking-wider">
+                            <input type="checkbox" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500" id="selectAll">
                         </th>
-                        <th scope="col" class="sortable" onclick="sortTable('identifiant')">
-                            <i class="fas fa-id-card"></i> Identifiant
-                            <i class="fas fa-sort sort-icon"></i>
+                        <th class="px-6 py-4 font-bold text-xs uppercase tracking-wider cursor-pointer group" onclick="sortTable('identifiant')">
+                            <div class="flex items-center gap-2">
+                                Identifiant <i class="fas fa-sort opacity-30 group-hover:opacity-100 transition-opacity"></i>
+                            </div>
                         </th>
-                        <th scope="col" class="sortable" onclick="sortTable('s1')">
-                            <i class="fas fa-calendar"></i> S1
-                            <i class="fas fa-sort sort-icon"></i>
-                        </th>
-                        <th scope="col" class="sortable" onclick="sortTable('s2')">
-                            <i class="fas fa-calendar"></i> S2
-                            <i class="fas fa-sort sort-icon"></i>
-                        </th>
-                        <th scope="col" class="sortable" onclick="sortTable('s3')">
-                            <i class="fas fa-calendar"></i> S3
-                            <i class="fas fa-sort sort-icon"></i>
-                        </th>
-                        <th scope="col" class="sortable" onclick="sortTable('annee')">
-                            <i class="fas fa-calendar-alt"></i> Année
-                            <i class="fas fa-sort sort-icon"></i>
-                        </th>
-                        <th scope="col" class="sortable" onclick="sortTable('moyen')">
-                            <i class="fas fa-chart-line"></i> Moyenne
-                            <i class="fas fa-sort sort-icon"></i>
-                        </th>
-                        <th scope="col" class="sortable" onclick="sortTable('centre')">
-                            <i class="fas fa-calendar"></i> Centre
-                            <i class="fas fa-sort sort-icon"></i>
-                        </th>
-                        <th scope="col" class="sortable" onclick="sortTable('ville')">
-                            <i class="fas fa-calendar"></i> Ville
-                            <i class="fas fa-sort sort-icon"></i>
-                        </th>
-                        <th scope="col" class="sortable" onclick="sortTable('rang')">
-                            <i class="fas fa-trophy"></i> Rang
-                            <i class="fas fa-sort sort-icon"></i>
-                        </th>
-                        <th scope="col" class="sortable" onclick="sortTable('decision')">
-                            <i class="fas fa-gavel"></i> Décision
-                            <i class="fas fa-sort sort-icon"></i>
-                        </th>
-                        <th scope="col">
-                            <i class="fas fa-graduation-cap"></i> Classe
-                        </th>
-                        <th scope="col">
-                            <i class="fas fa-university"></i> Institution
-                        </th>
-                        <th scope="col" class="text-center">
-                            <i class="fas fa-cogs"></i> Actions
-                        </th>
+                        <th class="px-4 py-4 font-bold text-xs uppercase tracking-wider text-center">S1</th>
+                        <th class="px-4 py-4 font-bold text-xs uppercase tracking-wider text-center">S2</th>
+                        <th class="px-4 py-4 font-bold text-xs uppercase tracking-wider text-center">S3</th>
+                        <th class="px-6 py-4 font-bold text-xs uppercase tracking-wider text-center">Année</th>
+                        <th class="px-6 py-4 font-bold text-xs uppercase tracking-wider text-center">Moyenne</th>
+                        <th class="px-6 py-4 font-bold text-xs uppercase tracking-wider">Centre / Ville</th>
+                        <th class="px-4 py-4 font-bold text-xs uppercase tracking-wider text-center">Rang</th>
+                        <th class="px-6 py-4 font-bold text-xs uppercase tracking-wider text-center">Décision</th>
+                        <th class="px-6 py-4 font-bold text-xs uppercase tracking-wider text-center">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="divide-y divide-slate-100">
                     {% for note in notes %}
-                    <tr class="table-row" data-id="{{ note.id }}">
-                        <td>
-                            <input type="checkbox" class="form-check-input row-checkbox" value="{{ note.id }}">
+                    <tr class="hover:bg-slate-50 transition-colors group">
+                        <td class="px-6 py-4">
+                            <input type="checkbox" class="row-checkbox rounded border-slate-300 text-indigo-600 focus:ring-indigo-500" value="{{ note.id }}">
                         </td>
-                        <td class="fw-bold text-primary">
-                            <div class="d-flex align-items-center">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-3">
                                 {% if note.identifiant.imageprofile %}
-                                    <img src="{{ note.identifiant.imageprofile.url }}" 
-                                         alt="Photo" 
-                                         class="avatar me-2">
+                                    <img src="{{ note.identifiant.imageprofile.url }}" class="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm">
                                 {% else %}
-                                    <div class="avatar-placeholder me-2">
-                                        <i class="fas fa-user"></i>
+                                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold shadow-sm">
+                                        {{ note.identifiant.nom|slice:":1" }}
                                     </div>
                                 {% endif %}
                                 <div>
-                                    <div class="fw-bold">{{ note.identifiant.identifiant }}</div>
-                                    <small class="text-muted">{{ note.identifiant.nom }}</small>
+                                    <div class="font-bold text-slate-900">{{ note.identifiant.identifiant }}</div>
+                                    <div class="text-xs text-slate-500 truncate max-w-[150px]">{{ note.identifiant.nom }}</div>
                                 </div>
                             </div>
                         </td>
-                        <td>
-                            <span class="badge {% if note.S1 >= 10 %}bg-success{% elif note.S1 >= 8 %}bg-warning{% else %}bg-danger{% endif %}">
+                        <td class="px-4 py-4 text-center">
+                            <span class="px-2 py-1 rounded text-xs font-bold {% if note.S1 >= 10 %}bg-emerald-100 text-emerald-700{% elif note.S1 >= 8 %}bg-amber-100 text-amber-700{% else %}bg-rose-100 text-rose-700{% endif %}">
                                 {{ note.S1|default:"-" }}
                             </span>
                         </td>
-                        <td>
-                            <span class="badge {% if note.S2 >= 10 %}bg-success{% elif note.S2 >= 8 %}bg-warning{% else %}bg-danger{% endif %}">
+                        <td class="px-4 py-4 text-center">
+                            <span class="px-2 py-1 rounded text-xs font-bold {% if note.S2 >= 10 %}bg-emerald-100 text-emerald-700{% elif note.S2 >= 8 %}bg-amber-100 text-amber-700{% else %}bg-rose-100 text-rose-700{% endif %}">
                                 {{ note.S2|default:"-" }}
                             </span>
                         </td>
-                        <td>
-                            <span class="badge {% if note.S3 >= 10 %}bg-success{% elif note.S3 >= 8 %}bg-warning{% else %}bg-danger{% endif %}">
+                        <td class="px-4 py-4 text-center">
+                            <span class="px-2 py-1 rounded text-xs font-bold {% if note.S3 >= 10 %}bg-emerald-100 text-emerald-700{% elif note.S3 >= 8 %}bg-amber-100 text-amber-700{% else %}bg-rose-100 text-rose-700{% endif %}">
                                 {{ note.S3|default:"-" }}
                             </span>
                         </td>
-                        <td>
-                            <span class="badge bg-info">{{ note.annee }}</span>
+                        <td class="px-6 py-4 text-center">
+                            <span class="text-sm font-medium text-slate-600">{{ note.annee }}</span>
                         </td>
-                        <td>
-                            <div class="average-score">
-                                <span class="score {% if note.moyen >= 16 %}excellent{% elif note.moyen >= 14 %}very-good{% elif note.moyen >= 12 %}good{% elif note.moyen >= 10 %}average{% else %}poor{% endif %}">
+                        <td class="px-6 py-4">
+                            <div class="flex flex-col items-center gap-1">
+                                <span class="text-sm font-bold {% if note.moyen >= 14 %}text-emerald-600{% elif note.moyen >= 10 %}text-indigo-600{% else %}text-rose-600{% endif %}">
                                     {{ note.moyen|floatformat:2 }}
                                 </span>
-                                <div class="progress progress-sm mt-1">
-                                    <div class="progress-bar {% if note.moyen >= 16 %}bg-success{% elif note.moyen >= 14 %}bg-info{% elif note.moyen >= 12 %}bg-primary{% elif note.moyen >= 10 %}bg-warning{% else %}bg-danger{% endif %}" 
-                                         style="width: {{ note.moyen|floatformat:0 }}%"></div>
+                                <div class="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                                    <div class="h-full {% if note.moyen >= 14 %}bg-emerald-500{% elif note.moyen >= 10 %}bg-indigo-500{% else %}bg-rose-500{% endif %}" style="width: {{ note.moyen|floatformat:0 }}0%"></div>
                                 </div>
                             </div>
                         </td>
-                        <td>
-                            <span class="badge bg-secondary">{{ note.identifiant.centre }}</span>
+                        <td class="px-6 py-4">
+                            <div class="text-sm font-medium text-slate-700">{{ note.identifiant.centre }}</div>
+                            <div class="text-xs text-slate-400">{{ note.identifiant.ville }}</div>
                         </td>
-                        <td>
-                            <span class="badge bg-secondary">{{ note.identifiant.ville }}</span>
+                        <td class="px-4 py-4 text-center">
+                            <span class="w-8 h-8 inline-flex items-center justify-center rounded-lg bg-slate-100 text-slate-700 font-bold text-sm">
+                                {{ note.rang|default:"-" }}
+                            </span>
                         </td>
-                        <td>
-                            <span class="badge bg-secondary">{{ note.rang|default:"-" }}</span>
-                        </td>
-                        <td>
-                            <span class="badge {% if note.decision == 'Admis' %}bg-success{% elif note.decision == 'Redoublant' %}bg-warning{% else %}bg-danger{% endif %}">
+                        <td class="px-6 py-4 text-center">
+                            <span class="px-3 py-1 rounded-full text-xs font-bold {% if note.decision == 'Admis' %}bg-emerald-500 text-white{% elif note.decision == 'Redoublant' %}bg-amber-500 text-white{% else %}bg-rose-500 text-white{% endif %}">
                                 {{ note.decision }}
                             </span>
                         </td>
-                        <td>
-                            <small class="text-muted">{{ note.identifiant.Class }}</small>
-                        </td>
-                        <td>
-                            <small class="text-muted">{{ note.identifiant.institution }}</small>
-                        </td>
-                        <td class="text-center">
-                            <div class="btn-group btn-group-sm" role="group">
-                                <button type="button" 
-                                        class="btn btn-outline-primary" 
-                                        onclick="viewNote('{{ note.identifiant.identifiant }}')"
-                                        title="Voir détails">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button onclick="viewNote('{{ note.identifiant.identifiant }}')" class="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors" title="Détails">
                                     <i class="fas fa-eye"></i>
                                 </button>
-                                <button type="button" 
-                                        class="btn btn-outline-success" 
-                                        onclick="editNote('{{ note.id }}')"
-                                        title="Modifier">
+                                <button onclick="editNote('{{ note.id }}')" class="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors" title="Modifier">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button type="button" 
-                                        class="btn btn-outline-danger" 
-                                        onclick="deleteNote('{{ note.id }}')"
-                                        title="Supprimer">
+                                <button onclick="deleteNote('{{ note.id }}')" class="p-2 text-rose-600 hover:bg-rose-50 rounded-lg transition-colors" title="Supprimer">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
@@ -349,11 +284,15 @@
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="12" class="text-center py-5">
-                            <div class="empty-state">
-                                <i class="fas fa-search fa-3x text-muted mb-3"></i>
-                                <h5 class="text-muted">Aucune note trouvée</h5>
-                                <p class="text-muted">Essayez de modifier vos critères de recherche.</p>
+                        <td colspan="11" class="px-6 py-20 text-center">
+                            <div class="flex flex-col items-center gap-4">
+                                <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center text-slate-300 text-4xl">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-bold text-slate-800">Aucune note trouvée</h4>
+                                    <p class="text-slate-500">Essayez de modifier vos filtres de recherche.</p>
+                                </div>
                             </div>
                         </td>
                     </tr>
@@ -364,503 +303,138 @@
     </div>
 
     <!-- Cards View (Hidden by default) -->
-    <div id="cards-view" class="cards-container" style="display: none;">
-        <div class="row g-3">
-            {% for note in notes %}
-            <div class="col-md-6 col-lg-4">
-                <div class="note-card">
-                    <div class="card-header">
-                        <div class="d-flex align-items-center">
-                            {% if note.identifiant.imageprofile %}
-                                <img src="{{ note.identifiant.imageprofile.url }}" 
-                                     alt="Photo" 
-                                     class="avatar me-3">
-                            {% else %}
-                                <div class="avatar-placeholder me-3">
-                                    <i class="fas fa-user"></i>
-                                </div>
-                            {% endif %}
-                            <div>
-                                <h6 class="mb-0">{{ note.identifiant.nom }}</h6>
-                                <small class="text-muted">{{ note.identifiant.identifiant }}</small>
-                            </div>
+    <div id="cards-view" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {% for note in notes %}
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-all group">
+            <div class="p-6">
+                <div class="flex items-center gap-4 mb-6">
+                    {% if note.identifiant.imageprofile %}
+                        <img src="{{ note.identifiant.imageprofile.url }}" class="w-14 h-14 rounded-2xl object-cover border-2 border-white shadow-md">
+                    {% else %}
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xl font-bold shadow-md">
+                            {{ note.identifiant.nom|slice:":1" }}
                         </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="scores-row">
-                            <div class="score-item">
-                                <span class="label">S1</span>
-                                <span class="value {% if note.S1 >= 10 %}text-success{% elif note.S1 >= 8 %}text-warning{% else %}text-danger{% endif %}">
-                                    {{ note.S1|default:"-" }}
-                                </span>
-                            </div>
-                            <div class="score-item">
-                                <span class="label">S2</span>
-                                <span class="value {% if note.S2 >= 10 %}text-success{% elif note.S2 >= 8 %}text-warning{% else %}text-danger{% endif %}">
-                                    {{ note.S2|default:"-" }}
-                                </span>
-                            </div>
-                            <div class="score-item">
-                                <span class="label">S3</span>
-                                <span class="value {% if note.S3 >= 10 %}text-success{% elif note.S3 >= 8 %}text-warning{% else %}text-danger{% endif %}">
-                                    {{ note.S3|default:"-" }}
-                                </span>
-                            </div>
-                        </div>
-                        <div class="average-section">
-                            <div class="average-label">Moyenne</div>
-                            <div class="average-value {% if note.moyen >= 16 %}excellent{% elif note.moyen >= 14 %}very-good{% elif note.moyen >= 12 %}good{% elif note.moyen >= 10 %}average{% else %}poor{% endif %}">
-                                {{ note.moyen|floatformat:2 }}
-                            </div>
-                        </div>
-                        <div class="card-footer-info">
-                            <div class="info-item">
-                                <i class="fas fa-graduation-cap"></i>
-                                <span>{{ note.identifiant.Class }}</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="fas fa-university"></i>
-                                <span>{{ note.identifiant.institution }}</span>
-                            </div>
-                            <div class="info-item">
-                                 <span>{{ note.identifiant.centre }}</span>
-                            </div>
-                            <div class="info-item">
-                                <i class="fas fa-gavel"></i>
-                                <span class="badge {% if note.decision == 'Admis' %}bg-success{% elif note.decision == 'Redoublant' %}bg-warning{% else %}bg-danger{% endif %}">
-                                    {{ note.decision }}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-actions">
-                        <button class="btn btn-sm btn-outline-primary" onclick="viewNote('{{ note.identifiant.identifiant }}')">
-                            <i class="fas fa-eye"></i> Voir
-                        </button>
-                        <button class="btn btn-sm btn-outline-success" onclick="editNote('{{ note.id }}')">
-                            <i class="fas fa-edit"></i> Modifier
-                        </button>
+                    {% endif %}
+                    <div class="flex-1 min-w-0">
+                        <h4 class="font-bold text-slate-900 truncate">{{ note.identifiant.nom }}</h4>
+                        <p class="text-sm text-indigo-600 font-semibold">{{ note.identifiant.identifiant }}</p>
                     </div>
                 </div>
+
+                <div class="grid grid-cols-3 gap-3 mb-6 bg-slate-50 p-3 rounded-xl">
+                    <div class="text-center">
+                        <div class="text-[10px] font-bold text-slate-400 uppercase">S1</div>
+                        <div class="font-bold {% if note.S1 >= 10 %}text-emerald-600{% else %}text-rose-600{% endif %}">{{ note.S1|default:"-" }}</div>
+                    </div>
+                    <div class="text-center border-x border-slate-200">
+                        <div class="text-[10px] font-bold text-slate-400 uppercase">S2</div>
+                        <div class="font-bold {% if note.S2 >= 10 %}text-emerald-600{% else %}text-rose-600{% endif %}">{{ note.S2|default:"-" }}</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-[10px] font-bold text-slate-400 uppercase">S3</div>
+                        <div class="font-bold {% if note.S3 >= 10 %}text-emerald-600{% else %}text-rose-600{% endif %}">{{ note.S3|default:"-" }}</div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <div class="text-[10px] font-bold text-slate-400 uppercase mb-1">Moyenne</div>
+                        <div class="text-2xl font-black {% if note.moyen >= 14 %}text-emerald-600{% elif note.moyen >= 10 %}text-indigo-600{% else %}text-rose-600{% endif %}">
+                            {{ note.moyen|floatformat:2 }}
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-[10px] font-bold text-slate-400 uppercase mb-1">Décision</div>
+                        <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider {% if note.decision == 'Admis' %}bg-emerald-500 text-white{% elif note.decision == 'Redoublant' %}bg-amber-500 text-white{% else %}bg-rose-500 text-white{% endif %}">
+                            {{ note.decision }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="space-y-2 mb-6">
+                    <div class="flex items-center gap-2 text-xs text-slate-600">
+                        <i class="fas fa-graduation-cap w-4 text-slate-400"></i>
+                        <span class="font-medium">{{ note.identifiant.Class }}</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-xs text-slate-600">
+                        <i class="fas fa-university w-4 text-slate-400"></i>
+                        <span class="font-medium truncate">{{ note.identifiant.institution }}</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-xs text-slate-600">
+                        <i class="fas fa-map-marker-alt w-4 text-slate-400"></i>
+                        <span class="font-medium">{{ note.identifiant.centre }}</span>
+                    </div>
+                </div>
+
+                <div class="flex gap-2">
+                    <button onclick="viewNote('{{ note.identifiant.identifiant }}')" class="flex-1 py-2 bg-indigo-50 text-indigo-600 rounded-lg font-bold text-xs hover:bg-indigo-100 transition-colors flex items-center justify-center gap-2">
+                        <i class="fas fa-eye"></i> Voir
+                    </button>
+                    <button onclick="editNote('{{ note.id }}')" class="flex-1 py-2 bg-emerald-50 text-emerald-600 rounded-lg font-bold text-xs hover:bg-emerald-100 transition-colors flex items-center justify-center gap-2">
+                        <i class="fas fa-edit"></i> Éditer
+                    </button>
+                </div>
             </div>
-            {% endfor %}
         </div>
+        {% endfor %}
     </div>
 
     <!-- Pagination -->
     {% if notes.has_other_pages %}
-    <nav aria-label="Navigation des notes" class="mt-4">
-        <ul class="pagination justify-content-center">
+    <div class="mt-10 flex flex-col items-center gap-4">
+        <div class="flex items-center gap-1 bg-white p-1 rounded-xl shadow-sm border border-slate-200">
             {% if notes.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if class_filter %}class={{ class_filter }}&{% endif %}{% if designation_filter %}designation={{ designation_filter }}&{% endif %}{% if institution_filter %}institution={{ institution_filter }}&{% endif %}{% if decision_filter %}decision={{ decision_filter }}&{% endif %}{% if note_range %}note_range={{ note_range }}&{% endif %}page=1">
-                        <i class="fas fa-angle-double-left"></i>
-                    </a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if class_filter %}class={{ class_filter }}&{% endif %}{% if designation_filter %}designation={{ designation_filter }}&{% endif %}{% if institution_filter %}institution={{ institution_filter }}&{% endif %}{% if decision_filter %}decision={{ decision_filter }}&{% endif %}{% if note_range %}note_range={{ note_range }}&{% endif %}page={{ notes.previous_page_number }}">
-                        <i class="fas fa-angle-left"></i>
-                    </a>
-                </li>
+                <a href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if class_filter %}class={{ class_filter }}&{% endif %}{% if designation_filter %}designation={{ designation_filter }}&{% endif %}{% if institution_filter %}institution={{ institution_filter }}&{% endif %}{% if decision_filter %}decision={{ decision_filter }}&{% endif %}{% if note_range %}note_range={{ note_range }}&{% endif %}page=1" class="w-10 h-10 flex items-center justify-center rounded-lg text-slate-400 hover:bg-slate-50 hover:text-indigo-600 transition-all">
+                    <i class="fas fa-angle-double-left"></i>
+                </a>
+                <a href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if class_filter %}class={{ class_filter }}&{% endif %}{% if designation_filter %}designation={{ designation_filter }}&{% endif %}{% if institution_filter %}institution={{ institution_filter }}&{% endif %}{% if decision_filter %}decision={{ decision_filter }}&{% endif %}{% if note_range %}note_range={{ note_range }}&{% endif %}page={{ notes.previous_page_number }}" class="w-10 h-10 flex items-center justify-center rounded-lg text-slate-400 hover:bg-slate-50 hover:text-indigo-600 transition-all">
+                    <i class="fas fa-angle-left"></i>
+                </a>
             {% endif %}
 
             {% for num in notes.paginator.page_range %}
                 {% if notes.number == num %}
-                    <li class="page-item active">
-                        <span class="page-link">{{ num }}</span>
-                    </li>
+                    <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-indigo-600 text-white font-bold shadow-md shadow-indigo-200">
+                        {{ num }}
+                    </div>
                 {% elif num > notes.number|add:'-3' and num < notes.number|add:'3' %}
-                    <li class="page-item">
-                        <a class="page-link" href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if class_filter %}class={{ class_filter }}&{% endif %}{% if designation_filter %}designation={{ designation_filter }}&{% endif %}{% if institution_filter %}institution={{ institution_filter }}&{% endif %}{% if decision_filter %}decision={{ decision_filter }}&{% endif %}{% if note_range %}note_range={{ note_range }}&{% endif %}page={{ num }}">{{ num }}</a>
-                    </li>
+                    <a href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if class_filter %}class={{ class_filter }}&{% endif %}{% if designation_filter %}designation={{ designation_filter }}&{% endif %}{% if institution_filter %}institution={{ institution_filter }}&{% endif %}{% if decision_filter %}decision={{ decision_filter }}&{% endif %}{% if note_range %}note_range={{ note_range }}&{% endif %}page={{ num }}" class="w-10 h-10 flex items-center justify-center rounded-lg text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition-all font-medium">
+                        {{ num }}
+                    </a>
                 {% endif %}
             {% endfor %}
 
             {% if notes.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if class_filter %}class={{ class_filter }}&{% endif %}{% if designation_filter %}designation={{ designation_filter }}&{% endif %}{% if institution_filter %}institution={{ institution_filter }}&{% endif %}{% if decision_filter %}decision={{ decision_filter }}&{% endif %}{% if note_range %}note_range={{ note_range }}&{% endif %}page={{ notes.next_page_number }}">
-                        <i class="fas fa-angle-right"></i>
-                    </a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if class_filter %}class={{ class_filter }}&{% endif %}{% if designation_filter %}designation={{ designation_filter }}&{% endif %}{% if institution_filter %}institution={{ institution_filter }}&{% endif %}{% if decision_filter %}decision={{ decision_filter }}&{% endif %}{% if note_range %}note_range={{ note_range }}&{% endif %}page={{ notes.paginator.num_pages }}">
-                        <i class="fas fa-angle-double-right"></i>
-                    </a>
-                </li>
+                <a href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if class_filter %}class={{ class_filter }}&{% endif %}{% if designation_filter %}designation={{ designation_filter }}&{% endif %}{% if institution_filter %}institution={{ institution_filter }}&{% endif %}{% if decision_filter %}decision={{ decision_filter }}&{% endif %}{% if note_range %}note_range={{ note_range }}&{% endif %}page={{ notes.next_page_number }}" class="w-10 h-10 flex items-center justify-center rounded-lg text-slate-400 hover:bg-slate-50 hover:text-indigo-600 transition-all">
+                    <i class="fas fa-angle-right"></i>
+                </a>
+                <a href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if class_filter %}class={{ class_filter }}&{% endif %}{% if designation_filter %}designation={{ designation_filter }}&{% endif %}{% if institution_filter %}institution={{ institution_filter }}&{% endif %}{% if decision_filter %}decision={{ decision_filter }}&{% endif %}{% if note_range %}note_range={{ note_range }}&{% endif %}page={{ notes.paginator.num_pages }}" class="w-10 h-10 flex items-center justify-center rounded-lg text-slate-400 hover:bg-slate-50 hover:text-indigo-600 transition-all">
+                    <i class="fas fa-angle-double-right"></i>
+                </a>
             {% endif %}
-        </ul>
-    </nav>
-    
-    <div class="pagination-info text-center text-muted">
-        Page {{ notes.number }} sur {{ notes.paginator.num_pages }} 
-        ({{ notes.start_index }}-{{ notes.end_index }} sur {{ notes.paginator.count }} résultats)
+        </div>
+        
+        <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">
+            Page {{ notes.number }} sur {{ notes.paginator.num_pages }} 
+            <span class="mx-2 text-slate-200">|</span>
+            {{ notes.start_index }}-{{ notes.end_index }} sur {{ notes.paginator.count }} résultats
+        </div>
     </div>
     {% endif %}
 </div>
 
 <style>
-.notes-container {
-    background: #f8f9fa;
-    border-radius: 15px;
-    padding: 2rem;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-}
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-}
-
-.stat-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+.view-btn.active {
+    background-color: #4f46e5;
     color: white;
-    padding: 1.5rem;
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
 }
-
-.stat-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+.view-btn:not(.active) {
+    color: #94a3b8;
 }
-
-.stat-card:nth-child(2) {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-}
-
-.stat-card:nth-child(3) {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-}
-
-.stat-card:nth-child(4) {
-    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-}
-
-.stat-icon {
-    font-size: 2.5rem;
-    margin-right: 1rem;
-    opacity: 0.8;
-}
-
-.stat-content h3 {
-    font-size: 2rem;
-    font-weight: bold;
-    margin: 0;
-}
-
-.stat-content p {
-    margin: 0;
-    opacity: 0.9;
-    font-size: 0.9rem;
-}
-
-.filters-section {
-    background: white;
-    border-radius: 15px;
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-}
-
-.filters-header {
-    display: flex;
-    justify-content: between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    border-bottom: 2px solid #f1f3f5;
-    padding-bottom: 1rem;
-}
-
-.filters-header h3 {
-    margin: 0;
-    color: #495057;
-    font-weight: 600;
-}
-
-.results-info {
-    background: white;
-    padding: 1rem;
-    border-radius: 10px;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-}
-
-.table-container {
-    background: white;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-}
-
-.modern-table {
-    margin: 0;
-    font-size: 0.9rem;
-}
-
-.modern-table th {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 0.8rem;
-    letter-spacing: 0.5px;
-    border: none;
-    padding: 1rem 0.75rem;
-}
-
-.modern-table td {
-    padding: 1rem 0.75rem;
-    vertical-align: middle;
-    border-color: #e9ecef;
-}
-
-.modern-table tbody tr:hover {
-    background-color: #f8f9fa;
-    transform: scale(1.01);
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-.avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #dee2e6;
-}
-
-.avatar-placeholder {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.2rem;
-}
-
-.average-score {
-    text-align: center;
-}
-
-.score {
-    font-size: 1.1rem;
-    font-weight: bold;
-    padding: 0.25rem 0.5rem;
-    border-radius: 6px;
-    color: white;
-}
-
-.score.excellent {
-    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-}
-
-.score.very-good {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-}
-
-.score.good {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.score.average {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-}
-
-.score.poor {
-    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-}
-
-.progress-sm {
-    height: 4px;
-}
-
-.sortable {
-    cursor: pointer;
-    user-select: none;
-    position: relative;
-}
-
-.sortable:hover {
-    background-color: rgba(255,255,255,0.1);
-}
-
-.sort-icon {
-    font-size: 0.7rem;
-    margin-left: 0.5rem;
-    opacity: 0.6;
-}
-
-.empty-state {
-    padding: 3rem;
-}
-
-/* Cards View Styles */
-.cards-container {
-    background: transparent;
-}
-
-.note-card {
-    background: white;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    height: 100%;
-}
-
-.note-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
-}
-
-.note-card .card-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 1rem;
-}
-
-.note-card .card-body {
-    padding: 1.5rem;
-}
-
-.scores-row {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 1rem;
-    background: #f8f9fa;
-    padding: 1rem;
-    border-radius: 10px;
-}
-
-.score-item {
-    text-align: center;
-}
-
-.score-item .label {
-    display: block;
-    font-size: 0.8rem;
-    color: #6c757d;
-    margin-bottom: 0.25rem;
-}
-
-.score-item .value {
-    font-size: 1.2rem;
-    font-weight: bold;
-}
-
-.average-section {
-    text-align: center;
-    margin-bottom: 1.5rem;
-}
-
-.average-label {
-    font-size: 0.9rem;
-    color: #6c757d;
-    margin-bottom: 0.5rem;
-}
-
-.average-value {
-    font-size: 1.8rem;
-    font-weight: bold;
-    padding: 0.5rem 1rem;
-    border-radius: 10px;
-    color: white;
-}
-
-.card-footer-info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.info-item {
-    display: flex;
-    align-items: center;
-    font-size: 0.9rem;
-    color: #6c757d;
-}
-
-.info-item i {
-    margin-right: 0.5rem;
-    width: 16px;
-}
-
-.card-actions {
-    padding: 1rem;
-    background: #f8f9fa;
-    display: flex;
-    justify-content: space-between;
-}
-
-.view-options .btn.active {
-    background-color: #007bff;
-    color: white;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .notes-container {
-        padding: 1rem;
-        border-radius: 10px;
-    }
-    
-    .stats-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-    
-    .stat-card {
-        padding: 1rem;
-    }
-    
-    .filters-form .row {
-        gap: 0.5rem;
-    }
-    
-    .modern-table {
-        font-size: 0.8rem;
-    }
-    
-    .modern-table th,
-    .modern-table td {
-        padding: 0.5rem 0.25rem;
-    }
-    
-    .btn-group-sm .btn {
-        padding: 0.25rem 0.4rem;
-        font-size: 0.75rem;
-    }
-}
-
-/* Animation Classes */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.table-row {
-    animation: fadeInUp 0.3s ease-out;
-}
-
-.table-row:nth-child(even) {
-    animation-delay: 0.1s;
-}
-
-.table-row:nth-child(odd) {
-    animation-delay: 0.05s;
+.view-btn:not(.active):hover {
+    color: #4f46e5;
+    background-color: #f5f3ff;
 }
 </style>
 
@@ -869,20 +443,22 @@
 function toggleView(viewType) {
     const tableView = document.getElementById('table-view');
     const cardsView = document.getElementById('cards-view');
-    const buttons = document.querySelectorAll('.view-options .btn');
-    
-    buttons.forEach(btn => btn.classList.remove('active'));
+    const tableBtn = document.getElementById('view-table-btn');
+    const cardsBtn = document.getElementById('view-cards-btn');
     
     if (viewType === 'table') {
-        tableView.style.display = 'block';
-        cardsView.style.display = 'none';
-        event.target.classList.add('active');
+        tableView.classList.remove('hidden');
+        cardsView.classList.add('hidden');
+        tableBtn.classList.add('active');
+        cardsBtn.classList.remove('active');
     } else {
-        tableView.style.display = 'none';
-        cardsView.style.display = 'block';
-        event.target.classList.add('active');
+        tableView.classList.add('hidden');
+        cardsView.classList.remove('hidden');
+        tableBtn.classList.remove('active');
+        cardsBtn.classList.add('active');
     }
 }
+
 
 // Clear all filters
 function clearFilters() {

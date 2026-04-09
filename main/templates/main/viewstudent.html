@@ -3,208 +3,44 @@
 {% block title%} {{ etudiant.nom }} - Profil Étudiant {% endblock %}
 
 {% block content %}
-<style>
-  /* Modern Student Profile Styles */
-  .student-profile {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 50%, #10b981 100%);
-    min-height: 100vh;
-    padding: 2rem 1rem;
-  }
-  
-  .profile-container {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  
-  .hero-card {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
-    border-radius: 20px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-  }
-  
-  .profile-header {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-    margin-bottom: 2rem;
-  }
-  
-  .profile-image {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid #fff;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  }
-  
-  .profile-info h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #1a202c;
-    margin: 0 0 0.5rem 0;
-  }
-  
-  .profile-info .student-id {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 25px;
-    font-weight: 600;
-    display: inline-block;
-    margin-bottom: 1rem;
-  }
-  
-  .info-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1rem;
-  }
-  
-  .info-item {
-    background: rgba(255, 255, 255, 0.7);
-    padding: 1rem;
-    border-radius: 12px;
-    border-left: 4px solid #0ea5e9;
-  }
-  
-  .info-item .label {
-    font-size: 0.875rem;
-    color: #6b7280;
-    font-weight: 500;
-  }
-  
-  .info-item .value {
-    font-size: 1rem;
-    color: #1f2937;
-    font-weight: 600;
-    margin-top: 0.25rem;
-  }
-  
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-  }
-  
-  .stat-card {
-    background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
-    color: white;
-    padding: 1.5rem;
-    border-radius: 16px;
-    text-align: center;
-    box-shadow: 0 10px 25px rgba(14, 165, 233, 0.3);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .stat-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(14, 165, 233, 0.4);
-  }
-  
-  .stat-card .number {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-  }
-  
-  .stat-card .label {
-    font-size: 0.875rem;
-    opacity: 0.9;
-  }
-  
-  .section-card {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
-    border-radius: 20px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-  }
-  
-  .section-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #1a202c;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-  
-  .section-icon {
-    width: 32px;
-    height: 32px;
-    background: linear-gradient(135deg, #0ea5e9, #06b6d4);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 16px;
-  }
-  
-  @media (max-width: 768px) {
-    .profile-header {
-      flex-direction: column;
-      text-align: center;
-    }
-    
-    .profile-info h1 {
-      font-size: 2rem;
-    }
-    
-    .stats-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .info-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-</style>
 
-<div class="student-profile">
-  <div class="profile-container">
+<div class="min-h-screen bg-gradient-to-br from-sky-500 via-cyan-500 to-emerald-500 p-4 md:p-8">
+  <div class="max-w-7xl mx-auto space-y-8">
     
     <!-- Hero Section -->
-    <div class="hero-card">
-      <div class="profile-header">
-        <img src="{{ etudiant.imageprofile.url }}" alt="{{ etudiant.nom }}" class="profile-image">
-        <div class="profile-info">
-          <h1>{{ etudiant.nom }}</h1>
-          <div class="student-id" style="background: linear-gradient(135deg, #0ea5e9, #06b6d4);">{{ etudiant.identifiant }}</div>
-          <div class="info-grid">
-            <div class="info-item">
-              <div class="label">Âge</div>
-              <div class="value">{{ age }} ans</div>
+    <div class="bg-white backdrop-blur-xl rounded-3xl p-6 md:p-8 shadow-2xl border border-white/20">
+      <div class="flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-8">
+        <img src="{{ etudiant.imageprofile.url }}" alt="{{ etudiant.nom }}" 
+             class="w-32 h-32 rounded-full object-cover border-4 border-white shadow-2xl">
+        <div class="flex-1 text-center md:text-left">
+          <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-3">{{ etudiant.nom }}</h1>
+          <div class="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-sky-500 to-cyan-500 text-white font-semibold text-sm mb-4">
+            {{ etudiant.identifiant }}
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+            <div class="bg-white/70 p-4 rounded-xl border-l-4 border-sky-500">
+              <div class="text-sm text-slate-500 font-medium">Âge</div>
+              <div class="text-base font-bold text-slate-900 mt-1">{{ age }} ans</div>
             </div>
-            <div class="info-item">
-              <div class="label">Genre</div>
-              <div class="value">{{ etudiant.genre }}</div>
+            <div class="bg-white/70 p-4 rounded-xl border-l-4 border-sky-500">
+              <div class="text-sm text-slate-500 font-medium">Genre</div>
+              <div class="text-base font-bold text-slate-900 mt-1">{{ etudiant.genre }}</div>
             </div>
-            <div class="info-item">
-              <div class="label">Classe</div>
-              <div class="value">{{ etudiant.Class }}</div>
+            <div class="bg-white/70 p-4 rounded-xl border-l-4 border-sky-500">
+              <div class="text-sm text-slate-500 font-medium">Classe</div>
+              <div class="text-base font-bold text-slate-900 mt-1">{{ etudiant.Class }}</div>
             </div>
-            <div class="info-item">
-              <div class="label">Institution</div>
-              <div class="value">{{ etudiant.institution }}</div>
+            <div class="bg-white/70 p-4 rounded-xl border-l-4 border-sky-500">
+              <div class="text-sm text-slate-500 font-medium">Institution</div>
+              <div class="text-base font-bold text-slate-900 mt-1">{{ etudiant.institution }}</div>
             </div>
-            <div class="info-item">
-              <div class="label">Ville</div>
-              <div class="value">{{ etudiant.ville }}</div>
+            <div class="bg-white/70 p-4 rounded-xl border-l-4 border-sky-500">
+              <div class="text-sm text-slate-500 font-medium">Ville</div>
+              <div class="text-base font-bold text-slate-900 mt-1">{{ etudiant.ville }}</div>
             </div>
-            <div class="info-item">
-              <div class="label">Email</div>
-              <div class="value">{{ etudiant.email|default:"Non renseigné" }}</div>
+            <div class="bg-white/70 p-4 rounded-xl border-l-4 border-sky-500">
+              <div class="text-sm text-slate-500 font-medium">Email</div>
+              <div class="text-base font-bold text-slate-900 mt-1">{{ etudiant.email|default:"Non renseigné" }}</div>
             </div>
           </div>
         </div>
@@ -212,162 +48,190 @@
     </div>
 
     <!-- Statistics -->
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="number">{{ latest_average|floatformat:2 }}/20</div>
-        <div class="label">Dernière Moyenne</div>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+      <div class="bg-gradient-to-br from-sky-500 to-cyan-500 text-white p-6 rounded-2xl text-center shadow-lg transform transition-all hover:-translate-y-2 hover:shadow-2xl">
+        <div class="text-3xl font-bold mb-2">{{ latest_average|floatformat:2 }}/20</div>
+        <div class="text-sm opacity-90">Dernière Moyenne</div>
       </div>
-      <div class="stat-card">
-        <div class="number">{{ etudiant.Class }}</div>
-        <div class="label">Classe Actuelle</div>
+      <div class="bg-gradient-to-br from-indigo-500 to-purple-500 text-white p-6 rounded-2xl text-center shadow-lg transform transition-all hover:-translate-y-2 hover:shadow-2xl">
+        <div class="text-3xl font-bold mb-2">{{ etudiant.Class }}</div>
+        <div class="text-sm opacity-90">Classe Actuelle</div>
       </div>
-      <div class="stat-card">
-        <div class="number">{{ etudiant.fillier|default:"Générale" }}</div>
-        <div class="label">Filière</div>
+      <div class="bg-gradient-to-br from-emerald-500 to-teal-500 text-white p-6 rounded-2xl text-center shadow-lg transform transition-all hover:-translate-y-2 hover:shadow-2xl">
+        <div class="text-3xl font-bold mb-2">{{ etudiant.fillier|default:"Générale" }}</div>
+        <div class="text-sm opacity-90">Filière</div>
       </div>
-      <div class="stat-card">
-        <div class="number">{{ avertissement_count }}</div>
-        <div class="label">Avertissements</div>
+      <div class="bg-gradient-to-br from-rose-500 to-pink-500 text-white p-6 rounded-2xl text-center shadow-lg transform transition-all hover:-translate-y-2 hover:shadow-2xl">
+        <div class="text-3xl font-bold mb-2">{{ avertissement_count }}</div>
+        <div class="text-sm opacity-90">Avertissements</div>
       </div>
     </div>
 
     <!-- Family Information -->
-    <div class="section-card">
-      <h2 class="section-title">
-        <div class="section-icon">👨‍👩‍👧‍👦</div>
+    <div class="bg-white backdrop-blur-xl rounded-3xl p-6 md:p-8 shadow-2xl border border-white/20">
+      <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+        <div class="w-10 h-10 bg-gradient-to-br from-sky-500 to-cyan-500 rounded-xl flex items-center justify-center text-white text-xl">
+          👨‍👩‍👧‍👦
+        </div>
         Informations Familiales
       </h2>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
-        <div style="background: rgba(59, 130, 246, 0.1); padding: 1.5rem; border-radius: 16px; border: 2px solid rgba(59, 130, 246, 0.2); transition: all 0.3s ease;">
-          <h3 style="font-size: 1.125rem; font-weight: 600; color: #1f2937; margin-bottom: 0.5rem;">👨 Père</h3>
-          <p style="color: #6b7280; margin: 0;">{{ etudiant.nom_pere|default:"Non renseigné" }}</p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-blue-50 p-6 rounded-2xl border-2 border-blue-100 hover:shadow-lg transition-all">
+          <h3 class="text-lg font-semibold text-slate-900 mb-2">👨 Père</h3>
+          <p class="text-slate-600">{{ etudiant.nom_pere|default:"Non renseigné" }}</p>
         </div>
-        <div style="background: rgba(236, 72, 153, 0.1); padding: 1.5rem; border-radius: 16px; border: 2px solid rgba(236, 72, 153, 0.2); transition: all 0.3s ease;">
-          <h3 style="font-size: 1.125rem; font-weight: 600; color: #1f2937; margin-bottom: 0.5rem;">👩 Mère</h3>
-          <p style="color: #6b7280; margin: 0;">{{ etudiant.nom_mere|default:"Non renseigné" }}</p>
+        <div class="bg-pink-50 p-6 rounded-2xl border-2 border-pink-100 hover:shadow-lg transition-all">
+          <h3 class="text-lg font-semibold text-slate-900 mb-2">👩 Mère</h3>
+          <p class="text-slate-600">{{ etudiant.nom_mere|default:"Non renseigné" }}</p>
         </div>
-        <div style="background: rgba(16, 185, 129, 0.1); padding: 1.5rem; border-radius: 16px; border: 2px solid rgba(16, 185, 129, 0.2); transition: all 0.3s ease;">
-          <h3 style="font-size: 1.125rem; font-weight: 600; color: #1f2937; margin-bottom: 0.5rem;">📞 Contacts</h3>
-          <p style="color: #6b7280; margin: 0;">{{ etudiant.telephone|default:"Non renseigné" }}</p>
+        <div class="bg-emerald-50 p-6 rounded-2xl border-2 border-emerald-100 hover:shadow-lg transition-all">
+          <h3 class="text-lg font-semibold text-slate-900 mb-2">📞 Contacts</h3>
+          <p class="text-slate-600">{{ etudiant.telephone|default:"Non renseigné" }}</p>
           {% if etudiant.telephone_mere %}
-            <p style="font-size: 0.875rem; margin-top: 0.5rem; color: #6b7280;">Mère: {{ etudiant.telephone_mere }}</p>
+            <p class="text-sm mt-2 text-slate-500">Mère: {{ etudiant.telephone_mere }}</p>
           {% endif %}
         </div>
       </div>
     </div>
 
     <!-- Academic Performance -->
-    <div class="section-card">
-      <h2 class="section-title">
-        <div class="section-icon">📊</div>
+    <div class="bg-white backdrop-blur-xl rounded-3xl p-6 md:p-8 shadow-2xl border border-white/20">
+      <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+        <div class="w-10 h-10 bg-gradient-to-br from-sky-500 to-cyan-500 rounded-xl flex items-center justify-center text-white text-xl">
+          📊
+        </div>
         Performance Académique
       </h2>
       {% if new_notes %}
-        <div style="display: grid; gap: 1rem; max-height: 400px; overflow-y: auto;">
+        <div class="space-y-4 max-h-96 overflow-y-auto pr-2">
           {% for note in new_notes %}
-            <div style="background: {% if note.moyen >= 16 %}rgba(16, 185, 129, 0.1){% elif note.moyen >= 12 %}rgba(59, 130, 246, 0.1){% elif note.moyen >= 10 %}rgba(245, 158, 11, 0.1){% else %}rgba(239, 68, 68, 0.1){% endif %}; padding: 1.5rem; border-radius: 16px; border-left: 4px solid {% if note.moyen >= 16 %}#10b981{% elif note.moyen >= 12 %}#3b82f6{% elif note.moyen >= 10 %}#f59e0b{% else %}#ef4444{% endif %}; transition: all 0.3s ease;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                <div style="font-size: 1.125rem; font-weight: 600; color: #1f2937;">Année {{ note.annee }}</div>
-                <div style="font-size: 1.5rem; font-weight: 700; color: {% if note.moyen >= 16 %}#10b981{% elif note.moyen >= 12 %}#3b82f6{% elif note.moyen >= 10 %}#f59e0b{% else %}#ef4444{% endif %};">
+            <div class="p-6 rounded-2xl border-l-4 transition-all hover:shadow-lg
+                        {% if note.moyen >= 16 %}bg-emerald-50 border-emerald-500
+                        {% elif note.moyen >= 12 %}bg-blue-50 border-blue-500
+                        {% elif note.moyen >= 10 %}bg-amber-50 border-amber-500
+                        {% else %}bg-red-50 border-red-500{% endif %}">
+              <div class="flex justify-between items-center mb-4">
+                <div class="text-lg font-semibold text-slate-900">Année {{ note.annee }}</div>
+                <div class="text-2xl font-bold
+                            {% if note.moyen >= 16 %}text-emerald-600
+                            {% elif note.moyen >= 12 %}text-blue-600
+                            {% elif note.moyen >= 10 %}text-amber-600
+                            {% else %}text-red-600{% endif %}">
                   {{ note.moyen|floatformat:2 }}/20
                 </div>
               </div>
               
               {% if note.S1 or note.S2 or note.S3 %}
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1rem;">
+                <div class="grid grid-cols-3 gap-3 mb-4">
                   {% if note.S1 %}
-                    <div style="background: rgba(255, 255, 255, 0.7); padding: 0.75rem; border-radius: 8px; text-align: center;">
-                      <div style="font-size: 0.75rem; color: #6b7280; font-weight: 500;">S1</div>
-                      <div style="font-size: 1rem; font-weight: 600; color: #1f2937;">{{ note.S1|floatformat:2 }}</div>
+                    <div class="bg-white/70 p-3 rounded-xl text-center">
+                      <div class="text-xs text-slate-500 font-medium">S1</div>
+                      <div class="text-base font-bold text-slate-900 mt-1">{{ note.S1|floatformat:2 }}</div>
                     </div>
                   {% endif %}
                   {% if note.S2 %}
-                    <div style="background: rgba(255, 255, 255, 0.7); padding: 0.75rem; border-radius: 8px; text-align: center;">
-                      <div style="font-size: 0.75rem; color: #6b7280; font-weight: 500;">S2</div>
-                      <div style="font-size: 1rem; font-weight: 600; color: #1f2937;">{{ note.S2|floatformat:2 }}</div>
+                    <div class="bg-white/70 p-3 rounded-xl text-center">
+                      <div class="text-xs text-slate-500 font-medium">S2</div>
+                      <div class="text-base font-bold text-slate-900 mt-1">{{ note.S2|floatformat:2 }}</div>
                     </div>
                   {% endif %}
                   {% if note.S3 %}
-                    <div style="background: rgba(255, 255, 255, 0.7); padding: 0.75rem; border-radius: 8px; text-align: center;">
-                      <div style="font-size: 0.75rem; color: #6b7280; font-weight: 500;">S3</div>
-                      <div style="font-size: 1rem; font-weight: 600; color: #1f2937;">{{ note.S3|floatformat:2 }}</div>
+                    <div class="bg-white/70 p-3 rounded-xl text-center">
+                      <div class="text-xs text-slate-500 font-medium">S3</div>
+                      <div class="text-base font-bold text-slate-900 mt-1">{{ note.S3|floatformat:2 }}</div>
                     </div>
                   {% endif %}
                 </div>
               {% endif %}
               
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span style="background: {% if note.moyen >= 16 %}linear-gradient(135deg, #10b981, #059669){% elif note.moyen >= 12 %}linear-gradient(135deg, #3b82f6, #2563eb){% elif note.moyen >= 10 %}linear-gradient(135deg, #f59e0b, #d97706){% else %}linear-gradient(135deg, #ef4444, #dc2626){% endif %}; color: white; padding: 0.5rem 1rem; border-radius: 25px; font-size: 0.875rem; font-weight: 600; display: inline-block;">
+              <div class="flex justify-between items-center">
+                <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold text-white
+                             {% if note.moyen >= 16 %}bg-gradient-to-r from-emerald-500 to-emerald-600
+                             {% elif note.moyen >= 12 %}bg-gradient-to-r from-blue-500 to-blue-600
+                             {% elif note.moyen >= 10 %}bg-gradient-to-r from-amber-500 to-amber-600
+                             {% else %}bg-gradient-to-r from-red-500 to-red-600{% endif %}">
                   {{ note.decision|default:"Non évalué" }}
                 </span>
                 {% if note.rang %}
-                  <span style="font-size: 0.875rem; color: #6b7280;">Rang: {{ note.rang }}</span>
+                  <span class="text-sm text-slate-600 font-medium">Rang: {{ note.rang }}</span>
                 {% endif %}
               </div>
             </div>
           {% endfor %}
         </div>
       {% else %}
-        <div style="text-align: center; padding: 3rem 1rem; color: #6b7280;">
-          <div style="width: 64px; height: 64px; background: rgba(107, 114, 128, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 24px;">📊</div>
-          <h3 style="margin: 0 0 0.5rem 0;">Aucune note disponible</h3>
-          <p style="margin: 0;">Les notes académiques apparaîtront ici une fois saisies.</p>
+        <div class="text-center py-12 text-slate-500">
+          <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+            📊
+          </div>
+          <h3 class="text-lg font-semibold mb-2">Aucune note disponible</h3>
+          <p class="text-sm">Les notes académiques apparaîtront ici une fois saisies.</p>
         </div>
       {% endif %}
     </div>
 
     <!-- Documents -->
-    <div class="section-card">
-      <h2 class="section-title">
-        <div class="section-icon">📄</div>
+    <div class="bg-white backdrop-blur-xl rounded-3xl p-6 md:p-8 shadow-2xl border border-white/20">
+      <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+        <div class="w-10 h-10 bg-gradient-to-br from-sky-500 to-cyan-500 rounded-xl flex items-center justify-center text-white text-xl">
+          📄
+        </div>
         Documents & Dossiers
       </h2>
       {% if dossiers %}
-        <div style="display: grid; gap: 1rem;">
+        <div class="space-y-4">
           {% for dossier in dossiers %}
-            <div style="background: rgba(255, 255, 255, 0.9); padding: 1.5rem; border-radius: 16px; display: flex; align-items: center; justify-content: space-between; transition: all 0.3s ease; border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);">
-              <div style="display: flex; align-items: center; gap: 1rem;">
-                <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #ef4444, #dc2626); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;">📄</div>
+            <div class="bg-white p-6 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-slate-100 shadow-sm hover:shadow-lg transition-all">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-xl flex items-center justify-center text-white text-2xl flex-shrink-0">
+                  📄
+                </div>
                 <div>
-                  <h4 style="font-size: 1rem; font-weight: 600; color: #1f2937; margin: 0 0 0.25rem 0;">{{ dossier.namefile }}</h4>
-                  <p style="font-size: 0.875rem; color: #6b7280; margin: 0;">{{ dossier.file.name|slice:"8:" }}</p>
+                  <h4 class="text-base font-semibold text-slate-900">{{ dossier.namefile }}</h4>
+                  <p class="text-sm text-slate-500 mt-1">{{ dossier.file.name|slice:"8:" }}</p>
                 </div>
               </div>
-              <div style="display: flex; gap: 0.75rem;">
-                <a href="{{ dossier.file.url }}" target="_blank" style="padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.875rem; font-weight: 500; text-decoration: none; background: linear-gradient(135deg, #0ea5e9, #06b6d4); color: white; border: none; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 0.5rem;">
-                  👁️ Voir
+              <div class="flex gap-3 w-full sm:w-auto">
+                <a href="{{ dossier.file.url }}" target="_blank" 
+                   class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-white bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 transition-all shadow-sm">
+                  <span>👁️</span> Voir
                 </a>
-                <a href="{{ dossier.file.url }}" download style="padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.875rem; font-weight: 500; text-decoration: none; background: rgba(255, 255, 255, 0.9); color: #374151; border: 1px solid #d1d5db; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 0.5rem;">
-                  ⬇️ Télécharger
+                <a href="{{ dossier.file.url }}" download 
+                   class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 transition-all">
+                  <span>⬇️</span> Télécharger
                 </a>
               </div>
             </div>
           {% endfor %}
         </div>
       {% else %}
-        <div style="text-align: center; padding: 3rem 1rem; color: #6b7280;">
-          <div style="width: 64px; height: 64px; background: rgba(107, 114, 128, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 24px;">📄</div>
-          <h3 style="margin: 0 0 0.5rem 0;">Aucun document disponible</h3>
-          <p style="margin: 0;">Les documents administratifs apparaîtront ici une fois ajoutés.</p>
+        <div class="text-center py-12 text-slate-500">
+          <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+            📄
+          </div>
+          <h3 class="text-lg font-semibold mb-2">Aucun document disponible</h3>
+          <p class="text-sm">Les documents administratifs apparaîtront ici une fois ajoutés.</p>
         </div>
       {% endif %}
     </div>
 
     <!-- Warnings (if any) -->
     {% if avertissement %}
-    <div class="section-card">
-      <h2 class="section-title">
-        <div class="section-icon">⚠️</div>
+    <div class="bg-white backdrop-blur-xl rounded-3xl p-6 md:p-8 shadow-2xl border border-white/20">
+      <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+        <div class="w-10 h-10 bg-gradient-to-br from-red-500 to-rose-500 rounded-xl flex items-center justify-center text-white text-xl">
+          ⚠️
+        </div>
         Avertissements
       </h2>
-      <div style="display: grid; gap: 1rem;">
+      <div class="space-y-4">
         {% for warn in avertissement %}
-          <div style="background: rgba(239, 68, 68, 0.1); padding: 1.5rem; border-radius: 16px; border-left: 4px solid #ef4444; transition: all 0.3s ease;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-              <div style="font-size: 1.125rem; font-weight: 600; color: #1f2937;">{{ warn.raison }}</div>
-              <div style="font-size: 0.875rem; color: #6b7280; font-weight: 500;">{{ warn.date|date:"d M Y" }}</div>
+          <div class="bg-red-50 p-6 rounded-2xl border-l-4 border-red-500 hover:shadow-lg transition-all">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-2">
+              <div class="text-lg font-semibold text-slate-900">{{ warn.raison }}</div>
+              <div class="text-sm text-slate-600 font-medium">{{ warn.date|date:"d M Y" }}</div>
             </div>
-            <p style="color: #6b7280; margin: 0;">Avertissement disciplinaire</p>
+            <p class="text-slate-600">Avertissement disciplinaire</p>
           </div>
         {% endfor %}
       </div>
@@ -375,43 +239,47 @@
     {% endif %}
 
     <!-- Academic Timeline -->
-    <div class="section-card">
-      <h2 class="section-title">
-        <div class="section-icon">🕒</div>
+    <div class="bg-white backdrop-blur-xl rounded-3xl p-6 md:p-8 shadow-2xl border border-white/20">
+      <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+        <div class="w-10 h-10 bg-gradient-to-br from-sky-500 to-cyan-500 rounded-xl flex items-center justify-center text-white text-xl">
+          🕒
+        </div>
         Parcours Académique
       </h2>
       
       <!-- Academic Dates -->
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
-        <div style="background: rgba(59, 130, 246, 0.1); padding: 1.5rem; border-radius: 16px; border: 2px solid rgba(59, 130, 246, 0.2); transition: all 0.3s ease;">
-          <h3 style="font-size: 1.125rem; font-weight: 600; color: #1f2937; margin-bottom: 0.5rem;">📅 Date d'entrée</h3>
-          <p style="color: #6b7280; margin: 0;">{{ etudiant.date_entre|date:"d M Y"|default:"Non renseignée" }}</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div class="bg-blue-50 p-6 rounded-2xl border-2 border-blue-100 hover:shadow-lg transition-all">
+          <h3 class="text-lg font-semibold text-slate-900 mb-2">📅 Date d'entrée</h3>
+          <p class="text-slate-600">{{ etudiant.date_entre|date:"d M Y"|default:"Non renseignée" }}</p>
         </div>
-        <div style="background: rgba(107, 114, 128, 0.1); padding: 1.5rem; border-radius: 16px; border: 2px solid rgba(107, 114, 128, 0.2); transition: all 0.3s ease;">
-          <h3 style="font-size: 1.125rem; font-weight: 600; color: #1f2937; margin-bottom: 0.5rem;">🎓 Statut actuel</h3>
-          <p style="color: #6b7280; margin: 0;">{{ etudiant.date_sortie|date:"d M Y"|default:"Étudiant actif" }}</p>
+        <div class="bg-slate-50 p-6 rounded-2xl border-2 border-slate-100 hover:shadow-lg transition-all">
+          <h3 class="text-lg font-semibold text-slate-900 mb-2">🎓 Statut actuel</h3>
+          <p class="text-slate-600">{{ etudiant.date_sortie|date:"d M Y"|default:"Étudiant actif" }}</p>
         </div>
       </div>
 
       {% if historique_etudiant %}
-        <div style="position: relative; padding-left: 2rem;">
-          <div style="position: absolute; left: 1rem; top: 0; bottom: 0; width: 2px; background: linear-gradient(135deg, #0ea5e9, #06b6d4);"></div>
+        <div class="relative pl-8">
+          <div class="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-sky-500 to-cyan-500"></div>
           {% for historique in historique_etudiant %}
-            <div style="position: relative; margin-bottom: 2rem;">
-              <div style="position: absolute; left: -1.75rem; top: 0.5rem; width: 12px; height: 12px; background: linear-gradient(135deg, #0ea5e9, #06b6d4); border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);"></div>
-              <div style="background: rgba(255, 255, 255, 0.9); padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
-                <div style="font-size: 0.875rem; color: #6b7280; font-weight: 500;">{{ historique.date|date:"d M Y" }}</div>
-                <h3 style="font-size: 1.125rem; font-weight: 600; color: #1f2937; margin: 0.5rem 0;">Événement Académique</h3>
-                <p style="color: #6b7280; margin: 0;">{{ historique.raison|default:"Aucun détail fourni" }}</p>
+            <div class="relative mb-8">
+              <div class="absolute left-[-1.75rem] top-2 w-3 h-3 bg-gradient-to-br from-sky-500 to-cyan-500 rounded-full border-4 border-white shadow-md"></div>
+              <div class="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition-all">
+                <div class="text-sm text-slate-500 font-medium mb-2">{{ historique.date|date:"d M Y" }}</div>
+                <h3 class="text-lg font-semibold text-slate-900 mb-2">Événement Académique</h3>
+                <p class="text-slate-600">{{ historique.raison|default:"Aucun détail fourni" }}</p>
               </div>
             </div>
           {% endfor %}
         </div>
       {% else %}
-        <div style="text-align: center; padding: 3rem 1rem; color: #6b7280;">
-          <div style="width: 64px; height: 64px; background: rgba(107, 114, 128, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 24px;">🕒</div>
-          <h3 style="margin: 0 0 0.5rem 0;">Aucun historique disponible</h3>
-          <p style="margin: 0;">L'historique académique apparaîtra ici au fur et à mesure des événements.</p>
+        <div class="text-center py-12 text-slate-500">
+          <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+            🕒
+          </div>
+          <h3 class="text-lg font-semibold mb-2">Aucun historique disponible</h3>
+          <p class="text-sm">L'historique académique apparaîtra ici au fur et à mesure des événements.</p>
         </div>
       {% endif %}
     </div>
@@ -419,53 +287,4 @@
   </div>
 </div>
 
-<script>
-// Add smooth animations on load
-document.addEventListener('DOMContentLoaded', function() {
-  // Animate cards on scroll
-  const cards = document.querySelectorAll('.section-card, .hero-card');
-  
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.style.opacity = '1';
-        entry.target.style.transform = 'translateY(0)';
-      }
-    });
-  }, { threshold: 0.1 });
-  
-  cards.forEach((card, index) => {
-    card.style.opacity = '0';
-    card.style.transform = 'translateY(30px)';
-    card.style.transition = `all 0.6s ease ${index * 0.1}s`;
-    observer.observe(card);
-  });
-  
-  // Add hover effects to stat cards
-  const statCards = document.querySelectorAll('.stat-card');
-  statCards.forEach(card => {
-    card.addEventListener('mouseenter', function() {
-      this.style.transform = 'translateY(-8px) scale(1.05)';
-    });
-    
-    card.addEventListener('mouseleave', function() {
-      this.style.transform = 'translateY(-5px) scale(1)';
-    });
-  });
-  
-  // Add hover effects to document and family cards
-  const hoverCards = document.querySelectorAll('[style*="transition: all 0.3s ease"]');
-  hoverCards.forEach(card => {
-    card.addEventListener('mouseenter', function() {
-      this.style.transform = 'translateY(-3px)';
-      this.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.15)';
-    });
-    
-    card.addEventListener('mouseleave', function() {
-      this.style.transform = 'translateY(0)';
-      this.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.05)';
-    });
-  });
-});
-</script>
 {% endblock %}

@@ -1,78 +1,70 @@
 <!-- Elite Notes Table Component -->
-<div class="elite-notes-container">
+<div class="bg-slate-50 rounded-2xl p-6">
     <!-- Statistics Cards -->
-    <div class="stats-grid mb-4">
-        <div class="stat-card">
-            <div class="stat-icon">
-                <i class="fas fa-star"></i>
-            </div>
-            <div class="stat-content">
-                <h3>{{ total_notes }}</h3>
-                <p>Total Notes Elites</p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div class="bg-gradient-to-br from-purple-500 to-violet-600 rounded-2xl p-5 flex items-center gap-4 text-white shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+            <div class="text-3xl opacity-80"><i class="fas fa-star"></i></div>
+            <div>
+                <h3 class="text-2xl font-bold">{{ total_notes }}</h3>
+                <p class="text-purple-100 text-sm font-medium uppercase tracking-wider">Total Notes Elites</p>
             </div>
         </div>
-        
-        <div class="stat-card">
-            <div class="stat-icon">
-                <i class="fas fa-chart-line"></i>
-            </div>
-            <div class="stat-content">
-                <h3>{{ avg_score }}</h3>
-                <p>Moyenne Générale</p>
+        <div class="bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl p-5 flex items-center gap-4 text-white shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+            <div class="text-3xl opacity-80"><i class="fas fa-chart-line"></i></div>
+            <div>
+                <h3 class="text-2xl font-bold">{{ avg_score }}</h3>
+                <p class="text-cyan-100 text-sm font-medium uppercase tracking-wider">Moyenne Générale</p>
             </div>
         </div>
-        
-        <div class="stat-card">
-            <div class="stat-icon">
-                <i class="fas fa-check-circle"></i>
-            </div>
-            <div class="stat-content">
-                <h3>{{ pass_rate }}%</h3>
-                <p>Taux de Réussite</p>
+        <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-5 flex items-center gap-4 text-white shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+            <div class="text-3xl opacity-80"><i class="fas fa-check-circle"></i></div>
+            <div>
+                <h3 class="text-2xl font-bold">{{ pass_rate }}%</h3>
+                <p class="text-emerald-100 text-sm font-medium uppercase tracking-wider">Taux de Réussite</p>
             </div>
         </div>
-        
-        <div class="stat-card">
-            <div class="stat-icon">
-                <i class="fas fa-trophy"></i>
-            </div>
-            <div class="stat-content">
-                <h3>{{ excellence_rate }}%</h3>
-                <p>Taux d'Excellence</p>
+        <div class="bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-5 flex items-center gap-4 text-white shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+            <div class="text-3xl opacity-80"><i class="fas fa-trophy"></i></div>
+            <div>
+                <h3 class="text-2xl font-bold">{{ excellence_rate }}%</h3>
+                <p class="text-amber-100 text-sm font-medium uppercase tracking-wider">Taux d'Excellence</p>
             </div>
         </div>
     </div>
 
     <!-- Filters Section -->
-    <div class="filters-section">
-        <div class="filters-header">
-            <h3><i class="fas fa-filter"></i> Filtres Spéciaux Elites</h3>
-            <button class="btn btn-outline-secondary btn-sm" onclick="clearEliteFilters()">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-8">
+        <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+            <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                <i class="fas fa-filter text-purple-500"></i> Filtres Spéciaux Elites
+            </h3>
+            <button class="inline-flex items-center gap-2 px-3 py-1.5 text-sm bg-white border border-slate-300 text-slate-700 rounded-lg font-medium hover:bg-slate-50 transition-all" onclick="clearEliteFilters()">
                 <i class="fas fa-times"></i> Effacer
             </button>
         </div>
-        
-        <form method="get" class="filters-form">
-            <div class="row g-3">
-                <!-- Search -->
-                <div class="col-md-3">
-                    <div class="form-floating">
-                        <input type="text" 
-                               class="form-control" 
-                               id="search" 
-                               name="search" 
-                               value="{{ search_query }}" 
-                               placeholder="Rechercher par nom...">
-                        <label for="search">
-                            <i class="fas fa-search"></i> Rechercher
+
+        <div class="p-6">
+            <form method="get" class="filters-form">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+                    <!-- Search -->
+                    <div>
+                        <label for="search" class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                            <i class="fas fa-search text-purple-500"></i> Rechercher
                         </label>
+                        <input type="text"
+                               class="mt-1 w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all outline-none text-slate-700"
+                               id="search"
+                               name="search"
+                               value="{{ search_query }}"
+                               placeholder="Rechercher par nom...">
                     </div>
-                </div>
-                
-                <!-- Class Filter -->
-                <div class="col-md-2">
-                    <div class="form-floating">
-                        <select class="form-select" id="class" name="class">
+
+                    <!-- Class Filter -->
+                    <div>
+                        <label for="class" class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                            <i class="fas fa-graduation-cap text-emerald-500"></i> Classe
+                        </label>
+                        <select class="mt-1 w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all outline-none text-slate-700 appearance-none" id="class" name="class">
                             <option value="">Toutes</option>
                             {% for class in classes %}
                                 <option value="{{ class }}" {% if class == class_filter %}selected{% endif %}>
@@ -80,16 +72,14 @@
                                 </option>
                             {% endfor %}
                         </select>
-                        <label for="class">
-                            <i class="fas fa-graduation-cap"></i> Classe
-                        </label>
                     </div>
-                </div>
-                
-                <!-- Designation Filter -->
-                <div class="col-md-2">
-                    <div class="form-floating">
-                        <select class="form-select" id="designation" name="designation">
+
+                    <!-- Designation Filter -->
+                    <div>
+                        <label for="designation" class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                            <i class="fas fa-tag text-amber-500"></i> Désignation
+                        </label>
+                        <select class="mt-1 w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all outline-none text-slate-700 appearance-none" id="designation" name="designation">
                             <option value="">Toutes</option>
                             {% for designation in designations %}
                                 <option value="{{ designation }}" {% if designation == designation_filter %}selected{% endif %}>
@@ -97,16 +87,14 @@
                                 </option>
                             {% endfor %}
                         </select>
-                        <label for="designation">
-                            <i class="fas fa-tag"></i> Désignation
-                        </label>
                     </div>
-                </div>
-                
-                <!-- Institution Filter -->
-                <div class="col-md-2">
-                    <div class="form-floating">
-                        <select class="form-select" id="institution" name="institution">
+
+                    <!-- Institution Filter -->
+                    <div>
+                        <label for="institution" class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                            <i class="fas fa-university text-cyan-500"></i> Institution
+                        </label>
+                        <select class="mt-1 w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all outline-none text-slate-700 appearance-none" id="institution" name="institution">
                             <option value="">Toutes</option>
                             {% for institution in institutions %}
                                 <option value="{{ institution }}" {% if institution == institution_filter %}selected{% endif %}>
@@ -114,16 +102,14 @@
                                 </option>
                             {% endfor %}
                         </select>
-                        <label for="institution">
-                            <i class="fas fa-university"></i> Institution
-                        </label>
                     </div>
-                </div>
-                
-                <!-- Decision Filter -->
-                <div class="col-md-2">
-                    <div class="form-floating">
-                        <select class="form-select" id="decision" name="decision">
+
+                    <!-- Decision Filter -->
+                    <div>
+                        <label for="decision" class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                            <i class="fas fa-gavel text-red-500"></i> Décision
+                        </label>
+                        <select class="mt-1 w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all outline-none text-slate-700 appearance-none" id="decision" name="decision">
                             <option value="">Toutes</option>
                             {% for decision in decisions %}
                                 <option value="{{ decision }}" {% if decision == decision_filter %}selected{% endif %}>
@@ -131,18 +117,14 @@
                                 </option>
                             {% endfor %}
                         </select>
-                        <label for="decision">
-                            <i class="fas fa-gavel"></i> Décision
-                        </label>
                     </div>
-                </div>
-            </div>
-            
-            <div class="row mt-3">
-                <!-- Note Range Filter -->
-                <div class="col-md-2">
-                    <div class="form-floating">
-                        <select class="form-select" id="note_range" name="note_range">
+
+                    <!-- Note Range Filter -->
+                    <div>
+                        <label for="note_range" class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                            <i class="fas fa-chart-bar text-emerald-500"></i> Notes
+                        </label>
+                        <select class="mt-1 w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all outline-none text-slate-700 appearance-none" id="note_range" name="note_range">
                             <option value="">Toutes</option>
                             <option value="0-8" {% if note_range == "0-8" %}selected{% endif %}>0-8</option>
                             <option value="8-10" {% if note_range == "8-10" %}selected{% endif %}>8-10</option>
@@ -152,47 +134,44 @@
                             <option value="16-18" {% if note_range == "16-18" %}selected{% endif %}>16-18</option>
                             <option value="18-20" {% if note_range == "18-20" %}selected{% endif %}>18-20</option>
                         </select>
-                        <label for="note_range">
-                            <i class="fas fa-chart-bar"></i> Notes
-                        </label>
                     </div>
                 </div>
-                
-                <div class="col-md-10">
-                    <button type="submit" class="btn btn-primary">
+
+                <div class="flex flex-wrap gap-2 mt-6">
+                    <button type="submit" class="inline-flex items-center gap-2 px-4 py-2.5 bg-purple-600 text-white rounded-xl font-medium hover:bg-purple-700 transition-all">
                         <i class="fas fa-search"></i> Filtrer
                     </button>
-                    <button type="button" class="btn btn-outline-primary ms-2" onclick="exportEliteData()">
+                    <button type="button" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-purple-600 text-purple-600 rounded-xl font-medium hover:bg-purple-50 transition-all" onclick="exportEliteData()">
                         <i class="fas fa-download"></i> Exporter
                     </button>
-                    <button type="button" class="btn btn-outline-info ms-2" onclick="viewEliteStatistics()">
+                    <button type="button" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-cyan-600 text-cyan-600 rounded-xl font-medium hover:bg-cyan-50 transition-all" onclick="viewEliteStatistics()">
                         <i class="fas fa-chart-pie"></i> Statistiques
                     </button>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 
     <!-- Results Info -->
-    <div class="results-info">
-        <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <span class="badge bg-primary fs-6">
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mb-6">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+            <div class="flex flex-wrap gap-2">
+                <span class="px-3 py-1.5 bg-purple-600 text-white rounded-xl text-sm font-medium">
                     {{ filtered_count }} elite{{ filtered_count|pluralize }} trouvé{{ filtered_count|pluralize }}
                     {% if total_notes != filtered_count %}
                         sur {{ total_notes }}
                     {% endif %}
                 </span>
-                <span class="badge bg-info fs-6 ms-2">
-                    <i class="fas fa-star mr-1"></i>
+                <span class="px-3 py-1.5 bg-purple-100 text-purple-700 rounded-xl text-sm font-medium inline-flex items-center gap-1">
+                    <i class="fas fa-star"></i>
                     Notes d'Elites Seulement
                 </span>
             </div>
-            <div class="view-options">
-                <button class="btn btn-sm btn-outline-secondary active" onclick="toggleEliteView('table')">
+            <div class="flex gap-1">
+                <button class="px-3 py-1.5 text-sm bg-purple-600 text-white rounded-lg transition-all" onclick="toggleEliteView('table')">
                     <i class="fas fa-table"></i>
                 </button>
-                <button class="btn btn-sm btn-outline-secondary" onclick="toggleEliteView('cards')">
+                <button class="px-3 py-1.5 text-sm bg-white border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-all" onclick="toggleEliteView('cards')">
                     <i class="fas fa-th-large"></i>
                 </button>
             </div>
@@ -200,155 +179,143 @@
     </div>
 
     <!-- Table View -->
-    <div id="elite-table-view" class="table-container">
-        <div class="table-responsive">
-            <table class="table table-hover table-striped elite-table">
-                <thead class="table-dark sticky-top">
+    <div id="elite-table-view" class="bg-white rounded-2xl shadow-lg overflow-hidden mb-6">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-slate-800 sticky top-0 z-10">
                     <tr>
-                        <th scope="col">
-                            <input type="checkbox" class="form-check-input" id="selectAllElite">
+                        <th class="px-4 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">
+                            <input type="checkbox" class="rounded border-slate-300" id="selectAllElite">
                         </th>
-                        <th scope="col" class="sortable" onclick="sortEliteTable('identifiant')">
-                            <i class="fas fa-id-card"></i> Identifiant
-                            <i class="fas fa-sort sort-icon"></i>
+                        <th class="px-4 py-4 text-left text-xs font-bold uppercase tracking-wider text-white cursor-pointer hover:bg-slate-700 transition-colors" onclick="sortEliteTable('identifiant')">
+                            <i class="fas fa-id-card mr-1"></i> Identifiant
+                            <i class="fas fa-sort ml-1 opacity-60 text-[10px]"></i>
                         </th>
-                        <th scope="col" class="sortable" onclick="sortEliteTable('s1')">
-                            <i class="fas fa-calendar"></i> S1
-                            <i class="fas fa-sort sort-icon"></i>
+                        <th class="px-4 py-4 text-left text-xs font-bold uppercase tracking-wider text-white cursor-pointer hover:bg-slate-700 transition-colors" onclick="sortEliteTable('s1')">
+                            <i class="fas fa-calendar mr-1"></i> S1
+                            <i class="fas fa-sort ml-1 opacity-60 text-[10px]"></i>
                         </th>
-                        <th scope="col" class="sortable" onclick="sortEliteTable('s2')">
-                            <i class="fas fa-calendar"></i> S2
-                            <i class="fas fa-sort sort-icon"></i>
+                        <th class="px-4 py-4 text-left text-xs font-bold uppercase tracking-wider text-white cursor-pointer hover:bg-slate-700 transition-colors" onclick="sortEliteTable('s2')">
+                            <i class="fas fa-calendar mr-1"></i> S2
+                            <i class="fas fa-sort ml-1 opacity-60 text-[10px]"></i>
                         </th>
-                        <th scope="col" class="sortable" onclick="sortEliteTable('s3')">
-                            <i class="fas fa-calendar"></i> S3
-                            <i class="fas fa-sort sort-icon"></i>
+                        <th class="px-4 py-4 text-left text-xs font-bold uppercase tracking-wider text-white cursor-pointer hover:bg-slate-700 transition-colors" onclick="sortEliteTable('s3')">
+                            <i class="fas fa-calendar mr-1"></i> S3
+                            <i class="fas fa-sort ml-1 opacity-60 text-[10px]"></i>
                         </th>
-                        <th scope="col" class="sortable" onclick="sortEliteTable('annee')">
-                            <i class="fas fa-calendar-alt"></i> Année
-                            <i class="fas fa-sort sort-icon"></i>
+                        <th class="px-4 py-4 text-left text-xs font-bold uppercase tracking-wider text-white cursor-pointer hover:bg-slate-700 transition-colors" onclick="sortEliteTable('annee')">
+                            <i class="fas fa-calendar-alt mr-1"></i> Année
+                            <i class="fas fa-sort ml-1 opacity-60 text-[10px]"></i>
                         </th>
-                        <th scope="col" class="sortable" onclick="sortEliteTable('moyen')">
-                            <i class="fas fa-chart-line"></i> Moyenne
-                            <i class="fas fa-sort sort-icon"></i>
+                        <th class="px-4 py-4 text-left text-xs font-bold uppercase tracking-wider text-white cursor-pointer hover:bg-slate-700 transition-colors" onclick="sortEliteTable('moyen')">
+                            <i class="fas fa-chart-line mr-1"></i> Moyenne
+                            <i class="fas fa-sort ml-1 opacity-60 text-[10px]"></i>
                         </th>
-                        <th scope="col" class="sortable" onclick="sortEliteTable('decision')">
-                            <i class="fas fa-gavel"></i> Décision
-                            <i class="fas fa-sort sort-icon"></i>
+                        <th class="px-4 py-4 text-left text-xs font-bold uppercase tracking-wider text-white cursor-pointer hover:bg-slate-700 transition-colors" onclick="sortEliteTable('decision')">
+                            <i class="fas fa-gavel mr-1"></i> Décision
+                            <i class="fas fa-sort ml-1 opacity-60 text-[10px]"></i>
                         </th>
-                        <th scope="col">
-                            <i class="fas fa-cog"></i> Actions
+                        <th class="px-4 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">
+                            <i class="fas fa-cog mr-1"></i> Actions
                         </th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="divide-y divide-slate-100 bg-white">
                     {% for note in notes %}
-                    <tr>
-                        <td>
-                            <input type="checkbox" class="form-check-input note-select" value="{{ note.id }}">
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-4 py-4 text-sm text-slate-600">
+                            <input type="checkbox" class="rounded border-slate-300 note-select" value="{{ note.id }}">
                         </td>
-                        <td>
-                            <div class="d-flex align-items-center">
+                        <td class="px-4 py-4 text-sm">
+                            <div class="flex items-center">
                                 {% if note.identifiant.imageprofile %}
-                                    <div class="elite-avatar-container">
-                                        <img src="{{ note.identifiant.imageprofile.url }}" 
-                                             alt="Photo de {{ note.identifiant.nom }}" 
-                                             class="elite-student-photo">
-                                        <div class="elite-image-overlay">
-                                            <i class="fas fa-search-plus"></i>
-                                        </div>
-                                        <div class="elite-status-indicator"></div>
+                                    <div class="relative w-12 h-12 rounded-full overflow-hidden mr-3 border-2 border-white shadow-md">
+                                        <img src="{{ note.identifiant.imageprofile.url }}"
+                                             alt="Photo de {{ note.identifiant.nom }}"
+                                             class="w-full h-full object-cover">
+                                        <div class="absolute bottom-0.5 right-0.5 w-3 h-3 rounded-full bg-gradient-to-br from-yellow-400 to-amber-400 border-2 border-white"></div>
                                     </div>
                                 {% else %}
-                                    <div class="elite-avatar-placeholder">
+                                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-violet-500 flex items-center justify-center text-white mr-3 shadow-md border-2 border-white">
                                         <i class="fas fa-user"></i>
-                                        <div class="elite-placeholder-shine"></div>
                                     </div>
                                 {% endif %}
-                                <div class="elite-student-info">
-                                    <div class="elite-student-name">{{ note.identifiant.nom }}</div>
-                                    <div class="elite-student-details">
-                                        <span class="elite-id">{{ note.identifiant.identifiant }}</span>
+                                <div>
+                                    <div class="font-semibold text-slate-800">{{ note.identifiant.nom }}</div>
+                                    <div class="flex flex-col gap-0.5">
+                                        <span class="text-xs text-slate-500">{{ note.identifiant.identifiant }}</span>
                                         {% if note.identifiant.Class %}
-                                            <span class="elite-class">{{ note.identifiant.Class }}</span>
+                                            <span class="text-[10px] text-emerald-600 font-semibold uppercase tracking-wide">{{ note.identifiant.Class }}</span>
                                         {% endif %}
                                     </div>
                                 </div>
                             </div>
                         </td>
-                        <td>
-                            <div class="note-display s1-note">
+                        <td class="px-4 py-4 text-sm text-slate-600">
+                            <div class="text-center p-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors">
                                 {% if note.S1 %}
-                                    <span class="note-value">{{ note.S1|floatformat:2 }}</span>
+                                    <span class="font-semibold text-slate-800">{{ note.S1|floatformat:2 }}</span>
                                 {% else %}
-                                    <span class="note-missing">N/A</span>
+                                    <span class="text-xs text-slate-400 italic">N/A</span>
                                 {% endif %}
                             </div>
                         </td>
-                        <td>
-                            <div class="note-display s2-note">
+                        <td class="px-4 py-4 text-sm text-slate-600">
+                            <div class="text-center p-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors">
                                 {% if note.S2 %}
-                                    <span class="note-value">{{ note.S2|floatformat:2 }}</span>
+                                    <span class="font-semibold text-slate-800">{{ note.S2|floatformat:2 }}</span>
                                 {% else %}
-                                    <span class="note-missing">N/A</span>
+                                    <span class="text-xs text-slate-400 italic">N/A</span>
                                 {% endif %}
                             </div>
                         </td>
-                        <td>
-                            <div class="note-display s3-note">
+                        <td class="px-4 py-4 text-sm text-slate-600">
+                            <div class="text-center p-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors">
                                 {% if note.S3 %}
-                                    <span class="note-value">{{ note.S3|floatformat:2 }}</span>
+                                    <span class="font-semibold text-slate-800">{{ note.S3|floatformat:2 }}</span>
                                 {% else %}
-                                    <span class="note-missing">N/A</span>
+                                    <span class="text-xs text-slate-400 italic">N/A</span>
                                 {% endif %}
                             </div>
                         </td>
-                        <td>
-                            <div class="year-display">
-                                <span class="year-badge">{{ note.annee|default:"N/A" }}</span>
-                            </div>
+                        <td class="px-4 py-4 text-sm text-slate-600">
+                            <span class="inline-flex items-center px-2.5 py-1 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-full text-xs font-bold">
+                                {{ note.annee|default:"N/A" }}
+                            </span>
                         </td>
-                        <td>
-                            <div class="average-display">
+                        <td class="px-4 py-4 text-sm text-slate-600">
+                            <div class="text-center">
                                 {% if note.moyen %}
-                                    <span class="average-badge {% if note.moyen >= 14 %}excellent
-                                                              {% elif note.moyen >= 10 %}good
-                                                              {% else %}poor{% endif %}">
-                                        <i class="fas fa-chart-line me-1"></i>
+                                    <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold text-white {% if note.moyen >= 14 %}bg-gradient-to-r from-emerald-500 to-teal-500{% elif note.moyen >= 10 %}bg-gradient-to-r from-cyan-500 to-blue-500{% else %}bg-gradient-to-r from-red-500 to-rose-500{% endif %}">
+                                        <i class="fas fa-chart-line text-[10px]"></i>
                                         {{ note.moyen|floatformat:2 }}
                                     </span>
                                 {% else %}
-                                    <span class="note-missing">N/A</span>
+                                    <span class="text-xs text-slate-400 italic">N/A</span>
                                 {% endif %}
                             </div>
                         </td>
-                        <td>
-                            <div class="decision-display">
+                        <td class="px-4 py-4 text-sm text-slate-600">
+                            <div class="text-center">
                                 {% if note.decision %}
-                                    <span class="decision-badge {% if note.decision == 'Admis' %}admis
-                                                              {% elif note.decision == 'Repechage' %}repechage
-                                                              {% elif note.decision == 'Redouble' %}redouble
-                                                              {% else %}other{% endif %}">
-                                        <i class="fas fa-{% if note.decision == 'Admis' %}check-circle
-                                                        {% elif note.decision == 'Repechage' %}exclamation-triangle
-                                                        {% elif note.decision == 'Redouble' %}times-circle
-                                                        {% else %}question-circle{% endif %} me-1"></i>
+                                    <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold text-white {% if note.decision == 'Admis' %}bg-gradient-to-r from-emerald-500 to-teal-500{% elif note.decision == 'Repechage' %}bg-gradient-to-r from-amber-500 to-orange-500{% elif note.decision == 'Redouble' %}bg-gradient-to-r from-red-500 to-rose-500{% else %}bg-gradient-to-r from-slate-500 to-slate-600{% endif %}">
+                                        <i class="fas fa-{% if note.decision == 'Admis' %}check-circle{% elif note.decision == 'Repechage' %}exclamation-triangle{% elif note.decision == 'Redouble' %}times-circle{% else %}question-circle{% endif %} text-[10px]"></i>
                                         {{ note.decision }}
                                     </span>
                                 {% else %}
-                                    <span class="note-missing">N/A</span>
+                                    <span class="text-xs text-slate-400 italic">N/A</span>
                                 {% endif %}
                             </div>
                         </td>
-                        <td>
-                            <div class="btn-group">
-                                <a href="{% url 'viewStudentByIdentifiant' note.identifiant.identifiant %}" class="btn btn-sm btn-info">
+                        <td class="px-4 py-4 text-sm text-slate-600">
+                            <div class="flex gap-1">
+                                <a href="{% url 'viewStudentByIdentifiant' note.identifiant.identifiant %}" class="px-2.5 py-1.5 text-cyan-600 hover:bg-cyan-50 rounded-lg transition-all" title="Voir">
                                     <i class="fas fa-eye"></i>
                                 </a>
-                                <a href="{% url 'notesUpdate' %}?id={{ note.id }}" class="btn btn-sm btn-warning">
+                                <a href="{% url 'notesUpdate' %}?id={{ note.id }}" class="px-2.5 py-1.5 text-amber-600 hover:bg-amber-50 rounded-lg transition-all" title="Modifier">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <a href="{% url 'notesdelete' note.id %}" class="btn btn-sm btn-danger">
+                                <a href="{% url 'notesdelete' note.id %}" class="px-2.5 py-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-all" title="Supprimer">
                                     <i class="fas fa-trash"></i>
                                 </a>
                             </div>
@@ -361,124 +328,100 @@
     </div>
 
     <!-- Card View (Hidden by default) -->
-    <div id="elite-card-view" class="card-container" style="display: none;">
-        <div class="row">
+    <div id="elite-card-view" class="hidden mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {% for note in notes %}
-                <div class="col-md-4 mb-4">
-                <div class="elite-card h-100">
-                    <div class="elite-card-header">
-                        <div class="elite-card-avatar">
-                            {% if note.identifiant.imageprofile %}
-                                <img src="{{ note.identifiant.imageprofile.url }}" 
-                                     alt="Photo de {{ note.identifiant.nom }}" 
-                                     class="elite-card-photo">
-                                <div class="elite-card-overlay">
-                                    <i class="fas fa-search-plus"></i>
-                                </div>
-                            {% else %}
-                                <div class="elite-card-placeholder">
-                                    <i class="fas fa-user"></i>
-                                    <div class="elite-card-shine"></div>
-                                </div>
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all hover:-translate-y-1 h-full border border-slate-100">
+                <div class="bg-gradient-to-r from-purple-500 to-violet-500 text-white p-5 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -translate-y-1/3 translate-x-1/3"></div>
+                    <div class="relative inline-block mb-3">
+                        {% if note.identifiant.imageprofile %}
+                            <img src="{{ note.identifiant.imageprofile.url }}"
+                                 alt="Photo de {{ note.identifiant.nom }}"
+                                 class="w-20 h-20 rounded-full object-cover border-4 border-white/30 shadow-lg">
+                        {% else %}
+                            <div class="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center border-4 border-white/30">
+                                <i class="fas fa-user text-white text-2xl"></i>
+                            </div>
+                        {% endif %}
+                        <div class="absolute -top-1 -right-1 w-7 h-7 rounded-full bg-gradient-to-br from-yellow-400 to-amber-400 flex items-center justify-center shadow-md">
+                            <i class="fas fa-star text-slate-800 text-xs"></i>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <h5 class="font-bold text-lg mb-1">{{ note.identifiant.nom }}</h5>
+                        <div class="flex flex-col items-center gap-0.5">
+                            <span class="text-xs text-white">{{ note.identifiant.identifiant }}</span>
+                            {% if note.identifiant.Class %}
+                                <span class="text-xs text-white font-semibold uppercase tracking-wide">{{ note.identifiant.Class }}</span>
                             {% endif %}
-                            <div class="elite-card-badge">
-                                <i class="fas fa-star"></i>
-                            </div>
-                        </div>
-                        <div class="elite-card-info">
-                            <h5 class="elite-card-name">{{ note.identifiant.nom }}</h5>
-                            <div class="elite-card-meta">
-                                <span class="elite-card-id">{{ note.identifiant.identifiant }}</span>
-                                {% if note.identifiant.Class %}
-                                    <span class="elite-card-class">{{ note.identifiant.Class }}</span>
-                                {% endif %}
-                            </div>
                         </div>
                     </div>
-                    <div class="elite-card-body">
-                        <div class="notes-grid">
-                            <div class="note-item s1">
-                                <div class="note-label">S1</div>
-                                <div class="note-value-card">
-                                    {% if note.S1 %}
-                                        <span class="note-number">{{ note.S1|floatformat:2 }}</span>
-                                    {% else %}
-                                        <span class="note-missing">N/A</span>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="note-item s2">
-                                <div class="note-label">S2</div>
-                                <div class="note-value-card">
-                                    {% if note.S2 %}
-                                        <span class="note-number">{{ note.S2|floatformat:2 }}</span>
-                                    {% else %}
-                                        <span class="note-missing">N/A</span>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="note-item s3">
-                                <div class="note-label">S3</div>
-                                <div class="note-value-card">
-                                    {% if note.S3 %}
-                                        <span class="note-number">{{ note.S3|floatformat:2 }}</span>
-                                    {% else %}
-                                        <span class="note-missing">N/A</span>
-                                    {% endif %}
-                                </div>
-                            </div>
+                </div>
+                <div class="p-5">
+                    <div class="grid grid-cols-3 gap-3 mb-5">
+                        <div class="text-center p-3 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors">
+                            <div class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-1">S1</div>
+                            {% if note.S1 %}
+                                <span class="font-bold text-lg text-slate-800">{{ note.S1|floatformat:2 }}</span>
+                            {% else %}
+                                <span class="text-xs text-slate-400 italic">N/A</span>
+                            {% endif %}
                         </div>
-                        
-                        <div class="performance-section">
-                            <div class="average-section">
-                                <div class="average-label">Moyenne</div>
-                                <div class="average-value">
-                                    {% if note.moyen %}
-                                        <span class="average-badge-card {% if note.moyen >= 14 %}excellent
-                                                                      {% elif note.moyen >= 10 %}good
-                                                                      {% else %}poor{% endif %}">
-                                            <i class="fas fa-chart-line"></i>
-                                            {{ note.moyen|floatformat:2 }}
-                                        </span>
-                                    {% else %}
-                                        <span class="note-missing">N/A</span>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            
-                            <div class="decision-section">
-                                <div class="decision-label">Décision</div>
-                                <div class="decision-value">
-                                    {% if note.decision %}
-                                        <span class="decision-badge-card {% if note.decision == 'Admis' %}admis
-                                                                       {% elif note.decision == 'Repechage' %}repechage
-                                                                       {% elif note.decision == 'Redouble' %}redouble
-                                                                       {% else %}other{% endif %}">
-                                            <i class="fas fa-{% if note.decision == 'Admis' %}check-circle
-                                                            {% elif note.decision == 'Repechage' %}exclamation-triangle
-                                                            {% elif note.decision == 'Redouble' %}times-circle
-                                                            {% else %}question-circle{% endif %}"></i>
-                                            {{ note.decision }}
-                                        </span>
-                                    {% else %}
-                                        <span class="note-missing">N/A</span>
-                                    {% endif %}
-                                </div>
-                            </div>
+                        <div class="text-center p-3 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors">
+                            <div class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-1">S2</div>
+                            {% if note.S2 %}
+                                <span class="font-bold text-lg text-slate-800">{{ note.S2|floatformat:2 }}</span>
+                            {% else %}
+                                <span class="text-xs text-slate-400 italic">N/A</span>
+                            {% endif %}
+                        </div>
+                        <div class="text-center p-3 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors">
+                            <div class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-1">S3</div>
+                            {% if note.S3 %}
+                                <span class="font-bold text-lg text-slate-800">{{ note.S3|floatformat:2 }}</span>
+                            {% else %}
+                                <span class="text-xs text-slate-400 italic">N/A</span>
+                            {% endif %}
                         </div>
                     </div>
-                    <div class="card-footer">
-                        <div class="btn-group w-100">
-                            <a href="{% url 'viewStudentByIdentifiant' note.identifiant.identifiant %}" class="btn btn-sm btn-info">
-                                <i class="fas fa-eye"></i> Voir
-                            </a>
-                            <a href="{% url 'notesUpdate' %}?id={{ note.id }}" class="btn btn-sm btn-warning">
-                                <i class="fas fa-edit"></i> Modifier
-                            </a>
-                            <a href="{% url 'notesdelete' note.id %}" class="btn btn-sm btn-danger">
-                                <i class="fas fa-trash"></i> Supprimer
-                            </a>
+
+                    <div class="flex gap-3 border-t border-slate-200 pt-4">
+                        <div class="flex-1 text-center">
+                            <div class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-1">Moyenne</div>
+                            {% if note.moyen %}
+                                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold text-white {% if note.moyen >= 14 %}bg-gradient-to-r from-emerald-500 to-teal-500{% elif note.moyen >= 10 %}bg-gradient-to-r from-cyan-500 to-blue-500{% else %}bg-gradient-to-r from-red-500 to-rose-500{% endif %}">
+                                    <i class="fas fa-chart-line text-[10px]"></i>
+                                    {{ note.moyen|floatformat:2 }}
+                                </span>
+                            {% else %}
+                                <span class="text-xs text-slate-400 italic">N/A</span>
+                            {% endif %}
                         </div>
+                        <div class="flex-1 text-center">
+                            <div class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-1">Décision</div>
+                            {% if note.decision %}
+                                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold text-white {% if note.decision == 'Admis' %}bg-gradient-to-r from-emerald-500 to-teal-500{% elif note.decision == 'Repechage' %}bg-gradient-to-r from-amber-500 to-orange-500{% elif note.decision == 'Redouble' %}bg-gradient-to-r from-red-500 to-rose-500{% else %}bg-gradient-to-r from-slate-500 to-slate-600{% endif %}">
+                                    <i class="fas fa-{% if note.decision == 'Admis' %}check-circle{% elif note.decision == 'Repechage' %}exclamation-triangle{% elif note.decision == 'Redouble' %}times-circle{% else %}question-circle{% endif %} text-[10px]"></i>
+                                    {{ note.decision }}
+                                </span>
+                            {% else %}
+                                <span class="text-xs text-slate-400 italic">N/A</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="px-4 py-3 bg-slate-50 border-t border-slate-100">
+                    <div class="flex gap-1 w-full">
+                        <a href="{% url 'viewStudentByIdentifiant' note.identifiant.identifiant %}" class="flex-1 inline-flex items-center justify-center gap-1 px-3 py-2 text-sm bg-cyan-600 text-white rounded-lg font-medium hover:bg-cyan-700 transition-all">
+                            <i class="fas fa-eye"></i> Voir
+                        </a>
+                        <a href="{% url 'notesUpdate' %}?id={{ note.id }}" class="flex-1 inline-flex items-center justify-center gap-1 px-3 py-2 text-sm bg-amber-600 text-white rounded-lg font-medium hover:bg-amber-700 transition-all">
+                            <i class="fas fa-edit"></i> Modifier
+                        </a>
+                        <a href="{% url 'notesdelete' note.id %}" class="flex-1 inline-flex items-center justify-center gap-1 px-3 py-2 text-sm bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-all">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </a>
                     </div>
                 </div>
             </div>
@@ -487,610 +430,6 @@
     </div>
 </div>
 
-<!-- Custom Styles -->
-<style>
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-}
-
-.stat-card {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    display: flex;
-    align-items: center;
-}
-
-.stat-icon {
-    font-size: 2rem;
-    margin-right: 1rem;
-    color: #4a90e2;
-}
-
-.stat-content h3 {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: bold;
-}
-
-.stat-content p {
-    margin: 0;
-    color: #666;
-}
-
-.filters-section {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    margin-bottom: 1.5rem;
-}
-
-.filters-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-.filters-header h3 {
-    margin: 0;
-    font-size: 1.25rem;
-}
-
-.form-floating > label {
-    padding-left: 2.5rem;
-}
-
-.form-floating > .form-control {
-    padding-left: 2.5rem;
-}
-
-.form-floating i {
-    position: absolute;
-    left: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #666;
-}
-
-.table-container {
-    background: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    overflow: hidden;
-}
-
-.elite-table th {
-    white-space: nowrap;
-    cursor: pointer;
-}
-
-.sort-icon {
-    margin-left: 0.5rem;
-    font-size: 0.75rem;
-}
-
-.sticky-top {
-    top: 0;
-    z-index: 1020;
-}
-
-/* Enhanced Elite Notes Styling */
-.elite-avatar-container {
-    position: relative;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    overflow: hidden;
-    margin-right: 1rem;
-}
-
-.elite-student-photo {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border: 3px solid #fff;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    transition: all 0.3s ease;
-}
-
-.elite-image-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0,0,0,0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-
-.elite-avatar-container:hover .elite-image-overlay {
-    opacity: 1;
-}
-
-.elite-image-overlay i {
-    color: white;
-    font-size: 1rem;
-}
-
-.elite-status-indicator {
-    position: absolute;
-    bottom: 2px;
-    right: 2px;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #ffd700, #ffed4e);
-    border: 2px solid #fff;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-}
-
-.elite-avatar-placeholder {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.2rem;
-    margin-right: 1rem;
-    position: relative;
-    overflow: hidden;
-    border: 3px solid #fff;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-.elite-placeholder-shine {
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    animation: shimmer 2s infinite;
-}
-
-.elite-student-info {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-.elite-student-name {
-    font-weight: 600;
-    color: #2d3748;
-    font-size: 0.95rem;
-    line-height: 1.2;
-    margin-bottom: 0.2rem;
-}
-
-.elite-student-details {
-    display: flex;
-    flex-direction: column;
-    gap: 0.1rem;
-}
-
-.elite-id {
-    font-size: 0.75rem;
-    color: #6c757d;
-    font-weight: 500;
-}
-
-.elite-class {
-    font-size: 0.7rem;
-    color: #28a745;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-/* Enhanced Note Display */
-.note-display {
-    text-align: center;
-    padding: 0.5rem;
-    border-radius: 8px;
-    background: rgba(248, 249, 250, 0.5);
-    transition: all 0.3s ease;
-}
-
-.note-display:hover {
-    background: rgba(248, 249, 250, 1);
-    transform: scale(1.05);
-}
-
-.note-value {
-    font-weight: 600;
-    font-size: 1rem;
-    color: #2d3748;
-}
-
-.note-missing {
-    font-size: 0.8rem;
-    color: #6c757d;
-    font-style: italic;
-}
-
-.year-display {
-    text-align: center;
-}
-
-.year-badge {
-    background: linear-gradient(135deg, #4facfe, #00f2fe);
-    color: white;
-    padding: 0.3rem 0.8rem;
-    border-radius: 15px;
-    font-size: 0.8rem;
-    font-weight: 600;
-}
-
-.average-display {
-    text-align: center;
-}
-
-.average-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    padding: 0.4rem 0.8rem;
-    border-radius: 15px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.average-badge.excellent {
-    background: linear-gradient(135deg, #43e97b, #38f9d7);
-    color: white;
-}
-
-.average-badge.good {
-    background: linear-gradient(135deg, #4facfe, #00f2fe);
-    color: white;
-}
-
-.average-badge.poor {
-    background: linear-gradient(135deg, #ff6b6b, #ee5a52);
-    color: white;
-}
-
-.decision-display {
-    text-align: center;
-}
-
-.decision-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    padding: 0.4rem 0.8rem;
-    border-radius: 15px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.decision-badge.admis {
-    background: linear-gradient(135deg, #43e97b, #38f9d7);
-    color: white;
-}
-
-.decision-badge.repechage {
-    background: linear-gradient(135deg, #ffd89b, #19547b);
-    color: white;
-}
-
-.decision-badge.redouble {
-    background: linear-gradient(135deg, #ff6b6b, #ee5a52);
-    color: white;
-}
-
-.decision-badge.other {
-    background: linear-gradient(135deg, #6c757d, #495057);
-    color: white;
-}
-
-/* Enhanced Card View */
-.elite-card {
-    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    border: 1px solid #e3e6ea;
-}
-
-.elite-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-}
-
-.elite-card-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 1.5rem;
-    position: relative;
-    overflow: hidden;
-}
-
-.elite-card-header::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 100px;
-    height: 100px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 50%;
-    transform: translate(30px, -30px);
-}
-
-.elite-card-avatar {
-    position: relative;
-    display: inline-block;
-    margin-bottom: 1rem;
-}
-
-.elite-card-photo {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid rgba(255,255,255,0.3);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-}
-
-.elite-card-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0,0,0,0.7);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-
-.elite-card:hover .elite-card-overlay {
-    opacity: 1;
-}
-
-.elite-card-overlay i {
-    color: white;
-    font-size: 1.5rem;
-}
-
-.elite-card-placeholder {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 2rem;
-    border: 4px solid rgba(255,255,255,0.3);
-    position: relative;
-    overflow: hidden;
-}
-
-.elite-card-shine {
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    animation: shimmer 2s infinite;
-}
-
-.elite-card-badge {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background: linear-gradient(135deg, #ffd700, #ffed4e);
-    color: #333;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 0.8rem;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    z-index: 10;
-}
-
-.elite-card-info {
-    text-align: center;
-}
-
-.elite-card-name {
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    color: white;
-    font-size: 1.2rem;
-}
-
-.elite-card-meta {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-}
-
-.elite-card-id {
-    font-size: 0.8rem;
-    color: rgba(255,255,255,0.8);
-    font-weight: 500;
-}
-
-.elite-card-class {
-    font-size: 0.75rem;
-    color: rgba(255,255,255,0.9);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.elite-card-body {
-    padding: 1.5rem;
-}
-
-.notes-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-}
-
-.note-item {
-    text-align: center;
-    padding: 1rem;
-    background: rgba(248, 249, 250, 0.8);
-    border-radius: 15px;
-    transition: all 0.3s ease;
-}
-
-.note-item:hover {
-    background: rgba(248, 249, 250, 1);
-    transform: translateY(-3px);
-}
-
-.note-label {
-    font-size: 0.8rem;
-    color: #6c757d;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 0.5rem;
-}
-
-.note-value-card {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.note-number {
-    font-weight: 700;
-    font-size: 1.2rem;
-    color: #2d3748;
-}
-
-.performance-section {
-    border-top: 1px solid #e3e6ea;
-    padding-top: 1rem;
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-}
-
-.average-section, .decision-section {
-    flex: 1;
-    text-align: center;
-}
-
-.average-label, .decision-label {
-    font-size: 0.8rem;
-    color: #6c757d;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 0.5rem;
-}
-
-.average-badge-card, .decision-badge-card {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.average-badge-card.excellent {
-    background: linear-gradient(135deg, #43e97b, #38f9d7);
-    color: white;
-}
-
-.average-badge-card.good {
-    background: linear-gradient(135deg, #4facfe, #00f2fe);
-    color: white;
-}
-
-.average-badge-card.poor {
-    background: linear-gradient(135deg, #ff6b6b, #ee5a52);
-    color: white;
-}
-
-.decision-badge-card.admis {
-    background: linear-gradient(135deg, #43e97b, #38f9d7);
-    color: white;
-}
-
-.decision-badge-card.repechage {
-    background: linear-gradient(135deg, #ffd89b, #19547b);
-    color: white;
-}
-
-.decision-badge-card.redouble {
-    background: linear-gradient(135deg, #ff6b6b, #ee5a52);
-    color: white;
-}
-
-.decision-badge-card.other {
-    background: linear-gradient(135deg, #6c757d, #495057);
-    color: white;
-}
-
-@media (max-width: 768px) {
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .filters-form .row {
-        margin: 0;
-    }
-    
-    .col-md-2, .col-md-3 {
-        padding: 0;
-        margin-bottom: 1rem;
-    }
-    
-    .performance-section {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    
-    .notes-grid {
-        grid-template-columns: 1fr;
-        gap: 0.5rem;
-    }
-}
-</style>
-
-<!-- Table Functionality -->
 <script>
 function clearEliteFilters() {
     document.querySelectorAll('.filters-form select, .filters-form input').forEach(input => {
@@ -1102,41 +441,31 @@ function clearEliteFilters() {
 function toggleEliteView(view) {
     const tableView = document.getElementById('elite-table-view');
     const cardView = document.getElementById('elite-card-view');
-    const buttons = document.querySelectorAll('.view-options button');
-    
+
     if (view === 'table') {
-        tableView.style.display = 'block';
-        cardView.style.display = 'none';
-        buttons[0].classList.add('active');
-        buttons[1].classList.remove('active');
+        tableView.classList.remove('hidden');
+        cardView.classList.add('hidden');
     } else {
-        tableView.style.display = 'none';
-        cardView.style.display = 'block';
-        buttons[0].classList.remove('active');
-        buttons[1].classList.add('active');
+        tableView.classList.add('hidden');
+        cardView.classList.remove('hidden');
     }
 }
 
 function sortEliteTable(column) {
-    // Implementation for sorting
     console.log('Sorting by:', column);
 }
 
 function exportEliteData() {
-    // Implementation for exporting
     console.log('Exporting data...');
 }
 
 function viewEliteStatistics() {
-    // Implementation for statistics view
     console.log('Opening statistics view...');
 }
 
-// Initialize select all functionality
 document.getElementById('selectAllElite')?.addEventListener('change', function() {
     document.querySelectorAll('.note-select').forEach(checkbox => {
         checkbox.checked = this.checked;
     });
 });
-</script> 
-</script> 
+</script>

@@ -1,83 +1,148 @@
 {% extends "main/base.html" %}
 {% load static %}
 {% block content %}
- <form method="GET" action="{% url 'notes' %}" class="flex flex-col md:flex-row gap-4 mb-4">
-    <!-- Search by student name -->
-    <input type="text" name="search" placeholder="Rechercher par nom d'étudiant" 
-           value="{{ search_query }}" 
-           class="border rounded p-2 w-full md:w-1/4" />
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-8">
+        <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+            <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                <i class="fas fa-filter text-indigo-600"></i> 
+                Filtres de Recherche
+            </h3>
+            <a href="{% url 'notes' %}" class="text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition-colors flex items-center gap-1">
+                <i class="fas fa-times"></i> Effacer
+            </a>
+        </div>
+        
+        <form method="GET" action="{% url 'notes' %}" class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Search by student name -->
+                <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                        <i class="fas fa-search text-slate-400"></i> Rechercher
+                    </label>
+                    <input type="text" name="search" placeholder="Nom de l'étudiant..." 
+                           value="{{ search_query }}" 
+                           class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700" />
+                </div>
 
-    <!-- Filter by Class -->
-    <select name="class" class="border rounded p-2 w-full md:w-1/4">
-        <option value="">Sélectionnez une classe</option>
-        {% for class in classes %}
-            <option value="{{ class }}" {% if class == class_filter %}selected{% endif %}>{{ class }}</option>
-        {% endfor %}
-    </select>
+                <!-- Filter by Class -->
+                <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                        <i class="fas fa-graduation-cap text-slate-400"></i> Classe
+                    </label>
+                    <select name="class" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none">
+                        <option value="">Toutes les classes</option>
+                        {% for class in classes %}
+                            <option value="{{ class }}" {% if class == class_filter %}selected{% endif %}>{{ class }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-    <!-- Filter by Designation -->
-    <select name="designation" class="border rounded p-2 w-full md:w-1/4">
-        <option value="">Sélectionnez une désignation</option>
-        {% for designation in designations %}
-            <option value="{{ designation }}" {% if designation == designation_filter %}selected{% endif %}>{{ designation }}</option>
-        {% endfor %}
-    </select>
+                <!-- Filter by Designation -->
+                <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                        <i class="fas fa-tag text-slate-400"></i> Désignation
+                    </label>
+                    <select name="designation" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none">
+                        <option value="">Toutes les désignations</option>
+                        {% for designation in designations %}
+                            <option value="{{ designation }}" {% if designation == designation_filter %}selected{% endif %}>{{ designation }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-    <!-- Filter by Institution -->
-    <select name="institution" class="border rounded p-2 w-full md:w-1/4">
-        <option value="">Sélectionnez une institution</option>
-        {% for institution in institutions %}
-            <option value="{{ institution }}" {% if institution == institution_filter %}selected{% endif %}>{{ institution }}</option>
-        {% endfor %}
-    </select>
+                <!-- Filter by Institution -->
+                <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                        <i class="fas fa-university text-slate-400"></i> Institution
+                    </label>
+                    <select name="institution" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none">
+                        <option value="">Toutes les institutions</option>
+                        {% for institution in institutions %}
+                            <option value="{{ institution }}" {% if institution == institution_filter %}selected{% endif %}>{{ institution }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-    <!-- Filter by Decision -->
-    <select name="decision" class="border rounded p-2 w-full md:w-1/4">
-        <option value="">Sélectionnez une décision</option>
-        {% for decision in decisions %}
-            <option value="{{ decision }}" {% if decision == decision_filter %}selected{% endif %}>{{ decision }}</option>
-        {% endfor %}
-    </select>
+                <!-- Filter by Decision -->
+                <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                        <i class="fas fa-gavel text-slate-400"></i> Décision
+                    </label>
+                    <select name="decision" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none">
+                        <option value="">Toutes les décisions</option>
+                        {% for decision in decisions %}
+                            <option value="{{ decision }}" {% if decision == decision_filter %}selected{% endif %}>{{ decision }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-    <!-- Filter by Note Range -->
-    <select name="note_range" class="border rounded p-2 w-full md:w-1/4">
-        <option value="">Sélectionnez une plage de notes</option>
-        <option value="8-9.9" {% if note_range == '8-9.9' %}selected{% endif %}>8 - 9.9</option>
-        <option value="10-11.9" {% if note_range == '10-11.9' %}selected{% endif %}>10 - 11.9</option>
-        <option value="12-13.9" {% if note_range == '12-13.9' %}selected{% endif %}>12 - 13.9</option>
-        <option value="14-15.9" {% if note_range == '14-15.9' %}selected{% endif %}>14 - 15.9</option>
-        <option value="16-17.9" {% if note_range == '16-17.9' %}selected{% endif %}>16 - 17.9</option>
-        <option value="18-20" {% if note_range == '18-20' %}selected{% endif %}>18 - 20</option>
-    </select>
+                <!-- Filter by Note Range -->
+                <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                        <i class="fas fa-chart-bar text-slate-400"></i> Plage de notes
+                    </label>
+                    <select name="note_range" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none">
+                        <option value="">Toutes les notes</option>
+                        <option value="8-9.9" {% if note_range == '8-9.9' %}selected{% endif %}>8 - 9.9</option>
+                        <option value="10-11.9" {% if note_range == '10-11.9' %}selected{% endif %}>10 - 11.9</option>
+                        <option value="12-13.9" {% if note_range == '12-13.9' %}selected{% endif %}>12 - 13.9</option>
+                        <option value="14-15.9" {% if note_range == '14-15.9' %}selected{% endif %}>14 - 15.9</option>
+                        <option value="16-17.9" {% if note_range == '16-17.9' %}selected{% endif %}>16 - 17.9</option>
+                        <option value="18-20" {% if note_range == '18-20' %}selected{% endif %}>18 - 20</option>
+                    </select>
+                </div>
 
-    <!-- Filter by Year -->
-    <select name="annee" class="border rounded p-2 w-full md:w-1/4">
-        <option value="">Sélectionnez une année</option>
-        {% for annee in annees %}
-            <option value="{{ annee }}" {% if annee == annee_filter %}selected{% endif %}>{{ annee }}</option>
-        {% endfor %}
-    </select>
+                <!-- Filter by Year -->
+                <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                        <i class="fas fa-calendar-alt text-slate-400"></i> Année
+                    </label>
+                    <select name="annee" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none">
+                        <option value="">Toutes les années</option>
+                        {% for annee in annees %}
+                            <option value="{{ annee }}" {% if annee == annee_filter %}selected{% endif %}>{{ annee }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-    <!-- Submit button -->
-    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Filtrer</button>
-</form>
+                <!-- Submit button -->
+                <div class="flex items-end">
+                    <button type="submit" class="w-full px-6 py-2.5 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+                        <i class="fas fa-filter"></i> Filtrer les résultats
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
 
    {% include  'main/components/TableNotes.html' with datas=notes %}
-    <div class="flex justify-between mt-4">
-        <div>
-            {% if students.has_previous %}
-                <a href="?page=1&search={{ search_query }}&class={{ class_filter }}&designation={{ designation_filter }}&institution={{ institution_filter }}&decision={{ decision_filter }}&note_range={{ note_range }}&annee={{ annee_filter }}" class="bg-green-500 text-white font-medium px-4 py-2 rounded">Première</a>
-                <a href="?page={{ students.previous_page_number }}&search={{ search_query }}&class={{ class_filter }}&designation={{ designation_filter }}&institution={{ institution_filter }}&decision={{ decision_filter }}&note_range={{ note_range }}&annee={{ annee_filter }}" class="bg-green-500 text-white font-medium px-4 py-2 rounded">Précédente</a>
+    <div class="flex justify-between mt-10">
+        <div class="flex items-center gap-2">
+            {% if notes.has_previous %}
+                <a href="?page=1&search={{ search_query }}&class={{ class_filter }}&designation={{ designation_filter }}&institution={{ institution_filter }}&decision={{ decision_filter }}&note_range={{ note_range }}&annee={{ annee_filter }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-indigo-600 hover:border-indigo-100 transition-all shadow-sm">
+                    <i class="fas fa-angle-double-left"></i>
+                </a>
+                <a href="?page={{ notes.previous_page_number }}&search={{ search_query }}&class={{ class_filter }}&designation={{ designation_filter }}&institution={{ institution_filter }}&decision={{ decision_filter }}&note_range={{ note_range }}&annee={{ annee_filter }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-indigo-600 hover:border-indigo-100 transition-all shadow-sm">
+                    <i class="fas fa-angle-left"></i>
+                </a>
             {% endif %}
-            <span>Page {{ students.number }} sur {{ students.paginator.num_pages }}</span>
-            {% if students.has_next %}
-                <a href="?page={{ students.next_page_number }}&search={{ search_query }}&class={{ class_filter }}&designation={{ designation_filter }}&institution={{ institution_filter }}&decision={{ decision_filter }}&note_range={{ note_range }}&annee={{ annee_filter }}" class="bg-green-500 text-white font-medium px-4 py-2 rounded">Suivante</a>
-                <a href="?page={{ students.paginator.num_pages }}&search={{ search_query }}&class={{ class_filter }}&designation={{ designation_filter }}&institution={{ institution_filter }}&decision={{ decision_filter }}&note_range={{ note_range }}&annee={{ annee_filter }}" class="bg-green-500 text-white font-medium px-4 py-2 rounded">Dernière</a>
+            
+            <div class="px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-600 shadow-sm">
+                Page {{ notes.number }} <span class="text-slate-300 mx-1">/</span> {{ notes.paginator.num_pages }}
+            </div>
+
+            {% if notes.has_next %}
+                <a href="?page={{ notes.next_page_number }}&search={{ search_query }}&class={{ class_filter }}&designation={{ designation_filter }}&institution={{ institution_filter }}&decision={{ decision_filter }}&note_range={{ note_range }}&annee={{ annee_filter }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-indigo-600 hover:border-indigo-100 transition-all shadow-sm">
+                    <i class="fas fa-angle-right"></i>
+                </a>
+                <a href="?page={{ notes.paginator.num_pages }}&search={{ search_query }}&class={{ class_filter }}&designation={{ designation_filter }}&institution={{ institution_filter }}&decision={{ decision_filter }}&note_range={{ note_range }}&annee={{ annee_filter }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-indigo-600 hover:border-indigo-100 transition-all shadow-sm">
+                    <i class="fas fa-angle-double-right"></i>
+                </a>
             {% endif %}
         </div>
     </div>
 
-<div id="imageModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+<div id="imageModal" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden">
     <div class="bg-white rounded-lg p-4 relative">
         <span id="closeModal" class="absolute top-2 right-2 cursor-pointer text-gray-600">&times;</span>
         <img id="modalImage" src="" alt="Profile" class="max-w-full max-h-[80vh] object-contain" />

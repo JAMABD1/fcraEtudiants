@@ -1,4 +1,5 @@
 {% load static %}
+{% load tailwind_tags %}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -8,24 +9,25 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;500;600&display=swap" rel="stylesheet">
+    {% tailwind_css %}
 </head>
 
-<body class="h-screen bg-cover bg-center" style="background-image: url('{% static 'image/fcra.jpeg' %}'); background-repeat: no-repeat; background-size: cover;">
-    <div class="wrapper">
-        <div class="logo-container">
-            <img src="{% static 'image/logo.jpeg' %}" alt="FCRA Logo" class="logo">
+<body class="min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat" style="background-image: url('{% static 'image/fcra.jpeg' %}');">
+    <div class="bg-white backdrop-blur-sm max-w-md w-full mx-4 p-10 rounded-3xl shadow-2xl">
+        <div class="text-center mb-8">
+            <img src="{% static 'image/logo.jpeg' %}" alt="FCRA Logo" class="w-32 h-32 rounded-full object-cover mx-auto shadow-lg">
         </div>
         
-        <div class="welcome-text">
-            <h1>Bienvenue</h1>
-            <p>Heureux de vous revoir! Connectez-vous à votre compte.</p>
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-slate-900 mb-2">Bienvenue</h1>
+            <p class="text-slate-600 text-base">Heureux de vous revoir! Connectez-vous à votre compte.</p>
         </div>
 
-        <div class="form-container">
+        <div>
             {% if messages %}
-                <div class="messages">
+                <div class="mb-6 space-y-3">
                     {% for message in messages %}
-                        <div class="message {{ message.tags }}">
+                        <div class="p-3 rounded-xl text-center text-sm {% if message.tags == 'error' %}bg-red-50 text-red-700{% else %}bg-emerald-50 text-emerald-700{% endif %}">
                             {{ message }}
                         </div>
                     {% endfor %}
@@ -33,206 +35,47 @@
             {% endif %}
 
             <!-- Login Form -->
-            <form method="POST" class="login-form">
+            <form method="POST">
                 {% csrf_token %}
-                <div class="input-group">
-                    <label for="username">Nom d'utilisateur</label>
+                <div class="mb-5">
+                    <label for="username" class="block mb-2 text-slate-700 text-sm font-medium">Nom d'utilisateur</label>
                     {{ login_form.username }}
                 </div>
-                <div class="input-group">
-                    <label for="password">Mot de passe</label>
-                    <div class="password-field">
+                <div class="mb-5">
+                    <label for="password" class="block mb-2 text-slate-700 text-sm font-medium">Mot de passe</label>
+                    <div class="relative">
                         {{ login_form.password }}
-                        <span class="password-toggle">
+                        <span class="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-slate-400 hover:text-slate-700 transition-colors">
                             <i class="fas fa-eye" id="login-password-toggle"></i>
                         </span>
                     </div>
                 </div>
-                <div class="forgot-password">
-                    <a href="#">Mot de passe oublié?</a>
+                <div class="text-right mb-6">
+                    <a href="#" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium transition-colors">Mot de passe oublié?</a>
                 </div>
-                <button type="submit" name="Save" value="Login">Se connecter</button>
+                <button type="submit" name="Save" value="Login" class="w-full h-12 bg-gradient-to-r from-indigo-600 via-purple-600 to-cyan-500 hover:from-indigo-700 hover:via-purple-700 hover:to-cyan-600 text-white font-semibold rounded-xl transition-all transform hover:-translate-y-0.5 hover:shadow-lg">
+                    Se connecter
+                </button>
             </form>
         </div>
     </div>
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Open Sans', sans-serif;
-        }
-
-        body {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #f3f4f6;
-        }
-
-        .wrapper {
-            background: rgba(255, 255, 255, 0.95);
-            max-width: 450px;
-            width: 100%;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .logo-container {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .logo {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            object-fit: cover;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .welcome-text {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .welcome-text h1 {
-            font-size: 32px;
-            font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 8px;
-        }
-
-        .welcome-text p {
-            color: #6b7280;
-            font-size: 16px;
-            line-height: 1.5;
-        }
-
-        .messages {
-            margin-bottom: 20px;
-        }
-
-        .message {
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            text-align: center;
-            font-size: 14px;
-        }
-
-        .message.error {
-            background-color: #fee2e2;
-            color: #dc2626;
-        }
-
-        .message.success {
-            background-color: #dcfce7;
-            color: #16a34a;
-        }
-
-        .input-group {
-            margin-bottom: 20px;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #374151;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .password-field {
-            position: relative;
-        }
-
         input {
             width: 100%;
             height: 50px;
             padding: 0 15px;
             border: 1px solid #e5e7eb;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 16px;
             transition: all 0.3s ease;
             background-color: white;
         }
 
         input:focus {
-            border-color: #003366;
+            border-color: #6366f1;
             outline: none;
-            box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.1);
-        }
-
-        .password-toggle {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: #6b7280;
-            transition: color 0.3s ease;
-        }
-
-        .password-toggle:hover {
-            color: #003366;
-        }
-
-        .forgot-password {
-            text-align: right;
-            margin-bottom: 24px;
-        }
-
-        .forgot-password a {
-            color: #003366;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: opacity 0.3s ease;
-        }
-
-        .forgot-password a:hover {
-            opacity: 0.8;
-        }
-
-        button {
-            width: 100%;
-            height: 50px;
-            background: linear-gradient(45deg, #003366, #15F5BA);
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        button:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        @media (max-width: 480px) {
-            .wrapper {
-                padding: 30px 20px;
-                margin: 20px;
-            }
-
-            .welcome-text h1 {
-                font-size: 28px;
-            }
-
-            .welcome-text p {
-                font-size: 14px;
-            }
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
         }
     </style>
 

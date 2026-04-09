@@ -3,62 +3,64 @@
 {% block content %}
 
 <!-- Header -->
-<div class="dashboard-header mb-8">
-    <div class="d-flex justify-content-between align-items-center">
+<div class="bg-gradient-to-r from-purple-600 via-fuchsia-600 to-purple-700 text-white p-6 rounded-2xl mb-8 shadow-2xl">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">
-                <i class="fas fa-star text-warning mr-3"></i>
+            <h1 class="text-3xl font-bold mb-2">
+                <i class="fas fa-star text-yellow-300 mr-3"></i>
                 Elites Archivés
             </h1>
-            <p class="text-gray-200">Liste des étudiants élites archivés</p>
+            <p class="text-purple-100">Liste des étudiants élites archivés</p>
         </div>
-        <div class="d-flex gap-2">
-            <a href="{% url 'elite' %}" class="btn btn-outline-light btn-sm"><i class="fas fa-star me-2"></i>Elites Actifs</a>
-            <a href="{% url 'archived_students' %}" class="btn btn-outline-light btn-sm"><i class="fas fa-archive me-2"></i>Étudiants Archivés</a>
-            <a href="{% url 'elite_dashboard' %}" class="btn btn-outline-light btn-sm"><i class="fas fa-chart-bar me-2"></i>Dashboard</a>
+        <div class="flex flex-wrap gap-2">
+            <a href="{% url 'elite' %}" class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-all backdrop-blur-sm border border-white/30"><i class="fas fa-star"></i>Elites Actifs</a>
+            <a href="{% url 'archived_students' %}" class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-all backdrop-blur-sm border border-white/30"><i class="fas fa-archive"></i>Étudiants Archivés</a>
+            <a href="{% url 'elite_dashboard' %}" class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-all backdrop-blur-sm border border-white/30"><i class="fas fa-chart-bar"></i>Dashboard</a>
         </div>
     </div>
     
     <!-- Simple Filter Panel -->
-    <div class="filter-panel mt-4">
-        <div class="card border-0 shadow-sm">
-            <div class="card-header bg-gradient-primary text-white">
-                <h5 class="mb-0">
-                    <i class="fas fa-filter mr-2"></i>
+    <div class="mt-6">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                    <i class="fas fa-filter text-purple-500"></i>
                     Filtres
-                </h5>
+                </h3>
             </div>
-            <div class="card-body">
-                <form method="GET" class="row g-3">
-                    <div class="col-md-4">
-                        <input type="text" class="form-control" name="search" placeholder="Rechercher..." value="{{ search_query }}" />
+            <div class="p-6">
+                <form method="GET" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+                    <div>
+                        <input type="text" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all outline-none text-slate-700" name="search" placeholder="Rechercher..." value="{{ search_query }}" />
                     </div>
-                    <div class="col-md-2">
-                        <select name="centre" class="form-select">
+                    <div>
+                        <select name="centre" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all outline-none text-slate-700 appearance-none">
                             <option value="">Centre</option>
                             {% for c in centers %}
                                 <option value="{{ c }}" {% if c == centre_filter %}selected{% endif %}>{{ c }}</option>
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="col-md-2">
-                        <select name="genre" class="form-select">
+                    <div>
+                        <select name="genre" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all outline-none text-slate-700 appearance-none">
                             <option value="">Genre</option>
                             {% for g in genres %}
                                 <option value="{{ g }}" {% if g == genre_filter %}selected{% endif %}>{{ g }}</option>
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="col-md-2">
-                        <select name="institution" class="form-select">
+                    <div>
+                        <select name="institution" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all outline-none text-slate-700 appearance-none">
                             <option value="">Institution</option>
                             {% for i in institutions %}
                                 <option value="{{ i }}" {% if i == institution_filter %}selected{% endif %}>{{ i }}</option>
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary w-100">Filtrer</button>
+                    <div>
+                        <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white rounded-xl font-medium hover:from-purple-700 hover:to-fuchsia-700 transition-all shadow-md">
+                            <i class="fas fa-search"></i>Filtrer
+                        </button>
                     </div>
                 </form>
             </div>
@@ -67,116 +69,109 @@
 </div>
 
 <!-- Statistics Cards -->
-<div class="row mb-6">
-    <div class="col-md-3">
-        <div class="card border-0 shadow-sm text-center">
-            <div class="card-body">
-                <h3 class="text-primary">{{ total_archived_elites }}</h3>
-                <p class="text-muted mb-0">Total Elites Archivés</p>
-            </div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="bg-gradient-to-br from-purple-500 to-fuchsia-600 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-4 text-white">
+        <div class="text-4xl opacity-80"><i class="fas fa-star"></i></div>
+        <div>
+            <h3 class="text-3xl font-bold">{{ total_archived_elites }}</h3>
+            <p class="text-purple-100 text-sm font-medium uppercase tracking-wider">Total Elites Archivés</p>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card border-0 shadow-sm text-center">
-            <div class="card-body">
-                <h3 class="text-success">{{ archived_elites_gender_stats|length }}</h3>
-                <p class="text-muted mb-0">Genres</p>
-            </div>
+    <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-4 text-white">
+        <div class="text-4xl opacity-80"><i class="fas fa-venus-mars"></i></div>
+        <div>
+            <h3 class="text-3xl font-bold">{{ archived_elites_gender_stats|length }}</h3>
+            <p class="text-emerald-100 text-sm font-medium uppercase tracking-wider">Genres</p>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card border-0 shadow-sm text-center">
-            <div class="card-body">
-                <h3 class="text-info">{{ centers|length }}</h3>
-                <p class="text-muted mb-0">Centres</p>
-            </div>
+    <div class="bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-4 text-white">
+        <div class="text-4xl opacity-80"><i class="fas fa-map-marker-alt"></i></div>
+        <div>
+            <h3 class="text-3xl font-bold">{{ centers|length }}</h3>
+            <p class="text-cyan-100 text-sm font-medium uppercase tracking-wider">Centres</p>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card border-0 shadow-sm text-center">
-            <div class="card-body">
-                <h3 class="text-warning">{{ institutions|length }}</h3>
-                <p class="text-muted mb-0">Institutions</p>
-            </div>
+    <div class="bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-4 text-white">
+        <div class="text-4xl opacity-80"><i class="fas fa-university"></i></div>
+        <div>
+            <h3 class="text-3xl font-bold">{{ institutions|length }}</h3>
+            <p class="text-amber-100 text-sm font-medium uppercase tracking-wider">Institutions</p>
         </div>
     </div>
 </div>
 
 <!-- Archived Elites Table -->
-<div class="card border-0 shadow-sm">
-    <div class="card-header bg-white">
-        <h5 class="mb-0">
-            <i class="fas fa-list mr-2"></i>
+<div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
+    <div class="bg-slate-50 px-6 py-4 border-b border-slate-200">
+        <h5 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+            <i class="fas fa-list text-purple-500"></i>
             Liste des Elites Archivés
         </h5>
     </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-hover">
-                <thead class="table-light">
+    <div class="p-6">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-slate-800">
                     <tr>
-                        <th>Photo</th>
-                        <th>Nom</th>
-                        <th>Identifiant</th>
-                        <th>Genre</th>
-                        <th>Centre</th>
-                        <th>Institution</th>
-                        <th>Classe</th>
-                        <th>Date d'Archivage</th>
-                        <th>Raison</th>
-                        <th>Actions</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Photo</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Nom</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Identifiant</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Genre</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Centre</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Institution</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Classe</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Date d'Archivage</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Raison</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="divide-y divide-slate-100 bg-white">
                     {% for archived_elite in archived_elites %}
-                    <tr>
-                        <td>
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-6 py-4 text-sm text-slate-600">
                             {% if archived_elite.archive.imageprofile %}
                                 <img src="{{ archived_elite.archive.imageprofile.url }}" 
                                      alt="{{ archived_elite.archive.nom }}" 
-                                     class="rounded-circle" 
-                                     width="40" 
-                                     height="40">
+                                     class="w-10 h-10 rounded-full object-cover">
                             {% else %}
-                                <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center" 
-                                     style="width: 40px; height: 40px;">
-                                    <i class="fas fa-user text-white"></i>
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-fuchsia-600 flex items-center justify-center text-white">
+                                    <i class="fas fa-user"></i>
                                 </div>
                             {% endif %}
                         </td>
-                        <td>{{ archived_elite.archive.nom }}</td>
-                        <td>{{ archived_elite.archive.identifiant }}</td>
-                        <td>
-                            <span class="badge bg-{% if archived_elite.archive.genre == 'M' %}primary{% else %}danger{% endif %}">
+                        <td class="px-6 py-4 text-sm font-medium text-slate-800">{{ archived_elite.archive.nom }}</td>
+                        <td class="px-6 py-4 text-sm text-slate-600">{{ archived_elite.archive.identifiant }}</td>
+                        <td class="px-6 py-4 text-sm text-slate-600">
+                            <span class="px-2.5 py-1 {% if archived_elite.archive.genre == 'M' %}bg-indigo-100 text-indigo-700{% else %}bg-rose-100 text-rose-700{% endif %} rounded-full text-xs font-bold">
                                 {{ archived_elite.archive.genre }}
                             </span>
                         </td>
-                        <td>{{ archived_elite.archive.centre|default:"N/A" }}</td>
-                        <td>{{ archived_elite.archive.institution|default:"N/A" }}</td>
-                        <td>{{ archived_elite.archive.Class|default:"N/A" }}</td>
-                        <td>{{ archived_elite.date_archivage|date:"d/m/Y" }}</td>
-                        <td>
-                            <span class="badge bg-warning">{{ archived_elite.raison|default:"N/A" }}</span>
+                        <td class="px-6 py-4 text-sm text-slate-600">{{ archived_elite.archive.centre|default:"N/A" }}</td>
+                        <td class="px-6 py-4 text-sm text-slate-600">{{ archived_elite.archive.institution|default:"N/A" }}</td>
+                        <td class="px-6 py-4 text-sm text-slate-600">{{ archived_elite.archive.Class|default:"N/A" }}</td>
+                        <td class="px-6 py-4 text-sm text-slate-600">{{ archived_elite.date_archivage|date:"d/m/Y" }}</td>
+                        <td class="px-6 py-4 text-sm text-slate-600">
+                            <span class="px-2.5 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-bold">{{ archived_elite.raison|default:"N/A" }}</span>
                         </td>
-                        <td>
-                            <div class="btn-group btn-group-sm">
+                        <td class="px-6 py-4 text-sm text-slate-600">
+                            <div class="flex items-center gap-1">
                                 <a href="{% url 'viewStudentByIdentifiant' archived_elite.archive.identifiant %}" 
-                                   class="btn btn-outline-info" 
+                                   class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-cyan-100 text-cyan-700 hover:bg-cyan-200 transition-all" 
                                    title="Voir">
-                                    <i class="fas fa-eye"></i>
+                                    <i class="fas fa-eye text-sm"></i>
                                 </a>
-                                <button class="btn btn-outline-warning" 
+                                <button class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-amber-100 text-amber-700 hover:bg-amber-200 transition-all" 
                                         title="Restaurer" 
                                         onclick="restoreElite({{ archived_elite.id }})">
-                                    <i class="fas fa-undo"></i>
+                                    <i class="fas fa-undo text-sm"></i>
                                 </button>
                             </div>
                         </td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="10" class="text-center text-muted py-4">
-                            <i class="fas fa-inbox fa-3x mb-3"></i>
+                        <td colspan="10" class="text-center text-slate-500 py-12">
+                            <i class="fas fa-inbox fa-3x mb-3 block"></i>
                             <p>Aucun élite archivé trouvé</p>
                         </td>
                     </tr>
@@ -189,30 +184,30 @@
 
 <!-- Pagination -->
 {% if archived_elites.has_other_pages %}
-<div class="d-flex justify-content-center mt-4">
+<div class="flex justify-center mt-6 mb-8">
     <nav aria-label="Pagination">
-        <ul class="pagination">
+        <ul class="flex items-center gap-1">
             {% if archived_elites.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if institution_filter %}&institution={{ institution_filter }}{% endif %}">Premier</a>
+                <li>
+                    <a class="inline-flex items-center px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-all" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if institution_filter %}&institution={{ institution_filter }}{% endif %}">Premier</a>
                 </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ archived_elites.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if institution_filter %}&institution={{ institution_filter }}{% endif %}">Précédent</a>
+                <li>
+                    <a class="inline-flex items-center px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-all" href="?page={{ archived_elites.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if institution_filter %}&institution={{ institution_filter }}{% endif %}">Précédent</a>
                 </li>
             {% endif %}
 
-            <li class="page-item active">
-                <span class="page-link">
+            <li>
+                <span class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-purple-600 border border-purple-600 rounded-lg">
                     Page {{ archived_elites.number }} sur {{ archived_elites.paginator.num_pages }}
                 </span>
             </li>
 
             {% if archived_elites.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ archived_elites.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if institution_filter %}&institution={{ institution_filter }}{% endif %}">Suivant</a>
+                <li>
+                    <a class="inline-flex items-center px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-all" href="?page={{ archived_elites.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if institution_filter %}&institution={{ institution_filter }}{% endif %}">Suivant</a>
                 </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ archived_elites.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if institution_filter %}&institution={{ institution_filter }}{% endif %}">Dernier</a>
+                <li>
+                    <a class="inline-flex items-center px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-all" href="?page={{ archived_elites.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if centre_filter %}&centre={{ centre_filter }}{% endif %}{% if genre_filter %}&genre={{ genre_filter }}{% endif %}{% if institution_filter %}&institution={{ institution_filter }}{% endif %}">Dernier</a>
                 </li>
             {% endif %}
         </ul>
@@ -220,16 +215,12 @@
 </div>
 {% endif %}
 
-{% endblock %}
-
-{% block extra_js %}
 <script>
 function restoreElite(archiveId) {
     if (confirm('Êtes-vous sûr de vouloir restaurer cet élite ?')) {
-        // Implementation for restoring elite
         console.log('Restoring elite with archive ID:', archiveId);
-        // You can add AJAX call here to restore the elite
     }
 }
 </script>
+
 {% endblock %}

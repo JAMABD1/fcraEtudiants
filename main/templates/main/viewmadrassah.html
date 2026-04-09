@@ -3,345 +3,165 @@
 {% block title %}{{ madrassah.nom }} — Profil Madrassah{% endblock %}
 
 {% block content %}
-<style>
-  .student-profile {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 50%, #10b981 100%);
-    min-height: 100vh;
-    padding: 2rem 1rem;
-  }
 
-  .profile-container {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
+<div class="min-h-screen bg-gradient-to-br from-sky-500 via-cyan-500 to-emerald-500 p-4 md:p-8">
+  <div class="max-w-7xl mx-auto space-y-8">
 
-  .back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: #fff;
-    text-decoration: none;
-    font-weight: 600;
-    margin-bottom: 1.25rem;
-    padding: 0.5rem 1rem;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
-    backdrop-filter: blur(8px);
-    transition: background 0.2s ease;
-  }
+    <a href="{% url 'madrassah' %}" class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm text-white rounded-xl font-semibold border border-white/30 hover:bg-white/40 transition-all">
+      ← Retour à la liste
+    </a>
 
-  .back-link:hover {
-    color: #fff;
-    background: rgba(255, 255, 255, 0.35);
-  }
-
-  .hero-card {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
-    border-radius: 20px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-  }
-
-  .profile-header {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-    margin-bottom: 2rem;
-  }
-
-  .profile-image {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid #fff;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  }
-
-  .profile-image-placeholder {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 2.5rem;
-    font-weight: 700;
-    border: 4px solid #fff;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  }
-
-  .profile-info h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #1a202c;
-    margin: 0 0 0.5rem 0;
-  }
-
-  .profile-info .student-id {
-    background: linear-gradient(135deg, #0ea5e9, #06b6d4);
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 25px;
-    font-weight: 600;
-    display: inline-block;
-    margin-bottom: 1rem;
-  }
-
-  .info-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1rem;
-  }
-
-  .info-item {
-    background: rgba(255, 255, 255, 0.7);
-    padding: 1rem;
-    border-radius: 12px;
-    border-left: 4px solid #0ea5e9;
-  }
-
-  .info-item .label {
-    font-size: 0.875rem;
-    color: #6b7280;
-    font-weight: 500;
-  }
-
-  .info-item .value {
-    font-size: 1rem;
-    color: #1f2937;
-    font-weight: 600;
-    margin-top: 0.25rem;
-  }
-
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-  }
-
-  .stat-card {
-    background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
-    color: white;
-    padding: 1.5rem;
-    border-radius: 16px;
-    text-align: center;
-    box-shadow: 0 10px 25px rgba(14, 165, 233, 0.3);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .stat-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(14, 165, 233, 0.4);
-  }
-
-  .stat-card .number {
-    font-size: 1.35rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    line-height: 1.3;
-    word-break: break-word;
-  }
-
-  .stat-card .label {
-    font-size: 0.875rem;
-    opacity: 0.9;
-  }
-
-  .section-card {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
-    border-radius: 20px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-  }
-
-  .section-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #1a202c;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  .section-icon {
-    width: 32px;
-    height: 32px;
-    background: linear-gradient(135deg, #0ea5e9, #06b6d4);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 16px;
-  }
-
-  @media (max-width: 768px) {
-    .profile-header {
-      flex-direction: column;
-      text-align: center;
-    }
-
-    .profile-info h1 {
-      font-size: 2rem;
-    }
-
-    .stats-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    .info-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-</style>
-
-<div class="student-profile">
-  <div class="profile-container">
-    <a href="{% url 'madrassah' %}" class="back-link">← Retour à la liste</a>
-
-    <div class="hero-card">
-      <div class="profile-header">
+    <!-- Hero Section -->
+    <div class="bg-white backdrop-blur-xl rounded-3xl p-6 md:p-8 shadow-2xl border border-white/20">
+      <div class="flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-8">
         {% if madrassah.imageprofile %}
-          <img src="{{ madrassah.imageprofile.url }}" alt="{{ madrassah.nom }}" class="profile-image">
+          <img src="{{ madrassah.imageprofile.url }}" alt="{{ madrassah.nom }}"
+               class="w-32 h-32 rounded-full object-cover border-4 border-white shadow-2xl">
         {% else %}
-          <div class="profile-image-placeholder" aria-hidden="true">{{ madrassah.nom|slice:":1"|upper }}</div>
+          <div class="w-32 h-32 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-5xl font-bold border-4 border-white shadow-2xl" aria-hidden="true">
+            {{ madrassah.nom|slice:":1"|upper }}
+          </div>
         {% endif %}
-        <div class="profile-info">
-          <h1>{{ madrassah.nom }}</h1>
-          <div class="student-id">{{ madrassah.madrassahid }}</div>
-          <div class="info-grid">
-            <div class="info-item">
-              <div class="label">Âge</div>
-              <div class="value">{% if madrassah.age %}{{ madrassah.age }}{% if "ans" not in madrassah.age %} ans{% endif %}{% else %}Non renseigné{% endif %}</div>
+        <div class="flex-1 text-center md:text-left">
+          <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-3">{{ madrassah.nom }}</h1>
+          <div class="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-sky-500 to-cyan-500 text-white font-semibold text-sm mb-4">
+            {{ madrassah.madrassahid }}
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+            <div class="bg-white/70 p-4 rounded-xl border-l-4 border-sky-500">
+              <div class="text-sm text-slate-500 font-medium">Âge</div>
+              <div class="text-base font-bold text-slate-900 mt-1">{% if madrassah.age %}{{ madrassah.age }}{% if "ans" not in madrassah.age %} ans{% endif %}{% else %}Non renseigné{% endif %}</div>
             </div>
-            <div class="info-item">
-              <div class="label">Genre</div>
-              <div class="value">{% if madrassah.genre == 'M' %}Masculin{% else %}Féminin{% endif %}</div>
+            <div class="bg-white/70 p-4 rounded-xl border-l-4 border-sky-500">
+              <div class="text-sm text-slate-500 font-medium">Genre</div>
+              <div class="text-base font-bold text-slate-900 mt-1">{% if madrassah.genre == 'M' %}Masculin{% else %}Féminin{% endif %}</div>
             </div>
-            <div class="info-item">
-              <div class="label">Classe madrassah</div>
-              <div class="value">{{ madrassah.class_madressah|default:"Non renseignée" }}</div>
+            <div class="bg-white/70 p-4 rounded-xl border-l-4 border-sky-500">
+              <div class="text-sm text-slate-500 font-medium">Classe madrassah</div>
+              <div class="text-base font-bold text-slate-900 mt-1">{{ madrassah.class_madressah|default:"Non renseignée" }}</div>
             </div>
-            <div class="info-item">
-              <div class="label">Classe académique</div>
-              <div class="value">{{ madrassah.class_academic|default:"Non renseignée" }}</div>
+            <div class="bg-white/70 p-4 rounded-xl border-l-4 border-sky-500">
+              <div class="text-sm text-slate-500 font-medium">Classe académique</div>
+              <div class="text-base font-bold text-slate-900 mt-1">{{ madrassah.class_academic|default:"Non renseignée" }}</div>
             </div>
-            <div class="info-item">
-              <div class="label">Centre</div>
-              <div class="value">{{ madrassah.centre|default:"Non renseigné" }}</div>
+            <div class="bg-white/70 p-4 rounded-xl border-l-4 border-sky-500">
+              <div class="text-sm text-slate-500 font-medium">Centre</div>
+              <div class="text-base font-bold text-slate-900 mt-1">{{ madrassah.centre|default:"Non renseigné" }}</div>
             </div>
-            <div class="info-item">
-              <div class="label">Adresse</div>
-              <div class="value">{{ madrassah.adress|default:"Non renseignée" }}</div>
+            <div class="bg-white/70 p-4 rounded-xl border-l-4 border-sky-500">
+              <div class="text-sm text-slate-500 font-medium">Adresse</div>
+              <div class="text-base font-bold text-slate-900 mt-1">{{ madrassah.adress|default:"Non renseignée" }}</div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="number">{{ madrassah.class_madressah|default:"—" }}</div>
-        <div class="label">Classe Madrassah</div>
+    <!-- Statistics -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+      <div class="bg-gradient-to-br from-sky-500 to-cyan-500 text-white p-6 rounded-2xl text-center shadow-lg transform transition-all hover:-translate-y-2 hover:shadow-2xl">
+        <div class="text-xl font-bold mb-2 break-words leading-snug">{{ madrassah.class_madressah|default:"—" }}</div>
+        <div class="text-sm opacity-90">Classe Madrassah</div>
       </div>
-      <div class="stat-card">
-        <div class="number">{{ madrassah.class_academic|default:"—" }}</div>
-        <div class="label">Classe académique</div>
+      <div class="bg-gradient-to-br from-indigo-500 to-purple-500 text-white p-6 rounded-2xl text-center shadow-lg transform transition-all hover:-translate-y-2 hover:shadow-2xl">
+        <div class="text-xl font-bold mb-2 break-words leading-snug">{{ madrassah.class_academic|default:"—" }}</div>
+        <div class="text-sm opacity-90">Classe académique</div>
       </div>
-      <div class="stat-card">
-        <div class="number">{{ madrassah.centre|default:"—" }}</div>
-        <div class="label">Centre</div>
+      <div class="bg-gradient-to-br from-emerald-500 to-teal-500 text-white p-6 rounded-2xl text-center shadow-lg transform transition-all hover:-translate-y-2 hover:shadow-2xl">
+        <div class="text-xl font-bold mb-2 break-words leading-snug">{{ madrassah.centre|default:"—" }}</div>
+        <div class="text-sm opacity-90">Centre</div>
       </div>
-      <div class="stat-card">
-        <div class="number">{% if madrassah.genre == 'M' %}Masculin{% else %}Féminin{% endif %}</div>
-        <div class="label">Genre</div>
+      <div class="bg-gradient-to-br from-rose-500 to-pink-500 text-white p-6 rounded-2xl text-center shadow-lg transform transition-all hover:-translate-y-2 hover:shadow-2xl">
+        <div class="text-xl font-bold mb-2 break-words leading-snug">{% if madrassah.genre == 'M' %}Masculin{% else %}Féminin{% endif %}</div>
+        <div class="text-sm opacity-90">Genre</div>
       </div>
     </div>
 
-    <div class="section-card">
-      <h2 class="section-title">
-        <div class="section-icon">👨‍👩‍👧‍👦</div>
+    <!-- Famille & contact -->
+    <div class="bg-white backdrop-blur-xl rounded-3xl p-6 md:p-8 shadow-2xl border border-white/20">
+      <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+        <div class="w-10 h-10 bg-gradient-to-br from-sky-500 to-cyan-500 rounded-xl flex items-center justify-center text-white text-xl">
+          👨‍👩‍👧‍👦
+        </div>
         Famille & contact
       </h2>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
-        <div style="background: rgba(59, 130, 246, 0.1); padding: 1.5rem; border-radius: 16px; border: 2px solid rgba(59, 130, 246, 0.2); transition: all 0.3s ease;">
-          <h3 style="font-size: 1.125rem; font-weight: 600; color: #1f2937; margin-bottom: 0.5rem;">👤 Parent / tuteur</h3>
-          <p style="color: #6b7280; margin: 0;">{{ madrassah.parent|default:"Non renseigné" }}</p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-blue-50 p-6 rounded-2xl border-2 border-blue-100 hover:shadow-lg transition-all">
+          <h3 class="text-lg font-semibold text-slate-900 mb-2">👤 Parent / tuteur</h3>
+          <p class="text-slate-600">{{ madrassah.parent|default:"Non renseigné" }}</p>
         </div>
-        <div style="background: rgba(16, 185, 129, 0.1); padding: 1.5rem; border-radius: 16px; border: 2px solid rgba(16, 185, 129, 0.2); transition: all 0.3s ease;">
-          <h3 style="font-size: 1.125rem; font-weight: 600; color: #1f2937; margin-bottom: 0.5rem;">📍 Adresse</h3>
-          <p style="color: #6b7280; margin: 0;">{{ madrassah.adress|default:"Non renseignée" }}</p>
+        <div class="bg-emerald-50 p-6 rounded-2xl border-2 border-emerald-100 hover:shadow-lg transition-all">
+          <h3 class="text-lg font-semibold text-slate-900 mb-2">📍 Adresse</h3>
+          <p class="text-slate-600">{{ madrassah.adress|default:"Non renseignée" }}</p>
         </div>
-        <div style="background: rgba(236, 72, 153, 0.1); padding: 1.5rem; border-radius: 16px; border: 2px solid rgba(236, 72, 153, 0.2); transition: all 0.3s ease;">
-          <h3 style="font-size: 1.125rem; font-weight: 600; color: #1f2937; margin-bottom: 0.5rem;">🏛️ Centre</h3>
-          <p style="color: #6b7280; margin: 0;">{{ madrassah.centre|default:"Non renseigné" }}</p>
+        <div class="bg-pink-50 p-6 rounded-2xl border-2 border-pink-100 hover:shadow-lg transition-all">
+          <h3 class="text-lg font-semibold text-slate-900 mb-2">🏛️ Centre</h3>
+          <p class="text-slate-600">{{ madrassah.centre|default:"Non renseigné" }}</p>
         </div>
       </div>
     </div>
 
-    <div class="section-card">
-      <h2 class="section-title">
-        <div class="section-icon">📊</div>
+    <!-- Scolarité & classes -->
+    <div class="bg-white backdrop-blur-xl rounded-3xl p-6 md:p-8 shadow-2xl border border-white/20">
+      <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+        <div class="w-10 h-10 bg-gradient-to-br from-sky-500 to-cyan-500 rounded-xl flex items-center justify-center text-white text-xl">
+          📊
+        </div>
         Scolarité & classes
       </h2>
-      <div style="display: grid; gap: 1rem;">
-        <div style="background: rgba(16, 185, 129, 0.1); padding: 1.5rem; border-radius: 16px; border-left: 4px solid #10b981;">
-          <div style="font-size: 1.125rem; font-weight: 600; color: #1f2937; margin-bottom: 0.5rem;">Enseignement religieux</div>
-          <p style="color: #6b7280; margin: 0;">{{ madrassah.class_madressah|default:"Classe madrassah non renseignée" }}</p>
+      <div class="space-y-4">
+        <div class="bg-emerald-50 p-6 rounded-2xl border-l-4 border-emerald-500">
+          <div class="text-lg font-semibold text-slate-900 mb-2">Enseignement religieux</div>
+          <p class="text-slate-600">{{ madrassah.class_madressah|default:"Classe madrassah non renseignée" }}</p>
         </div>
-        <div style="background: rgba(59, 130, 246, 0.1); padding: 1.5rem; border-radius: 16px; border-left: 4px solid #3b82f6;">
-          <div style="font-size: 1.125rem; font-weight: 600; color: #1f2937; margin-bottom: 0.5rem;">Scolarité académique</div>
-          <p style="color: #6b7280; margin: 0;">{{ madrassah.class_academic|default:"Classe académique non renseignée" }}</p>
+        <div class="bg-blue-50 p-6 rounded-2xl border-l-4 border-blue-500">
+          <div class="text-lg font-semibold text-slate-900 mb-2">Scolarité académique</div>
+          <p class="text-slate-600">{{ madrassah.class_academic|default:"Classe académique non renseignée" }}</p>
         </div>
       </div>
     </div>
 
-    <div class="section-card">
-      <h2 class="section-title">
-        <div class="section-icon">📄</div>
+    <!-- Documents & dossiers -->
+    <div class="bg-white backdrop-blur-xl rounded-3xl p-6 md:p-8 shadow-2xl border border-white/20">
+      <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+        <div class="w-10 h-10 bg-gradient-to-br from-sky-500 to-cyan-500 rounded-xl flex items-center justify-center text-white text-xl">
+          📄
+        </div>
         Documents & dossiers
       </h2>
-      <div style="text-align: center; padding: 3rem 1rem; color: #6b7280;">
-        <div style="width: 64px; height: 64px; background: rgba(107, 114, 128, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 24px;">📄</div>
-        <h3 style="margin: 0 0 0.5rem 0;">Aucun document rattaché</h3>
-        <p style="margin: 0;">Les pièces administratives pour les profils madrassah pourront être ajoutées ultérieurement.</p>
+      <div class="text-center py-12 text-slate-500">
+        <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">📄</div>
+        <h3 class="text-lg font-semibold mb-2">Aucun document rattaché</h3>
+        <p class="text-sm">Les pièces administratives pour les profils madrassah pourront être ajoutées ultérieurement.</p>
       </div>
     </div>
 
-    <div class="section-card">
-      <h2 class="section-title">
-        <div class="section-icon">🕒</div>
+    <!-- Fiche locale -->
+    <div class="bg-white backdrop-blur-xl rounded-3xl p-6 md:p-8 shadow-2xl border border-white/20">
+      <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+        <div class="w-10 h-10 bg-gradient-to-br from-sky-500 to-cyan-500 rounded-xl flex items-center justify-center text-white text-xl">
+          🕒
+        </div>
         Fiche locale
       </h2>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
-        <div style="background: rgba(59, 130, 246, 0.1); padding: 1.5rem; border-radius: 16px; border: 2px solid rgba(59, 130, 246, 0.2);">
-          <h3 style="font-size: 1.125rem; font-weight: 600; color: #1f2937; margin-bottom: 0.5rem;">🏛️ Centre d’accueil</h3>
-          <p style="color: #6b7280; margin: 0;">{{ madrassah.centre|default:"Non renseigné" }}</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-blue-50 p-6 rounded-2xl border-2 border-blue-100 hover:shadow-lg transition-all">
+          <h3 class="text-lg font-semibold text-slate-900 mb-2">🏛️ Centre d'accueil</h3>
+          <p class="text-slate-600">{{ madrassah.centre|default:"Non renseigné" }}</p>
         </div>
-        <div style="background: rgba(107, 114, 128, 0.1); padding: 1.5rem; border-radius: 16px; border: 2px solid rgba(107, 114, 128, 0.2);">
-          <h3 style="font-size: 1.125rem; font-weight: 600; color: #1f2937; margin-bottom: 0.5rem;">🆔 Identifiant madrassah</h3>
-          <p style="color: #6b7280; margin: 0;">{{ madrassah.madrassahid }}</p>
+        <div class="bg-slate-50 p-6 rounded-2xl border-2 border-slate-200 hover:shadow-lg transition-all">
+          <h3 class="text-lg font-semibold text-slate-900 mb-2">🆔 Identifiant madrassah</h3>
+          <p class="text-slate-600">{{ madrassah.madrassahid }}</p>
         </div>
       </div>
     </div>
+
   </div>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  const cards = document.querySelectorAll('.section-card, .hero-card');
+  const cards = document.querySelectorAll('.bg-white\\/95');
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -356,15 +176,6 @@ document.addEventListener('DOMContentLoaded', function() {
     card.style.transform = 'translateY(30px)';
     card.style.transition = `all 0.6s ease ${index * 0.1}s`;
     observer.observe(card);
-  });
-
-  document.querySelectorAll('.stat-card').forEach(card => {
-    card.addEventListener('mouseenter', function() {
-      this.style.transform = 'translateY(-8px) scale(1.05)';
-    });
-    card.addEventListener('mouseleave', function() {
-      this.style.transform = 'translateY(-5px) scale(1)';
-    });
   });
 });
 </script>

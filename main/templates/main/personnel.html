@@ -2,91 +2,100 @@
 {% load static %}
 {% block title%} Personnels {%endblock%}
 {% block content %}
-   <div class="p-6">
- <form method="GET" action="{% url 'personnel' %}" class="flex flex-col md:flex-row gap-4 mb-4">
-    <input type="text" name="search" placeholder="Rechercher par nom" 
-           value="{{ search_query }}" 
-           class="border rounded p-2 w-full md:w-1/4" />
+<div class="p-6">
+    <form method="GET" action="{% url 'personnel' %}" class="flex flex-col md:flex-row gap-4 mb-4">
+        <input type="text" name="search" placeholder="Rechercher par nom" 
+               value="{{ search_query }}" 
+               class="w-full md:w-1/4 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700" />
 
-    <select name="travail" class="border rounded p-2 w-full md:w-1/4">
-        <option value="">Sélectionnez un travail</option>
-        {% for travail in travaux %}
-            <option value="{{ travail }}" {% if travail == travail_filter %}selected{% endif %}>{{ travail }}</option>
-        {% endfor %}
-    </select>
+        <select name="travail" class="w-full md:w-1/4 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none">
+            <option value="">Sélectionnez un travail</option>
+            {% for travail in travaux %}
+                <option value="{{ travail }}" {% if travail == travail_filter %}selected{% endif %}>{{ travail }}</option>
+            {% endfor %}
+        </select>
 
-    <select name="section" class="border rounded p-2 w-full md:w-1/4">
-        <option value="">Sélectionnez une section</option>
-        {% for section in sections %}
-            <option value="{{ section }}" {% if section == section_filter %}selected{% endif %}>{{ section }}</option>
-        {% endfor %}
-    </select>
+        <select name="section" class="w-full md:w-1/4 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none">
+            <option value="">Sélectionnez une section</option>
+            {% for section in sections %}
+                <option value="{{ section }}" {% if section == section_filter %}selected{% endif %}>{{ section }}</option>
+            {% endfor %}
+        </select>
 
-    <select name="centre" class="border rounded p-2 w-full md:w-1/4">
-        <option value="">Sélectionnez un centre</option>
-        {% for centre in centres %}
-            <option value="{{ centre }}" {% if centre == centre_filter %}selected{% endif %}>{{ centre }}</option>
-        {% endfor %}
-    </select>
+        <select name="centre" class="w-full md:w-1/4 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none">
+            <option value="">Sélectionnez un centre</option>
+            {% for centre in centres %}
+                <option value="{{ centre }}" {% if centre == centre_filter %}selected{% endif %}>{{ centre }}</option>
+            {% endfor %}
+        </select>
 
-    <select name="situation" class="border rounded p-2 w-full md:w-1/4">
-        <option value="">Sélectionnez une situation</option>
-        {% for situation in situations %}
-            <option value="{{ situation }}" {% if situation == situation_filter %}selected{% endif %}>{{ situation }}</option>
-        {% endfor %}
-    </select>
+        <select name="situation" class="w-full md:w-1/4 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none">
+            <option value="">Sélectionnez une situation</option>
+            {% for situation in situations %}
+                <option value="{{ situation }}" {% if situation == situation_filter %}selected{% endif %}>{{ situation }}</option>
+            {% endfor %}
+        </select>
 
-    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Filtrer</button>
-</form>
-   <div class="flex justify-between items-center mb-4">
-       <h1 class="text-2xl font-bold">Liste des Personnels</h1>
-       <a href="{% url 'gestion_conge' %}" class="bg-blue-600 text-white px-4 py-2 rounded shadow-sm hover:bg-blue-700 transition duration-200">
-           <i class="fas fa-calendar-alt mr-2"></i>Gestion des Congés
-       </a>
-   </div>
+        <button type="submit" class="inline-flex items-center gap-2 px-4 py-2.5 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 transition-all">Filtrer</button>
+    </form>
+
+    <div class="flex justify-between items-center mb-4">
+        <h1 class="text-2xl font-bold">Liste des Personnels</h1>
+        <a href="{% url 'gestion_conge' %}" class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 shadow-sm transition-all">
+            <i class="fas fa-calendar-alt"></i>Gestion des Congés
+        </a>
+    </div>
     
-         {% include  'main/components/TablePersonnel.html' with datas=personnel section_stats=section_stats %}
+    {% include 'main/components/TablePersonnel.html' with datas=personnel section_stats=section_stats %}
 
-<div class="flex justify-between mt-4">
-        <div>
-            {% if personnel.has_previous %}
-                <a href="?page=1&search={{ search_query }}" class="bg-green-500 text-white font-medium px-4 py-2 rounded">Première</a>
-                <a href="?page={{ personnel.previous_page_number }}&search={{ search_query }}" class="bg-green-500 text-white font-medium px-4 py-2 rounded">Précédente</a>
-            {% endif %}
-            <span>Page {{ personnel.number }} sur {{ personnel.paginator.num_pages }}</span>
-            {% if personnel.has_next %}
-                <a href="?page={{ personnel.next_page_number }}&search={{ search_query }}" class="bg-green-500 text-white font-medium px-4 py-2 rounded">Suivante</a>
-                <a href="?page={{ personnel.paginator.num_pages }}&search={{ search_query }}" class="bg-green-500 text-white font-medium px-4 py-2 rounded">Dernière</a>
-            {% endif %}
-        </div>
-    </div>
-
-    </div>
-    <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
-    <div class="bg-white rounded-lg p-4 relative">
-        <span id="closeModal" class="absolute top-2 right-2 cursor-pointer text-gray-600">&times;</span>
-        <img id="modalImage" src="" alt="Profile" class="max-w-full max-h-[80vh] object-contain" />
+    <div class="flex justify-center items-center gap-2 py-4">
+        {% if personnel.has_previous %}
+            <a href="?page=1&search={{ search_query }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-all">
+                <i class="fas fa-angles-left"></i>
+            </a>
+            <a href="?page={{ personnel.previous_page_number }}&search={{ search_query }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-all">
+                <i class="fas fa-angle-left"></i>
+            </a>
+        {% endif %}
+        <span class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-medium">Page {{ personnel.number }} sur {{ personnel.paginator.num_pages }}</span>
+        {% if personnel.has_next %}
+            <a href="?page={{ personnel.next_page_number }}&search={{ search_query }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-all">
+                <i class="fas fa-angle-right"></i>
+            </a>
+            <a href="?page={{ personnel.paginator.num_pages }}&search={{ search_query }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition-all">
+                <i class="fas fa-angles-right"></i>
+            </a>
+        {% endif %}
     </div>
 </div>
 
+<div id="imageModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm" onclick="if(event.target===this){this.classList.add('hidden');this.classList.remove('flex')}">
+    <div class="bg-white rounded-2xl p-4 relative shadow-2xl">
+        <span id="closeModal" class="absolute top-2 right-2 cursor-pointer text-slate-400 hover:text-slate-600 transition-colors text-xl">&times;</span>
+        <img id="modalImage" src="" alt="Profile" class="max-w-full max-h-[80vh] object-contain rounded-xl" />
+    </div>
+</div>
 
-<!--Modal Script -->
 <script>
     function openModal(imageUrl) {
         document.getElementById('modalImage').src = imageUrl;
-        document.getElementById('imageModal').classList.remove('hidden');
+        var modal = document.getElementById('imageModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
     }
 
     document.getElementById('closeModal').onclick = function() {
-        document.getElementById('imageModal').classList.add('hidden');
+        var modal = document.getElementById('imageModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
     }
 
-    // Close modal when clicking outside of the image
     window.onclick = function(event) {
-        if (event.target == document.getElementById('imageModal')) {
-            document.getElementById('imageModal').classList.add('hidden');
+        var modal = document.getElementById('imageModal');
+        if (event.target == modal) {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
         }
     }
 </script>
- 
 {% endblock content %}

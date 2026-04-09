@@ -3,54 +3,54 @@
 {% block content %}
 
 <!-- Header -->
-<div class="dashboard-header mb-8">
-    <div class="d-flex justify-content-between align-items-center">
+<div class="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white p-6 rounded-2xl mb-8 shadow-2xl">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">
-                <i class="fas fa-heart-broken text-danger mr-3"></i>
+            <h1 class="text-3xl font-bold mb-2">
+                <i class="fas fa-heart-broken text-rose-200 mr-3"></i>
                 Orphelins Archivés
             </h1>
-            <p class="text-gray-200">Liste des orphelins archivés</p>
+            <p class="text-amber-100">Liste des orphelins archivés</p>
         </div>
-        <div class="d-flex gap-2">
-            <a href="{% url 'orphelin' %}" class="btn btn-outline-light btn-sm"><i class="fas fa-heart me-2"></i>Orphelins Actifs</a>
-            <a href="{% url 'archived_students' %}" class="btn btn-outline-light btn-sm"><i class="fas fa-archive me-2"></i>Étudiants Archivés</a>
-            <a href="{% url 'etudiants_dashboard' %}" class="btn btn-outline-light btn-sm"><i class="fas fa-chart-bar me-2"></i>Dashboard</a>
+        <div class="flex flex-wrap gap-2">
+            <a href="{% url 'orphelin' %}" class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-all backdrop-blur-sm border border-white/30"><i class="fas fa-heart"></i>Orphelins Actifs</a>
+            <a href="{% url 'archived_students' %}" class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-all backdrop-blur-sm border border-white/30"><i class="fas fa-archive"></i>Étudiants Archivés</a>
+            <a href="{% url 'etudiants_dashboard' %}" class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-all backdrop-blur-sm border border-white/30"><i class="fas fa-chart-bar"></i>Dashboard</a>
         </div>
     </div>
     
     <!-- Simple Filter Panel -->
-    <div class="filter-panel mt-4">
-        <div class="card border-0 shadow-sm">
-            <div class="card-header bg-gradient-primary text-white">
-                <h5 class="mb-0">
-                    <i class="fas fa-filter mr-2"></i>
+    <div class="mt-6">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                    <i class="fas fa-filter text-amber-500"></i>
                     Filtres
-                </h5>
+                </h3>
             </div>
-            <div class="card-body">
-                <form method="GET" class="row g-3">
-                    <div class="col-md-4">
-                        <input type="text" class="form-control" name="search" placeholder="Rechercher..." value="{{ search_query }}" />
+            <div class="p-6">
+                <form method="GET" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <div>
+                        <input type="text" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all outline-none text-slate-700" name="search" placeholder="Rechercher..." value="{{ search_query }}" />
                     </div>
-                    <div class="col-md-2">
-                        <select name="centre" class="form-select">
+                    <div>
+                        <select name="centre" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all outline-none text-slate-700 appearance-none">
                             <option value="">Centre</option>
                             {% for c in centers %}
                                 <option value="{{ c }}" {% if c == centre_filter %}selected{% endif %}>{{ c }}</option>
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="col-md-2">
-                        <select name="genre" class="form-select">
+                    <div>
+                        <select name="genre" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all outline-none text-slate-700 appearance-none">
                             <option value="">Genre</option>
                             {% for g in genres %}
                                 <option value="{{ g }}" {% if g == genre_filter %}selected{% endif %}>{{ g }}</option>
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="col-md-2">
-                        <select name="age" class="form-select">
+                    <div>
+                        <select name="age" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all outline-none text-slate-700 appearance-none">
                             <option value="">Âge</option>
                             <option value="3-10" {% if age_filter == '3-10' %}selected{% endif %}>3-10 ans</option>
                             <option value="11-14" {% if age_filter == '11-14' %}selected{% endif %}>11-14 ans</option>
@@ -60,24 +60,26 @@
                             <option value="26+" {% if age_filter == '26+' %}selected{% endif %}>26+ ans</option>
                         </select>
                     </div>
-                    <div class="col-md-2">
-                        <select name="raison" class="form-select">
+                    <div>
+                        <select name="raison" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all outline-none text-slate-700 appearance-none">
                             <option value="">Raison</option>
                             {% for r in raisons %}
                                 <option value="{{ r }}" {% if r == raison_filter %}selected{% endif %}>{{ r }}</option>
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="col-md-2">
-                        <select name="archive_type" class="form-select">
+                    <div>
+                        <select name="archive_type" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all outline-none text-slate-700 appearance-none">
                             <option value="">Type</option>
                             {% for t in archive_choices %}
                                 <option value="{{ t }}" {% if t == archive_type_filter %}selected{% endif %}>{{ t }}</option>
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search me-2"></i>Filtrer</button>
+                    <div>
+                        <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-medium hover:from-amber-600 hover:to-orange-600 transition-all shadow-md">
+                            <i class="fas fa-search"></i>Filtrer
+                        </button>
                     </div>
                 </form>
             </div>
@@ -86,108 +88,92 @@
 </div>
 
 <!-- Simple Metrics -->
-<div class="row mb-6">
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="metric-card">
-            <div class="metric-icon">
-                <i class="fas fa-heart-broken"></i>
-            </div>
-            <div class="metric-content">
-                <h3>{{ total_archived_orphelins }}</h3>
-                <p>Orphelins Archivés</p>
-            </div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="bg-gradient-to-br from-rose-500 to-pink-600 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-4 text-white">
+        <div class="text-4xl opacity-80"><i class="fas fa-heart-broken"></i></div>
+        <div>
+            <h3 class="text-3xl font-bold">{{ total_archived_orphelins }}</h3>
+            <p class="text-rose-100 text-sm font-medium uppercase tracking-wider">Orphelins Archivés</p>
         </div>
     </div>
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="metric-card">
-            <div class="metric-icon">
-                <i class="fas fa-venus-mars"></i>
-            </div>
-            <div class="metric-content">
-                <h3>{% with m=0 f=0 %}{% for s in archived_orphelins_gender_stats %}{% if s.archive__genre == 'M' %}{% widthratio s.count 1 1 as m %}{% endif %}{% if s.archive__genre == 'F' %}{% widthratio s.count 1 1 as f %}{% endif %}{% endfor %}{{ m|add:f }}{% endwith %}</h3>
-                <p>Répartition Genre</p>
-            </div>
+    <div class="bg-gradient-to-br from-blue-500 to-cyan-600 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-4 text-white">
+        <div class="text-4xl opacity-80"><i class="fas fa-venus-mars"></i></div>
+        <div>
+            <h3 class="text-3xl font-bold">{% with m=0 f=0 %}{% for s in archived_orphelins_gender_stats %}{% if s.archive__genre == 'M' %}{% widthratio s.count 1 1 as m %}{% endif %}{% if s.archive__genre == 'F' %}{% widthratio s.count 1 1 as f %}{% endif %}{% endfor %}{{ m|add:f }}{% endwith %}</h3>
+            <p class="text-blue-100 text-sm font-medium uppercase tracking-wider">Répartition Genre</p>
         </div>
     </div>
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="metric-card">
-            <div class="metric-icon">
-                <i class="fas fa-map-marker-alt"></i>
-            </div>
-            <div class="metric-content">
-                <h3>{{ archived_orphelins_center_stats|length }}</h3>
-                <p>Centres</p>
-            </div>
+    <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-4 text-white">
+        <div class="text-4xl opacity-80"><i class="fas fa-map-marker-alt"></i></div>
+        <div>
+            <h3 class="text-3xl font-bold">{{ archived_orphelins_center_stats|length }}</h3>
+            <p class="text-emerald-100 text-sm font-medium uppercase tracking-wider">Centres</p>
         </div>
     </div>
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="metric-card">
-            <div class="metric-icon">
-                <i class="fas fa-graduation-cap"></i>
-            </div>
-            <div class="metric-content">
-                <h3>{{ archived_orphelins_class_stats|length }}</h3>
-                <p>Classes</p>
-            </div>
+    <div class="bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-4 text-white">
+        <div class="text-4xl opacity-80"><i class="fas fa-graduation-cap"></i></div>
+        <div>
+            <h3 class="text-3xl font-bold">{{ archived_orphelins_class_stats|length }}</h3>
+            <p class="text-amber-100 text-sm font-medium uppercase tracking-wider">Classes</p>
         </div>
     </div>
 </div>
 
 <!-- Simple Table -->
-<div class="card border-0 shadow-sm">
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle">
-                <thead class="table-light">
+<div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
+    <div class="p-6">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-slate-800">
                     <tr>
-                        <th><i class="fas fa-id-card text-primary"></i> Identifiant</th>
-                        <th><i class="fas fa-user text-success"></i> Nom</th>
-                        <th><i class="fas fa-venus-mars text-info"></i> Genre</th>
-                        <th><i class="fas fa-graduation-cap text-warning"></i> Classe</th>
-                        <th><i class="fas fa-map-marker-alt text-danger"></i> Centre</th>
-                        <th><i class="fas fa-heart-broken text-danger"></i> Statut Orphelin</th>
-                        <th><i class="fas fa-exclamation-triangle text-warning"></i> Raison</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white"><i class="fas fa-id-card mr-1"></i> Identifiant</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white"><i class="fas fa-user mr-1"></i> Nom</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white"><i class="fas fa-venus-mars mr-1"></i> Genre</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white"><i class="fas fa-graduation-cap mr-1"></i> Classe</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white"><i class="fas fa-map-marker-alt mr-1"></i> Centre</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white"><i class="fas fa-heart-broken mr-1"></i> Statut Orphelin</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-white"><i class="fas fa-exclamation-triangle mr-1"></i> Raison</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="divide-y divide-slate-100 bg-white">
                     {% for a in archived_orphelins %}
-                    <tr>
-                        <td><span class="badge bg-light text-dark">{{ a.archive.identifiant }}</span></td>
-                        <td>
-                            <div class="d-flex align-items-center">
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-6 py-4 text-sm text-slate-600"><span class="px-2.5 py-1 bg-slate-100 text-slate-700 rounded-full text-xs font-bold">{{ a.archive.identifiant }}</span></td>
+                        <td class="px-6 py-4 text-sm text-slate-600">
+                            <div class="flex items-center gap-3">
                                 {% if a.archive.imageprofile %}
-                                    <img src="{{ a.archive.imageprofile.url }}" alt="Photo" class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;">
+                                    <img src="{{ a.archive.imageprofile.url }}" alt="Photo" class="w-8 h-8 rounded-full object-cover">
                                 {% else %}
-                                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-2" style="width: 30px; height: 30px;">
-                                        <i class="fas fa-user text-white" style="font-size: 12px;"></i>
+                                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white text-xs">
+                                        <i class="fas fa-user"></i>
                                     </div>
                                 {% endif %}
                                 <span>{{ a.archive.nom }}</span>
                             </div>
                         </td>
-                        <td>
-                            <span class="badge bg-{% if a.archive.genre == 'M' %}primary{% else %}pink{% endif %}">
-                                <i class="fas fa-{% if a.archive.genre == 'M' %}mars{% else %}venus{% endif %} me-1"></i>
+                        <td class="px-6 py-4 text-sm text-slate-600">
+                            <span class="px-2.5 py-1 {% if a.archive.genre == 'M' %}bg-indigo-100 text-indigo-700{% else %}bg-pink-100 text-pink-700{% endif %} rounded-full text-xs font-bold">
+                                <i class="fas fa-{% if a.archive.genre == 'M' %}mars{% else %}venus{% endif %} mr-1"></i>
                                 {{ a.archive.genre }}
                             </span>
                         </td>
-                        <td>{{ a.archive.Class|default:"N/A" }}</td>
-                        <td>{{ a.archive.centre|default:"N/A" }}</td>
-                        <td>
+                        <td class="px-6 py-4 text-sm text-slate-600">{{ a.archive.Class|default:"N/A" }}</td>
+                        <td class="px-6 py-4 text-sm text-slate-600">{{ a.archive.centre|default:"N/A" }}</td>
+                        <td class="px-6 py-4 text-sm text-slate-600">
                             {% for status in archived_orphelins_orphan_status_stats %}
-                                {% if status.décedé %}
-                                    <span class="badge bg-{% if status.décedé == 'Orphelin père et mère' %}danger{% elif status.décedé == 'père' or status.décedé == 'mère' %}warning{% else %}secondary{% endif %}">
-                                        {{ status.décedé }}
+                                {% if status.décédé %}
+                                    <span class="px-2.5 py-1 {% if status.décédé == 'Orphelin père et mère' %}bg-rose-100 text-rose-700{% elif status.décédé == 'père' or status.décédé == 'mère' %}bg-amber-100 text-amber-700{% else %}bg-slate-100 text-slate-700{% endif %} rounded-full text-xs font-bold">
+                                        {{ status.décédé }}
                                     </span>
                                 {% endif %}
                             {% endfor %}
                         </td>
-                        <td><span class="badge bg-secondary">{{ a.raison|default:"N/A" }}</span></td>
+                        <td class="px-6 py-4 text-sm text-slate-600"><span class="px-2.5 py-1 bg-slate-100 text-slate-700 rounded-full text-xs font-bold">{{ a.raison|default:"N/A" }}</span></td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="7" class="text-center text-muted py-4">
-                            <i class="fas fa-heart-broken fa-2x mb-2 d-block"></i>
+                        <td colspan="7" class="text-center text-slate-500 py-12">
+                            <i class="fas fa-heart-broken fa-2x block mb-2"></i>
                             Aucun orphelin archivé trouvé
                         </td>
                     </tr>
@@ -196,47 +182,9 @@
             </table>
         </div>
     </div>
-    <div class="card-footer text-muted">
-        <i class="fas fa-info-circle me-1"></i> Les orphelins archivés sont des étudiants avec archive_type = 'Orphelin'.
+    <div class="bg-slate-50 px-6 py-4 border-t border-slate-200 text-slate-500 text-sm">
+        <i class="fas fa-info-circle mr-1"></i> Les orphelins archivés sont des étudiants avec archive_type = 'Orphelin'.
     </div>
 </div>
-
-<style>
-.dashboard-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 2rem;
-    border-radius: 15px;
-    margin-bottom: 2rem;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-}
-
-.bg-gradient-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-
-.metric-card {
-    background: white;
-    border-radius: 20px;
-    padding: 2rem;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    color: #2d3748;
-}
-.metric-card:hover { transform: translateY(-8px); box-shadow: 0 15px 40px rgba(0,0,0,0.2); }
-.metric-icon { font-size: 3rem; margin-right: 1.5rem; opacity: 0.8; }
-.metric-content h3 { font-size: 2.5rem; font-weight: bold; margin: 0; line-height: 1; }
-.metric-content p { margin: 0.5rem 0 0 0; opacity: 0.9; font-size: 1rem; }
-
-.text-pink { color: #e91e63 !important; }
-
-@media (max-width: 768px) {
-    .dashboard-header { padding: 1rem; text-align: center; }
-    .metric-card { flex-direction: column; text-align: center; padding: 1.5rem; }
-    .metric-icon { margin-right: 0; margin-bottom: 1rem; }
-}
-</style>
 
 {% endblock %}

@@ -2,8 +2,10 @@
 module.exports = {
     content: [
         '../templates/**/*.html',
+        '../../main/templates/main/**/*.html',
+        '../../main/templates/main/components/**/*.html',
+        '../../api/templates/api/**/*.html',
         '../../templates/**/*.html',
-        '../../**/templates/**/*.html',
     ],
     darkMode: 'class',
     theme: {

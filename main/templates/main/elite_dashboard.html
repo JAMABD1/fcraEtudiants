@@ -2,321 +2,286 @@
 {% block title%} Tableau de Bord - Elites de Zainabia {% endblock%}
 {% block content %}
 
-<!-- Enhanced Elite Dashboard Header -->
-<div class="dashboard-header mb-8">
-    <div class="d-flex justify-content-between align-items-center">
+<!-- Header -->
+<div class="bg-gradient-to-r from-purple-600 via-indigo-600 to-indigo-700 text-white p-6 rounded-2xl mb-8 shadow-2xl">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-            <h1 class="text-3xl font-bold text-purple-700 mb-2">
-                <i class="fas fa-star text-amber-500 mr-3"></i>
+            <h1 class="text-3xl font-bold mb-2 flex items-center gap-3">
+                <i class="fas fa-star text-amber-300"></i>
                 Tableau de Bord — Elites
             </h1>
-            <p class="text-gray-600">Vue d'ensemble et analyses dédiées aux étudiants élites</p>
+            <p class="text-indigo-100">Vue d'ensemble et analyses dédiées aux étudiants élites</p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+            <a href="{% url 'elite' %}" class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-all backdrop-blur-sm border border-white/30">
+                <i class="fas fa-list"></i> Liste Elites
+            </a>
+            <a href="{% url 'archived_elites' %}" class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-all backdrop-blur-sm border border-white/30">
+                <i class="fas fa-archive"></i> Archivés
+            </a>
         </div>
     </div>
-</div>
-
-
-<!-- Advanced Filter Panel -->
-<div class="filter-panel mb-6">
-    <div class="card border-0 shadow-sm">
-        <div class="card-header" style="background: linear-gradient(135deg,#6D28D9,#F59E0B); color: #fff;">
-            <h5 class="mb-0">
-                <i class="fas fa-filter mr-2"></i>
-                Filtres Avancés
-                <button class="btn btn-sm btn-outline-light float-right" type="button" data-bs-toggle="collapse" data-bs-target="#filtersCollapse">
+    
+    <!-- Advanced Filter Panel -->
+    <div class="mt-6">
+        <div class="bg-white backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden">
+            <div class="bg-gradient-to-r from-purple-500 to-indigo-600 text-white p-4 flex justify-between items-center cursor-pointer" onclick="document.getElementById('filtersCollapse').classList.toggle('hidden')">
+                <h5 class="text-lg font-semibold flex items-center gap-2">
+                    <i class="fas fa-filter"></i>
+                    Filtres Avancés
+                </h5>
+                <button type="button" class="text-white hover:text-indigo-100 transition-colors">
                     <i class="fas fa-chevron-down"></i>
                 </button>
+            </div>
+            <div id="filtersCollapse" class="">
+                <div class="p-6">
+                    <form method="GET" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div>
+                            <label for="centre" class="block text-sm font-medium text-slate-700 mb-2 flex items-center gap-2">
+                                <i class="fas fa-map-marker-alt text-purple-600"></i> Centre
+                            </label>
+                            <select name="centre" id="centre" class="block w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white text-slate-900">
+                                <option value="">Tous les centres</option>
+                                {% for centre in centres %}
+                                    <option value="{{ centre }}" {% if centre == centre_filter %}selected{% endif %}>
+                                        {{ centre }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div>
+                            <label for="age" class="block text-sm font-medium text-slate-700 mb-2 flex items-center gap-2">
+                                <i class="fas fa-birthday-cake text-emerald-600"></i> Tranche d'âge
+                            </label>
+                            <select name="age" id="age" class="block w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white text-slate-900">
+                                <option value="">Tous les âges</option>
+                                <option value="3-10" {% if age_filter == '3-10' %}selected{% endif %}>3-10 ans</option>
+                                <option value="11-14" {% if age_filter == '11-14' %}selected{% endif %}>11-14 ans</option>
+                                <option value="15-18" {% if age_filter == '15-18' %}selected{% endif %}>15-18 ans</option>
+                                <option value="19-21" {% if age_filter == '19-21' %}selected{% endif %}>19-21 ans</option>
+                                <option value="22-25" {% if age_filter == '22-25' %}selected{% endif %}>22-25 ans</option>
+                                <option value="26+" {% if age_filter == '26+' %}selected{% endif %}>26+ ans</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="institution" class="block text-sm font-medium text-slate-700 mb-2 flex items-center gap-2">
+                                <i class="fas fa-university text-cyan-600"></i> Institution
+                            </label>
+                            <select name="institution" id="institution" class="block w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white text-slate-900">
+                                <option value="">Toutes les institutions</option>
+                                {% for institution in institutions %}
+                                    <option value="{{ institution }}" {% if institution == institution_filter %}selected{% endif %}>{{ institution }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div>
+                            <label for="year" class="block text-sm font-medium text-slate-700 mb-2 flex items-center gap-2">
+                                <i class="fas fa-calendar-alt text-amber-600"></i> Année des Notes
+                            </label>
+                            <select name="year" id="year" class="block w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white text-slate-900">
+                                <option value="">Toutes les années</option>
+                                {% for year in years %}
+                                    <option value="{{ year }}" {% if year == year_filter %}selected{% endif %}>{{ year }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-span-full flex flex-wrap gap-3 mt-2">
+                            <button type="submit" class="inline-flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg font-medium hover:from-purple-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg">
+                                <i class="fas fa-search"></i> Appliquer les filtres
+                            </button>
+                            <a href="{% url 'elite_dashboard' %}" class="inline-flex items-center gap-2 px-6 py-2 bg-white border-2 border-slate-300 text-slate-700 rounded-lg font-medium hover:bg-slate-50 transition-all">
+                                <i class="fas fa-times"></i> Réinitialiser
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Key Metrics Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="bg-gradient-to-br from-purple-500 to-indigo-600 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-4 text-white">
+        <div class="text-4xl opacity-80">
+            <i class="fas fa-star"></i>
+        </div>
+        <div>
+            <h3 class="text-3xl font-bold">{{ total_elites }}</h3>
+            <p class="text-purple-100 text-sm font-medium uppercase tracking-wider">Total Elites</p>
+        </div>
+    </div>
+    <div class="bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-4 text-white">
+        <div class="text-4xl opacity-80">
+            <i class="fas fa-graduation-cap"></i>
+        </div>
+        <div>
+            <h3 class="text-3xl font-bold">{{ total_elite_notes }}</h3>
+            <p class="text-amber-100 text-sm font-medium uppercase tracking-wider">Total Notes</p>
+        </div>
+    </div>
+    <div class="bg-gradient-to-br from-blue-500 to-cyan-600 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-4 text-white">
+        <div class="text-4xl opacity-80">
+            <i class="fas fa-chart-line"></i>
+        </div>
+        <div>
+            <h3 class="text-3xl font-bold">{{ elite_avg_score }}</h3>
+            <p class="text-blue-100 text-sm font-medium uppercase tracking-wider">Moyenne</p>
+        </div>
+    </div>
+    <div class="bg-gradient-to-br from-slate-600 to-slate-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-4 text-white">
+        <div class="text-4xl opacity-80">
+            <i class="fas fa-archive"></i>
+        </div>
+        <div>
+            <h3 class="text-3xl font-bold">{{ archived_elites_total }}</h3>
+            <p class="text-slate-300 text-sm font-medium uppercase tracking-wider">Archivés</p>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <!-- Gender Distribution -->
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div class="bg-gradient-to-r from-purple-500 to-indigo-500 p-6">
+            <h5 class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="fas fa-venus-mars text-white"></i> Distribution par Genre
             </h5>
         </div>
-        <div class="collapse show" id="filtersCollapse">
-            <div class="card-body">
-                <form method="GET" class="row g-3">
-                    <div class="col-md-3">
-                        <label for="centre" class="form-label">
-                            <i class="fas fa-map-marker-alt text-primary"></i> Centre
-                        </label>
-                        <select name="centre" id="centre" class="form-select">
-                            <option value="">Tous les centres</option>
-                            {% for centre in centres %}
-                                <option value="{{ centre }}" {% if centre == centre_filter %}selected{% endif %}>
-                                    {{ centre }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="age" class="form-label">
-                            <i class="fas fa-birthday-cake text-success"></i> Tranche d'âge
-                        </label>
-                        <select name="age" id="age" class="form-select">
-                            <option value="">Tous les âges</option>
-                            <option value="3-10" {% if age_filter == '3-10' %}selected{% endif %}>3-10 ans</option>
-                            <option value="11-14" {% if age_filter == '11-14' %}selected{% endif %}>11-14 ans</option>
-                            <option value="15-18" {% if age_filter == '15-18' %}selected{% endif %}>15-18 ans</option>
-                            <option value="19-21" {% if age_filter == '19-21' %}selected{% endif %}>19-21 ans</option>
-                            <option value="22-25" {% if age_filter == '22-25' %}selected{% endif %}>22-25 ans</option>
-                            <option value="26+" {% if age_filter == '26+' %}selected{% endif %}>26+ ans</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="institution" class="form-label">
-                            <i class="fas fa-university text-info"></i> Institution
-                        </label>
-                        <select name="institution" id="institution" class="form-select">
-                            <option value="">Toutes les institutions</option>
-                            {% for institution in institutions %}
-                                <option value="{{ institution }}" {% if institution == institution_filter %}selected{% endif %}>
-                                    {{ institution }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="year" class="form-label">
-                            <i class="fas fa-calendar-alt text-warning"></i> Année des Notes
-                        </label>
-                        <select name="year" id="year" class="form-select">
-                            <option value="">Toutes les années</option>
-                            {% for year in years %}
-                                <option value="{{ year }}" {% if year == year_filter %}selected{% endif %}>
-                                    {{ year }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="col-12">
-                        <button type="submit" class="btn btn-warning">
-                            <i class="fas fa-search mr-2"></i> Appliquer les Filtres
-                        </button>
-                        <a href="{% url 'elite_dashboard' %}" class="btn btn-outline-dark ml-2">
-                            <i class="fas fa-times mr-2"></i> Effacer
-                        </a>
-                    </div>
-                </form>
+        <div class="p-6">
+            <div class="relative h-72 w-full">
+                <canvas id="genderChart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Age Distribution -->
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div class="bg-gradient-to-r from-amber-500 to-orange-500 p-6">
+            <h5 class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="fas fa-birthday-cake text-white"></i> Distribution par Âge
+            </h5>
+        </div>
+        <div class="p-6">
+            <div class="relative h-72 w-full">
+                <canvas id="ageChart"></canvas>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Statistics Overview Cards -->
-<div class="row mb-6">
-    <!-- Total Elites Card -->
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body text-center">
-                <div class="d-flex align-items-center justify-content-center mb-3">
-                    <div class="rounded-circle p-3" style="background: rgba(109,40,217,0.1);">
-                        <i class="fas fa-star fa-2x" style="color:#6D28D9"></i>
-                    </div>
-                </div>
-                <h3 class="mb-1" style="color:#6D28D9">{{ total_elites }}</h3>
-                <p class="text-muted mb-0">Total Elites</p>
+<!-- Performance Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <!-- Grade Distribution -->
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div class="bg-gradient-to-r from-blue-500 to-cyan-500 p-6">
+            <h5 class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="fas fa-chart-bar text-white"></i> Distribution des Notes
+            </h5>
+        </div>
+        <div class="p-6">
+            <div class="relative h-72 w-full">
+                <canvas id="gradeChart"></canvas>
             </div>
         </div>
     </div>
-
-    <!-- Total Notes Card -->
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body text-center">
-                <div class="d-flex align-items-center justify-content-center mb-3">
-                    <div class="rounded-circle p-3" style="background: rgba(245,158,11,0.12);">
-                        <i class="fas fa-graduation-cap fa-2x" style="color:#F59E0B"></i>
-                    </div>
-                </div>
-                <h3 class="mb-1" style="color:#F59E0B">{{ total_elite_notes }}</h3>
-                <p class="text-muted mb-0">Total Notes</p>
-            </div>
+    
+    <!-- Decision Distribution -->
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div class="bg-gradient-to-r from-slate-600 to-slate-700 p-6">
+            <h5 class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="fas fa-gavel text-white"></i> Distribution des Décisions
+            </h5>
         </div>
-    </div>
-
-    <!-- Average Score Card -->
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body text-center">
-                <div class="d-flex align-items-center justify-content-center mb-3">
-                    <div class="rounded-circle p-3" style="background: rgba(147,197,253,0.18);">
-                        <i class="fas fa-chart-line fa-2x" style="color:#2563EB"></i>
-                    </div>
-                </div>
-                <h3 class="mb-1" style="color:#2563EB">{{ elite_avg_score }}</h3>
-                <p class="text-muted mb-0">Moyenne Générale</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Archived Elites Card -->
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body text-center">
-                <div class="d-flex align-items-center justify-content-center mb-3">
-                    <div class="rounded-circle p-3" style="background: rgba(107,114,128,0.12);">
-                        <i class="fas fa-archive fa-2x" style="color:#6B7280"></i>
-                    </div>
-                </div>
-                <h3 class="mb-1" style="color:#6B7280">{{ archived_elites_total }}</h3>
-                <p class="text-muted mb-0">Elites Archivés</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Charts Row -->
-<div class="row mb-6">
-    <!-- Gender Distribution Chart -->
-    <div class="col-lg-6 mb-4">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-header bg-white">
-                <h5 class="mb-0" style="color:#6D28D9">
-                    <i class="fas fa-venus-mars mr-2" style="color:#6D28D9"></i>
-                    Distribution par Genre
-                </h5>
-            </div>
-            <div class="card-body">
-                <canvas id="genderChart" height="300"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <!-- Age Distribution Chart -->
-    <div class="col-lg-6 mb-4">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-header bg-white">
-                <h5 class="mb-0" style="color:#F59E0B">
-                    <i class="fas fa-birthday-cake mr-2" style="color:#F59E0B"></i>
-                    Distribution par Âge
-                </h5>
-            </div>
-            <div class="card-body">
-                <canvas id="ageChart" height="300"></canvas>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Performance Charts Row -->
-<div class="row mb-6">
-    <!-- Grade Distribution Chart -->
-    <div class="col-lg-6 mb-4">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-header bg-white">
-                <h5 class="mb-0" style="color:#2563EB">
-                    <i class="fas fa-chart-bar mr-2" style="color:#2563EB"></i>
-                    Distribution des Notes
-                </h5>
-            </div>
-            <div class="card-body">
-                <canvas id="gradeChart" height="300"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <!-- Decision Distribution Chart -->
-    <div class="col-lg-6 mb-4">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-header bg-white">
-                <h5 class="mb-0" style="color:#6B7280">
-                    <i class="fas fa-gavel mr-2" style="color:#6B7280"></i>
-                    Distribution des Décisions
-                </h5>
-            </div>
-            <div class="card-body">
-                <canvas id="decisionChart" height="300"></canvas>
+        <div class="p-6">
+            <div class="relative h-72 w-full">
+                <canvas id="decisionChart"></canvas>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Top Performers Table -->
-<div class="row mb-6">
-    <div class="col-12">
-        <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white">
-                <h5 class="mb-0">
-                    <i class="fas fa-medal text-warning mr-2"></i>
-                    Top 10 Performers Elites
-                </h5>
+<div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
+    <div class="bg-gradient-to-r from-amber-400 to-amber-500 p-6 flex justify-between items-center">
+        <h5 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fas fa-medal text-white"></i> Top 10 Performers Elites
+        </h5>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-slate-800 text-white text-xs uppercase tracking-wider font-bold">
+                    <th class="px-6 py-4">Rang</th>
+                    <th class="px-6 py-4">Nom</th>
+                    <th class="px-6 py-4">Identifiant</th>
+                    <th class="px-6 py-4">Classe</th>
+                    <th class="px-6 py-4">Moyenne</th>
+                    <th class="px-6 py-4">Décision</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                {% for performer in top_elite_performers %}
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4">
+                        <span class="w-8 h-8 flex items-center justify-center rounded-lg bg-amber-100 text-amber-700 font-black text-sm">
+                            {{ forloop.counter }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 font-bold text-slate-900">{{ performer.identifiant.nom }}</td>
+                    <td class="px-6 py-4 text-indigo-600 font-semibold">{{ performer.identifiant.identifiant }}</td>
+                    <td class="px-6 py-4 text-slate-600">{{ performer.identifiant.Class|default:"N/A" }}</td>
+                    <td class="px-6 py-4">
+                        <span class="px-3 py-1 rounded-lg font-bold text-xs {% if performer.moyen >= 16 %}bg-emerald-500 text-white{% elif performer.moyen >= 10 %}bg-indigo-500 text-white{% else %}bg-rose-500 text-white{% endif %}">
+                            {{ performer.moyen|floatformat:2 }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider {% if performer.decision == 'Admis' %}bg-emerald-100 text-emerald-700{% elif performer.decision == 'Repechage' %}bg-amber-100 text-amber-700{% else %}bg-rose-100 text-rose-700{% endif %}">
+                            {{ performer.decision|default:"N/A" }}
+                        </span>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="px-6 py-10 text-center text-slate-400 italic">Aucune donnée disponible</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Regional Distribution -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div class="bg-gradient-to-r from-purple-500 to-purple-600 p-6">
+            <h5 class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="fas fa-map-marker-alt text-white"></i> Distribution par Centre
+            </h5>
+        </div>
+        <div class="p-6">
+            <div class="relative h-72 w-full">
+                <canvas id="centerChart"></canvas>
             </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Rang</th>
-                                <th>Nom</th>
-                                <th>Identifiant</th>
-                                <th>Classe</th>
-                                <th>Moyenne</th>
-                                <th>Décision</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for performer in top_elite_performers %}
-                            <tr>
-                                <td>
-                                    <span class="badge bg-warning text-dark">{{ forloop.counter }}</span>
-                                </td>
-                                <td>{{ performer.identifiant.nom }}</td>
-                                <td>{{ performer.identifiant.identifiant }}</td>
-                                <td>{{ performer.identifiant.Class|default:"N/A" }}</td>
-                                <td>
-                                    <span class="badge bg-{% if performer.moyen >= 16 %}success{% elif performer.moyen >= 10 %}info{% else %}danger{% endif %}">
-                                        {{ performer.moyen|floatformat:2 }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="badge bg-{% if performer.decision == 'Admis' %}success{% elif performer.decision == 'Repechage' %}warning{% else %}danger{% endif %}">
-                                        {{ performer.decision|default:"N/A" }}
-                                    </span>
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="6" class="text-center text-muted">Aucune donnée disponible</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+        </div>
+    </div>
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div class="bg-gradient-to-r from-blue-500 to-indigo-500 p-6">
+            <h5 class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="fas fa-university text-white"></i> Distribution par Institution
+            </h5>
+        </div>
+        <div class="p-6">
+            <div class="relative h-72 w-full">
+                <canvas id="institutionChart"></canvas>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Center and Institution Distribution -->
-<div class="row mb-6">
-    <div class="col-lg-6 mb-4">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-header bg-white">
-                <h5 class="mb-0" style="color:#6D28D9">
-                    <i class="fas fa-map-marker-alt mr-2" style="color:#6D28D9"></i>
-                    Distribution par Centre
-                </h5>
-            </div>
-            <div class="card-body">
-                <canvas id="centerChart" height="300"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-lg-6 mb-4">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-header bg-white">
-                <h5 class="mb-0" style="color:#2563EB">
-                    <i class="fas fa-university mr-2" style="color:#2563EB"></i>
-                    Distribution par Institution
-                </h5>
-            </div>
-            <div class="card-body">
-                <canvas id="institutionChart" height="300"></canvas>
-            </div>
-        </div>
-    </div>
-</div>
-
-{% endblock %}
-
-{% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Gender Distribution Chart
@@ -331,8 +296,8 @@ document.addEventListener('DOMContentLoaded', function() {
             labels: genderLabels,
             datasets: [{
                 data: genderValues,
-                backgroundColor: ['#3B82F6', '#EF4444', '#10B981'],
-                borderWidth: 2,
+                backgroundColor: ['#6366f1', '#ec4899', '#10b981'],
+                borderWidth: 4,
                 borderColor: '#fff'
             }]
         },
@@ -340,9 +305,7 @@ document.addEventListener('DOMContentLoaded', function() {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: {
-                    position: 'bottom'
-                }
+                legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } }
             }
         }
     });
@@ -358,19 +321,14 @@ document.addEventListener('DOMContentLoaded', function() {
             datasets: [{
                 label: 'Nombre d\'Elites',
                 data: Object.values(ageData),
-                backgroundColor: '#10B981',
-                borderColor: '#059669',
-                borderWidth: 1
+                backgroundColor: '#f59e0b',
+                borderRadius: 8
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
+            scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } }
         }
     });
 
@@ -385,19 +343,14 @@ document.addEventListener('DOMContentLoaded', function() {
             datasets: [{
                 label: 'Nombre d\'Elites',
                 data: Object.values(gradeData),
-                backgroundColor: '#3B82F6',
-                borderColor: '#2563EB',
-                borderWidth: 1
+                backgroundColor: '#3b82f6',
+                borderRadius: 8
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
+            scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } }
         }
     });
 
@@ -413,8 +366,8 @@ document.addEventListener('DOMContentLoaded', function() {
             labels: decisionLabels,
             datasets: [{
                 data: decisionValues,
-                backgroundColor: ['#10B981', '#F59E0B', '#EF4444', '#6B7280'],
-                borderWidth: 2,
+                backgroundColor: ['#10b981', '#f59e0b', '#ef4444', '#64748b'],
+                borderWidth: 4,
                 borderColor: '#fff'
             }]
         },
@@ -422,9 +375,7 @@ document.addEventListener('DOMContentLoaded', function() {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: {
-                    position: 'bottom'
-                }
+                legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } }
             }
         }
     });
@@ -436,25 +387,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const centerValues = centerData.map(item => item.count);
     
     new Chart(centerCtx, {
-        type: 'horizontalBar',
+        type: 'bar',
         data: {
             labels: centerLabels,
             datasets: [{
                 label: 'Nombre d\'Elites',
                 data: centerValues,
-                backgroundColor: '#8B5CF6',
-                borderColor: '#7C3AED',
-                borderWidth: 1
+                backgroundColor: '#8b5cf6',
+                borderRadius: 8
             }]
         },
         options: {
+            indexAxis: 'y',
             responsive: true,
             maintainAspectRatio: false,
-            scales: {
-                x: {
-                    beginAtZero: true
-                }
-            }
+            scales: { x: { beginAtZero: true, grid: { display: false } }, y: { grid: { display: false } } }
         }
     });
 
@@ -465,27 +412,24 @@ document.addEventListener('DOMContentLoaded', function() {
     const institutionValues = institutionData.map(item => item.count);
     
     new Chart(institutionCtx, {
-        type: 'horizontalBar',
+        type: 'bar',
         data: {
             labels: institutionLabels,
             datasets: [{
                 label: 'Nombre d\'Elites',
                 data: institutionValues,
-                backgroundColor: '#F59E0B',
-                borderColor: '#D97706',
-                borderWidth: 1
+                backgroundColor: '#f59e0b',
+                borderRadius: 8
             }]
         },
         options: {
+            indexAxis: 'y',
             responsive: true,
             maintainAspectRatio: false,
-            scales: {
-                x: {
-                    beginAtZero: true
-                }
-            }
+            scales: { x: { beginAtZero: true, grid: { display: false } }, y: { grid: { display: false } } }
         }
     });
 });
 </script>
+
 {% endblock %}

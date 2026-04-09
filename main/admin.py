@@ -469,9 +469,29 @@ class InternationalAdmin(admin.ModelAdmin):
 
 
 class CongeAdmin(admin.ModelAdmin):
-    list_display=('identifiant__identifiant','identifiant__nom','identifiant__section','identifiant__travail','raison','statut','date_debut','date_fin','nombre_jours','jours_restants')
+    list_display=('get_identifiant','get_nom','get_section','get_travail','raison','statut','date_debut','date_fin','nombre_jours','jours_restants')
     search_fields=('identifiant__nom','identifiant__identifiant')
     list_filter=('statut','identifiant__centre','identifiant__travail')
+
+    def get_identifiant(self, obj):
+        return obj.identifiant.identifiant if obj.identifiant else 'N/A'
+    get_identifiant.short_description = 'Matricule'
+    get_identifiant.admin_order_field = 'identifiant__identifiant'
+
+    def get_nom(self, obj):
+        return obj.identifiant.nom if obj.identifiant else 'N/A'
+    get_nom.short_description = 'Nom'
+    get_nom.admin_order_field = 'identifiant__nom'
+
+    def get_section(self, obj):
+        return obj.identifiant.get_section_display() if obj.identifiant else 'N/A'
+    get_section.short_description = 'Section'
+    get_section.admin_order_field = 'identifiant__section'
+
+    def get_travail(self, obj):
+        return obj.identifiant.get_travail_display() if obj.identifiant else 'N/A'
+    get_travail.short_description = 'Travail'
+    get_travail.admin_order_field = 'identifiant__travail'
 
 
 
