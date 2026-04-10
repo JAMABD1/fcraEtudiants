@@ -10,3 +10,7 @@ db.sql3
 
 # User-uploaded media (Django MEDIA_ROOT)
 media/
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
