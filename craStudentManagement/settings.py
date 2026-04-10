@@ -49,8 +49,6 @@ INSTALLED_APPS = [
     'tailwind',
     'theme',
     'django_browser_reload',
-    
-
 ]
 
 MIDDLEWARE = [
@@ -94,30 +92,27 @@ INTERNAL_IPS = [
 ]
 
 JAZZMIN_SETTINGS = {
-     
-     "site_title": "FCRA Admin",
-      "site_logo_classes": "img-circle  w-20 h-20",
-       "welcome_sign": "Bienvenu",
-       
-       "copyright": "Jaolaza Abdallah Marcel",
-          # Whether to display the side menu
-     "use_google_fonts_cdn": True,
-    # Whether to show the UI customizer on the sidebar
-    "show_ui_builder": True,
-        "search_model": ["auth.User", "auth.Group"],
-        "topmenu_links": [
-             {"app": "main"},
-                     {"name": "Createur", "url": "http://102.16.39.246:11085/", "new_window": True},
- ],
-  "usermenu_links": [
-        {"name": "Createur", "url": "http://102.16.39.246:11085/", "new_window": True},
-        {"model": "auth.user"}
-    ],
+    "site_title": "FCRA Admin",
+    "site_header": "FCRA",
+    "site_brand": "FCRA",
+    "site_logo_classes": "img-circle elevation-2",
+    "welcome_sign": "Bienvenue",
+    "copyright": "Jaolaza Abdallah Marcel",
+    "use_google_fonts_cdn": True,
+    "show_ui_builder": False,
+    "search_model": ["auth.User", "auth.Group"],
    
+    "usermenu_links": [
+        {"model": "auth.user"},
+    ],
+    # Fixes large empty strip between sidebar and main (AdminLTE grid + 100vw main)
+    "custom_css": "jazzmin/css/admin_layout_fix.css",
 }
 
 LANGUAGE_CODE = 'fr'
 USE_I18N = True
+# Cohesive admin chrome: light top bar + dark sidebar + Bootswatch theme (BS5 / data-bs-theme).
+# Tweak "theme" (flatly, materia, minty, slate, …) via UI builder or here.
 JAZZMIN_UI_TWEAKS = {
     "navbar_small_text": False,
     "footer_small_text": False,
@@ -125,30 +120,30 @@ JAZZMIN_UI_TWEAKS = {
     "brand_small_text": False,
     "brand_colour": "navbar-primary",
     "accent": "accent-primary",
-    "navbar": "navbar-primary navbar-dark",
+    "navbar": "navbar-white navbar-light border-bottom",
     "no_navbar_border": False,
     "navbar_fixed": True,
-    "layout_boxed": False,
+    "layout_boxed": True,
     "footer_fixed": False,
-    "sidebar_fixed": False,
-    "sidebar": "sidebar-light-primary",
+    "sidebar_fixed": True,
+    "sidebar": "sidebar-dark-primary",
     "sidebar_nav_small_text": False,
     "sidebar_disable_expand": False,
-    "sidebar_nav_child_indent": False,
+    "sidebar_nav_child_indent": True,
     "sidebar_nav_compact_style": False,
     "sidebar_nav_legacy_style": False,
     "sidebar_nav_flat_style": False,
     "theme": "lux",
-    "dark_mode_theme": None,
+   
     "button_classes": {
         "primary": "btn-primary",
         "secondary": "btn-outline-secondary",
         "info": "btn-info",
         "warning": "btn-warning",
         "danger": "btn-danger",
-        "success": "btn-success"
+        "success": "btn-success",
     },
-    "actions_sticky_top": True
+    "actions_sticky_top": True,
 }
 
  
