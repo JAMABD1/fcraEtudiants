@@ -1025,3 +1025,20 @@ class International (models.Model):
     def fillier(self):
         return self.international.fillier
 
+
+class HistoriqueSanteEtudiant(models.Model):
+    id=models.AutoField(primary_key=True)
+    identifiant=models.ForeignKey(Etudiant,on_delete=models.CASCADE,null=True,unique=False,verbose_name="Identifiant")
+    date=models.DateField(null=True, blank=True)
+    raison=models.CharField(max_length=100, default='Autre', verbose_name="Raison")
+    observation=models.TextField(null=True, blank=True, verbose_name="Observation / suivi santé")
+    def Image(self):
+        return mark_safe('<img src="%s" width="50" height="50"/>'% (self.identifiant.imageprofile.url))
+    def nom(self):
+        return self.identifiant.nom
+    def date_naissance(self):
+        return self.identifiant.date_naissance
+    def genre(self):
+        return self.identifiant.genre
+    def __str__(self):
+        return self.identifiant.nom

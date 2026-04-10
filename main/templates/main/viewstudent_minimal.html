@@ -152,6 +152,36 @@
     </div>
     {% endif %}
 
+    <!-- Suivi / historique santé -->
+    <div class="bg-white backdrop-blur-xl rounded-3xl p-6 md:p-8 shadow-2xl border border-white/20">
+      <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+        <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center text-white text-lg">
+          🏥
+        </div>
+        Suivi / historique santé
+      </h2>
+      {% if historique_sante_etudiant %}
+      <div class="divide-y divide-slate-200">
+        {% for hs in historique_sante_etudiant %}
+        <div class="py-4 first:pt-0">
+          <div class="flex items-start gap-3">
+            <div class="w-3 h-3 mt-1.5 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full flex-shrink-0"></div>
+            <div class="text-sm text-slate-700 flex-1">
+              <div class="font-semibold text-slate-900">{{ hs.raison|default:"Autre" }}</div>
+              <div class="text-slate-500 mt-0.5">{{ hs.date|date:"d/m/Y"|default:"—" }}</div>
+              {% if hs.observation %}
+              <p class="mt-2 text-slate-600 whitespace-pre-wrap">{{ hs.observation }}</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="text-sm text-slate-500 text-center py-6">Aucun suivi santé enregistré.</p>
+      {% endif %}
+    </div>
+
     <!-- Documents -->
     {% if dossiers %}
     <div class="bg-white backdrop-blur-xl rounded-3xl p-6 md:p-8 shadow-2xl border border-white/20">

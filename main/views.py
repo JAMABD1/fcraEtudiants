@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404
 from .models import Etudiant,Personnel,Jamat,ArchiveJamat,Madrassah,ArchiveMadrassah,Avertissement,Presence,ImageUpload,DossierUpload,Profile,Orphelin,NoteEtudiant,Pension,DossierPension,Paiementpension,Cimitiere,DossierCimitiere,Archive,Elite,NoteElite,Conge,DossierPersonnel
 from django.http import JsonResponse
-from .models import Elite,NoteElite,HistoriqueEtudiant,Universite,Sortant,International, get_center_filter_values
+from .models import Elite,NoteElite,HistoriqueEtudiant,HistoriqueSanteEtudiant,Universite,Sortant,International, get_center_filter_values
 from django.db.models import Q,Count,Avg,Sum
 from django.contrib import messages
 from django.contrib.auth  import authenticate,login as auth_login,logout
@@ -2921,6 +2921,7 @@ def viewStudent(response,etudiantid):
      # Get academic history from HistoriqueEtudiant model
      # This displays the student's academic journey and important events
      historique_etudiant = HistoriqueEtudiant.objects.filter(identifiant=ls).order_by('-date').all()
+     historique_sante_etudiant = HistoriqueSanteEtudiant.objects.filter(identifiant=ls).order_by('-date')
      
      # Prepare chart data for yearly progression
      yearly_data = []
@@ -3007,6 +3008,7 @@ def viewStudent(response,etudiantid):
          'etudiant': ls,
          'new_notes': new_notes,
          'historique_etudiant': historique_etudiant,
+         'historique_sante_etudiant': historique_sante_etudiant,
          'presence_stats': presence,
          'presence_percentage': round(presence_percentage, 1),
          'presence_total': presence_total,
@@ -3183,6 +3185,7 @@ def viewStudentMinimal(request, etudiantid: str):
         # Notes and academic history (same as full view)
         new_notes = NoteEtudiant.objects.filter(identifiant=student).order_by('annee').all()
         historique_etudiant = HistoriqueEtudiant.objects.filter(identifiant=student).order_by('-date').all()
+        historique_sante_etudiant = HistoriqueSanteEtudiant.objects.filter(identifiant=student).order_by('-date')
 
         # Charts data (computed but not necessarily graphed in minimal view)
         years: list[str] = []
@@ -3246,6 +3249,7 @@ def viewStudentMinimal(request, etudiantid: str):
             'age': age_years,
             'new_notes': new_notes,
             'historique_etudiant': historique_etudiant,
+            'historique_sante_etudiant': historique_sante_etudiant,
             'dossiers': dossiers,
             'latest_decision': latest_decision,
             'latest_average': latest_average,

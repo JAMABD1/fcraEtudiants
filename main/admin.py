@@ -4,7 +4,7 @@ from django import forms
 from django.http import HttpRequest
 from .models import Etudiant,Personnel,Jamat,Madrassah,Avertissement,Pension,Paiementpension,DossierPension,Presence,DossierUpload,Profile,ImageUpload,Orphelin,DossierPersonnel,NoteEtudiant
 
-from .models import Cimitiere,DossierCimitiere,HistoriqueEtudiant,Universite,Elite,Sortant,Archive,International,ArchiveJamat,ArchiveMadrassah
+from .models import Cimitiere,DossierCimitiere,HistoriqueEtudiant,HistoriqueSanteEtudiant,Universite,Elite,Sortant,Archive,International,ArchiveJamat,ArchiveMadrassah
 from .models import Conge, CenterAlias, addresschoice, get_centre_choices, get_center_filter_values
 
 from django.contrib.sessions.models import Session
@@ -158,6 +158,11 @@ class HistoriqueEtudiantAdmin(admin.TabularInline):
     search_fields=('nom','date_naissance','genre','date','raison')
     list_filter=('nom','date_naissance','genre','date','raison')
 
+class HistoriqueSanteEtudiantAdmin(admin.TabularInline):
+    model = HistoriqueSanteEtudiant
+    fields = ('date', 'raison', 'observation')
+    extra = 1
+
 class EtudiantAdminForm(forms.ModelForm):
     """Custom form that includes center aliases in the centre dropdown"""
     
@@ -177,7 +182,7 @@ class EtudiantAdminForm(forms.ModelForm):
 
 class EtudiantAdmin(admin.ModelAdmin):
     form = EtudiantAdminForm
-    inlines=[DossierUploadAdmin,NoteEtudiantFAdmin,AverissementFAdmin,HistoriqueEtudiantAdmin]
+    inlines=[DossierUploadAdmin,NoteEtudiantFAdmin,AverissementFAdmin,HistoriqueEtudiantAdmin,HistoriqueSanteEtudiantAdmin]
     list_display=("identifiant","Image","nom","Age","genre","Class","designation","institution","centre","ville","Dossier","telephone","status")
     search_fields=('identifiant','nom')
     list_filter=['identifiant','nom','designation','genre','Class',CentreFilter,'ville','fillier','institution','status']
