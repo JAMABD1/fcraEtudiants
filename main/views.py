@@ -107,9 +107,11 @@ def orphelin_dashboard(response):
     year_filter = response.GET.get('year', '')
     
     # === ORPHAN STATISTICS (Main Focus) ===
-    orphan_student_ids = Orphelin.objects.values_list('identifiant__id', flat=True)
-    orphelins_queryset = Orphelin.objects.all()
-    
+    archived_student_ids = Archive.objects.values_list('archive_id', flat=True)
+    orphelins_base = Orphelin.objects.exclude(identifiant_id__in=archived_student_ids)
+    orphan_student_ids = orphelins_base.values_list('identifiant__id', flat=True)
+    orphelins_queryset = orphelins_base
+
     # Apply filters to orphans
     if centre_filter:
         centre_values = get_center_filter_values(centre_filter)
@@ -122,24 +124,9 @@ def orphelin_dashboard(response):
     if institution_filter:
         orphelins_queryset = orphelins_queryset.filter(identifiant__institution=institution_filter)
     if age_filter:
-        if age_filter == '3-10':
-            start_date, end_date = get_age_range(3, 10)
-            orphelins_queryset = orphelins_queryset.filter(identifiant__date_naissance__range=[start_date, end_date])
-        elif age_filter == '11-14':
-            start_date, end_date = get_age_range(11, 14)
-            orphelins_queryset = orphelins_queryset.filter(identifiant__date_naissance__range=[start_date, end_date])
-        elif age_filter == '15-18':
-            start_date, end_date = get_age_range(15, 18)
-            orphelins_queryset = orphelins_queryset.filter(identifiant__date_naissance__range=[start_date, end_date])
-        elif age_filter == '19-21':
-            start_date, end_date = get_age_range(19, 21)
-            orphelins_queryset = orphelins_queryset.filter(identifiant__date_naissance__range=[start_date, end_date])
-        elif age_filter == '22-25':
-            start_date, end_date = get_age_range(22, 25)
-            orphelins_queryset = orphelins_queryset.filter(identifiant__date_naissance__range=[start_date, end_date])
-        elif age_filter == '26+':
-            end_date = date.today().replace(year=date.today().year - 26)
-            orphelins_queryset = orphelins_queryset.filter(identifiant__date_naissance__lte=end_date)
+        orphelins_queryset = filter_queryset_by_age_band_year(
+            orphelins_queryset, age_filter, 'identifiant__date_naissance'
+        )
     
     total_orphans = orphelins_queryset.count()
     
@@ -216,24 +203,9 @@ def orphelin_dashboard(response):
     if year_filter:
         orphan_notes = orphan_notes.filter(annee=year_filter)
     if age_filter:
-        if age_filter == '3-10':
-            start_date, end_date = get_age_range(3, 10)
-            orphan_notes = orphan_notes.filter(identifiant__date_naissance__range=[start_date, end_date])
-        elif age_filter == '11-14':
-            start_date, end_date = get_age_range(11, 14)
-            orphan_notes = orphan_notes.filter(identifiant__date_naissance__range=[start_date, end_date])
-        elif age_filter == '15-18':
-            start_date, end_date = get_age_range(15, 18)
-            orphan_notes = orphan_notes.filter(identifiant__date_naissance__range=[start_date, end_date])
-        elif age_filter == '19-21':
-            start_date, end_date = get_age_range(19, 21)
-            orphan_notes = orphan_notes.filter(identifiant__date_naissance__range=[start_date, end_date])
-        elif age_filter == '22-25':
-            start_date, end_date = get_age_range(22, 25)
-            orphan_notes = orphan_notes.filter(identifiant__date_naissance__range=[start_date, end_date])
-        elif age_filter == '26+':
-            end_date = date.today().replace(year=date.today().year - 26)
-            orphan_notes = orphan_notes.filter(identifiant__date_naissance__lte=end_date)
+        orphan_notes = filter_queryset_by_age_band_year(
+            orphan_notes, age_filter, 'identifiant__date_naissance'
+        )
     
     total_orphan_notes = orphan_notes.count()
     orphan_avg_score = orphan_notes.aggregate(Avg('moyen'))['moyen__avg'] or 0
@@ -257,10 +229,10 @@ def orphelin_dashboard(response):
     # Top performing orphans
     top_orphan_performers = orphan_notes.order_by('-moyen')[:10]
     
-    # Filter options for dropdowns
-    centres = Orphelin.objects.values_list('identifiant__centre', flat=True).distinct().exclude(identifiant__centre__isnull=True)
-    institutions = Orphelin.objects.values_list('identifiant__institution', flat=True).distinct().exclude(identifiant__institution__isnull=True)
-    statuses = Orphelin.objects.values_list('décedé', flat=True).distinct().exclude(décedé__isnull=True)
+    # Filter options for dropdowns (non-archived élèves only, same as liste orphelins / API)
+    centres = orphelins_base.values_list('identifiant__centre', flat=True).distinct().exclude(identifiant__centre__isnull=True)
+    institutions = orphelins_base.values_list('identifiant__institution', flat=True).distinct().exclude(identifiant__institution__isnull=True)
+    statuses = orphelins_base.values_list('décedé', flat=True).distinct().exclude(décedé__isnull=True)
     years = NoteEtudiant.objects.filter(identifiant__id__in=orphan_student_ids).values_list('annee', flat=True).distinct().exclude(annee__isnull=True).order_by('-annee')
     
     context = {
@@ -545,24 +517,9 @@ def elite_dashboard(response):
     if institution_filter:
         elites_queryset = elites_queryset.filter(identifiant__institution=institution_filter)
     if age_filter:
-        if age_filter == '3-10':
-            start_date, end_date = get_age_range(3, 10)
-            elites_queryset = elites_queryset.filter(identifiant__date_naissance__range=[start_date, end_date])
-        elif age_filter == '11-14':
-            start_date, end_date = get_age_range(11, 14)
-            elites_queryset = elites_queryset.filter(identifiant__date_naissance__range=[start_date, end_date])
-        elif age_filter == '15-18':
-            start_date, end_date = get_age_range(15, 18)
-            elites_queryset = elites_queryset.filter(identifiant__date_naissance__range=[start_date, end_date])
-        elif age_filter == '19-21':
-            start_date, end_date = get_age_range(19, 21)
-            elites_queryset = elites_queryset.filter(identifiant__date_naissance__range=[start_date, end_date])
-        elif age_filter == '22-25':
-            start_date, end_date = get_age_range(22, 25)
-            elites_queryset = elites_queryset.filter(identifiant__date_naissance__range=[start_date, end_date])
-        elif age_filter == '26+':
-            end_date = date.today().replace(year=date.today().year - 26)
-            elites_queryset = elites_queryset.filter(identifiant__date_naissance__lte=end_date)
+        elites_queryset = filter_queryset_by_age_band_year(
+            elites_queryset, age_filter, 'identifiant__date_naissance'
+        )
     
     total_elites = elites_queryset.count()
     archived_elites_total = Archive.objects.filter(archive_type='Elite').count()
@@ -609,24 +566,9 @@ def elite_dashboard(response):
     if year_filter:
         elite_notes = elite_notes.filter(annee=year_filter)
     if age_filter:
-        if age_filter == '3-10':
-            start_date, end_date = get_age_range(3, 10)
-            elite_notes = elite_notes.filter(identifiant__date_naissance__range=[start_date, end_date])
-        elif age_filter == '11-14':
-            start_date, end_date = get_age_range(11, 14)
-            elite_notes = elite_notes.filter(identifiant__date_naissance__range=[start_date, end_date])
-        elif age_filter == '15-18':
-            start_date, end_date = get_age_range(15, 18)
-            elite_notes = elite_notes.filter(identifiant__date_naissance__range=[start_date, end_date])
-        elif age_filter == '19-21':
-            start_date, end_date = get_age_range(19, 21)
-            elite_notes = elite_notes.filter(identifiant__date_naissance__range=[start_date, end_date])
-        elif age_filter == '22-25':
-            start_date, end_date = get_age_range(22, 25)
-            elite_notes = elite_notes.filter(identifiant__date_naissance__range=[start_date, end_date])
-        elif age_filter == '26+':
-            end_date = date.today().replace(year=date.today().year - 26)
-            elite_notes = elite_notes.filter(identifiant__date_naissance__lte=end_date)
+        elite_notes = filter_queryset_by_age_band_year(
+            elite_notes, age_filter, 'identifiant__date_naissance'
+        )
     
     total_elite_notes = elite_notes.count()
     elite_avg_score = elite_notes.aggregate(Avg('moyen'))['moyen__avg'] or 0
@@ -914,24 +856,7 @@ def etudiants_dashboard(response):
     if institution_filter:
         students_queryset = students_queryset.filter(institution=institution_filter)
     if age_filter:
-        if age_filter == '3-10':
-            start_date, end_date = get_age_range(3, 10)
-            students_queryset = students_queryset.filter(date_naissance__range=[start_date, end_date])
-        elif age_filter == '11-14':
-            start_date, end_date = get_age_range(11, 14)
-            students_queryset = students_queryset.filter(date_naissance__range=[start_date, end_date])
-        elif age_filter == '15-18':
-            start_date, end_date = get_age_range(15, 18)
-            students_queryset = students_queryset.filter(date_naissance__range=[start_date, end_date])
-        elif age_filter == '19-21':
-            start_date, end_date = get_age_range(19, 21)
-            students_queryset = students_queryset.filter(date_naissance__range=[start_date, end_date])
-        elif age_filter == '22-25':
-            start_date, end_date = get_age_range(22, 25)
-            students_queryset = students_queryset.filter(date_naissance__range=[start_date, end_date])
-        elif age_filter == '26+':
-            end_date = date.today().replace(year=date.today().year - 26)
-            students_queryset = students_queryset.filter(date_naissance__lte=end_date)
+        students_queryset = filter_queryset_by_age_band_year(students_queryset, age_filter, 'date_naissance')
     
     total_students = students_queryset.count()
     
@@ -981,24 +906,9 @@ def etudiants_dashboard(response):
     if year_filter:
         student_notes = student_notes.filter(annee=year_filter)
     if age_filter:
-        if age_filter == '3-10':
-            start_date, end_date = get_age_range(3, 10)
-            student_notes = student_notes.filter(identifiant__date_naissance__range=[start_date, end_date])
-        elif age_filter == '11-14':
-            start_date, end_date = get_age_range(11, 14)
-            student_notes = student_notes.filter(identifiant__date_naissance__range=[start_date, end_date])
-        elif age_filter == '15-18':
-            start_date, end_date = get_age_range(15, 18)
-            student_notes = student_notes.filter(identifiant__date_naissance__range=[start_date, end_date])
-        elif age_filter == '19-21':
-            start_date, end_date = get_age_range(19, 21)
-            student_notes = student_notes.filter(identifiant__date_naissance__range=[start_date, end_date])
-        elif age_filter == '22-25':
-            start_date, end_date = get_age_range(22, 25)
-            student_notes = student_notes.filter(identifiant__date_naissance__range=[start_date, end_date])
-        elif age_filter == '26+':
-            end_date = date.today().replace(year=date.today().year - 26)
-            student_notes = student_notes.filter(identifiant__date_naissance__lte=end_date)
+        student_notes = filter_queryset_by_age_band_year(
+            student_notes, age_filter, 'identifiant__date_naissance'
+        )
     
     total_student_notes = student_notes.count()
     student_avg_score = student_notes.aggregate(Avg('moyen'))['moyen__avg'] or 0
@@ -1073,6 +983,38 @@ def get_age_range(min_age, max_age):
     end_date = today.replace(year=today.year - min_age)  # Youngest date
     return start_date, end_date
 
+
+def filter_queryset_by_age_band_year(queryset, age_filter, birthdate_field='date_naissance'):
+    """
+    Filter by birth-year bands only, matching api/views.py (OrphelinViewSet / get_statistics_orphelin).
+    birthdate_field: path to DateField, e.g. date_naissance, identifiant__date_naissance,
+    archive__date_naissance, universite__date_naissance, sortant__date_naissance.
+    """
+    if not age_filter:
+        return queryset
+    cy = date.today().year
+    y = f'{birthdate_field}__year'
+    if age_filter == '3-10':
+        return queryset.filter(**{f'{y}__gte': cy - 10, f'{y}__lte': cy - 3})
+    if age_filter == '11-14':
+        return queryset.filter(**{f'{y}__gte': cy - 14, f'{y}__lte': cy - 11})
+    if age_filter == '15-18':
+        return queryset.filter(**{f'{y}__gte': cy - 18, f'{y}__lte': cy - 15})
+    if age_filter == '19-21':
+        return queryset.filter(**{f'{y}__gte': cy - 21, f'{y}__lte': cy - 19})
+    if age_filter == '22-25':
+        return queryset.filter(**{f'{y}__gte': cy - 25, f'{y}__lte': cy - 22})
+    if age_filter == '26+':
+        return queryset.filter(**{f'{y}__lte': cy - 26})
+    if age_filter == '18-21':
+        return queryset.filter(**{f'{y}__gte': cy - 21, f'{y}__lte': cy - 18})
+    if age_filter == '26-30':
+        return queryset.filter(**{f'{y}__gte': cy - 30, f'{y}__lte': cy - 26})
+    if age_filter == '31+':
+        return queryset.filter(**{f'{y}__lte': cy - 31})
+    return queryset
+
+
 @login_required(login_url='loginSingup') 
 @allowed_permisstion(allowed_roles=['Admin','personnel'])
 def student(request):
@@ -1126,24 +1068,7 @@ def student(request):
 
     # Apply age filter based on the categories
     if age_filter:
-        if age_filter == '3-10':
-            start_date, end_date = get_age_range(3, 10)
-            students = students.filter(date_naissance__range=[start_date, end_date])
-        elif age_filter == '11-14':
-            start_date, end_date = get_age_range(11, 14)
-            students = students.filter(date_naissance__range=[start_date, end_date])
-        elif age_filter == '15-18':
-            start_date, end_date = get_age_range(15, 18)
-            students = students.filter(date_naissance__range=[start_date, end_date])
-        elif age_filter == '19-21':
-            start_date, end_date = get_age_range(19, 21)
-            students = students.filter(date_naissance__range=[start_date, end_date])
-        elif age_filter == '22-25':
-            start_date, end_date = get_age_range(22, 25)
-            students = students.filter(date_naissance__range=[start_date, end_date])
-        elif age_filter == '26+':
-            end_date = date.today().replace(year=date.today().year - 26)
-            students = students.filter(date_naissance__lte=end_date)
+        students = filter_queryset_by_age_band_year(students, age_filter, 'date_naissance')
 
     # Calculate statistics
     filtered_count = students.count()
@@ -1298,25 +1223,9 @@ def archived_students(request):
 
     # Age ranges based on student birthdate
     if age_filter:
-        if age_filter == '3-10':
-            start_date, end_date = get_age_range(3, 10)
-            archived_qs = archived_qs.filter(archive__date_naissance__range=[start_date, end_date])
-        elif age_filter == '11-14':
-            start_date, end_date = get_age_range(11, 14)
-            archived_qs = archived_qs.filter(archive__date_naissance__range=[start_date, end_date])
-        elif age_filter == '15-18':
-            start_date, end_date = get_age_range(15, 18)
-            archived_qs = archived_qs.filter(archive__date_naissance__range=[start_date, end_date])
-        elif age_filter == '19-21':
-            start_date, end_date = get_age_range(19, 21)
-            archived_qs = archived_qs.filter(archive__date_naissance__range=[start_date, end_date])
-        elif age_filter == '22-25':
-            start_date, end_date = get_age_range(22, 25)
-            archived_qs = archived_qs.filter(archive__date_naissance__range=[start_date, end_date])
-        elif age_filter == '26+':
-            from datetime import date as _date
-            end_date = _date.today().replace(year=_date.today().year - 26)
-            archived_qs = archived_qs.filter(archive__date_naissance__lte=end_date)
+        archived_qs = filter_queryset_by_age_band_year(
+            archived_qs, age_filter, 'archive__date_naissance'
+        )
 
     # === Archived Statistics ===
     total_archived = archived_qs.count()
@@ -1443,25 +1352,9 @@ def archived_orphelins(request):
 
     # Age ranges based on student birthdate
     if age_filter:
-        if age_filter == '3-10':
-            start_date, end_date = get_age_range(3, 10)
-            archived_orphelins_qs = archived_orphelins_qs.filter(archive__date_naissance__range=[start_date, end_date])
-        elif age_filter == '11-14':
-            start_date, end_date = get_age_range(11, 14)
-            archived_orphelins_qs = archived_orphelins_qs.filter(archive__date_naissance__range=[start_date, end_date])
-        elif age_filter == '15-18':
-            start_date, end_date = get_age_range(15, 18)
-            archived_orphelins_qs = archived_orphelins_qs.filter(archive__date_naissance__range=[start_date, end_date])
-        elif age_filter == '19-21':
-            start_date, end_date = get_age_range(19, 21)
-            archived_orphelins_qs = archived_orphelins_qs.filter(archive__date_naissance__range=[start_date, end_date])
-        elif age_filter == '22-25':
-            start_date, end_date = get_age_range(22, 25)
-            archived_orphelins_qs = archived_orphelins_qs.filter(archive__date_naissance__range=[start_date, end_date])
-        elif age_filter == '26+':
-            from datetime import date as _date
-            end_date = _date.today().replace(year=_date.today().year - 26)
-            archived_orphelins_qs = archived_orphelins_qs.filter(archive__date_naissance__lte=end_date)
+        archived_orphelins_qs = filter_queryset_by_age_band_year(
+            archived_orphelins_qs, age_filter, 'archive__date_naissance'
+        )
 
     # === Archived Orphelins Statistics ===
     total_archived_orphelins = archived_orphelins_qs.count()
@@ -1770,25 +1663,9 @@ def archived_elites(request):
     if raison_filter:
         archived_elites_qs = archived_elites_qs.filter(raison=raison_filter)
     if age_filter:
-        today = date.today()
-        if age_filter == '3-10':
-            start_date, end_date = get_age_range(3, 10)
-            archived_elites_qs = archived_elites_qs.filter(archive__date_naissance__range=[start_date, end_date])
-        elif age_filter == '11-14':
-            start_date, end_date = get_age_range(11, 14)
-            archived_elites_qs = archived_elites_qs.filter(archive__date_naissance__range=[start_date, end_date])
-        elif age_filter == '15-18':
-            start_date, end_date = get_age_range(15, 18)
-            archived_elites_qs = archived_elites_qs.filter(archive__date_naissance__range=[start_date, end_date])
-        elif age_filter == '19-21':
-            start_date, end_date = get_age_range(19, 21)
-            archived_elites_qs = archived_elites_qs.filter(archive__date_naissance__range=[start_date, end_date])
-        elif age_filter == '22-25':
-            start_date, end_date = get_age_range(22, 25)
-            archived_elites_qs = archived_elites_qs.filter(archive__date_naissance__range=[start_date, end_date])
-        elif age_filter == '26+':
-            end_date = date.today().replace(year=date.today().year - 26)
-            archived_elites_qs = archived_elites_qs.filter(archive__date_naissance__lte=end_date)
+        archived_elites_qs = filter_queryset_by_age_band_year(
+            archived_elites_qs, age_filter, 'archive__date_naissance'
+        )
 
     # === Archived Elites Statistics ===
     total_archived_elites = archived_elites_qs.count()
@@ -1903,24 +1780,9 @@ def universite(request):
 
     # Apply age filter based on the categories
     if age_filter:
-        if age_filter == '3-10':
-            start_date, end_date = get_age_range(3, 10)
-            universites = universites.filter(universite__date_naissance__range=[start_date, end_date])
-        elif age_filter == '11-14':
-            start_date, end_date = get_age_range(11, 14)
-            universites = universites.filter(universite__date_naissance__range=[start_date, end_date])
-        elif age_filter == '15-18':
-            start_date, end_date = get_age_range(15, 18)
-            universites = universites.filter(universite__date_naissance__range=[start_date, end_date])
-        elif age_filter == '19-21':
-            start_date, end_date = get_age_range(19, 21)
-            universites = universites.filter(universite__date_naissance__range=[start_date, end_date])
-        elif age_filter == '22-25':
-            start_date, end_date = get_age_range(22, 25)
-            universites = universites.filter(universite__date_naissance__range=[start_date, end_date])
-        elif age_filter == '26+':
-            end_date = date.today().replace(year=date.today().year - 26)
-            universites = universites.filter(universite__date_naissance__lte=end_date)
+        universites = filter_queryset_by_age_band_year(
+            universites, age_filter, 'universite__date_naissance'
+        )
 
     # Calculate statistics
     filtered_count = universites.count()
@@ -2022,18 +1884,9 @@ def universite_dashboard(response):
     if institution_filter:
         universites_queryset = universites_queryset.filter(universite__institution=institution_filter)
     if age_filter:
-        if age_filter == '18-21':
-            start_date, end_date = get_age_range(18, 21)
-            universites_queryset = universites_queryset.filter(universite__date_naissance__range=[start_date, end_date])
-        elif age_filter == '22-25':
-            start_date, end_date = get_age_range(22, 25)
-            universites_queryset = universites_queryset.filter(universite__date_naissance__range=[start_date, end_date])
-        elif age_filter == '26-30':
-            start_date, end_date = get_age_range(26, 30)
-            universites_queryset = universites_queryset.filter(universite__date_naissance__range=[start_date, end_date])
-        elif age_filter == '31+':
-            end_date = date.today().replace(year=date.today().year - 31)
-            universites_queryset = universites_queryset.filter(universite__date_naissance__lte=end_date)
+        universites_queryset = filter_queryset_by_age_band_year(
+            universites_queryset, age_filter, 'universite__date_naissance'
+        )
     
     # Basic counts
     total_universites = universites_queryset.count()
@@ -2521,18 +2374,9 @@ def sortant(request):
 
     # Apply age filter based on the categories
     if age_filter:
-        if age_filter == '18-21':
-            start_date, end_date = get_age_range(18, 21)
-            sortants = sortants.filter(sortant__date_naissance__range=[start_date, end_date])
-        elif age_filter == '22-25':
-            start_date, end_date = get_age_range(22, 25)
-            sortants = sortants.filter(sortant__date_naissance__range=[start_date, end_date])
-        elif age_filter == '26-30':
-            start_date, end_date = get_age_range(26, 30)
-            sortants = sortants.filter(sortant__date_naissance__range=[start_date, end_date])
-        elif age_filter == '31+':
-            end_date = date.today().replace(year=date.today().year - 31)
-            sortants = sortants.filter(sortant__date_naissance__lte=end_date)
+        sortants = filter_queryset_by_age_band_year(
+            sortants, age_filter, 'sortant__date_naissance'
+        )
 
     # Calculate statistics
     filtered_count = sortants.count()
@@ -4406,11 +4250,14 @@ def getGetfillier(response):
 @login_required(login_url='loginSingup') 
 @allowed_permisstion(allowed_roles=['Admin','personnel'])
 def orphelin(request):
+    archived_student_ids = Archive.objects.values_list('archive_id', flat=True)
+    orphelins_base = Orphelin.objects.exclude(identifiant_id__in=archived_student_ids)
+
     # Annotate each orphelin with number of uploaded documents for the associated student
-    orphelins = Orphelin.objects.all().annotate(docs_count=Count('identifiant__dossier', distinct=True))
-    
-    # Store original queryset for statistics
-    original_orphelins = Orphelin.objects.all()
+    orphelins = orphelins_base.annotate(docs_count=Count('identifiant__dossier', distinct=True))
+
+    # Store original queryset for statistics (aligned with chatbot / get_statistics_orphelin)
+    original_orphelins = orphelins_base
     total_orphelins = original_orphelins.count()
     
     # Get the filters from the request
@@ -4423,6 +4270,7 @@ def orphelin(request):
     acte_de_dece = request.GET.get('acte_de_dece', '')  # Death certificate filter
     age_filter = request.GET.get('age', '')
     institution_filter = request.GET.get('institution', '')
+    designation_filter = request.GET.get('designation', '')
 
     # Apply filters
     if search_query:
@@ -4446,6 +4294,9 @@ def orphelin(request):
 
     if institution_filter:
         orphelins = orphelins.filter(identifiant__institution=institution_filter)
+
+    if designation_filter:
+        orphelins = orphelins.filter(identifiant__designation=designation_filter)
 
     if decede_filter:
         orphelins = orphelins.filter(décedé=decede_filter)
@@ -4476,24 +4327,9 @@ def orphelin(request):
     
     # Apply age filter based on the categories
     if age_filter:
-        if age_filter == '3-10':
-            start_date, end_date = get_age_range(3, 10)
-            orphelins = orphelins.filter(identifiant__date_naissance__range=[start_date, end_date])
-        elif age_filter == '11-14':
-            start_date, end_date = get_age_range(11, 14)
-            orphelins = orphelins.filter(identifiant__date_naissance__range=[start_date, end_date])
-        elif age_filter == '15-18':
-            start_date, end_date = get_age_range(15, 18) 
-            orphelins = orphelins.filter(identifiant__date_naissance__range=[start_date, end_date])
-        elif age_filter == '19-21':
-            start_date, end_date = get_age_range(19, 21)
-            orphelins = orphelins.filter(identifiant__date_naissance__range=[start_date, end_date])
-        elif age_filter == '22-25':
-            start_date, end_date = get_age_range(22, 25)
-            orphelins = orphelins.filter(identifiant__date_naissance__range=[start_date, end_date])
-        elif age_filter == '26+':
-            end_date = date.today().replace(year=date.today().year - 26)
-            orphelins = orphelins.filter(identifiant__date_naissance__lte=end_date)
+        orphelins = filter_queryset_by_age_band_year(
+            orphelins, age_filter, 'identifiant__date_naissance'
+        )
 
     # Calculate statistics
     filtered_count = orphelins.count()
@@ -4544,13 +4380,19 @@ def orphelin(request):
     page = request.GET.get('page', 1)
     paginated_orphelins = paginator.get_page(page)
 
-    # Get distinct values for filter options from orphelins only
-    centres = Orphelin.objects.values_list('identifiant__centre', flat=True).distinct().exclude(identifiant__centre__isnull=True).exclude(identifiant__centre='')
-    filliers = Orphelin.objects.values_list('identifiant__fillier', flat=True).distinct().exclude(identifiant__fillier__isnull=True).exclude(identifiant__fillier='')
-    classes = Orphelin.objects.values_list('identifiant__Class', flat=True).distinct().exclude(identifiant__Class__isnull=True).exclude(identifiant__Class='')
-    institutions = Orphelin.objects.values_list('identifiant__institution', flat=True).distinct().exclude(identifiant__institution__isnull=True).exclude(identifiant__institution='')
-    decedes = Orphelin.objects.values_list('décedé', flat=True).distinct().exclude(décedé__isnull=True).exclude(décedé='')
-    
+    # Get distinct values for filter options (non-archived students only)
+    centres = orphelins_base.values_list('identifiant__centre', flat=True).distinct().exclude(identifiant__centre__isnull=True).exclude(identifiant__centre='')
+    filliers = orphelins_base.values_list('identifiant__fillier', flat=True).distinct().exclude(identifiant__fillier__isnull=True).exclude(identifiant__fillier='')
+    classes = orphelins_base.values_list('identifiant__Class', flat=True).distinct().exclude(identifiant__Class__isnull=True).exclude(identifiant__Class='')
+    institutions = orphelins_base.values_list('identifiant__institution', flat=True).distinct().exclude(identifiant__institution__isnull=True).exclude(identifiant__institution='')
+    decedes = orphelins_base.values_list('décedé', flat=True).distinct().exclude(décedé__isnull=True).exclude(décedé='')
+    designations = (
+        orphelins_base.values_list('identifiant__designation', flat=True)
+        .distinct()
+        .exclude(identifiant__designation__isnull=True)
+        .exclude(identifiant__designation='')
+    )
+
     datahead=["identifiant","Décedé","Date de Naissance","Genre","Nom mère","Nom du Père","telephone_mere","institution","ville","fillier","Class","Centre","Date d' entree","Date de Sortie"]
 
     context = {
@@ -4569,10 +4411,12 @@ def orphelin(request):
         'acte_de_dece': acte_de_dece,
         'age_filter': age_filter,
         'institution_filter': institution_filter,
+        'designation_filter': designation_filter,
         'centres': centres,
         'filliers': filliers,
         'classes': classes,
         'institutions': institutions,
+        'designations': designations,
         'datahead': datahead,
         'decedes': decedes,
         'lenght_doc': lenght_doc,
@@ -4621,12 +4465,14 @@ def orphelin(request):
             'age_filter': age_filter,
             'institution_filter': institution_filter,
             'acte_de_dece': acte_de_dece,
+            'designation_filter': designation_filter,
             # Filter options for dropdowns
             'centres': centres,
             'filliers': filliers,
             'classes': classes,
             'institutions': institutions,
             'decedes': decedes,
+            'designations': designations,
         }
         return render(request, "main/components/TableOrphelin.html", ajax_context)
    

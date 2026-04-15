@@ -425,7 +425,7 @@ def get_statistics_etudiant(identifiant: str = None, nom: str = None, genre: str
         'par_age': par_age,
     }
 
-def get_statistics_orphelin(nom: str = None, decede: str = None, centre: str = None, Class: str = None, genre: str = None, institution: str = None, age: str = None, acte_de_dece: str = None, fillier: str = None):
+def get_statistics_orphelin(nom: str = None, decede: str = None, centre: str = None, Class: str = None, genre: str = None, institution: str = None, age: str = None, acte_de_dece: str = None, fillier: str = None, **kwargs):
     """Calcul des statistiques pour les orphelins avec filtrage croisé."""
     archived_etudiant_ids = Archive.objects.values_list('archive_id', flat=True)
     active_orphelins = Orphelin.objects.exclude(identifiant_id__in=archived_etudiant_ids)
@@ -455,6 +455,16 @@ def get_statistics_orphelin(nom: str = None, decede: str = None, centre: str = N
             active_orphelins = active_orphelins.filter(identifiant__date_naissance__year__gte=current_year-25, identifiant__date_naissance__year__lte=current_year-22)
         elif age == '26+':
             active_orphelins = active_orphelins.filter(identifiant__date_naissance__year__lte=current_year-26)
+        elif '-' in age:
+            try:
+                start_age, end_age = map(int, age.split('-'))
+                if start_age <= end_age:
+                    active_orphelins = active_orphelins.filter(
+                        identifiant__date_naissance__year__gte=current_year - end_age,
+                        identifiant__date_naissance__year__lte=current_year - start_age,
+                    )
+            except ValueError:
+                pass
 
     if acte_de_dece:
         if acte_de_dece == 'complete':
@@ -471,9 +481,15 @@ def get_statistics_orphelin(nom: str = None, decede: str = None, centre: str = N
         'total': active_orphelins.count(),
         'decedes': active_orphelins.filter(décedé__in=["mère", "père", "Orphelin père et mère"]).count(),
         'vivants': active_orphelins.filter(décedé="non orphelin").count(),
-        'par_centre': list(active_orphelins.values('identifiant__centre').annotate(count=Count('identifiant__centre'))),
-        'par_genre': list(active_orphelins.values('identifiant__genre').annotate(count=Count('identifiant__genre'))),
+        'par_centre': list(active_orphelins.values('identifiant__centre').annotate(count=Count('identifiant__centre')).order_by('-count')),
+        'par_genre': list(active_orphelins.values('identifiant__genre').annotate(count=Count('identifiant__genre')).order_by('-count')),
         'par_age': par_age_orphelins,
+        'par_classe': list(active_orphelins.values('identifiant__Class').annotate(count=Count('identifiant__Class')).order_by('-count')),
+        'par_fillier': list(active_orphelins.values('identifiant__fillier').annotate(count=Count('identifiant__fillier')).order_by('-count')),
+        'par_institution': list(active_orphelins.values('identifiant__institution').annotate(count=Count('identifiant__institution')).order_by('-count')),
+        'par_designation': list(active_orphelins.values('identifiant__designation').annotate(count=Count('identifiant__designation')).order_by('-count')),
+        'par_ville': list(active_orphelins.values('identifiant__ville').annotate(count=Count('identifiant__ville')).order_by('-count')),
+        'par_decede': list(active_orphelins.values('décedé').annotate(count=Count('décedé')).order_by('-count')),
     }
 
 def get_statistics_jamat(nom: str = None, centre: str = None, genre: str = None, age: int = None, conversion_year: int = None, adress: str = None, travail: str = None):
@@ -524,7 +540,7 @@ def get_statistics(category: str = None, **kwargs):
         
     return stats
 
-model = genai.GenerativeModel('gemini-2.0-flash',
+model = genai.GenerativeModel('gemini-2.5-flash',
  tools=[
      get_etudiants, get_orphelins, get_jamats, get_internationaux, 
      get_universites, get_elites, get_statistics,
@@ -547,7 +563,7 @@ Outils disponibles :
 - 'get_internationaux', 'get_universites', 'get_elites' : Recherche spécifique.
 - 'get_statistics' : Statistiques globales. Supporte le filtrage croisé via des arguments.
 - 'get_statistics_etudiant' : Statistiques spécifiques pour les étudiants. Supporte TOUS les filtres.
-- 'get_statistics_orphelin' : Statistiques pour les orphelins.
+- 'get_statistics_orphelin' : Statistiques pour les orphelins. Retourne total, decedes, vivants, par_age, par_centre, par_genre, par_classe, par_fillier, par_institution, par_designation, par_ville, par_decede. Paramètre age : tranches fixes (3-10, 11-14, …) ou plage exacte 'min-max' (ex. 5 à 10 ans → age='5-10'). N'utilise pas 3-10 si l'utilisateur demande une autre plage.
 - 'get_statistics_jamat' : Statistiques pour les jamats.
 
 CONSIGNES CRUCIALES :
