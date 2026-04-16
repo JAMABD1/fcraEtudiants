@@ -1746,10 +1746,12 @@ def archived_elites(request):
 @login_required(login_url='loginSingup') 
 @allowed_permisstion(allowed_roles=['Admin','personnel'])
 def universite(request):
-    universites = Universite.objects.all()
+    # Exclure les étudiants archivés (type Université) pour aligner avec les stats API
+    archived_universite_ids = Archive.objects.filter(archive_type='Université').values_list('archive_id', flat=True)
+    universites = Universite.objects.exclude(universite_id__in=archived_universite_ids)
     
     # Store original queryset for statistics
-    original_universites = Universite.objects.all()
+    original_universites = Universite.objects.exclude(universite_id__in=archived_universite_ids)
     total_universites = original_universites.count()
 
     # Get the filters
@@ -1874,7 +1876,9 @@ def universite_dashboard(response):
     year_filter = response.GET.get('year', '')
     
     # === UNIVERSITÉ STATISTICS (Main Focus) ===
-    universites_queryset = Universite.objects.all()
+    # Exclure les étudiants archivés (type Université) pour aligner avec les stats API
+    archived_universite_ids = Archive.objects.filter(archive_type='Université').values_list('archive_id', flat=True)
+    universites_queryset = Universite.objects.exclude(universite_id__in=archived_universite_ids)
     
     # Apply filters to universites
     if centre_filter:
