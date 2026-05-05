@@ -170,10 +170,10 @@ def _normalize_designation_filter(designation: str) -> str:
     return designation_map.get(d, designation)
 
 
-def get_etudiants(identifiant: str = None, nom: str = None, genre: str = None, designation: str = None, institution: str = None, ville: str = None, Class: str = None, centre: str = None, status: str = None, telephone: str = None, nom_pere: str = None, nom_mere: str = None, telephone_mere: str = None, date_entre_after: str = None, date_entre_before: str = None, limit: int = None, order_by: str = None):
+def get_etudiants(identifiant: str = None, nom: str = None, genre: str = None, designation: str = None, fillier: str = None, institution: str = None, ville: str = None, Class: str = None, centre: str = None, status: str = None, telephone: str = None, nom_pere: str = None, nom_mere: str = None, telephone_mere: str = None, date_entre_after: str = None, date_entre_before: str = None, limit: int = None, order_by: str = None):
     """
     Récupère les informations sur les étudiants depuis l'API externe.
-    Permet de filtrer par identifiant, nom, genre, désignation, institution, ville, classe, centre, statut, téléphone, parents ou date d'entrée.
+    Permet de filtrer par identifiant, nom, genre, désignation, filière (fillier), institution, ville, classe, centre, statut, téléphone, parents ou date d'entrée.
     
     Arguments additionnels :
     - limit: Nombre maximum de résultats à retourner (ex: 5).
@@ -233,6 +233,9 @@ def get_etudiants(identifiant: str = None, nom: str = None, genre: str = None, d
         designation = designation_map.get(d, designation)
         params['designation'] = designation
 
+    if fillier:
+        params['fillier__icontains'] = fillier
+
     if identifiant: params['identifiant'] = identifiant
     if nom: params['nom__icontains'] = nom
     if institution: params['institution'] = institution
@@ -261,8 +264,8 @@ def get_etudiants(identifiant: str = None, nom: str = None, genre: str = None, d
 
         # Filtrage pour correspondre à l'interface principale (main.views)
         # On exclut par défaut les "Sortant" sauf si un statut spécifique est demandé
-        # OU si on fait une recherche spécifique par nom ou identifiant
-        if not status and not nom and not identifiant:
+        # OU si on fait une recherche spécifique par nom, identifiant ou fillier
+        if not status and not nom and not identifiant and not fillier:
             data = [s for s in data if s.get('status') in ['Actif', 'Inactif']]
             
         # Tri manuel si demandé (car l'API externe peut ne pas le supporter directement)
@@ -587,7 +590,7 @@ def calculate_age_distribution(birthdates, current_year):
             age_groups["26+ ans"] += 1
     return [{"age": group, "count": count} for group, count in age_groups.items()]
 
-def get_statistics_etudiant(identifiant: str = None, nom: str = None, genre: str = None, designation: str = None, institution: str = None, ville: str = None, Class: str = None, centre: str = None, status: str = None, telephone: str = None, nom_pere: str = None, nom_mere: str = None, telephone_mere: str = None, date_entre_after: str = None, date_entre_before: str = None, age: str = None):
+def get_statistics_etudiant(identifiant: str = None, nom: str = None, genre: str = None, designation: str = None, fillier: str = None, institution: str = None, ville: str = None, Class: str = None, centre: str = None, status: str = None, telephone: str = None, nom_pere: str = None, nom_mere: str = None, telephone_mere: str = None, date_entre_after: str = None, date_entre_before: str = None, age: str = None):
     """
     Calcul des statistiques pour les étudiants avec filtrage croisé complet.
     
@@ -610,6 +613,7 @@ def get_statistics_etudiant(identifiant: str = None, nom: str = None, genre: str
     if nom: active_etudiants = active_etudiants.filter(nom__icontains=nom)
     if genre: active_etudiants = active_etudiants.filter(genre=genre)
     if designation: active_etudiants = active_etudiants.filter(designation=designation)
+    if fillier: active_etudiants = active_etudiants.filter(fillier=fillier)
     if institution: active_etudiants = active_etudiants.filter(institution=institution)
     if ville: active_etudiants = active_etudiants.filter(ville=ville)
     if Class: active_etudiants = active_etudiants.filter(Class=Class)
@@ -1032,7 +1036,7 @@ def get_statistics(category: str = None, **kwargs):
     
     if category in ['etudiants', 'sortants', 'all', None]:
         # On ne passe que les kwargs valides pour les étudiants
-        etudiant_kwargs = {k: v for k, v in kwargs.items() if k in ['identifiant', 'nom', 'genre', 'designation', 'institution', 'ville', 'Class', 'centre', 'status', 'telephone', 'nom_pere', 'nom_mere', 'telephone_mere', 'date_entre_after', 'date_entre_before', 'age']}
+        etudiant_kwargs = {k: v for k, v in kwargs.items() if k in ['identifiant', 'nom', 'genre', 'designation', 'fillier', 'institution', 'ville', 'Class', 'centre', 'status', 'telephone', 'nom_pere', 'nom_mere', 'telephone_mere', 'date_entre_after', 'date_entre_before', 'age']}
         stats['etudiants'] = get_statistics_etudiant(**etudiant_kwargs)
         
     if category in ['orphelins', 'all', None]:
@@ -1079,7 +1083,7 @@ PROCESSUS DE RÉPONSE OBLIGATOIRE :
 5. GRAPHIQUES (Si applicable) : Si tu présentes des statistiques, génère un graphique Chart.js APRÈS le texte.
 
 Outils disponibles :
-- 'get_etudiants', 'get_orphelins' : Recherche détaillée. Supportent désormais 'limit' (int) et 'order_by' (str, ex: '-date_entre', 'nom').
+- 'get_etudiants', 'get_orphelins' : Recherche détaillée. Supportent désormais 'limit' (int) et 'order_by' (str, ex: '-date_entre', 'nom'). get_etudiants supporte aussi fillier (recherche par filière).
 - 'get_internationaux' : Filtres pays, nom/identifiant étudiant, genre, centre, institution, ville, Class, désignation, statut, parents, fillier, dates de départ, durée de séjour (duree_sejour ou min/max), limit, order_by (ex. '-international__date_entre').
 - 'get_universites' : Filtres email (exact ou email_icontains), champs étudiant universite__ (nom, identifiant, genre, centre, institution, ville, Class, fillier, désignation, téléphone, statut, parents), dates entrée/sortie/naissance, limit, order_by.
 - 'get_statistics' : Statistiques globales. Utilise category ('etudiants', 'sortants', 'orphelins', 'internationaux', 'international', 'universites', 'universite', 'all' ou None) + filtres croisés.
@@ -1342,3 +1346,44 @@ def delete_conversation(request, conversation_id):
 def delete_all_conversations(request):
     ChatConversation.objects.filter(user=request.user).delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_statistics_api(request):
+    """
+    API endpoint pour récupérer les statistiques.
+    
+    Exemples :
+    - GET /api/statistics/?category=etudiants
+    - GET /api/statistics/?category=etudiants&centre=Andakana&genre=F
+    - GET /api/statistics/?category=all
+    - GET /api/statistics/?category=etudiants&age=15-18
+    
+    Retourne les statistiques pour étudiants, orphelins, internationaux, universités
+    selon la catégorie demandée (ou toutes si category=all ou non spécifié).
+    Supporte tous les filtres croisés définis dans les fonctions get_statistics_*.
+    """
+    category = request.query_params.get('category')
+    
+    # Convertir QueryDict en dict normal pour passer aux fonctions de stats
+    kwargs = {}
+    for key, value_list in request.query_params.lists():
+        if key.lower() != 'category' and value_list:
+            # Prendre la première valeur (la plupart des filtres sont simples)
+            kwargs[key] = value_list[0]
+    
+    try:
+        stats = get_statistics(category=category, **kwargs)
+        return Response({
+            'success': True,
+            'category': category or 'all',
+            'data': stats,
+            'filters_applied': kwargs
+        })
+    except Exception as e:
+        return Response({
+            'success': False,
+            'error': str(e),
+            'category': category
+        }, status=status.HTTP_400_BAD_REQUEST)
