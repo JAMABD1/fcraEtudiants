@@ -66,6 +66,55 @@ class HasDossierFilter(admin.SimpleListFilter):
         if self.value() == 'no':
             return queryset.filter(identifiant__dossier__isnull=True)
         return queryset
+
+
+class EtudiantHasNoteFilter(SimpleListFilter):
+    title = 'A une note ?'
+    parameter_name = 'has_note'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('yes', 'Oui'),
+            ('no', 'Non'),
+        )
+
+    def queryset(self, request, queryset):
+        year = request.GET.get('note_annee')
+        if self.value() == 'yes':
+            if year:
+                return queryset
+            return queryset.filter(notesetudiant__isnull=False).distinct()
+        if self.value() == 'no':
+            if year:
+                return queryset.exclude(notesetudiant__annee=year).distinct()
+            return queryset.filter(notesetudiant__isnull=True)
+        return queryset
+
+
+class EtudiantNoteYearFilter(SimpleListFilter):
+    title = 'Année de la note'
+    parameter_name = 'note_annee'
+
+    def lookups(self, request, model_admin):
+        years = (
+            NoteEtudiant.objects
+            .values_list('annee', flat=True)
+            .distinct()
+            .exclude(annee__isnull=True)
+            .exclude(annee='')
+            .order_by('-annee')
+        )
+        return [(year, year) for year in years if year]
+
+    def queryset(self, request, queryset):
+        year = self.value()
+        if not year:
+            return queryset
+        if request.GET.get('has_note') == 'no':
+            return queryset
+        return queryset.filter(notesetudiant__annee=year).distinct()
+
+
 class ActeDeDecesFilter(admin.SimpleListFilter):
     title = "Acte de Décès"
     parameter_name = "has_acte"
@@ -119,12 +168,61 @@ class CentreFilter(admin.SimpleListFilter):
                 return queryset.filter(centre__in=filter_values)
         return queryset
 
+class OrphelinHasNoteFilter(SimpleListFilter):
+    title = 'A une note ?'
+    parameter_name = 'has_note'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('yes', 'Oui'),
+            ('no', 'Non'),
+        )
+
+    def queryset(self, request, queryset):
+        year = request.GET.get('note_annee')
+        if self.value() == 'yes':
+            if year:
+                return queryset
+            return queryset.filter(identifiant__notesetudiant__isnull=False).distinct()
+        if self.value() == 'no':
+            if year:
+                return queryset.exclude(identifiant__notesetudiant__annee=year).distinct()
+            return queryset.filter(identifiant__notesetudiant__isnull=True)
+        return queryset
+
+
+class OrphelinNoteYearFilter(SimpleListFilter):
+    title = 'Année de la note'
+    parameter_name = 'note_annee'
+
+    def lookups(self, request, model_admin):
+        years = (
+            NoteEtudiant.objects
+            .filter(identifiant__orphelin__isnull=False)
+            .values_list('annee', flat=True)
+            .distinct()
+            .exclude(annee__isnull=True)
+            .exclude(annee='')
+            .order_by('-annee')
+        )
+        return [(year, year) for year in years if year]
+
+    def queryset(self, request, queryset):
+        year = self.value()
+        if not year:
+            return queryset
+        if request.GET.get('has_note') == 'no':
+            return queryset
+        return queryset.filter(identifiant__notesetudiant__annee=year).distinct()
+
+
 class orphelinAdmin(admin.ModelAdmin):
     list_display=('identifiant','Image','nom','genre','décedé','acte_de_décé','get_dossiers','date_naissance','telephone_mere','institution','ville','Class','centre')
     search_fields=('identifiant','identifiant__nom' )
     list_filter=('identifiant','identifiant__Class','identifiant__institution',
                  'identifiant__centre','identifiant__fillier','identifiant__ville',
-                 'identifiant__genre','décedé',HasDossierFilter,ActeDeDecesFilter
+                 'identifiant__genre','décedé',HasDossierFilter,ActeDeDecesFilter,
+                 OrphelinHasNoteFilter,OrphelinNoteYearFilter
                  )
     def get_dossiers(self, obj):
         if obj.identifiant:
@@ -185,7 +283,7 @@ class EtudiantAdmin(admin.ModelAdmin):
     inlines=[DossierUploadAdmin,NoteEtudiantFAdmin,AverissementFAdmin,HistoriqueEtudiantAdmin,HistoriqueSanteEtudiantAdmin]
     list_display=("identifiant","Image","nom","Age","genre","Class","designation","institution","centre","ville","Dossier","telephone","status")
     search_fields=('identifiant','nom')
-    list_filter=['identifiant','nom','designation','genre','Class',CentreFilter,'ville','fillier','institution','status']
+    list_filter=['identifiant','nom','designation','genre','Class',CentreFilter,'ville','fillier','institution','status',EtudiantHasNoteFilter,EtudiantNoteYearFilter]
     readonly_fields = ( 'image_preview',)
     fieldsets = (
         ("Personal Information", {
