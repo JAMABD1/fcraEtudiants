@@ -3146,6 +3146,7 @@ def notes(request):
     decision_filter = request.GET.get('decision', '')
     note_range_filter = request.GET.get('note_range', '')
     annee_filter = request.GET.get('annee', '')
+    centre_filter = request.GET.get('centre', '')
 
     # Apply the filters
     if search_query:
@@ -3169,6 +3170,13 @@ def notes(request):
 
     if annee_filter:
         notes = notes.filter(annee=annee_filter)
+
+    if centre_filter:
+        centre_values = get_center_filter_values(centre_filter)
+        if centre_values:
+            notes = notes.filter(identifiant__centre__in=centre_values)
+        else:
+            notes = notes.filter(identifiant__centre=centre_filter)
 
     # Calculate statistics
     filtered_count = notes.count()
@@ -3220,6 +3228,7 @@ def notes(request):
     institutions = NoteEtudiant.objects.values_list('identifiant__institution', flat=True).distinct()
     decisions = NoteEtudiant.objects.values_list('decision', flat=True).distinct()
     annees = NoteEtudiant.objects.values_list('annee', flat=True).distinct()
+    centres = NoteEtudiant.objects.values_list('identifiant__centre', flat=True).distinct().exclude(identifiant__centre__isnull=True)
 
     # Context to pass to the template
     context = {
@@ -3231,11 +3240,13 @@ def notes(request):
         'decision_filter': decision_filter,
         'note_range': note_range_filter,
         'annee_filter': annee_filter,
+        'centre_filter': centre_filter,
         'classes': classes,
         'designations': designations,
         'institutions': institutions,
         'decisions': decisions,
         'annees': annees,
+        'centres': centres,
         "datahead": datahead,
         # Statistics
         'total_notes': total_notes,

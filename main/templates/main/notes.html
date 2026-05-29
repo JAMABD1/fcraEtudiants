@@ -105,6 +105,19 @@
                     </select>
                 </div>
 
+                <!-- Filter by Centre -->
+                <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                        <i class="fas fa-map-marker-alt text-slate-400"></i> Centre
+                    </label>
+                    <select name="centre" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-slate-700 appearance-none">
+                        <option value="">Tous les centres</option>
+                        {% for centre in centres %}
+                            <option value="{{ centre }}" {% if centre == centre_filter %}selected{% endif %}>{{ centre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
                 <!-- Submit button -->
                 <div class="flex items-end">
                     <button type="submit" class="w-full px-6 py-2.5 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2">
@@ -119,10 +132,10 @@
     <div class="flex justify-between mt-10">
         <div class="flex items-center gap-2">
             {% if notes.has_previous %}
-                <a href="?page=1&search={{ search_query }}&class={{ class_filter }}&designation={{ designation_filter }}&institution={{ institution_filter }}&decision={{ decision_filter }}&note_range={{ note_range }}&annee={{ annee_filter }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-indigo-600 hover:border-indigo-100 transition-all shadow-sm">
+                <a href="?page=1&search={{ search_query }}&class={{ class_filter }}&designation={{ designation_filter }}&institution={{ institution_filter }}&decision={{ decision_filter }}&note_range={{ note_range }}&annee={{ annee_filter }}&centre={{ centre_filter }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-indigo-600 hover:border-indigo-100 transition-all shadow-sm">
                     <i class="fas fa-angle-double-left"></i>
                 </a>
-                <a href="?page={{ notes.previous_page_number }}&search={{ search_query }}&class={{ class_filter }}&designation={{ designation_filter }}&institution={{ institution_filter }}&decision={{ decision_filter }}&note_range={{ note_range }}&annee={{ annee_filter }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-indigo-600 hover:border-indigo-100 transition-all shadow-sm">
+                <a href="?page={{ notes.previous_page_number }}&search={{ search_query }}&class={{ class_filter }}&designation={{ designation_filter }}&institution={{ institution_filter }}&decision={{ decision_filter }}&note_range={{ note_range }}&annee={{ annee_filter }}&centre={{ centre_filter }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-indigo-600 hover:border-indigo-100 transition-all shadow-sm">
                     <i class="fas fa-angle-left"></i>
                 </a>
             {% endif %}
@@ -132,10 +145,10 @@
             </div>
 
             {% if notes.has_next %}
-                <a href="?page={{ notes.next_page_number }}&search={{ search_query }}&class={{ class_filter }}&designation={{ designation_filter }}&institution={{ institution_filter }}&decision={{ decision_filter }}&note_range={{ note_range }}&annee={{ annee_filter }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-indigo-600 hover:border-indigo-100 transition-all shadow-sm">
+                <a href="?page={{ notes.next_page_number }}&search={{ search_query }}&class={{ class_filter }}&designation={{ designation_filter }}&institution={{ institution_filter }}&decision={{ decision_filter }}&note_range={{ note_range }}&annee={{ annee_filter }}&centre={{ centre_filter }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-indigo-600 hover:border-indigo-100 transition-all shadow-sm">
                     <i class="fas fa-angle-right"></i>
                 </a>
-                <a href="?page={{ notes.paginator.num_pages }}&search={{ search_query }}&class={{ class_filter }}&designation={{ designation_filter }}&institution={{ institution_filter }}&decision={{ decision_filter }}&note_range={{ note_range }}&annee={{ annee_filter }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-indigo-600 hover:border-indigo-100 transition-all shadow-sm">
+                <a href="?page={{ notes.paginator.num_pages }}&search={{ search_query }}&class={{ class_filter }}&designation={{ designation_filter }}&institution={{ institution_filter }}&decision={{ decision_filter }}&note_range={{ note_range }}&annee={{ annee_filter }}&centre={{ centre_filter }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-indigo-600 hover:border-indigo-100 transition-all shadow-sm">
                     <i class="fas fa-angle-double-right"></i>
                 </a>
             {% endif %}
