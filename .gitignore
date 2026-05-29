@@ -12,5 +12,6 @@ db.sql3
 media/
 # Python
 __pycache__/
+*.pyc
 *.py[cod]
 *$py.class

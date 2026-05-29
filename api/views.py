@@ -1349,7 +1349,6 @@ def delete_all_conversations(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def get_statistics_api(request):
     """
     API endpoint pour récupérer les statistiques.
