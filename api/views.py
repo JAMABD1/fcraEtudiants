@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from django.shortcuts import render, get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Count, Q
-from main.models import Etudiant, Orphelin, International, Universite, Archive
+from main.models import Etudiant, Orphelin, International, Universite, Archive, get_center_filter_values
 from .models import ChatConversation, ChatMessage
 from .serializers import (
     EtudiantSerializer, OrphelinSerializer, InternationalSerializer,
@@ -22,6 +22,28 @@ GEMINI_API_KEY = config('GEMINI_API_KEY')
 genai.configure(api_key=GEMINI_API_KEY)
 
 EXTERNAL_API_BASE = "http://102.16.39.246:11802"
+
+
+def _filter_queryset_by_centre(queryset, centre, field_name="centre"):
+    """Filter a queryset by centre, including CenterAlias values (same as admin)."""
+    if not centre:
+        return queryset
+    values = get_center_filter_values(centre)
+    if not values:
+        return queryset
+    return queryset.filter(**{f"{field_name}__in": values})
+
+
+def _centre_request_params(centre, param_name="centre"):
+    """Build HTTP query params for centre filter with alias expansion."""
+    if not centre:
+        return {}
+    values = get_center_filter_values(centre)
+    if not values:
+        return {}
+    if len(values) == 1:
+        return {param_name: values[0]}
+    return {f"{param_name}__in": ",".join(values)}
 
 
 def _unwrap_list_response(data):
@@ -240,7 +262,8 @@ def get_etudiants(identifiant: str = None, nom: str = None, genre: str = None, d
     if nom: params['nom__icontains'] = nom
     if institution: params['institution'] = institution
     if ville: params['ville'] = ville
-    if centre: params['centre'] = centre
+    if centre:
+        params.update(_centre_request_params(centre, "centre"))
     if status: params['status'] = status
     if telephone: params['telephone'] = telephone
     if nom_pere: params['nom_pere__icontains'] = nom_pere
@@ -336,7 +359,8 @@ def get_orphelins(nom: str = None, decede: str = None, centre: str = None, Class
         params['décedé'] = decede
 
     if nom: params['identifiant__nom__icontains'] = nom
-    if centre: params['identifiant__centre'] = centre
+    if centre:
+        params.update(_centre_request_params(centre, "identifiant__centre"))
     if institution: params['identifiant__institution'] = institution
     if age: params['age'] = age
     if acte_de_dece: params['acte_de_dece'] = acte_de_dece
@@ -421,7 +445,7 @@ def get_internationaux(
     if genre:
         params["international__genre"] = _normalize_genre_filter(genre)
     if centre:
-        params["international__centre"] = centre
+        params.update(_centre_request_params(centre, "international__centre"))
     if institution:
         params["international__institution"] = institution
     if ville:
@@ -518,7 +542,7 @@ def get_universites(
     if genre:
         params["universite__genre"] = _normalize_genre_filter(genre)
     if centre:
-        params["universite__centre"] = centre
+        params.update(_centre_request_params(centre, "universite__centre"))
     if institution:
         params["universite__institution"] = institution
     if ville:
@@ -617,7 +641,8 @@ def get_statistics_etudiant(identifiant: str = None, nom: str = None, genre: str
     if institution: active_etudiants = active_etudiants.filter(institution=institution)
     if ville: active_etudiants = active_etudiants.filter(ville=ville)
     if Class: active_etudiants = active_etudiants.filter(Class=Class)
-    if centre: active_etudiants = active_etudiants.filter(centre=centre)
+    if centre:
+        active_etudiants = _filter_queryset_by_centre(active_etudiants, centre, "centre")
     if telephone: active_etudiants = active_etudiants.filter(telephone=telephone)
     if nom_pere: active_etudiants = active_etudiants.filter(nom_pere__icontains=nom_pere)
     if nom_mere: active_etudiants = active_etudiants.filter(nom_mere__icontains=nom_mere)
@@ -690,7 +715,8 @@ def get_statistics_orphelin(nom: str = None, decede: str = None, centre: str = N
     # Application des filtres
     if nom: active_orphelins = active_orphelins.filter(identifiant__nom__icontains=nom)
     if decede: active_orphelins = active_orphelins.filter(décedé=decede)
-    if centre: active_orphelins = active_orphelins.filter(identifiant__centre=centre)
+    if centre:
+        active_orphelins = _filter_queryset_by_centre(active_orphelins, centre, "identifiant__centre")
     if Class: active_orphelins = active_orphelins.filter(identifiant__Class=Class)
     if genre: active_orphelins = active_orphelins.filter(identifiant__genre=genre)
     if institution: active_orphelins = active_orphelins.filter(identifiant__institution=institution)
@@ -836,7 +862,7 @@ def get_statistics_international(
     if genre:
         qs = qs.filter(international__genre=_normalize_genre_filter(genre))
     if centre:
-        qs = qs.filter(international__centre=centre)
+        qs = _filter_queryset_by_centre(qs, centre, "international__centre")
     if institution:
         qs = qs.filter(international__institution=institution)
     if ville:
@@ -952,7 +978,7 @@ def get_statistics_universite(
     if genre:
         qs = qs.filter(universite__genre=_normalize_genre_filter(genre))
     if centre:
-        qs = qs.filter(universite__centre=centre)
+        qs = _filter_queryset_by_centre(qs, centre, "universite__centre")
     if institution:
         qs = qs.filter(universite__institution=institution)
     if ville:
@@ -1131,7 +1157,7 @@ class EtudiantViewSet(viewsets.ReadOnlyModelViewSet):
         'institution': ['exact'],
         'ville': ['exact'],
         'Class': ['exact'],
-        'centre': ['exact'],
+        'centre': ['in'],
         'status': ['exact'],
         'telephone': ['exact'],
         'nom_pere': ['exact', 'icontains'],
@@ -1141,6 +1167,13 @@ class EtudiantViewSet(viewsets.ReadOnlyModelViewSet):
     }
     search_fields = ['nom']
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        centre = self.request.query_params.get('centre')
+        if centre and not self.request.query_params.get('centre__in'):
+            queryset = _filter_queryset_by_centre(queryset, centre, 'centre')
+        return queryset
+
 class OrphelinViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Orphelin.objects.all()
     serializer_class = OrphelinSerializer
@@ -1148,7 +1181,7 @@ class OrphelinViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_fields = {
         'décedé': ['exact'],
         'identifiant__nom': ['exact', 'icontains'],
-        'identifiant__centre': ['exact'],
+        'identifiant__centre': ['in'],
         'identifiant__Class': ['exact'],
         'identifiant__genre': ['exact'],
         'identifiant__institution': ['exact'],
@@ -1158,7 +1191,10 @@ class OrphelinViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        
+        centre = self.request.query_params.get('identifiant__centre')
+        if centre and not self.request.query_params.get('identifiant__centre__in'):
+            queryset = _filter_queryset_by_centre(queryset, centre, 'identifiant__centre')
+
         # Filtrage par âge (tranches ou formats flexibles)
         age_range = self.request.query_params.get('age')
         if age_range:
@@ -1215,7 +1251,7 @@ class InternationalViewSet(viewsets.ReadOnlyModelViewSet):
         'international__identifiant': ['exact'],
         'international__nom': ['exact', 'icontains'],
         'international__genre': ['exact'],
-        'international__centre': ['exact'],
+        'international__centre': ['in'],
         'international__institution': ['exact'],
         'international__ville': ['exact'],
         'international__Class': ['exact'],
@@ -1226,6 +1262,13 @@ class InternationalViewSet(viewsets.ReadOnlyModelViewSet):
     }
     search_fields = ['international__nom', 'international__identifiant']
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        centre = self.request.query_params.get('international__centre')
+        if centre and not self.request.query_params.get('international__centre__in'):
+            queryset = _filter_queryset_by_centre(queryset, centre, 'international__centre')
+        return queryset
+
 class UniversiteViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Universite.objects.all()
     serializer_class = UniversiteSerializer
@@ -1235,7 +1278,7 @@ class UniversiteViewSet(viewsets.ReadOnlyModelViewSet):
         'universite__identifiant': ['exact'],
         'universite__nom': ['exact'],
         'universite__genre': ['exact'],
-        'universite__centre': ['exact'],
+        'universite__centre': ['in'],
         'universite__institution': ['exact'],
         'universite__ville': ['exact'],
         'universite__Class': ['exact'],
@@ -1248,6 +1291,13 @@ class UniversiteViewSet(viewsets.ReadOnlyModelViewSet):
         'universite__date_naissance': ['exact', 'gte', 'lte'],
     }
     search_fields = ['email', 'universite__nom', 'universite__identifiant']
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        centre = self.request.query_params.get('universite__centre')
+        if centre and not self.request.query_params.get('universite__centre__in'):
+            queryset = _filter_queryset_by_centre(queryset, centre, 'universite__centre')
+        return queryset
 
 def chatbot_view(request):
     """
@@ -1346,6 +1396,20 @@ def delete_conversation(request, conversation_id):
 def delete_all_conversations(request):
     ChatConversation.objects.filter(user=request.user).delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_gemini_key(request):
+    """
+    Retourne la clé API Gemini de manière sécurisée pour les utilisateurs authentifiés.
+    """
+    if not GEMINI_API_KEY:
+        return Response(
+            {'error': 'GEMINI_API_KEY manquante dans la configuration serveur.'},
+            status=status.HTTP_503_SERVICE_UNAVAILABLE,
+        )
+    return Response({'key': GEMINI_API_KEY})
 
 
 @api_view(['GET'])

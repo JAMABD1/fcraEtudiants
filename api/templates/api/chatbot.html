@@ -118,10 +118,10 @@
             <div class="max-w-4xl mx-auto">
                 <div class="relative group">
                     <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-[2.2rem] blur opacity-10 group-focus-within:opacity-20 transition duration-500"></div>
-                    <div class="relative flex items-center gap-2 bg-white border border-gray-200 rounded-[2rem] p-3 shadow-xl focus-within:border-blue-400 transition-all">
+                    <div class="relative flex flex-col sm:flex-row sm:items-end gap-2 bg-white border border-gray-200 rounded-[2rem] p-3 shadow-xl focus-within:border-blue-400 transition-all">
                         <!-- Sélecteur de catégorie -->
-                        <div class="pl-2">
-                            <select id="category-select" class="bg-gray-50 border border-gray-200 text-gray-700 text-xs rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 outline-none transition-all cursor-pointer hover:bg-gray-100">
+                        <div class="pl-1 sm:pl-2 flex-shrink-0">
+                            <select id="category-select" class="bg-gray-50 border border-gray-200 text-gray-700 text-xs rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full sm:w-auto p-2.5 outline-none transition-all cursor-pointer hover:bg-gray-100">
                                 <option value="etudiants" selected>Étudiants</option>
                                 <option value="sortants">Sortants</option>
                                 <option value="orphelins">Orphelins</option>
@@ -129,7 +129,7 @@
                                 <option value="internationaux">Internationaux</option>
                             </select>
                         </div>
-                        <div class="flex-1 relative">
+                        <div class="flex-1 relative min-w-0 w-full">
                             <textarea 
                                 id="chat-input"
                                 rows="1"
@@ -137,11 +137,11 @@
                                 class="w-full bg-transparent border-none focus:ring-0 py-3 px-4 resize-none text-gray-700 text-[15px] max-h-48"
                             ></textarea>
                         </div>
-                        <div class="flex items-center gap-2 pb-1 pr-1">
-                            <button class="p-3 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-2xl transition-all" title="Joindre un fichier">
-                                <i class="fas fa-paperclip text-lg"></i>
+                        <div class="flex items-center gap-1 sm:gap-2 pb-1 pr-1 flex-shrink-0 self-end">
+                            <button type="button" id="live-talk-btn" class="p-3 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-2xl transition-all border border-red-100 bg-red-50/50" title="Conversation vocale en direct">
+                                <i class="fas fa-microphone text-lg"></i>
                             </button>
-                            <button id="send-btn" class="bg-blue-600 hover:bg-blue-700 text-white w-12 h-12 rounded-2xl shadow-lg transition-all transform active:scale-95 flex items-center justify-center">
+                            <button type="button" id="send-btn" class="bg-blue-600 hover:bg-blue-700 text-white w-12 h-12 rounded-2xl shadow-lg transition-all transform active:scale-95 flex items-center justify-center flex-shrink-0" title="Envoyer">
                                 <i class="fas fa-paper-plane"></i>
                             </button>
                         </div>
@@ -155,8 +155,1064 @@
     </div>
 </div>
 
+<!-- Modal de Conversation Vocale en Direct -->
+<div id="live-talk-modal" class="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden transition-all duration-300 opacity-0">
+    <div class="bg-white/95 backdrop-blur-lg rounded-3xl w-full max-w-2xl shadow-2xl border border-white/20 flex flex-col relative transform scale-95 transition-all duration-300 max-h-[92vh] overflow-hidden">
+        <!-- En-tête -->
+        <div class="flex items-start justify-between gap-4 px-6 pt-6 pb-4 border-b border-gray-100">
+            <div class="min-w-0">
+                <h3 class="text-xl font-bold text-gray-900 tracking-tight">Conversation Vocale</h3>
+                <p class="text-sm text-gray-500 mt-1">Votre discussion s'affiche ici et dans le fil principal.</p>
+            </div>
+            <button id="close-live-talk-btn" class="text-gray-400 hover:text-gray-600 transition-colors w-10 h-10 rounded-full hover:bg-gray-100 flex items-center justify-center flex-shrink-0" title="Fermer">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Visualiseur + statut -->
+        <div class="px-6 py-4 flex items-center gap-5 border-b border-gray-50 bg-gradient-to-r from-blue-50/40 to-indigo-50/30">
+            <div class="relative w-20 h-20 flex items-center justify-center flex-shrink-0">
+                <div id="visualizer-pulse-1" class="absolute inset-0 rounded-full bg-blue-500/10 animate-ping" style="animation-duration: 3s;"></div>
+                <div id="visualizer-pulse-2" class="absolute inset-2 rounded-full bg-blue-500/15 animate-ping" style="animation-duration: 2s;"></div>
+                <canvas id="live-audio-canvas" class="w-20 h-20 rounded-full z-10 bg-gradient-to-tr from-blue-50 to-indigo-50 shadow-inner border border-blue-100/50"></canvas>
+                <div id="visualizer-center-icon" class="absolute w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-lg shadow-blue-200 z-20 transition-all duration-300">
+                    <i class="fas fa-microphone text-sm"></i>
+                </div>
+            </div>
+            <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                    <span id="live-status-dot" class="w-2.5 h-2.5 rounded-full bg-gray-400 animate-pulse flex-shrink-0"></span>
+                    <span id="live-status-text" class="text-xs font-bold text-gray-600 uppercase tracking-wider">Connexion...</span>
+                </div>
+                <p id="live-error-text" class="text-xs text-red-600 hidden"></p>
+                <div id="live-tool-indicator" class="mt-2 flex items-center gap-2 hidden">
+                    <span class="w-3.5 h-3.5 border-2 border-blue-200 border-t-blue-600 rounded-full animate-spin"></span>
+                    <span id="live-tool-text" class="text-xs font-semibold text-blue-700">Recherche des données...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fil de conversation vocal -->
+        <div id="live-conversation-log" class="flex-1 overflow-y-auto px-4 py-5 md:px-6 space-y-4 min-h-[220px] bg-[#f8f9fa] scroll-smooth">
+            <div id="live-conversation-empty" class="flex flex-col items-center justify-center text-center py-10 px-4">
+                <div class="w-12 h-12 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center mb-3">
+                    <i class="fas fa-comments text-lg"></i>
+                </div>
+                <p class="text-sm font-medium text-gray-600">La transcription apparaît ici en temps réel</p>
+                <p class="text-xs text-gray-400 mt-1">Parlez ou écoutez — chaque message est ajouté au fil de discussion.</p>
+            </div>
+        </div>
+
+        <!-- Contrôles -->
+        <div class="px-6 py-5 border-t border-gray-100 bg-white flex items-center justify-center gap-5">
+            <button id="mute-mic-btn" class="w-14 h-14 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 flex items-center justify-center transition-all shadow-md transform active:scale-95" title="Couper le micro">
+                <i class="fas fa-microphone text-xl"></i>
+            </button>
+            <button id="stop-live-talk-btn" class="w-16 h-16 rounded-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center transition-all shadow-lg shadow-red-200 transform active:scale-95" title="Arrêter la conversation">
+                <i class="fas fa-phone-slash text-2xl"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
 <script>
     let currentConversationId = null;
+
+    // === CONFIGURATION DE LA CONVERSATION VOCALE EN DIRECT (GEMINI LIVE API) ===
+    let liveTalkSocket = null;
+    let audioContext = null;
+    let microphoneStream = null;
+    let scriptProcessor = null;
+    let isMuted = false;
+    let nextPlayTime = 0;
+    let audioQueue = [];
+    let isPlayingAudio = false;
+    let micAnalyser = null;
+    let speakerAnalyser = null;
+    let visualizerId = null;
+    let speechRecognition = null;
+    let liveSessionReady = false;
+    let isLiveTalkClosing = false;
+    let liveMicEnabled = false;
+    let silentGainNode = null;
+    const LIVE_MODEL = 'models/gemini-2.5-flash-native-audio-preview-12-2025';
+
+    const liveTalkBtn = document.getElementById('live-talk-btn');
+    const liveTalkModal = document.getElementById('live-talk-modal');
+    const closeLiveTalkBtn = document.getElementById('close-live-talk-btn');
+    const stopLiveTalkBtn = document.getElementById('stop-live-talk-btn');
+    const muteMicBtn = document.getElementById('mute-mic-btn');
+    const liveStatusDot = document.getElementById('live-status-dot');
+    const liveStatusText = document.getElementById('live-status-text');
+    const liveErrorText = document.getElementById('live-error-text');
+    const liveToolIndicator = document.getElementById('live-tool-indicator');
+    const liveToolText = document.getElementById('live-tool-text');
+    const liveConversationLog = document.getElementById('live-conversation-log');
+    const liveConversationEmpty = document.getElementById('live-conversation-empty');
+    const liveAudioCanvas = document.getElementById('live-audio-canvas');
+
+    let pendingUserText = '';
+    let pendingAiText = '';
+    let currentUserBubbleTextEl = null;
+    let currentAiBubbleTextEl = null;
+
+    function escapeLiveHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    function hideLiveConversationEmpty() {
+        if (liveConversationEmpty) liveConversationEmpty.classList.add('hidden');
+    }
+
+    function scrollLiveConversation() {
+        if (!liveConversationLog) return;
+        liveConversationLog.scrollTop = liveConversationLog.scrollHeight;
+    }
+
+    function clearLiveConversationLog() {
+        pendingUserText = '';
+        pendingAiText = '';
+        currentUserBubbleTextEl = null;
+        currentAiBubbleTextEl = null;
+        if (!liveConversationLog) return;
+        liveConversationLog.querySelectorAll('.live-msg-bubble').forEach(el => el.remove());
+        if (liveConversationEmpty) liveConversationEmpty.classList.remove('hidden');
+    }
+
+    function liveStreamingSuffix(role) {
+        const color = role === 'user' ? 'bg-white/80' : 'bg-blue-400';
+        return `<span class="live-typing-dot inline-block w-1.5 h-1.5 ml-1 ${color} rounded-full animate-pulse align-middle"></span>`;
+    }
+
+    function createLiveBubble(role, text, isStreaming = false) {
+        hideLiveConversationEmpty();
+        const isUser = role === 'user';
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const safeText = escapeLiveHtml(text || '…');
+        const streamingClass = isStreaming ? 'live-streaming' : '';
+        const suffix = isStreaming ? liveStreamingSuffix(role) : '';
+
+        const html = isUser ? `
+            <div class="live-msg-bubble flex gap-3 max-w-full ml-auto flex-row-reverse animate-message-in ${streamingClass}" data-role="user">
+                <div class="w-8 h-8 rounded-xl bg-gray-900 flex-shrink-0 flex items-center justify-center text-white text-[10px] shadow-sm">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="flex flex-col gap-1 items-end max-w-[88%] min-w-0">
+                    <div class="live-msg-content bg-gray-900 text-white px-4 py-3 rounded-2xl rounded-tr-sm shadow-md text-sm leading-relaxed break-words">${safeText}${suffix}</div>
+                    <span class="text-[10px] font-medium text-gray-400 mr-1">Vous • ${time}</span>
+                </div>
+            </div>
+        ` : `
+            <div class="live-msg-bubble flex gap-3 max-w-full animate-message-in group ${streamingClass}" data-role="assistant">
+                <div class="w-8 h-8 rounded-xl bg-blue-600 flex-shrink-0 flex items-center justify-center text-white shadow-sm">
+                    <i class="fas fa-robot text-[10px]"></i>
+                </div>
+                <div class="flex flex-col gap-1 max-w-[88%] min-w-0">
+                    <div class="live-msg-content bg-white border border-gray-100 px-4 py-3 rounded-2xl rounded-tl-sm shadow-sm text-gray-800 text-sm leading-relaxed break-words">${safeText}${suffix}</div>
+                    <span class="text-[10px] font-medium text-gray-400 ml-1">Assistant • ${time}</span>
+                </div>
+            </div>
+        `;
+
+        liveConversationLog.insertAdjacentHTML('beforeend', html);
+        const bubble = liveConversationLog.lastElementChild;
+        const textEl = bubble.querySelector('.live-msg-content');
+        scrollLiveConversation();
+        return textEl;
+    }
+
+    function updateLiveStreamingBubble(role, text) {
+        const trimmed = (text || '').trim();
+        if (!trimmed) return;
+
+        if (role === 'user') {
+            pendingUserText = trimmed;
+            if (!currentUserBubbleTextEl) {
+                currentUserBubbleTextEl = createLiveBubble('user', trimmed, true);
+            } else {
+                currentUserBubbleTextEl.innerHTML = escapeLiveHtml(trimmed) + liveStreamingSuffix('user');
+            }
+        } else {
+            pendingAiText = trimmed;
+            if (!currentAiBubbleTextEl) {
+                currentAiBubbleTextEl = createLiveBubble('assistant', trimmed, true);
+            } else {
+                currentAiBubbleTextEl.innerHTML = escapeLiveHtml(trimmed) + liveStreamingSuffix('assistant');
+            }
+        }
+        scrollLiveConversation();
+    }
+
+    function appendToLiveStreamingBubble(role, chunk) {
+        if (!chunk) return;
+        if (role === 'user') {
+            pendingUserText = (pendingUserText + chunk).trim();
+            updateLiveStreamingBubble('user', pendingUserText);
+        } else {
+            pendingAiText += chunk;
+            updateLiveStreamingBubble('assistant', pendingAiText);
+        }
+    }
+
+    function finalizeLiveBubble(role, syncToMain = true) {
+        const isUser = role === 'user';
+        const text = (isUser ? pendingUserText : pendingAiText).trim();
+        const textEl = isUser ? currentUserBubbleTextEl : currentAiBubbleTextEl;
+
+        if (textEl && text) {
+            textEl.innerHTML = escapeLiveHtml(text);
+            textEl.closest('.live-msg-bubble')?.classList.remove('live-streaming');
+        } else if (text && !textEl) {
+            createLiveBubble(isUser ? 'user' : 'assistant', text, false);
+        }
+
+        if (syncToMain && text) {
+            addMessage(text, isUser);
+        }
+
+        if (isUser) {
+            pendingUserText = '';
+            currentUserBubbleTextEl = null;
+        } else {
+            pendingAiText = '';
+            currentAiBubbleTextEl = null;
+        }
+        scrollLiveConversation();
+    }
+
+    function finalizeAllLiveBubbles(syncToMain = true) {
+        if (pendingUserText.trim()) finalizeLiveBubble('user', syncToMain);
+        if (pendingAiText.trim()) finalizeLiveBubble('assistant', syncToMain);
+    }
+
+    function clearLiveStreamingBubble(role) {
+        const textEl = role === 'user' ? currentUserBubbleTextEl : currentAiBubbleTextEl;
+        if (textEl) {
+            textEl.closest('.live-msg-bubble')?.remove();
+        }
+        if (role === 'user') {
+            pendingUserText = '';
+            currentUserBubbleTextEl = null;
+        } else {
+            pendingAiText = '';
+            currentAiBubbleTextEl = null;
+        }
+    }
+
+    function showLiveError(message) {
+        if (!liveErrorText) return;
+        liveErrorText.textContent = message;
+        liveErrorText.classList.remove('hidden');
+        liveStatusDot.className = 'w-3 h-3 rounded-full bg-red-500';
+        liveStatusText.innerText = 'Erreur';
+    }
+
+    function clearLiveError() {
+        if (!liveErrorText) return;
+        liveErrorText.textContent = '';
+        liveErrorText.classList.add('hidden');
+    }
+
+    function cleanupLiveTalkResources() {
+        liveSessionReady = false;
+        liveMicEnabled = false;
+
+        if (liveTalkSocket) {
+            liveTalkSocket.onclose = null;
+            liveTalkSocket.onerror = null;
+            liveTalkSocket.onmessage = null;
+            if (liveTalkSocket.readyState === WebSocket.OPEN || liveTalkSocket.readyState === WebSocket.CONNECTING) {
+                liveTalkSocket.close();
+            }
+            liveTalkSocket = null;
+        }
+
+        if (microphoneStream) {
+            microphoneStream.getTracks().forEach(track => track.stop());
+            microphoneStream = null;
+        }
+
+        if (scriptProcessor) {
+            scriptProcessor.disconnect();
+            scriptProcessor.onaudioprocess = null;
+            scriptProcessor = null;
+        }
+
+        if (silentGainNode) {
+            silentGainNode.disconnect();
+            silentGainNode = null;
+        }
+
+        if (visualizerId) {
+            cancelAnimationFrame(visualizerId);
+            visualizerId = null;
+        }
+
+        if (audioContext) {
+            audioContext.close().catch(() => {});
+            audioContext = null;
+        }
+
+        if (speechRecognition) {
+            try { speechRecognition.stop(); } catch (e) {}
+            speechRecognition = null;
+        }
+
+        audioQueue = [];
+        isPlayingAudio = false;
+        nextPlayTime = 0;
+        micAnalyser = null;
+        speakerAnalyser = null;
+    }
+
+    function hideLiveTalkModal() {
+        liveTalkModal.classList.add('opacity-0');
+        liveTalkModal.querySelector('div').classList.add('scale-95');
+        setTimeout(() => {
+            liveTalkModal.classList.add('hidden');
+        }, 300);
+    }
+
+    // Définition des outils pour Gemini Live API
+    const toolsConfig = [
+        {
+            "functionDeclarations": [
+                {
+                    "name": "get_etudiants",
+                    "description": "Recherche et liste les étudiants actifs. Permet de filtrer par nom, identifiant, genre, centre, classe (Class), fillier, designation, status, etc.",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "nom": { "type": "string", "description": "Nom de l'étudiant" },
+                            "identifiant": { "type": "string", "description": "Identifiant unique de l'étudiant" },
+                            "centre": { "type": "string", "description": "Centre d'hébergement (ex: Andakana, Madrassah, Jamat)" },
+                            "genre": { "type": "string", "description": "Genre (M ou F)" },
+                            "Class": { "type": "string", "description": "Classe/niveau d'études" },
+                            "fillier": { "type": "string", "description": "Filière d'études" },
+                            "designation": { "type": "string", "description": "Désignation (ex: Primaire, Secondaire, Universitaire)" },
+                            "status": { "type": "string", "description": "Statut de l'étudiant" },
+                            "limit": { "type": "integer", "description": "Nombre maximum de résultats à retourner" }
+                        }
+                    }
+                },
+                {
+                    "name": "get_orphelins",
+                    "description": "Recherche et liste les orphelins. Permet de filtrer par nom, centre, genre, age, classe, etc.",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "nom": { "type": "string", "description": "Nom de l'orphelin" },
+                            "centre": { "type": "string", "description": "Centre d'hébergement" },
+                            "genre": { "type": "string", "description": "Genre (M ou F)" },
+                            "Class": { "type": "string", "description": "Classe" },
+                            "limit": { "type": "integer", "description": "Nombre maximum de résultats" }
+                        }
+                    }
+                },
+                {
+                    "name": "get_internationaux",
+                    "description": "Recherche et liste les étudiants internationaux.",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "pays": { "type": "string", "description": "Pays de séjour (ex: Inde, France)" },
+                            "limit": { "type": "integer", "description": "Nombre maximum de résultats" }
+                        }
+                    }
+                },
+                {
+                    "name": "get_universites",
+                    "description": "Recherche et liste les étudiants universitaires.",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "email": { "type": "string", "description": "Email universitaire" },
+                            "limit": { "type": "integer", "description": "Nombre maximum de résultats" }
+                        }
+                    }
+                },
+                {
+                    "name": "get_statistics",
+                    "description": "Obtient des statistiques globales ou par catégorie (etudiants, orphelins, internationaux, universites, sortants).",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "category": { "type": "string", "description": "Catégorie de statistiques (etudiants, orphelins, internationaux, universites, sortants, all)" },
+                            "centre": { "type": "string", "description": "Filtrer par centre" }
+                        }
+                    }
+                },
+                {
+                    "name": "get_statistics_etudiant",
+                    "description": "Obtient des statistiques détaillées sur les étudiants.",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "centre": { "type": "string", "description": "Filtrer par centre" }
+                        }
+                    }
+                },
+                {
+                    "name": "get_statistics_orphelin",
+                    "description": "Obtient des statistiques détaillées sur les orphelins.",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "centre": { "type": "string", "description": "Filtrer par centre" }
+                        }
+                    }
+                },
+                {
+                    "name": "get_statistics_international",
+                    "description": "Obtient des statistiques détaillées sur les étudiants internationaux.",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "centre": { "type": "string", "description": "Filtrer par centre" }
+                        }
+                    }
+                },
+                {
+                    "name": "get_statistics_universite",
+                    "description": "Obtient des statistiques détaillées sur les étudiants universitaires.",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "centre": { "type": "string", "description": "Filtrer par centre" }
+                        }
+                    }
+                }
+            ]
+        }
+    ];
+
+    // Mappage et exécution des outils via l'API REST existante
+    async function executeTool(name, args) {
+        let url = '';
+        const params = new URLSearchParams();
+        
+        for (const [key, val] of Object.entries(args || {})) {
+            if (val !== undefined && val !== null) {
+                params.append(key, val);
+            }
+        }
+
+        if (name === 'get_etudiants') {
+            url = `/api/etudiants/?${params.toString()}`;
+        } else if (name === 'get_orphelins') {
+            url = `/api/orphelins/?${params.toString()}`;
+        } else if (name === 'get_internationaux') {
+            url = `/api/international/?${params.toString()}`;
+        } else if (name === 'get_universites') {
+            url = `/api/universite/?${params.toString()}`;
+        } else if (name === 'get_statistics') {
+            url = `/api/statistics/?${params.toString()}`;
+        } else if (name === 'get_statistics_etudiant') {
+            params.append('category', 'etudiants');
+            url = `/api/statistics/?${params.toString()}`;
+        } else if (name === 'get_statistics_orphelin') {
+            params.append('category', 'orphelins');
+            url = `/api/statistics/?${params.toString()}`;
+        } else if (name === 'get_statistics_international') {
+            params.append('category', 'internationaux');
+            url = `/api/statistics/?${params.toString()}`;
+        } else if (name === 'get_statistics_universite') {
+            params.append('category', 'universites');
+            url = `/api/statistics/?${params.toString()}`;
+        } else {
+            throw new Error(`Outil inconnu : ${name}`);
+        }
+
+        const response = await fetch(url, {
+            credentials: 'same-origin',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        });
+        if (!response.ok) {
+            throw new Error(`Erreur lors de l'appel de l'outil ${name}: ${response.statusText}`);
+        }
+        return await response.json();
+    }
+
+    // Downsampler l'audio à 16kHz et encoder en PCM 16 bits base64
+    function downsampleAndEncode(float32Array, inputSampleRate, outputSampleRate) {
+        const sampleRateRatio = inputSampleRate / outputSampleRate;
+        const newLength = Math.round(float32Array.length / sampleRateRatio);
+        const pcmBuffer = new ArrayBuffer(newLength * 2);
+        const view = new DataView(pcmBuffer);
+        
+        let offsetResult = 0;
+        let offsetBuffer = 0;
+        
+        while (offsetResult < newLength) {
+            const nextOffsetBuffer = Math.round((offsetResult + 1) * sampleRateRatio);
+            let accum = 0, count = 0;
+            for (let i = offsetBuffer; i < nextOffsetBuffer && i < float32Array.length; i++) {
+                accum += float32Array[i];
+                count++;
+            }
+            const sample = count > 0 ? accum / count : 0;
+            const s = Math.max(-1, Math.min(1, sample));
+            const intSample = s < 0 ? s * 0x8000 : s * 0x7FFF;
+            view.setInt16(offsetResult * 2, intSample, true);
+            
+            offsetResult++;
+            offsetBuffer = nextOffsetBuffer;
+        }
+        
+        const uint8 = new Uint8Array(pcmBuffer);
+        let binary = '';
+        for (let i = 0; i < uint8.length; i++) {
+            binary += String.fromCharCode(uint8[i]);
+        }
+        return btoa(binary);
+    }
+
+    // Gérer la file d'attente de lecture audio (PCM 24kHz)
+    function queueAudioChunk(base64Data) {
+        if (audioContext && audioContext.state === 'suspended') {
+            audioContext.resume().catch(() => {});
+        }
+        const raw = atob(base64Data);
+        const array = new Uint8Array(raw.length);
+        for (let i = 0; i < raw.length; i++) {
+            array[i] = raw.charCodeAt(i);
+        }
+        const int16 = new Int16Array(array.buffer);
+        const float32 = new Float32Array(int16.length);
+        for (let i = 0; i < int16.length; i++) {
+            float32[i] = int16[i] / 32768.0;
+        }
+        
+        audioQueue.push(float32);
+        if (!isPlayingAudio) {
+            processAudioQueue();
+        }
+    }
+
+    function processAudioQueue() {
+        if (audioQueue.length === 0) {
+            isPlayingAudio = false;
+            return;
+        }
+        
+        isPlayingAudio = true;
+        const float32 = audioQueue.shift();
+        
+        if (!audioContext) return;
+        
+        const audioBuffer = audioContext.createBuffer(1, float32.length, 24000);
+        audioBuffer.getChannelData(0).set(float32);
+        
+        const source = audioContext.createBufferSource();
+        source.buffer = audioBuffer;
+        
+        source.connect(audioContext.destination);
+        if (speakerAnalyser) {
+            source.connect(speakerAnalyser);
+        }
+        
+        const now = audioContext.currentTime;
+        if (nextPlayTime < now) {
+            nextPlayTime = now;
+        }
+        
+        source.start(nextPlayTime);
+        nextPlayTime += audioBuffer.duration;
+        
+        const delay = (nextPlayTime - now) * 1000;
+        setTimeout(processAudioQueue, delay - 50);
+    }
+
+    // Initialiser le visualiseur d'ondes audio
+    function initVisualizer() {
+        micAnalyser = audioContext.createAnalyser();
+        micAnalyser.fftSize = 256;
+        
+        speakerAnalyser = audioContext.createAnalyser();
+        speakerAnalyser.fftSize = 256;
+        
+        // Ajuster la taille du canvas pour la résolution retina
+        const dpr = window.devicePixelRatio || 1;
+        liveAudioCanvas.width = liveAudioCanvas.clientWidth * dpr;
+        liveAudioCanvas.height = liveAudioCanvas.clientHeight * dpr;
+        
+        drawVisualizer();
+    }
+
+    function drawVisualizer() {
+        if (!audioContext) return;
+        visualizerId = requestAnimationFrame(drawVisualizer);
+        
+        const canvas = liveAudioCanvas;
+        const ctx = canvas.getContext('2d');
+        const width = canvas.width;
+        const height = canvas.height;
+        
+        ctx.clearRect(0, 0, width, height);
+        
+        // Fond dégradé doux
+        const bgGrad = ctx.createLinearGradient(0, 0, width, height);
+        bgGrad.addColorStop(0, '#f8fafc');
+        bgGrad.addColorStop(1, '#f1f5f9');
+        ctx.fillStyle = bgGrad;
+        ctx.fillRect(0, 0, width, height);
+        
+        let bufferLength = 0;
+        let dataArray = null;
+        let isSpeaking = isPlayingAudio;
+        
+        if (isSpeaking && speakerAnalyser) {
+            bufferLength = speakerAnalyser.frequencyBinCount;
+            dataArray = new Uint8Array(bufferLength);
+            speakerAnalyser.getByteFrequencyData(dataArray);
+            
+            document.getElementById('visualizer-center-icon').className = "absolute w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-lg shadow-blue-200 z-20 transition-all duration-300 scale-110";
+            document.getElementById('visualizer-center-icon').innerHTML = '<i class="fas fa-volume-high text-sm animate-pulse"></i>';
+            liveStatusDot.className = "w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse";
+            liveStatusText.innerText = "L'IA parle...";
+        } else if (microphoneStream && !isMuted && micAnalyser) {
+            bufferLength = micAnalyser.frequencyBinCount;
+            dataArray = new Uint8Array(bufferLength);
+            micAnalyser.getByteFrequencyData(dataArray);
+            
+            document.getElementById('visualizer-center-icon').className = "absolute w-10 h-10 rounded-full bg-green-600 text-white flex items-center justify-center shadow-lg shadow-green-200 z-20 transition-all duration-300";
+            document.getElementById('visualizer-center-icon').innerHTML = '<i class="fas fa-microphone text-sm"></i>';
+            liveStatusDot.className = "w-2.5 h-2.5 rounded-full bg-green-500 animate-ping";
+            liveStatusText.innerText = "À l'écoute...";
+        } else {
+            document.getElementById('visualizer-center-icon').className = "absolute w-10 h-10 rounded-full bg-gray-500 text-white flex items-center justify-center shadow-lg shadow-gray-200 z-20 transition-all duration-300";
+            document.getElementById('visualizer-center-icon').innerHTML = isMuted ? '<i class="fas fa-microphone-slash text-sm"></i>' : '<i class="fas fa-microphone text-sm"></i>';
+            liveStatusDot.className = "w-2.5 h-2.5 rounded-full bg-gray-400";
+            liveStatusText.innerText = isMuted ? "Micro coupé" : "Prêt";
+        }
+        
+        const centerX = width / 2;
+        const centerY = height / 2;
+        const radius = Math.min(width, height) * 0.28;
+        
+        ctx.beginPath();
+        ctx.strokeStyle = isSpeaking ? 'rgba(59, 130, 246, 0.8)' : (isMuted ? 'rgba(156, 163, 175, 0.5)' : 'rgba(34, 197, 94, 0.8)');
+        ctx.lineWidth = 4;
+        ctx.lineCap = 'round';
+        
+        const numBars = 60;
+        for (let i = 0; i < numBars; i++) {
+            const angle = (i / numBars) * Math.PI * 2;
+            let value = 0;
+            
+            if (dataArray && dataArray.length > 0) {
+                const dataIdx = Math.floor((i / numBars) * bufferLength);
+                value = dataArray[dataIdx] / 255.0;
+            } else {
+                value = (Math.sin(Date.now() * 0.003 + i * 0.1) + 1) * 0.1;
+            }
+            
+            const barHeight = value * 45;
+            const x1 = centerX + Math.cos(angle) * radius;
+            const y1 = centerY + Math.sin(angle) * radius;
+            const x2 = centerX + Math.cos(angle) * (radius + barHeight);
+            const y2 = centerY + Math.sin(angle) * (radius + barHeight);
+            
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+        }
+        ctx.stroke();
+    }
+
+    // Initialiser la reconnaissance vocale locale pour le transcript
+    function initSpeechRecognition() {
+        try {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) return;
+
+            speechRecognition = new SpeechRecognition();
+            speechRecognition.continuous = true;
+            speechRecognition.interimResults = true;
+            speechRecognition.lang = 'fr-FR';
+            
+            speechRecognition.onresult = (event) => {
+                let interimTranscript = '';
+                let finalTranscript = '';
+                
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        finalTranscript += event.results[i][0].transcript;
+                    } else {
+                        interimTranscript += event.results[i][0].transcript;
+                    }
+                }
+                
+                const transcriptText = finalTranscript || interimTranscript;
+                if (transcriptText.trim()) {
+                    updateLiveStreamingBubble('user', transcriptText);
+                }
+            };
+            
+            speechRecognition.start();
+        } catch (err) {
+            console.warn('Reconnaissance vocale locale indisponible:', err);
+        }
+    }
+
+    // Initialiser le micro
+    async function initMicrophone() {
+        microphoneStream = await navigator.mediaDevices.getUserMedia({
+            audio: {
+                channelCount: 1,
+                sampleRate: 16000,
+                echoCancellation: true,
+                noiseSuppression: true
+            }
+        });
+        
+        if (!audioContext) return;
+        
+        const source = audioContext.createMediaStreamSource(microphoneStream);
+        source.connect(micAnalyser);
+        
+        scriptProcessor = audioContext.createScriptProcessor(2048, 1, 1);
+        source.connect(scriptProcessor);
+        // Garder le graphe audio actif sans écho (obligatoire pour onaudioprocess)
+        silentGainNode = audioContext.createGain();
+        silentGainNode.gain.value = 0;
+        scriptProcessor.connect(silentGainNode);
+        silentGainNode.connect(audioContext.destination);
+        
+        const inputSampleRate = audioContext.sampleRate;
+        
+        scriptProcessor.onaudioprocess = (event) => {
+            if (!liveSessionReady || !liveMicEnabled || isMuted || !liveTalkSocket || liveTalkSocket.readyState !== WebSocket.OPEN) {
+                return;
+            }
+            
+            if (isPlayingAudio) {
+                return;
+            }
+            
+            const inputBuffer = event.inputBuffer.getChannelData(0);
+            const base64Audio = downsampleAndEncode(inputBuffer, inputSampleRate, 16000);
+            
+            const audioMessage = {
+                realtimeInput: {
+                    audio: {
+                        mimeType: 'audio/pcm;rate=16000',
+                        data: base64Audio
+                    }
+                }
+            };
+            
+            liveTalkSocket.send(JSON.stringify(audioMessage));
+        };
+    }
+
+    async function parseLiveSocketMessage(event) {
+        let raw = event.data;
+        if (raw instanceof Blob) {
+            raw = await raw.text();
+        } else if (raw instanceof ArrayBuffer) {
+            raw = new TextDecoder().decode(raw);
+        } else if (raw && typeof raw !== 'string') {
+            raw = String(raw);
+        }
+        return JSON.parse(raw);
+    }
+
+    function sendLiveOpeningPrompt() {
+        if (!liveTalkSocket || liveTalkSocket.readyState !== WebSocket.OPEN) {
+            return;
+        }
+
+        liveTalkSocket.send(JSON.stringify({
+            clientContent: {
+                turns: [{
+                    role: 'user',
+                    parts: [{
+                        text: 'Bonjour. Commence la conversation : présente-toi brièvement en français et explique comment tu peux m\'aider avec les données FCRA (étudiants, orphelins, internationaux, statistiques).'
+                    }]
+                }],
+                turnComplete: true
+            }
+        }));
+
+        liveStatusDot.className = 'w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse';
+        liveStatusText.innerText = "L'IA parle...";
+    }
+
+    // Initialiser le WebSocket vers Gemini Live API
+    function initWebSocket(apiKey) {
+        return new Promise((resolve, reject) => {
+            let settled = false;
+            const finishResolve = () => {
+                if (settled) return;
+                settled = true;
+                resolve();
+            };
+            const finishReject = (err) => {
+                if (settled) return;
+                settled = true;
+                reject(err);
+            };
+
+            const wsUrl = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=${encodeURIComponent(apiKey)}`;
+            liveTalkSocket = new WebSocket(wsUrl);
+            liveTalkSocket.binaryType = 'arraybuffer';
+            liveSessionReady = false;
+            liveMicEnabled = false;
+
+            const connectionTimeout = setTimeout(() => {
+                finishReject(new Error('Délai de connexion dépassé. Vérifiez votre réseau et la clé API Gemini.'));
+            }, 30000);
+
+            liveTalkSocket.onopen = () => {
+                console.log('WebSocket connecté à Gemini Live API');
+                liveStatusText.innerText = 'Configuration...';
+
+                const setupMessage = {
+                    setup: {
+                        model: LIVE_MODEL,
+                        generationConfig: {
+                            responseModalities: ['AUDIO'],
+                            speechConfig: {
+                                voiceConfig: {
+                                    prebuiltVoiceConfig: {
+                                        voiceName: 'Aoede'
+                                    }
+                                }
+                            }
+                        },
+                        inputAudioTranscription: {},
+                        outputAudioTranscription: {},
+                        systemInstruction: {
+                            parts: [{
+                                text: "Tu es l'assistant vocal FCRA. Tu as accès à des outils pour rechercher des étudiants, orphelins, internationaux, universitaires et des statistiques. Réponds toujours en français, de manière concise et naturelle à l'oral. Commence toujours par te présenter quand la conversation démarre. Utilise les outils quand tu as besoin de données réelles."
+                            }]
+                        },
+                        tools: toolsConfig
+                    }
+                };
+
+                liveTalkSocket.send(JSON.stringify(setupMessage));
+            };
+
+            liveTalkSocket.onmessage = async (event) => {
+                let data;
+                try {
+                    data = await parseLiveSocketMessage(event);
+                } catch (err) {
+                    console.error('Message WebSocket invalide:', err, event.data);
+                    return;
+                }
+
+                if (data.error) {
+                    const message = data.error.message || JSON.stringify(data.error);
+                    showLiveError(message);
+                    finishReject(new Error(message));
+                    return;
+                }
+
+                if (data.setupComplete !== undefined) {
+                    clearTimeout(connectionTimeout);
+                    liveSessionReady = true;
+                    liveMicEnabled = false;
+                    clearLiveError();
+                    try { initSpeechRecognition(); } catch (e) {}
+                    sendLiveOpeningPrompt();
+                    finishResolve();
+                    return;
+                }
+
+                if (data.serverContent) {
+                    if (data.serverContent.interrupted) {
+                        audioQueue = [];
+                        isPlayingAudio = false;
+                        nextPlayTime = audioContext ? audioContext.currentTime : 0;
+                        clearLiveStreamingBubble('assistant');
+                    }
+
+                    if (data.serverContent.inputTranscription?.text) {
+                        updateLiveStreamingBubble('user', data.serverContent.inputTranscription.text);
+                    }
+
+                    if (data.serverContent.outputTranscription?.text) {
+                        updateLiveStreamingBubble('assistant', data.serverContent.outputTranscription.text);
+                    }
+
+                    const modelTurn = data.serverContent.modelTurn;
+                    if (modelTurn && modelTurn.parts) {
+                        for (const part of modelTurn.parts) {
+                            if (part.text && !data.serverContent.outputTranscription?.text) {
+                                appendToLiveStreamingBubble('assistant', part.text);
+                            }
+
+                            const audioData = part.inlineData?.data || part.inline_data?.data;
+                            if (audioData) {
+                                queueAudioChunk(audioData);
+                            }
+                        }
+                    }
+
+                    if (data.serverContent.turnComplete) {
+                        finalizeAllLiveBubbles(true);
+
+                        if (!liveMicEnabled) {
+                            liveMicEnabled = true;
+                            liveStatusDot.className = 'w-2.5 h-2.5 rounded-full bg-green-500 animate-ping';
+                            liveStatusText.innerText = "À l'écoute...";
+                        }
+                    }
+                }
+
+                if (data.toolCall) {
+                    const functionCalls = data.toolCall.functionCalls;
+                    if (functionCalls) {
+                        const functionResponses = [];
+
+                        for (const call of functionCalls) {
+                            const name = call.name;
+                            const args = call.args || {};
+                            const id = call.id;
+
+                            liveToolText.innerText = `Appel de l'outil : ${name}...`;
+                            liveToolIndicator.classList.remove('hidden');
+
+                            try {
+                                const result = await executeTool(name, args);
+                                functionResponses.push({
+                                    id: id,
+                                    name: name,
+                                    response: { result: result }
+                                });
+                            } catch (err) {
+                                console.error("Erreur lors de l'exécution de l'outil:", err);
+                                functionResponses.push({
+                                    id: id,
+                                    name: name,
+                                    response: { error: err.message }
+                                });
+                            }
+                        }
+
+                        liveToolIndicator.classList.add('hidden');
+
+                        if (liveTalkSocket && liveTalkSocket.readyState === WebSocket.OPEN) {
+                            liveTalkSocket.send(JSON.stringify({
+                                toolResponse: { functionResponses }
+                            }));
+                        }
+                    }
+                }
+            };
+
+            liveTalkSocket.onerror = () => {
+                clearTimeout(connectionTimeout);
+                showLiveError('Erreur de connexion WebSocket avec Gemini Live.');
+                finishReject(new Error('Erreur WebSocket Gemini Live'));
+            };
+
+            liveTalkSocket.onclose = (event) => {
+                clearTimeout(connectionTimeout);
+                liveSessionReady = false;
+                console.log('WebSocket Gemini Live fermé', event.code, event.reason);
+
+                if (isLiveTalkClosing) {
+                    return;
+                }
+
+                if (!event.wasClean) {
+                    showLiveError(event.reason || 'Connexion fermée par le serveur. Vérifiez GEMINI_API_KEY et le modèle Live.');
+                }
+            };
+        });
+    }
+
+    // Démarrer la conversation vocale
+    async function startLiveTalk() {
+        if (liveTalkSocket) {
+            return;
+        }
+
+        liveTalkModal.classList.remove('hidden');
+        liveTalkModal.offsetHeight;
+        liveTalkModal.classList.remove('opacity-0');
+        liveTalkModal.querySelector('div').classList.remove('scale-95');
+        clearLiveError();
+        liveStatusText.innerText = 'Connexion...';
+        liveStatusDot.className = 'w-3 h-3 rounded-full bg-yellow-500 animate-pulse';
+
+        try {
+            const keyResponse = await fetch('/api/chatbot/api/key/', {
+                credentials: 'same-origin',
+                headers: { 'X-CSRFToken': getCookie('csrftoken') }
+            });
+            if (!keyResponse.ok) {
+                let detail = '';
+                try {
+                    const errBody = await keyResponse.json();
+                    detail = errBody.error || errBody.detail || '';
+                } catch (e) {}
+                throw new Error(detail || (keyResponse.status === 403
+                    ? 'Vous devez être connecté pour utiliser la conversation vocale.'
+                    : 'Impossible de récupérer la clé API Gemini.'));
+            }
+            const keyData = await keyResponse.json();
+            const apiKey = keyData.key;
+            if (!apiKey) {
+                throw new Error('GEMINI_API_KEY manquante dans la configuration serveur.');
+            }
+
+            clearLiveConversationLog();
+
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioContext.state === 'suspended') {
+                await audioContext.resume();
+            }
+
+            initVisualizer();
+            await initWebSocket(apiKey);
+            try {
+                await initMicrophone();
+            } catch (micErr) {
+                console.warn('Micro indisponible, écoute seule:', micErr);
+                if (liveErrorText) {
+                    liveErrorText.textContent = 'Micro inaccessible — vous pouvez écouter l\'IA, mais pas parler pour le moment.';
+                    liveErrorText.classList.remove('hidden');
+                }
+            }
+
+            isMuted = false;
+            muteMicBtn.innerHTML = '<i class="fas fa-microphone text-xl"></i>';
+            muteMicBtn.className = 'w-14 h-14 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 flex items-center justify-center transition-all shadow-md transform active:scale-95';
+
+        } catch (err) {
+            console.error('Erreur lors du démarrage de Live Talk:', err);
+            showLiveError(err.message || 'Erreur lors du démarrage de la conversation vocale.');
+            cleanupLiveTalkResources();
+        }
+    }
+
+    // Arrêter la conversation vocale
+    function stopLiveTalk() {
+        finalizeAllLiveBubbles(true);
+        isLiveTalkClosing = true;
+        cleanupLiveTalkResources();
+        isLiveTalkClosing = false;
+        hideLiveTalkModal();
+    }
+
+    function toggleMute() {
+        isMuted = !isMuted;
+        if (isMuted) {
+            muteMicBtn.innerHTML = '<i class="fas fa-microphone-slash text-xl"></i>';
+            muteMicBtn.className = "w-14 h-14 rounded-full bg-red-50 hover:bg-red-100 text-red-600 flex items-center justify-center transition-all shadow-md transform active:scale-95 border border-red-200";
+        } else {
+            muteMicBtn.innerHTML = '<i class="fas fa-microphone text-xl"></i>';
+            muteMicBtn.className = "w-14 h-14 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 flex items-center justify-center transition-all shadow-md transform active:scale-95";
+        }
+    }
 
     function setQuery(text) {
         const textarea = document.getElementById('chat-input');
@@ -416,6 +1472,7 @@
                 try {
                     const response = await fetch('/api/chatbot/api/chat/', {
                         method: 'POST',
+                        credentials: 'same-origin',
                         headers: {
                             'Content-Type': 'application/json',
                             'X-CSRFToken': getCookie('csrftoken')
@@ -426,11 +1483,16 @@
                         })
                     });
                     
-                    const data = await response.json();
+                    let data = {};
+                    try {
+                        data = await response.json();
+                    } catch (parseErr) {
+                        console.error('Réponse chat invalide:', parseErr);
+                    }
                     const typingElement = document.getElementById(typingId);
                     if (typingElement) typingElement.remove();
                     
-                    if (data.reply) {
+                    if (response.ok && data.reply) {
                         if (!currentConversationId) {
                             currentConversationId = data.conversation_id;
                             document.getElementById('current-chat-title').textContent = data.conversation_title;
@@ -439,6 +1501,10 @@
                         addMessage(data.reply, false);
                     } else if (data.error) {
                         addMessage("Désolé, une erreur est survenue : " + data.error, false);
+                    } else if (response.status === 403) {
+                        addMessage("Vous devez être connecté pour utiliser le chatbot.", false);
+                    } else {
+                        addMessage("Désolé, aucune réponse reçue du serveur (" + response.status + ").", false);
                     }
                 } catch (error) {
                     const typingElement = document.getElementById(typingId);
@@ -455,6 +1521,20 @@
                 sendBtn.click();
             }
         });
+
+        // Live Talk — initialiser après le DOM
+        if (liveTalkBtn) {
+            liveTalkBtn.addEventListener('click', startLiveTalk);
+        }
+        if (closeLiveTalkBtn) {
+            closeLiveTalkBtn.addEventListener('click', stopLiveTalk);
+        }
+        if (stopLiveTalkBtn) {
+            stopLiveTalkBtn.addEventListener('click', stopLiveTalk);
+        }
+        if (muteMicBtn) {
+            muteMicBtn.addEventListener('click', toggleMute);
+        }
     });
 </script>
 
@@ -466,10 +1546,18 @@
     .animate-message-in {
         animation: message-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
-    #chat-messages::-webkit-scrollbar { width: 6px; }
-    #chat-messages::-webkit-scrollbar-track { background: transparent; }
-    #chat-messages::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 10px; }
-    #chat-messages::-webkit-scrollbar-thumb:hover { background: #d1d5db; }
+    #chat-messages::-webkit-scrollbar,
+    #live-conversation-log::-webkit-scrollbar { width: 6px; }
+    #chat-messages::-webkit-scrollbar-track,
+    #live-conversation-log::-webkit-scrollbar-track { background: transparent; }
+    #chat-messages::-webkit-scrollbar-thumb,
+    #live-conversation-log::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 10px; }
+    #chat-messages::-webkit-scrollbar-thumb:hover,
+    #live-conversation-log::-webkit-scrollbar-thumb:hover { background: #d1d5db; }
+
+    .live-msg-bubble.live-streaming .live-msg-content {
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+    }
 
     /* Style pour les images dans les messages de l'IA */
     .prose img {
