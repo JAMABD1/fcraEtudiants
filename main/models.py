@@ -76,49 +76,20 @@ def get_centre_choices():
 
 def get_center_filter_values(center_name):
     """
-    Returns a list of center names including the main name, all aliases,
-    and sub-centres named like "Manakara-Roshan Jamil" when filtering "Manakara".
-    Used for filtering queries to include aliases and hyphenated sub-centres.
+    Returns a list of center names including the main name and all aliases.
+    Used for filtering queries to include aliases.
     """
     if not center_name:
         return []
-
-    center_name = center_name.strip()
-    if not center_name:
-        return []
-
-    # If the given name is an alias, expand from its main centre too.
-    main_center = (
-        CenterAlias.objects.filter(alias=center_name)
-        .values_list("main_center", flat=True)
-        .first()
-    ) or center_name
-
+    
+    # Start with the main center name
     values = [center_name]
-    if main_center != center_name:
-        values.append(main_center)
-
-    # Registered aliases for the main centre
-    aliases = CenterAlias.objects.filter(main_center=main_center).values_list("alias", flat=True)
+    
+    # Add all aliases for this center
+    aliases = CenterAlias.objects.filter(main_center=center_name).values_list('alias', flat=True)
     values.extend(list(aliases))
-
-    # Sub-centres stored as "Main-Subname" (e.g. Manakara-Roshan Jamil)
-    prefix = f"{main_center}-"
-    sub_centres = (
-        Etudiant.objects.filter(centre__startswith=prefix)
-        .values_list("centre", flat=True)
-        .distinct()
-    )
-    values.extend(sub_centres)
-
-    # Preserve order, drop duplicates
-    seen = set()
-    result = []
-    for value in values:
-        if value and value not in seen:
-            seen.add(value)
-            result.append(value)
-    return result
+    
+    return values
 
 class Etudiant(models.Model):
     id=models.AutoField(primary_key=True)
